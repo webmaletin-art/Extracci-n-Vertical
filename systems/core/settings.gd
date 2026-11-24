@@ -21,6 +21,7 @@ var particles := 1                  ## chispas, polvo, sangre, fragmentos
 var smoke := 1                      ## humo de granadas, explosiones y ambiente
 var explosions := 1                 ## destello, bola de fuego, onda, escombros
 var decor := 1                      ## densidad de decoración (props que no se usan para jugar)
+var fog_war := true                 ## velos suaves sobre sectores sin explorar / ya vistos
 var background := 1                 ## 0 fondo plano · 1 fachadas lejanas · 2 fachadas + niebla con profundidad
 var view_floors := 1                ## pisos vecinos visibles además del actual (0..2): oclusión por sector
 var fps_target := 30                ## 30 o 60
@@ -36,7 +37,7 @@ var vol_sfx := 1.0
 var vol_ambient := 0.7
 ## ---------- controles ----------
 var joystick_size := 1.0            ## escala de los joysticks virtuales
-var aim_sensitivity := 1.0
+var aim_sensitivity := 0.7             ## velocidad de giro del apuntado con joystick (1.0 = 170°/s)
 var auto_fire_stick := false        ## dispara al llevar el joystick derecho al borde (además del botón)
 var show_fps := false
 var character_id := "alfa"
@@ -133,7 +134,7 @@ func _apply_audio() -> void:
 	set_db.call("Ambiente", vol_ambient)
 
 const KEYS := ["quality_preset", "render_scale", "shadows", "lights", "msaa", "fxaa", "particles", "smoke", "explosions",
-	"decor", "background", "view_floors", "fps_target", "xray", "bullet_time", "camera_shake", "blood", "laser", "laser_enemies", "vol_master",
+	"decor", "background", "fog_war", "view_floors", "fps_target", "xray", "bullet_time", "camera_shake", "blood", "laser", "laser_enemies", "vol_master",
 	"vol_sfx", "vol_ambient", "joystick_size", "aim_sensitivity", "auto_fire_stick", "show_fps", "character_id"]
 
 func save_settings() -> void:

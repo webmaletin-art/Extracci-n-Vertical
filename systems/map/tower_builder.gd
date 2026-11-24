@@ -52,7 +52,6 @@ func build(d: Dictionary) -> void:
 	_build_stairs(d)
 	_build_crater(d)
 	_build_elevator(d)
-	_build_background(d)
 	_build_covers()
 	_build_light_pool()
 	_build_environment()
@@ -757,7 +756,7 @@ func update_covers(current_id: String, delta: float) -> void:
 	_cur_floor = int(graph.room(current_id).get("floor", 0))
 	for id in covers:
 		var mi: MeshInstance3D = covers[id]
-		var target := 0.0 if id == current_id else (0.35 if revealed.has(id) else 0.9)
+		var target := 0.0 if (id == current_id or not Settings.fog_war) else (0.18 if revealed.has(id) else 0.6)
 		var mm := mi.material_override as StandardMaterial3D
 		mm.albedo_color.a = move_toward(mm.albedo_color.a, target, delta * 2.5)
 		var rf := int(graph.room(id).get("floor", 0))
@@ -776,7 +775,7 @@ func _build_environment() -> void:
 	world_env = WorldEnvironment.new()
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.03, 0.035, 0.05)
+	env.background_color = Color(0.02, 0.022, 0.03)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.32, 0.36, 0.45)
 	env.ambient_light_energy = 0.55

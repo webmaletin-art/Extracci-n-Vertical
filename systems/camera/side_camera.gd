@@ -4,7 +4,7 @@ extends Camera3D
 ## del edificio y vibra con las explosiones (TimeFx.shake). Encuadre cerrado: muestra el piso actual y un poco de los
 ## vecinos, nunca toda la torre. La cámara de bala (BulletTime) la toma prestada con override_target().
 
-@export var distance := 10.5
+@export var distance := 9.0
 @export var height := 2.0
 var target: Actor
 var bounds := Rect2(0, -1, 60, 26)

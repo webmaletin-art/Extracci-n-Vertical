@@ -5,6 +5,7 @@ extends RefCounted
 ## servidor recibe de cada cliente (ver docs/MULTIJUGADOR.md).
 
 var move := Vector2.ZERO        ## x: -1..1 horizontal (cuánto se inclina el joystick); y: +1 arriba / -1 abajo (escaleras, agacharse)
+var aim_snap := false          ## true con mouse (apunta directo); false con joystick (gira con velocidad limitada)
 var aim := Vector2.ZERO         ## dirección de apuntado en el MUNDO (x derecha, y arriba). Cero = conservar la anterior
 var fire := false               ## gatillo apretado
 var jump := false               ## se apretó saltar en este cuadro (salto / parkour contextual)

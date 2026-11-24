@@ -73,6 +73,7 @@ func _physics_process(_delta: float) -> void:
 			aim = Vector2(d.x, -d.y).normalized()
 		_mouse_moved = false
 	inp.move = mv
+	inp.aim_snap = not hud.touch_mode
 	if aim != Vector2.ZERO:
 		inp.aim = aim
 	else:

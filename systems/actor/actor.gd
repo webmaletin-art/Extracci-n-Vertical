@@ -35,6 +35,7 @@ const HANG_REACH_MIN := 1.15        ## altura del borde sobre los pies para agar
 const HANG_REACH_MAX := 2.35
 const VAULT_MIN := 0.35             ## cajas y tarimas que se suben con el botón de salto
 const VAULT_MAX := 1.3
+const JUMP_VAULT := 0.9             ## hasta esta altura se sube saltando; más alto, con la animación de apoyarse y trepar
 const SAFE_FALL := 3.6              ## metros sin daño
 const DEADLY_FALL := 11.0
 ## Multiplicador de daño por zona y por qué zona es «crítica» (activa la cámara de rayos X)
@@ -397,7 +398,7 @@ func _physics_process(delta: float) -> void:
 	_combo_t = maxf(_combo_t - delta, 0.0)
 	recoil_angle = move_toward(recoil_angle, 0.0, delta * deg_to_rad(18.0))
 	if state != State.DEAD:
-		_update_aim()
+		_update_aim(delta)
 		_handle_weapon_input(delta)
 	match state:
 		State.GROUND, State.AIR:
@@ -422,9 +423,21 @@ func _process(delta: float) -> void:
 
 # ---------------------------------------------------------------- apuntado
 
-func _update_aim() -> void:
+## Velocidad máxima de giro del apuntado con joystick (grados por segundo, con sensibilidad 1,0). El joystick sólo dice
+## HACIA DÓNDE: el arma gira hacia ahí a esta velocidad (más lento cuanto menos se estira el joystick), así no salta.
+const AIM_RATE := 170.0
+
+func _update_aim(delta := 1.0 / 60.0) -> void:
 	if inp.aim.length() > 0.2 and stunned <= 0.0:
-		aim_dir = inp.aim.normalized()
+		var tgt := inp.aim.normalized()
+		if inp.aim_snap:
+			aim_dir = tgt
+		else:
+			var a := aim_dir.angle()
+			var diff := angle_difference(a, tgt.angle())
+			var tilt := clampf((inp.aim.length() - 0.2) / 0.8, 0.0, 1.0)
+			var rate := deg_to_rad(AIM_RATE) * (0.3 + 0.7 * tilt) * Settings.aim_sensitivity
+			aim_dir = Vector2.from_angle(a + clampf(diff, -rate * delta, rate * delta))
 	var armed := weapon() != null
 	if not armed:
 		# sin arma de fuego el cuerpo mira hacia donde camina (cuerpo a cuerpo); el apuntado queda guardado igual
@@ -610,6 +623,10 @@ func _try_vault() -> bool:
 	var dir := signf(inp.move.x) if absf(inp.move.x) > 0.25 else facing
 	var l := _probe_ledge(dir, VAULT_MIN, 0.8 if injuries.leg_broken else VAULT_MAX)
 	if l.is_empty() or absf(float(l.wall_x) - global_position.x) > 0.7:
+		return false
+	if float(l.top) - global_position.y <= JUMP_VAULT:
+		# caja o tarima baja: alcanza con un salto (se da un empujón hacia adelante para caer encima), sin la animación de apoyarse
+		velocity.x = dir * 3.2
 		return false
 	_start_climb(Vector3(float(l.wall_x) + dir * 0.4, float(l.top), 0), "climb_box", 1.6, dir)
 	Sfx.play("gear_rattle", global_position, -8.0, 1.0, 5.0, self)
@@ -1225,12 +1242,17 @@ func _update_visual(delta: float) -> void:
 	ik.body_up = Vector3.UP
 	if w and _ik_w > 0.001:
 		ik.weapon_target = _weapon_target(w)
+		ik.weapon_aim_dir = fire_dir()
+		ik.weapon_butt = w.butt
+		ik.weapon_aim_facing = facing
 		ik.weapon_target_w = _ik_w
-		var pitch := clampf(aim_pitch(), deg_to_rad(-70), deg_to_rad(75))
-		ik.spine_pitch = -pitch * 0.45 * _ik_w
-		ik.head_pitch = -pitch * 0.35 * _ik_w
+		# al apuntar hacia arriba el torso se echa hacia atrás (más cuanto más arriba), la cabeza acompaña un poco menos
+		var pitch := clampf(aim_pitch(), deg_to_rad(-70), deg_to_rad(80))
+		ik.spine_pitch = pitch * (0.5 + 0.2 * absf(pitch) / deg_to_rad(80.0)) * _ik_w
+		ik.head_pitch = pitch * 0.25 * _ik_w
 		ik.left_grip_weight = 1.0
 	else:
+		ik.weapon_aim_dir = Vector3.ZERO
 		ik.weapon_target_w = 0.0
 		ik.spine_pitch = 0.0
 		ik.head_pitch = 0.0

@@ -128,8 +128,9 @@ func _update_floor_visibility() -> void:
 		var vis := absi(i - _player_floor) <= keep or (i == _player_floor + 1)
 		n.visible = vis
 		for c in n.get_children():
-			if c is Actor:
-				(c as Actor).set_process(vis)
+			if c is Actor and c != player:
+				# enemigos de pisos que no se ven: dormidos (sin IA, sin animación, sin física propia)
+				(c as Actor).process_mode = Node.PROCESS_MODE_INHERIT if vis else Node.PROCESS_MODE_DISABLED
 
 func reveal_all_near(pos: Vector3) -> void:
 	var room := tower.room_id_at(pos)

@@ -21,7 +21,7 @@ func _ready() -> void:
 	p.health = 100000.0
 	g.controller.set_physics_process(false)
 	_freeze_bots(true)
-	var list := ["inicio", "apunta_atras", "escalera", "colgado", "rayos_x", "destello", "explosion", "patada", "caja", "ascensor", "caida", "arteria", "rafaga", "menu_config"]
+	var list := ["inicio", "apunta_atras", "escalera", "colgado", "rayos_x", "destello", "explosion", "patada", "caja", "ascensor", "caida", "arteria", "rafaga", "apuntar", "menu_config"]
 	for s in list:
 		if which == "all" or which == s:
 			await call("_s_" + s)
@@ -310,3 +310,18 @@ func _s_rafaga() -> void:
 	await _shot("rafaga_3")
 	bt.phase = "kill"
 	bt.skip()
+
+func _s_apuntar() -> void:
+	# el arma al apuntar en distintos ángulos (revisar brazos deformados y el arma atravesando el pecho)
+	await _place(Vector3(50.0, 0.05, 0), Vector2(1, 0.0))
+	for a in [[0.0, "0"], [45.0, "45"], [80.0, "80"], [-50.0, "m50"], [135.0, "135"]]:
+		p.aim_dir = Vector2.from_angle(deg_to_rad(a[0]))
+		p.facing = signf(p.aim_dir.x) if absf(p.aim_dir.x) > 0.05 else 1.0
+		await _wait(40)
+		g.camera.override_target(p.global_position + Vector3(0, 1.3, 2.6), p.global_position + Vector3(0, 1.2, 0), 36.0)
+		await _wait(12)
+		await _shot("apuntar_" + a[1])
+		var w := p.weapon()
+		var bd := (w.global_basis * Vector3(0, 0, -1)).normalized()
+		print("  ángulo ", a[0], " cañón apunta a ", rad_to_deg(atan2(bd.y, bd.x)), "° · reach err R ", p.ik.reach_err_r, " L ", p.ik.reach_err_l)
+		g.camera.release_override()

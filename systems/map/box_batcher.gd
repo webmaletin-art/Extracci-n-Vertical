@@ -7,7 +7,26 @@ var _st := {}            ## clave de material → SurfaceTool
 var _mats := {}
 var tris := 0
 
+## Largo de cada tramo (m). Las piezas largas se cortan en tramos y cada tramo es su propia malla: Godot descarta solo
+## los que no están en pantalla (renderizado por sectores). Sin esto, el piso de 60 m se dibujaría entero siempre.
+const CHUNK := 15.0
+
 func add_box(mat_key: String, mat: Material, center: Vector3, size: Vector3, basis := Basis.IDENTITY, uv_scale := 0.5) -> void:
+	if basis == Basis.IDENTITY and size.x > CHUNK * 1.01:
+		var x0 := center.x - size.x * 0.5
+		var x1 := center.x + size.x * 0.5
+		var c := floorf(x0 / CHUNK) * CHUNK
+		while c < x1:
+			var a := maxf(x0, c)
+			var b := minf(x1, c + CHUNK)
+			if b - a > 0.001:
+				_add_box(mat_key, mat, Vector3((a + b) * 0.5, center.y, center.z), Vector3(b - a, size.y, size.z), basis, uv_scale)
+			c += CHUNK
+		return
+	_add_box(mat_key, mat, center, size, basis, uv_scale)
+
+func _add_box(mat_key: String, mat: Material, center: Vector3, size: Vector3, basis := Basis.IDENTITY, uv_scale := 0.5) -> void:
+	mat_key = "%s#%d" % [mat_key, int(floorf(center.x / CHUNK))]
 	if not _st.has(mat_key):
 		var st := SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)

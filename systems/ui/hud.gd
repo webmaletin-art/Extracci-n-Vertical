@@ -314,15 +314,7 @@ func _draw() -> void:
 			if prev != Vector2.INF and i % 2 == 0:
 				draw_line(prev, sp, Color(0.8, 1.0, 0.5, 0.8 - i * 0.02), 3.0)
 			prev = sp
-	# mira (dirección de apuntado persistente)
-	if player.weapon() and not _cinematic_on:
-		var c := player.global_position + Vector3(0, 1.4, 0)
-		var a := c + Vector3(player.aim_dir.x, player.aim_dir.y, 0) * 3.2
-		if not camera.is_position_behind(a):
-			var sp := camera.unproject_position(a)
-			draw_arc(sp, 10, 0, TAU, 20, Color(1, 1, 1, 0.8), 2.0)
-			draw_line(sp + Vector2(-16, 0), sp + Vector2(-6, 0), Color(1, 1, 1, 0.8), 2.0)
-			draw_line(sp + Vector2(6, 0), sp + Vector2(16, 0), Color(1, 1, 1, 0.8), 2.0)
+	# (sin mira blanca: se apunta con el láser que sale de la boca del cañón)
 	_draw_minimap(s)
 	if _cinematic > 0.01:
 		var h := 60.0 * _cinematic

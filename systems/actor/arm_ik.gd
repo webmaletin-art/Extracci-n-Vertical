@@ -45,6 +45,9 @@ var right_override_active := false
 var right_override_frame := {}
 var right_override_weight := 0.0
 var weapon_target := Transform3D()     ## 3ª persona: dónde debe quedar el arma (mundo) cuando se apunta; la mano derecha la sigue
+var weapon_aim_dir := Vector3.ZERO     ## si no es cero: el arma se coloca AQUÍ dentro de la IK con el hombro ya inclinado (no el del cuadro anterior)
+var weapon_butt := Vector3.ZERO        ## culata del arma (espacio del arma)
+var weapon_aim_facing := 1.0
 var weapon_target_w := 0.0             ## 0 = el arma sale de las manos de la animación, 1 = va exactamente a weapon_target
 var reach_l := 0.6                     ## largo de cada brazo (hombro -> mano), de la pose de reposo
 var reach_r := 0.6
@@ -243,6 +246,18 @@ func _process_attached(sk: Skeleton3D, inv: Transform3D) -> void:
 				u = Vector3.UP
 			var wb := Basis.looking_at(a, u.normalized()) * _weapon_axis_basis.inverse()
 			last_weapon_skel = Transform3D(wb, hand_r.origin + hrb * _hand_grip_local - wb * weapon_grip_local)
+	if weapon_target_w > 0.001 and weapon_aim_dir.length_squared() > 0.1:
+		# el hombro de ESTE cuadro (con la columna ya inclinada): así la culata queda en el hombro aunque se apunte hacia arriba
+		var sr := sk.global_transform * sk.get_bone_global_pose(_b.RightArm).origin
+		var sl := sk.global_transform * sk.get_bone_global_pose(_b.LeftArm).origin
+		var d := weapon_aim_dir.normalized()
+		var bb := Basis.looking_at(d, Vector3.UP if absf(d.y) < 0.97 else Vector3(weapon_aim_facing, 0, 0))
+		if weapon_is_pistol:
+			var center := (sr + sl) * 0.5 + Vector3(0, -0.05, 0)
+			weapon_target = Transform3D(bb, center + d * 0.48 - bb * weapon_grip_local)
+		else:
+			var pocket := sr + d * 0.06 + Vector3(0, -0.03, 0)
+			weapon_target = Transform3D(bb, pocket - bb * weapon_butt)
 	if weapon_target_w > 0.001 and not right_override_active:
 		# apuntando: el arma va exactamente donde pide el jugador y las dos manos la siguen
 		last_weapon_skel = last_weapon_skel.interpolate_with(inv * weapon_target, weapon_target_w)
