@@ -4,4 +4,6 @@ tools/anim_builder/_work/
 /android/
 export_credentials.cfg
 *.keystore
-!build/dev.keystore      # clave de DESARROLLO (contraseña pública, ver docs/ACTUALIZACIONES.md): mantiene la firma estable entre compilaciones
+# clave de DESARROLLO (contraseña pública): mantiene la firma estable entre compilaciones
+!build/dev.keystore
+build/*.pck
