@@ -24,7 +24,7 @@
 | `ActorInput` | Intención de un cuadro (lo llena el jugador o la IA; en red, lo que manda cada cliente) | — |
 | `CharacterModel` | Carga personajes de Nexus y adapta las animaciones a cada esqueleto (retarget por rotaciones de reposo) | `assets/anims/ref_skeleton.json` |
 | `ArmIK` / `WeaponGrip` | (de Nexus) IK de dos huesos: el arma va hacia donde se apunta y las manos la siguen; flexión de columna y cabeza | — |
-| `Injuries` | Lesiones con efecto: pierna rota (renguea, salta y trepa menos), brazo/cabeza (dispersión y temblor), hemorragia; venda y botiquín | `XRayAnatomy.injuries_at` |
+| `Injuries` | Trauma: qué se rompe con cada golpe (bala, esquirla, cuchillo, onda, lanzado, caída, puño) y sus efectos y hemorragias por órgano; venda y botiquín | `AnatomyBody`, `data/anatomy_damage.json` |
 | `Firearm` | Arma en mano: modelo + marcadores, cargador, cadencia, recarga, ciclo de cerrojo | `data/weapons.json`, `WeaponMaterials` |
 | `Ballistics` | Proyectiles físicos sin nodos sueltos: integración con gravedad y resistencia, rayo por tramo, daño por zona, penetración, rebote, predicción para la cámara de bala | `Fx`, `Sfx` |
 | `Grenade` / `Explosion` | Granada con trayectoria real y espoleta; explosión con daño radial ocluido, onda, humo (`SmokeCloud` tapa la vista de la IA) y fuego (`FireZone`) | `data/explosives.json` |
@@ -36,7 +36,8 @@
 | `SideCamera` | Sigue en X/Y con adelanto hacia el apuntado, límites, vibración; la toma prestada la cámara de bala | `TimeFx` |
 | `BotBrain` | IA: patrulla, alerta por ruido, combate con tiempo de reacción y error, búsqueda | `NoiseBus` |
 | `NoiseBus` | Ruido para la IA: radio por acción, atenuado por paredes | — |
-| `BulletTime` / `XRayAnatomy` | Cámara lenta, seguimiento de la bala, rayos X con fracturas y perforaciones | `Ballistics`, `TimeFx` |
+| `AnatomyBody` | Anatomía ajustada del personaje (mallas con su piel), trayectorias por dentro del cuerpo, heridas en espacio de enlace, shader de heridas, destello y toma de muerte | `assets/anatomy/fit` |
+| `BulletTime` | Cámara de muerte (lenta + acercamiento) y destellos de heridas graves | `AnatomyBody`, `Ballistics`, `TimeFx` |
 | `Sfx` / `Fx` | Sonido 3D con reverberación por lugar; partículas y fragmentos reutilizables escalados por calidad | `Settings` |
 | `Settings` / `SettingsMenu` / `PerfProbe` | Calidad gráfica y efectos; captador de rendimiento | — |
 

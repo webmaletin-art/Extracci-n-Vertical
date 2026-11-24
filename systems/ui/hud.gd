@@ -287,6 +287,8 @@ func _process(delta: float) -> void:
 	for n in ["fire", "jump", "melee", "grenade", "reload", "swap", "crouch"]:
 		(buttons[n] as Control).modulate.a = 1.0 - _cinematic
 	(buttons.melee as TouchButton).label = "🔪" if player.current == "knife" else "✊"
+	for n in ["ammo", "weapon", "floor", "objective", "prompt", "loot"]:
+		(_lbl[n] as Label).visible = not _cinematic_on
 	(buttons.crouch as TouchButton).pressed = crouch_toggle
 	queue_redraw()
 

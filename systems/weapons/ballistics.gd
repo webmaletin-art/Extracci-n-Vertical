@@ -142,14 +142,23 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 				continue
 			info["zone"] = (col as Area3D).get_meta("zone", "torso")
 			info["bone"] = (col as Area3D).get_meta("bone", "")
-			info["type"] = "bullet"
+			info["type"] = "fragment" if _kind[i] == "fragment" else "bullet"
+			info["penetration"] = _pen[i]
 			projectile_hit.emit(i, info)
 			if is_instance_valid(actor) and actor.has_method("take_damage"):
 				actor.take_damage(info)
 			Fx.impact(point, -dir, "flesh")
 			Sfx.play("impact_flesh", point, -2.0)
-			# los proyectiles potentes atraviesan el cuerpo y siguen con menos energía
-			if _pen[i] >= 10.0:
+			# la bala atraviesa las partes finas (cabeza, cuello, brazos, piernas, manos, pies) y sigue; el torso sólo
+			# lo atraviesan los calibres potentes
+			var thin: bool = str(info.zone) in ["head", "neck", "arm", "leg", "hand", "foot"]
+			if _kind[i] != "fragment" and thin and _pen[i] >= 2.5:
+				_pen[i] -= 2.5
+				_dmg[i] *= 0.6
+				_exclude[i] = _exclude[i] + [hit.rid]
+				from = point + dir * 0.03
+				continue
+			if _pen[i] >= 10.0 and _kind[i] != "fragment":
 				_pen[i] -= 10.0
 				_dmg[i] *= 0.5
 				_exclude[i] = _exclude[i] + [hit.rid]

@@ -74,15 +74,25 @@ func _go(kind: String, by: Node) -> void:
 		if not _clear(pos + Vector3.UP * 0.2, chest):
 			k *= 0.25
 		var dir := (chest - pos).normalized()
-		ac.take_damage({"damage": dmg * k, "type": "blast", "zone": "torso", "bone": "mixamorig_Spine1", "point": chest - dir * 0.2,
-			"dir": dir, "shooter": by, "explosion": kind})
+		# lugar cerrado: la onda rebota y pega más fuerte
+		var closed := Sfx.room_closed
+		ac.take_damage({"damage": dmg * k * (1.25 if closed else 1.0), "type": "blast", "zone": "torso", "bone": "mixamorig_Spine1",
+			"point": chest - dir * 0.2, "dir": dir, "shooter": by, "explosion": kind, "distance": dist, "radius": radius, "closed": closed})
 		if not ac.is_dead():
-			ac.velocity += Vector3(dir.x, absf(dir.y) + 0.4, 0) * float(d.impulse) * k
+			ac.throw(Vector3(dir.x, absf(dir.y) + 0.45, 0) * float(d.impulse) * k * 1.4)
 	for o in get_tree().get_nodes_in_group("destructibles"):
 		var ds := o as Destructible
 		var dist := ds.global_position.distance_to(pos)
 		if dist < radius and ds != null:
 			ds.apply_damage(dmg * (1.0 - dist / radius), ds.global_position, (ds.global_position - pos).normalized(), "blast", by)
+	# esquirlas: proyectiles físicos en todas direcciones del plano (entran al cuerpo y quedan alojadas)
+	var nfrag := int(d.get("fragments", 0))
+	if nfrag > 0 and Ballistics.instance:
+		for i in nfrag:
+			var a := TAU * float(i) / nfrag + randf_range(-0.15, 0.15)
+			var fd := Vector3(cos(a), sin(a), 0.0)
+			Ballistics.instance.fire(pos + Vector3.UP * 0.15 + fd * 0.1, fd, randf_range(160.0, 260.0), randf_range(14.0, 24.0), by, [],
+				{"penetration": 1.0, "drag": 1.2, "ricochet": 0.3, "kind": "fragment"})
 	if d.has("fire"):
 		var f := FireZone.new()
 		f.seconds = float(d.fire)

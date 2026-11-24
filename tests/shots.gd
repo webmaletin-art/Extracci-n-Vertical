@@ -21,7 +21,7 @@ func _ready() -> void:
 	p.health = 100000.0
 	g.controller.set_physics_process(false)
 	_freeze_bots(true)
-	var list := ["inicio", "apunta_atras", "escalera", "colgado", "rayos_x", "explosion", "patada", "caja", "ascensor", "caida", "menu_config"]
+	var list := ["inicio", "apunta_atras", "escalera", "colgado", "rayos_x", "destello", "explosion", "patada", "caja", "ascensor", "caida", "menu_config"]
 	for s in list:
 		if which == "all" or which == s:
 			await call("_s_" + s)
@@ -103,7 +103,8 @@ func _s_colgado() -> void:
 	print("  después de trepar: ", Actor.State.keys()[p.state], " pos=", p.global_position)
 
 func _s_rayos_x() -> void:
-	Settings.bullet_time = 2
+	# tiro a la cabeza: la cámara sigue la bala y en la muerte se acerca a la herida (sólo las partes dañadas)
+	Settings.bullet_time = 1
 	Settings.xray = 2
 	var e: Actor = g.tower.enemies[0]
 	await _place(Vector3(50.0, 0.05, 0), Vector2(1, 0.0))
@@ -112,27 +113,60 @@ func _s_rayos_x() -> void:
 	e.facing = -1
 	e.aim_dir = Vector2(-1, 0)
 	await _wait_phys(10)
-	var target := e.global_position + Vector3(0, 1.35, 0)
-	var chest := p.global_position + Vector3(0, 1.4, 0)
-	p.aim_dir = Vector2(target.x - chest.x, target.y - chest.y).normalized()
+	var hb := e.skel.find_bone("mixamorig_Head")
+	var target := e.skel.global_transform * e.skel.get_bone_global_pose(hb).origin + Vector3(0, 0.07, 0)
+	var w := p.weapon()
+	var mz := w.muzzle_world()
+	p.aim_dir = Vector2(target.x - mz.x, target.y - mz.y).normalized()
 	await _wait_phys(20)
+	mz = w.muzzle_world()
+	p.aim_dir = Vector2(target.x - mz.x, target.y - mz.y).normalized()
+	await _wait_phys(2)
 	p.inp.fire = true
 	await _wait_phys(2)
 	p.inp.fire = false
 	var t := 0
-	while g.bullet_time.phase == "" and t < 30:
+	while g.bullet_time.phase != "bullet" and g.bullet_time.phase != "kill" and t < 60:
 		await get_tree().process_frame
 		t += 1
 	await _shot("bala_seguida")
 	t = 0
-	while g.bullet_time.phase != "impact" and t < 300:
+	while g.bullet_time.phase != "kill" and t < 400:
 		await get_tree().process_frame
 		t += 1
-	await _wait(2)
-	await _shot("rayos_x")
-	print("  fase: ", g.bullet_time.phase, " vida enemigo: ", e.health)
+	# con renderizado por software van pocos cuadros por segundo: se congela la toma cerca del final del acercamiento
+	var bt := g.bullet_time
+	bt._t0 = TimeFx.now() - BulletTime.KILL_SECONDS * 0.55
+	bt._until = TimeFx.now() + 120.0
+	await _wait(8)
+	await _shot("muerte_cabeza_1")
+	bt._t0 = TimeFx.now() - BulletTime.KILL_SECONDS * 0.98
+	await _wait(10)
+	await _shot("muerte_cabeza_2")
+	print("  fase: ", g.bullet_time.phase, " muerto: ", e.is_dead(), " lesiones: ", e.injuries.log)
 	g.bullet_time.skip()
-	await _wait(20)
+	await _wait(10)
+
+func _s_destello() -> void:
+	# herida no mortal: destello rápido de lo dañado en pleno juego (sin cámara lenta)
+	var e: Actor = g.tower.enemies[1]
+	e.max_health = 500.0
+	e.health = 500.0
+	await _place(Vector3(50.0, 0.05, 0), Vector2(1, 0.0))
+	e.global_position = Vector3(55.5, 0.05, 0)
+	e.facing = -1
+	await _wait_phys(10)
+	var sb := e.skel.find_bone("mixamorig_Spine2")
+	var target := e.skel.global_transform * e.skel.get_bone_global_pose(sb).origin
+	var mz := p.weapon().muzzle_world()
+	p.aim_dir = Vector2(target.x - mz.x, target.y - mz.y).normalized()
+	await _wait_phys(15)
+	p.inp.fire = true
+	await _wait_phys(2)
+	p.inp.fire = false
+	await _wait_phys(8)
+	await _shot("destello_herida")
+	print("  lesiones: ", e.injuries.log, " hemorragia ", e.injuries.bleeding)
 
 func _s_explosion() -> void:
 	await _place(Vector3(37.5, 0.05, 0), Vector2(1, 0))

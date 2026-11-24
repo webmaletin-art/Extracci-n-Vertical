@@ -1,5 +1,16 @@
 # Registro de cambios
 
+## 0.2.0 — anatomía completa y daño interno
+
+* Anatomía completa de Z-Anatomy (huesos, músculos, órganos, arterias y venas, encéfalo, médula, nervios) ajustada DENTRO
+  de cada personaje con sus mismos pesos de piel (se deforma con cualquier animación).
+* Daño interno real: trayectorias por dentro del cuerpo, fracturas, perforaciones, astillas de hueso hacia órganos,
+  esquirlas alojadas, onda expansiva (pulmones, tímpanos), lanzado contra paredes, caídas por altura, efecto y
+  hemorragia por órgano (`data/anatomy_damage.json`); puñetazos sólo quitan vida.
+* Cámara lenta con acercamiento sólo en las muertes; destello rápido de las heridas graves en el juego.
+* Escalera: el personaje queda de espaldas a la cámara.
+* Zonas de impacto de manos y pies; balas que atraviesan cabeza y miembros.
+
 ## 0.1.0 — primer entregable (vertical slice)
 
 * Proyecto nuevo en Godot 4.7.2 (GL Compatibility, Jolt).

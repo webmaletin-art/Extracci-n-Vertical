@@ -1,5 +1,5 @@
 # Anatomía
 
-**BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International**
-(https://dbarchive.biosciencedbc.jp/en/bodyparts3d/download.html). Reducido y agrupado por
-`tools/anatomy/build_anatomy.py` (piezas originales: 1258; en el juego: 71 grupos, ~63 000 triángulos).
+Basada en **Z-Anatomy** (https://www.z-anatomy.com), licencia **Creative Commons Atribución-CompartirIgual 4.0
+(CC BY-SA 4.0)**. Las mallas de `fit/` son una obra derivada (reducidas, agrupadas y ajustadas a cada personaje por
+`tools/anatomy/`) y se distribuyen bajo la misma licencia CC BY-SA 4.0.

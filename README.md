@@ -26,8 +26,9 @@ Motor **Godot 4.7.2** · renderer **GL Compatibility** (teléfonos de gama baja)
 | Cajas rompibles, barriles, vidrio, chapas | ✅ intacto → dañado → roto, fragmentos, botín | `Destructible` |
 | Contenedor que se abre con cuchillo | ✅ arrodillado, barra de progreso, sonidos de metal/madera/cerradura; forzar sin cuchillo hace ruido | `LootContainer` |
 | Explosión con daño y fragmentos | ✅ destello, bola de fuego, onda, humo, escombros, daño radial con oclusión, vibración | `Explosion` |
-| Rayos X / bullet time | ✅ la cámara sigue la bala y en el impacto muestra huesos, órganos y vasos; fracturas y perforaciones; sangre siempre | `BulletTime`, `XRayAnatomy` |
-| Lesiones con efecto | ✅ pierna rota = renguea y trepa lento; brazo/cabeza = puntería tiembla; hemorragia; venda/botiquín | `Injuries` |
+| Anatomía completa y daño interno | ✅ Z-Anatomy dentro de cada personaje (mismos pesos de piel); balas que recorren el cuerpo, fracturas, perforaciones, astillas de hueso, esquirlas, onda expansiva, caídas; hemorragia por órgano | `AnatomyBody`, `Injuries`, `docs/ANATOMIA.md` |
+| Cámara de muerte | ✅ sólo en muertes: cámara lenta y acercamiento a la herida, sólo las partes dañadas; heridas graves: destello rápido | `BulletTime` |
+| Lesiones con efecto | ✅ pierna rota, parálisis, brazo, mano, conmoción, pulmón, sordera, hemorragia por órgano; venda/botiquín | `Injuries` |
 | Sonidos | ✅ disparos y recargas de Nexus (Black Veil) + 29 efectos nuevos de ElevenLabs | `docs/audio/` |
 | IA con oído y vista | ✅ patrulla, alerta por ruido, combate, búsqueda | `BotBrain`, `NoiseBus` |
 | Configuración gráfica baja/media/alta | ✅ escala de render, sombras, luces, partículas, humo, explosiones, decorado, fondo, FPS, rayos X | `Settings`, `SettingsMenu` |
@@ -36,8 +37,8 @@ Motor **Godot 4.7.2** · renderer **GL Compatibility** (teléfonos de gama baja)
 
 ## Jugar / probar
 
-* **Pruebas:** `tools/run_tests.sh` (12 pruebas: mapa, velocidad, ajustes, inventario, apuntado, escalera, ascensor,
-  balística, destrucción, granada, lesiones, captador).
+* **Pruebas:** `tools/run_tests.sh` (13 pruebas: mapa, velocidad, ajustes, inventario, apuntado, escalera, ascensor,
+  balística, destrucción, granada, lesiones, anatomía, captador).
 * **APK:** GitHub → Actions → **Pruebas y APK** → Run workflow → el APK queda en *Artifacts* (firma de prueba descartable).
 * **Capturas de revisión:** `xvfb-run -a godot --path . --rendering-driver opengl3 tests/shots.tscn -- <carpeta> [escenario]`.
 * **Captador sin interfaz:** `godot --path . scenes/main.tscn -- --probe` (imprime el informe).
@@ -87,6 +88,6 @@ docs/                  ARQUITECTURA, RECURSOS, MAPA_TORRE_ALFA, ANATOMIA, RENDIM
 
 * Animaciones: **Mixamo** (Adobe), del respaldo `mixamo-respaldo`.
 * Personajes, armas, munición, íconos y parte de los sonidos: **Operación Nexus / BLACK VEIL** (mismo autor).
-* Anatomía: **BodyParts3D**, © The Database Center for Life Science, licencia **CC BY 4.0** (`assets/anatomy/CREDITOS.md`).
+* Anatomía: **Z-Anatomy**, licencia **CC BY-SA 4.0** (las mallas derivadas en `assets/anatomy/fit` también son CC BY-SA 4.0).
 * Modelos de decorado: bibliotecas libres de **Sweet Home 3D** (Free Art License / CC0 / CC BY, `assets/props/CREDITOS_SH3D.txt`).
 * Efectos de sonido nuevos: generados con **ElevenLabs** (`docs/audio/elevenlabs_ledger.jsonl`).

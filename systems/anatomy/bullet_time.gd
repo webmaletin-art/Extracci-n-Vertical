@@ -1,42 +1,44 @@
 class_name BulletTime
 extends Node
-## Director de la cámara lenta con rayos X («bullet time»):
-##  * DISPARO: cuando el jugador dispara, se predice la trayectoria (Ballistics.predict). Si la bala va a dar en un
-##    enemigo y el tiro es decisivo (o la opción dice «siempre»), el tiempo baja a 3 %, la cámara sigue a la bala 3D
-##    (munición de Nexus) y en el impacto pasa a primer plano del blanco con rayos X: huesos, órganos y vasos, y lo dañado
-##    en rojo (fracturas con polvo de hueso). Al final el tiempo vuelve a 1×.
-##  * GOLPES Y CAÍDAS: patadas, puñetazos y cuchilladas fuertes y las caídas con daño muestran un instante de rayos X
-##    sobre la zona golpeada (sin seguir proyectil).
-## Las lesiones se calculan siempre (XRayAnatomy.injuries_at) y quedan en el HUD; los rayos X se pueden apagar.
-## Tocar la pantalla salta la toma (skip()).
+## Qué se muestra de las heridas:
+##  * MUERTES (del enemigo por el jugador, o del jugador): cámara lenta + cámara que se acerca a la herida que mató
+##    (tiro en la cabeza, explosión, caída, cuchillo). Se ven SÓLO las partes dañadas (todas las heridas acumuladas:
+##    huesos quebrados, músculos, órganos y vasos perforados, esquirlas), el cuerpo como rayos X alrededor.
+##    Si el disparo va a matar (se predice la trayectoria), antes la cámara sigue a la bala.
+##  * RESTO DE HERIDAS GRAVES (fracturas, órganos, vasos): en pleno juego, un destello rápido de las partes dañadas a
+##    través del cuerpo. Sin cámara lenta. Los puñetazos no muestran nada (sólo quitan vida).
+## Tocar la pantalla salta la toma.
 
 signal injury_report(victim: Actor, lines: Array)
 
+const KILL_SECONDS := 2.6
+
 var camera: SideCamera
 var player: Actor
-var phase := ""              ## "" | "bullet" | "impact" | "moment"
+var phase := ""              ## "" | "bullet" | "kill"
 var _proj := -1
 var _victim: Actor
-var _xray: XRayAnatomy
 var _until := 0.0
-var _cool_until := 0.0
+var _t0 := 0.0
+var _focus := Vector3.ZERO
+var _side := 1.0
 var _connected := false
 
 func setup(cam: SideCamera, p: Actor) -> void:
 	camera = cam
 	player = p
 	player.shot_fired.connect(_on_shot)
-	player.damaged.connect(func(info): _on_any_damage(player, info))
+	player.damaged.connect(func(info): _on_damage(player, info))
 	for a in get_tree().get_nodes_in_group("enemies"):
-		(a as Actor).damaged.connect(func(info): _on_any_damage(a, info))
+		var ac := a as Actor
+		ac.damaged.connect(func(info): _on_damage(ac, info))
 
 func _now() -> float:
 	return TimeFx.now()
 
+## Disparo del jugador: si la bala va a matar, la cámara la sigue en cámara lenta.
 func _on_shot(idx: int, w: Firearm) -> void:
 	if Settings.bullet_time == 0 or phase != "" or idx < 0 or Ballistics.instance == null:
-		return
-	if _now() < _cool_until:
 		return
 	var b := Ballistics.instance
 	var pred := b.predict(b.position_of(idx), b.velocity_of(idx), float(w.stats.drag), player.hitbox_rids(), 1.2)
@@ -49,102 +51,93 @@ func _on_shot(idx: int, w: Firearm) -> void:
 	if victim == null or victim == player or victim.is_dead():
 		return
 	var zone := str((col as Area3D).get_meta("zone", "torso"))
-	var dmg := float(w.stats.damage) * float(Actor.ZONE_MULT.get(zone, 1.0)) * float(w.stats.pellets)
-	var decisive := dmg >= victim.health or zone == "head"
-	if Settings.bullet_time == 1 and not decisive:
+	var est := float(w.stats.damage) * float(Actor.ZONE_MULT.get(zone, 1.0)) * float(w.stats.pellets) * 0.5 + 12.0
+	if not (est >= victim.health or zone == "head"):
 		return
-	# la toma sólo vale la pena si la bala viaja un poco (no a quemarropa)
 	if (pred.point as Vector3).distance_to(b.position_of(idx)) < 2.5:
 		return
-	_start_bullet(idx, victim)
-
-func _start_bullet(idx: int, victim: Actor) -> void:
 	phase = "bullet"
 	_proj = idx
 	_victim = victim
-	Ballistics.instance.tracked = idx
+	b.tracked = idx
 	TimeFx.slowmo(0.03, 6.0, "bullet_time", 0.05)
 	_until = _now() + 4.0
 	if not _connected:
-		Ballistics.instance.projectile_hit.connect(_on_proj_hit)
+		b.projectile_hit.connect(_on_proj_hit)
 		_connected = true
 	get_tree().call_group("hud", "set_cinematic", true)
 	Sfx.play_ui("bullet_whoosh", -4.0)
 
-func _on_proj_hit(idx: int, info: Dictionary) -> void:
-	if phase != "bullet" or idx != _proj:
-		return
-	var v: Actor = null
-	if info.has("zone") and is_instance_valid(_victim):
-		v = _victim
-	if v == null:
-		_end()
-		return
-	_impact(v, info, 1.8)
+func _on_proj_hit(idx: int, _info: Dictionary) -> void:
+	if phase == "bullet" and idx == _proj:
+		_until = _now() + 0.12        # el daño se aplica justo después: se decide en el próximo cuadro
 
-func _on_any_damage(a: Actor, info: Dictionary) -> void:
+func _on_damage(a: Actor, info: Dictionary) -> void:
+	var lines: Array = info.get("injuries", [])
+	if not lines.is_empty():
+		injury_report.emit(a, lines)
+	var involved: bool = a == player or info.get("shooter") == player
+	if not involved:
+		return
 	var t := str(info.get("type", ""))
-	# reporte de lesiones siempre (HUD); los rayos X de la bala los maneja _on_proj_hit
-	var inj: Array = info.get("injuries", [])
-	if not inj.is_empty():
-		injury_report.emit(a, inj.map(func(i): return i.text))
-	if phase != "" or Settings.bullet_time == 0:
+	if bool(info.get("lethal", false)):
+		if Settings.bullet_time > 0 and phase != "bullet":
+			_killcam(a, info)
 		return
-	if _now() < _cool_until:
+	var nodes: Array = info.get("anatomy_nodes", [])
+	if nodes.is_empty() or t == "punch":
 		return
-	var strong := false
-	match t:
-		"kick", "punch":
-			strong = float(info.get("final_damage", 0.0)) >= 18.0 or bool(info.get("lethal", false))
-		"knife":
-			strong = bool(info.get("lethal", false)) or randf() < 0.35
-		"fall":
-			strong = float(info.get("final_damage", 0.0)) >= 20.0
-		"bullet":
-			strong = false
-	if strong and (a == player or info.get("shooter") == player):
-		_moment(a, info, inj)
+	AnatomyBody.for_actor(a).show_flash(nodes, 0.9)
 
-func _moment(a: Actor, info: Dictionary, inj: Array) -> void:
-	phase = "moment"
+func _killcam(a: Actor, info: Dictionary) -> void:
+	if phase == "kill":
+		return
+	phase = "kill"
 	_victim = a
-	TimeFx.slowmo(0.12, 1.3, "xray", 0.03)
-	_until = _now() + 1.1
-	_show(a, info, inj)
-	var p: Vector3 = info.get("point", a.global_position + Vector3.UP)
-	camera.override_target(p + Vector3(0, 0.25, 2.6), p, 32.0)
+	if Ballistics.instance:
+		Ballistics.instance.tracked = -1
+		Ballistics.instance.bullet_model.visible = false
+	var t := str(info.get("type", ""))
+	_focus = info.get("point", a.global_position + Vector3.UP * 1.2)
+	var anat := AnatomyBody.for_actor(a)
+	var main := str(info.get("anatomy_main", ""))
+	if main != "" and anat.groups.has(main):
+		_focus = anat.bind_to_world(main, anat.groups[main].center)
+	if t == "fall":
+		_focus = a.global_position + Vector3.UP * 0.4
+	elif t in ["blast", "impact"]:
+		_focus = a.global_position + Vector3.UP * 1.1
+	var d: Vector3 = info.get("dir", Vector3.RIGHT)
+	_side = -signf(d.x) if absf(d.x) > 0.1 else 1.0
+	anat.show_killcam()
+	TimeFx.slowmo(0.06, KILL_SECONDS + 0.4, "kill", 0.02)
+	_t0 = _now()
+	_until = _t0 + KILL_SECONDS
 	get_tree().call_group("hud", "set_cinematic", true)
-
-func _impact(v: Actor, info: Dictionary, seconds: float) -> void:
-	phase = "impact"
-	TimeFx.slowmo(0.06, seconds + 0.3, "bullet_time", 0.0)
-	_until = _now() + seconds
-	var inj: Array = info.get("injuries", [])
-	if inj.is_empty():
-		inj = XRayAnatomy.for_actor(v).injuries_at(info)
-	_show(v, info, inj)
-	var p: Vector3 = info.get("point", v.global_position + Vector3.UP)
-	var side := -signf((info.get("dir", Vector3.RIGHT) as Vector3).x)
-	camera.override_target(p + Vector3(side * 0.9, 0.3, 2.2), p, 30.0)
 	Sfx.play_ui("heartbeat", -2.0)
-
-func _show(a: Actor, _info: Dictionary, inj: Array) -> void:
-	_xray = XRayAnatomy.for_actor(a)
-	_xray.show_xray(inj, _info)
 
 func _process(_d: float) -> void:
 	if phase == "":
 		return
 	if phase == "bullet":
 		var b := Ballistics.instance
-		if b == null or not b.is_alive(_proj):
-			# la bala ya pegó (o se perdió) sin aviso: terminar
-			if _now() > _until - 3.6:
-				_end()
-			return
-		var p := b.position_of(_proj)
-		var v := b.velocity_of(_proj).normalized()
-		camera.override_target(p - v * 1.1 + Vector3(0, 0.25, 0.9), p + v * 2.0, 34.0)
+		if b and b.is_alive(_proj):
+			var p := b.position_of(_proj)
+			var v := b.velocity_of(_proj).normalized()
+			camera.override_target(p - v * 1.1 + Vector3(0, 0.25, 0.9), p + v * 2.0, 34.0)
+		if _now() > _until:
+			var v2 := _victim
+			_end()
+			if is_instance_valid(v2) and v2.is_dead():
+				_killcam(v2, v2.last_hit_info)
+		return
+	# toma de muerte: la cámara se acerca a la herida y gira un poco
+	var k := clampf((_now() - _t0) / KILL_SECONDS, 0.0, 1.0)
+	var e := 1.0 - pow(1.0 - k, 3.0)
+	var dist := lerpf(1.9, 0.55, e)
+	var ang := lerpf(-0.45, 0.25, e) * _side
+	var off := Vector3(sin(ang) * _side, 0.12, cos(ang)).normalized() * dist
+	camera.override_target(_focus + off, _focus, lerpf(34.0, 26.0, e))
 	if _now() > _until:
 		_end()
 
@@ -153,15 +146,14 @@ func skip() -> void:
 		_end()
 
 func _end() -> void:
-	if _xray:
-		_xray.hide_xray()
-		_xray = null
+	if is_instance_valid(_victim):
+		AnatomyBody.for_actor(_victim).hide_all()
 	phase = ""
 	_proj = -1
 	if Ballistics.instance:
 		Ballistics.instance.tracked = -1
 		Ballistics.instance.bullet_model.visible = false
 	TimeFx.end_slowmo()
-	camera.release_override()
-	_cool_until = _now() + (8.0 if Settings.bullet_time == 1 else 2.5)
+	if camera:
+		camera.release_override()
 	get_tree().call_group("hud", "set_cinematic", false)

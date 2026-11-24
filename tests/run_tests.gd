@@ -107,7 +107,7 @@ func _game_tests(filt: String) -> void:
 	var p := g.player
 	p.max_health = 1000.0
 	p.health = 1000.0
-	for t in ["apuntado", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "captador"]:
+	for t in ["apuntado", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "anatomia", "captador"]:
 		if filt != "" and not t.contains(filt):
 			continue
 		p.inp = ActorInput.new()
@@ -117,6 +117,13 @@ func _game_tests(filt: String) -> void:
 		p._action_anim = ""
 		p._task = Callable()
 		p.stunned = 0.0
+		g.bullet_time.skip()
+		TimeFx.end_slowmo()
+		Engine.time_scale = 1.0
+		await _wait_phys(2)
+		p._thrown = false
+		p._bad_fall = false
+		p.health = 1000.0
 		p.injuries = Injuries.new()
 		var err: String = await call("g_" + t, p)
 		_report(t, err)
@@ -234,6 +241,7 @@ func g_granada(p: Actor) -> String:
 	return ""
 
 func g_lesiones(p: Actor) -> String:
+	seed(11)
 	p.injuries = Injuries.new()
 	await _place(p, Vector3(39.6, 13.55, 0))
 	p.inp.move = Vector2(0.5, 0)
@@ -245,7 +253,7 @@ func g_lesiones(p: Actor) -> String:
 		t += 1
 	await _wait_phys(120)
 	if not p.injuries.leg_broken:
-		return "la caída de %.1f m no fracturó la pierna" % (13.55 - p.global_position.y)
+		return "la caída de %.1f m no fracturó la pierna (estado %s, pos %s, vida %.0f, lesiones %s)" % [13.55 - p.global_position.y, Actor.State.keys()[p.state], p.global_position, p.health, p.injuries.log]
 	p.state = Actor.State.GROUND
 	p.inp.move = Vector2(1.0, 0)
 	await _wait_phys(40)
@@ -262,6 +270,33 @@ func g_lesiones(p: Actor) -> String:
 	await _wait_phys(200)
 	if p.injuries.leg_broken:
 		return "la venda no entablilló la pierna"
+	return ""
+
+## Anatomía ajustada: existe para todos los personajes; un tiro a la cabeza rompe el cráneo y mata; uno al pecho
+## perfora órganos y deja hemorragia; un puñetazo sólo quita vida.
+func g_anatomia(p: Actor) -> String:
+	for c in CharacterModel.all():
+		if not ResourceLoader.exists("res://assets/anatomy/fit/%s.scn" % c.id):
+			return "falta la anatomía ajustada de %s" % c.id
+	var e: Actor = g.tower.enemies[2]
+	await _place(p, Vector3(50, 0.05, 0))
+	e.global_position = Vector3(52, 0.05, 0)
+	await _wait_phys(6)
+	var hb := e.skel.find_bone("mixamorig_Head")
+	var head := e.skel.global_transform * e.skel.get_bone_global_pose(hb).origin + Vector3(0, 0.07, 0)
+	var r := e.injuries.process(e, {"type": "bullet", "zone": "head", "bone": "mixamorig_Head", "point": head - Vector3(0.12, 0, 0), "dir": Vector3.RIGHT})
+	if not r.death or not str(r.texts).contains("cráneo"):
+		return "tiro a la cabeza: %s" % str(r.texts)
+	var sb := e.skel.find_bone("mixamorig_Spine2")
+	var chest := e.skel.global_transform * e.skel.get_bone_global_pose(sb).origin
+	e.injuries = Injuries.new()
+	var r2 := e.injuries.process(e, {"type": "bullet", "zone": "torso", "bone": "mixamorig_Spine2", "point": chest - Vector3(0.2, 0, 0), "dir": Vector3.RIGHT, "penetration": 6.0})
+	if r2.nodes.is_empty() or e.injuries.bleeding <= 0.0:
+		return "tiro al pecho sin órganos ni hemorragia: %s" % str(r2.texts)
+	e.injuries = Injuries.new()
+	var r3 := e.injuries.process(e, {"type": "punch", "zone": "torso", "point": chest, "dir": Vector3.RIGHT})
+	if not r3.nodes.is_empty():
+		return "un puñetazo rompió algo"
 	return ""
 
 func g_captador(_p: Actor) -> String:

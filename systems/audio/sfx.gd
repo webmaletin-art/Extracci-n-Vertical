@@ -18,6 +18,7 @@ var _amb := {}                ## nombre → AudioStreamPlayer (ambiente)
 var _reverb: AudioEffectReverb
 var _room_target := 0.4
 var _wet_target := 0.12
+var room_closed := true
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -64,7 +65,18 @@ func _process(delta: float) -> void:
 		_reverb.wet = lerpf(_reverb.wet, _wet_target, delta * 2.0)
 
 ## Lugar donde está el oyente: size 0..1 (cuarto chico → cráter enorme), closed = paredes duras alrededor.
+var _lowpass: AudioEffectLowPassFilter
+## Tímpanos rotos (explosión cerca): todo suena apagado unos segundos.
+func set_deaf(seconds: float) -> void:
+	var master := AudioServer.get_bus_index("Master")
+	if _lowpass == null:
+		_lowpass = AudioEffectLowPassFilter.new()
+		_lowpass.cutoff_hz = 20000.0
+		AudioServer.add_bus_effect(master, _lowpass)
+	_lowpass.cutoff_hz = lerpf(20000.0, 450.0, clampf(seconds / 3.0, 0.0, 1.0))
+
 func set_room(size: float, closed: bool) -> void:
+	room_closed = closed
 	_room_target = clampf(size, 0.05, 1.0)
 	_wet_target = 0.22 if closed else 0.08
 

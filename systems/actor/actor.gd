@@ -38,7 +38,7 @@ const VAULT_MAX := 1.3
 const SAFE_FALL := 3.6              ## metros sin daño
 const DEADLY_FALL := 11.0
 ## Multiplicador de daño por zona y por qué zona es «crítica» (activa la cámara de rayos X)
-const ZONE_MULT := {"head": 3.5, "neck": 2.5, "torso": 1.0, "pelvis": 0.9, "arm": 0.55, "leg": 0.6}
+const ZONE_MULT := {"head": 3.5, "neck": 2.5, "torso": 1.0, "pelvis": 0.9, "arm": 0.55, "leg": 0.6, "hand": 0.4, "foot": 0.4}
 ## Velocidad propia de cada clip de locomoción (m/s): la reproducción se escala para que los pies no patinen.
 const CLIP_SPEED := {"walk_f": 1.4, "walk_b": 1.3, "run_f": 3.3, "run_b": 2.6, "sprint_f": 5.4, "sprint_b": 4.0,
 	"cwalk_f": 1.3, "cwalk_b": 1.2, "injured_walk_f": 1.0, "injured_walk_b": 0.9, "pistol_walk_f": 1.4, "pistol_walk_b": 1.3, "pistol_run_f": 3.4, "pistol_run_b": 2.7}
@@ -53,6 +53,8 @@ var injuries := Injuries.new()
 var laser: MeshInstance3D           ## láser desde la boca del cañón hasta donde pega
 var laser_dot: MeshInstance3D
 var _bleed_t := 0.0
+var _thrown := false                ## lanzado por una explosión (choque contra pared / piso = lesión terciaria)
+var _bad_fall := false              ## la próxima caída no es de pie (lanzado, derribado, soltado de un borde)
 var state := State.GROUND
 var health := 100.0
 var facing := 1.0                   ## +1 mira a +X, -1 a -X
@@ -215,7 +217,8 @@ func _build_hitboxes() -> void:
 		["Spine", "torso", 0.16, 0.0], ["Hips", "pelvis", 0.16, 0.0],
 		["LeftArm", "arm", 0.06, 1.0], ["LeftForeArm", "arm", 0.05, 1.0], ["RightArm", "arm", 0.06, 1.0],
 		["RightForeArm", "arm", 0.05, 1.0], ["LeftUpLeg", "leg", 0.085, 1.0], ["LeftLeg", "leg", 0.065, 1.0],
-		["RightUpLeg", "leg", 0.085, 1.0], ["RightLeg", "leg", 0.065, 1.0]]
+		["RightUpLeg", "leg", 0.085, 1.0], ["RightLeg", "leg", 0.065, 1.0],
+		["LeftHand", "hand", 0.05, 1.0], ["RightHand", "hand", 0.05, 1.0], ["LeftFoot", "foot", 0.055, 1.0], ["RightFoot", "foot", 0.055, 1.0]]
 	for d in defs:
 		var b := skel.find_bone(P + str(d[0]))
 		if b < 0:
@@ -332,6 +335,10 @@ func cycle_weapon() -> void:
 
 func _physics_process(delta: float) -> void:
 	_time += delta
+	if injuries.deaf > 0.0:
+		injuries.deaf = maxf(injuries.deaf - delta, 0.0)
+		if is_player:
+			Sfx.set_deaf(injuries.deaf)
 	if injuries.bleeding > 0.0 and state != State.DEAD:
 		health -= injuries.bleeding * delta
 		_bleed_t -= delta
@@ -386,7 +393,7 @@ func _update_aim() -> void:
 ## Dirección de disparo (apuntado + retroceso), 3D en el plano del juego.
 func fire_dir() -> Vector3:
 	var sway := 0.0
-	if injuries.arm > 0.0 or injuries.head > 0.0:
+	if injuries.arm > 0.0 or injuries.head > 0.0 or injuries.hand > 0.0:
 		# brazo herido / conmoción: el arma tiembla y la puntería oscila
 		sway = (sin(_time * 2.1) * 0.6 + sin(_time * 5.3) * 0.4) * deg_to_rad(2.5) * (injuries.aim_penalty() - 1.0)
 	var a := Vector2(aim_dir.x, aim_dir.y).rotated(recoil_angle * facing + sway)
@@ -422,8 +429,12 @@ func _move_free(delta: float) -> void:
 		target = signf(target) * BACK_MAX
 	if stunned > 0.0:
 		target *= 0.4
-	if injuries.leg_broken:
+	if injuries.paralysis:
+		target = clampf(target, -0.35, 0.35)   # médula dañada: casi no puede moverse
+	elif injuries.leg_broken:
 		target = clampf(target, -1.1, 1.1)     # pierna fracturada: renguea (no corre) hasta usar venda o botiquín
+	elif injuries.breath:
+		target = clampf(target, -2.4, 2.4)     # pulmón perforado: no le da el aire para correr
 	speed_target = target
 	var vx := velocity.x
 	if on_floor:
@@ -457,7 +468,13 @@ func _move_free(delta: float) -> void:
 		if _try_grab():
 			return
 	var was_air := state == State.AIR
+	var pre_speed := velocity.length()
 	move_and_slide()
+	if _thrown and (is_on_wall() or is_on_floor()) and pre_speed > 6.0:
+		_thrown = false
+		_bad_fall = true
+		take_damage({"damage": (pre_speed - 5.0) * 4.0, "type": "impact", "speed": pre_speed, "zone": "torso",
+			"bone": P + "Spine1", "point": global_position + Vector3.UP * 1.1, "dir": -velocity.normalized()})
 	if was_air and is_on_floor():
 		_on_land()
 	elif state == State.GROUND and not is_on_floor():
@@ -476,6 +493,9 @@ func _crouch_shape(c: bool) -> void:
 func _on_land() -> void:
 	state = State.GROUND
 	var h := _air_top - global_position.y
+	var bad := _bad_fall or _thrown or absf(velocity.x) > 3.8
+	_bad_fall = false
+	_thrown = false
 	landed.emit(h)
 	if h > SAFE_FALL:
 		var k := clampf((h - SAFE_FALL) / (DEADLY_FALL - SAFE_FALL), 0.0, 1.0)
@@ -484,7 +504,7 @@ func _on_land() -> void:
 		Sfx.play("body_fall", global_position, 0.0, 1.0)
 		TimeFx.shake(0.4 + k)
 		var info := {"damage": dmg, "type": "fall", "zone": "leg", "bone": P + ("LeftLeg" if randf() < 0.5 else "RightLeg"),
-			"point": global_position + Vector3.UP * 0.4, "dir": Vector3.DOWN, "fall_height": h}
+			"point": global_position + Vector3.UP * 0.4, "dir": Vector3.DOWN, "fall_height": h, "bad_landing": bad}
 		take_damage(info)
 		if state != State.DEAD:
 			_action("hard_landing", 1.4)
@@ -885,25 +905,37 @@ func take_damage(info: Dictionary) -> void:
 	if state == State.DEAD:
 		return
 	var zone := str(info.get("zone", "torso"))
+	var t := str(info.get("type", ""))
 	var amount := float(info.get("damage", 10.0))
-	if str(info.get("type", "")) == "bullet":
+	if t in ["bullet", "fragment"]:
 		amount *= float(ZONE_MULT.get(zone, 1.0))
+	elif t == "punch" and zone in ["torso", "pelvis"]:
+		amount *= 0.6                  # al cuerpo duele, pero menos que a la cara
+	# lo que se rompe por dentro (anatomía real) suma su propio daño
+	var res: Dictionary = injuries.process(self, info) if skel else {}
+	info["injuries"] = res.get("texts", [])
+	info["anatomy_nodes"] = res.get("nodes", [])
+	info["anatomy_main"] = res.get("main", "")
+	if t in ["bullet", "fragment", "knife"]:
+		amount = amount * 0.5 + float(res.get("hp", 0.0))
+	else:
+		amount += float(res.get("hp", 0.0))
 	var src = info.get("shooter")
 	if is_player and src is Actor and is_instance_valid(src) and (src as Actor).team != team:
 		amount *= BOT_DAMAGE_TO_PLAYER
+	if bool(res.get("death", false)):
+		amount = maxf(amount, health + 1.0)
 	info["final_damage"] = amount
 	info["victim"] = self
 	health -= amount
 	info["lethal"] = health <= 0.0
 	last_hit_info = info
-	if skel:
-		var inj := XRayAnatomy.for_actor(self).injuries_at(info)
-		info["injuries"] = inj
-		injuries.apply(inj, str(info.get("type", "")))
 	damaged.emit(info)
 	var dir: Vector3 = info.get("dir", Vector3(-facing, 0, 0))
-	if str(info.get("type", "")) in ["bullet", "knife", "punch", "kick", "blast"]:
+	if t in ["bullet", "fragment", "knife", "blast", "impact"] or (t in ["punch", "kick"] and amount > 12.0):
 		Fx.blood(info.get("point", global_position + Vector3.UP * 1.2), dir, 1.0)
+		if t == "bullet" and zone in ["head", "neck", "arm", "leg", "hand", "foot"]:
+			Fx.blood(info.get("point", global_position + Vector3.UP * 1.2) + dir * 0.2, dir, 1.2)   # orificio de salida
 	if health <= 0.0:
 		_die(info)
 		return
@@ -957,6 +989,19 @@ func _knock_down() -> void:
 	_down_t = 1.6
 	_action("knocked_down", 1.2)
 	Sfx.play("body_fall", global_position, -2.0, 1.0, 10.0, self)
+
+## Explosión: empuje que puede tirar al personaje contra paredes y piso.
+func throw(v: Vector3) -> void:
+	if state == State.LADDER:
+		_exit_ladder()
+	elif state == State.HANG:
+		state = State.AIR
+	velocity += v
+	if v.length() > 4.0:
+		_thrown = true
+		if state == State.GROUND:
+			state = State.AIR
+			_air_top = global_position.y
 
 func stun(seconds: float) -> void:
 	stunned = maxf(stunned, seconds)
@@ -1107,7 +1152,8 @@ func _update_visual(delta: float) -> void:
 	var target_yaw := facing * deg_to_rad(70.0)
 	_model_offset = Vector3.ZERO
 	if state == State.LADDER:
-		target_yaw = PI
+		# Climbing_Ladder de Mixamo viene girado 180° respecto de las demás: con 0 queda de espaldas a la cámara, mirando la pared
+		target_yaw = 0.0
 		_model_offset = Vector3(0, 0, (_ladder.global_position.z + 0.42) if _ladder else -0.5)
 	elif state in [State.HANG, State.CLIMB]:
 		target_yaw = facing * deg_to_rad(90.0)
@@ -1183,7 +1229,7 @@ func _update_laser(w: Firearm, on: bool) -> void:
 		laser_dot.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		laser_dot.top_level = true
 		add_child(laser_dot)
-	var show := on and w != null and Settings.laser and state != State.DEAD and (is_player or Settings.laser_enemies)
+	var show := on and w != null and Settings.laser and state != State.DEAD and (is_player or Settings.laser_enemies) and not TimeFx.active
 	laser.visible = show
 	laser_dot.visible = show
 	if not show:

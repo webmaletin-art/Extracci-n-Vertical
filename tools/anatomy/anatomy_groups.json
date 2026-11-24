@@ -1,0 +1,3097 @@
+{
+ "source": "Z-Anatomy (CC BY-SA 4.0)",
+ "marks": {
+  "Left": {
+   "shoulder": [
+    0.1691,
+    1.4046,
+    -0.0274
+   ],
+   "elbow": [
+    0.206,
+    1.087,
+    -0.0332
+   ],
+   "wrist": [
+    0.2434,
+    0.8556,
+    0.0111
+   ],
+   "tip": [
+    0.1448,
+    0.0092,
+    0.094
+   ],
+   "hip": [
+    0.0833,
+    0.8843,
+    -0.0069
+   ],
+   "knee": [
+    0.0507,
+    0.4299,
+    -0.0309
+   ],
+   "ankle": [
+    0.0541,
+    0.0752,
+    -0.0318
+   ]
+  },
+  "Right": {
+   "shoulder": [
+    -0.1691,
+    1.4046,
+    -0.0274
+   ],
+   "elbow": [
+    -0.206,
+    1.087,
+    -0.0332
+   ],
+   "wrist": [
+    -0.2434,
+    0.8556,
+    0.0111
+   ],
+   "tip": [
+    -0.1448,
+    0.0092,
+    0.094
+   ],
+   "hip": [
+    -0.0833,
+    0.8843,
+    -0.0069
+   ],
+   "knee": [
+    -0.0507,
+    0.4299,
+    -0.0309
+   ],
+   "ankle": [
+    -0.0541,
+    0.0752,
+    -0.0318
+   ]
+  }
+ },
+ "groups": [
+  {
+   "node": "g000",
+   "label": "clavícula der",
+   "system": "hueso",
+   "bone": "mixamorig_RightShoulder",
+   "tris": 360,
+   "center": [
+    -0.0829,
+    1.4076,
+    -0.0008
+   ],
+   "parts": [
+    "Clavicle.r"
+   ]
+  },
+  {
+   "node": "g001",
+   "label": "clavícula izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftShoulder",
+   "tris": 360,
+   "center": [
+    0.0829,
+    1.4076,
+    -0.0008
+   ],
+   "parts": [
+    "Clavicle.l"
+   ]
+  },
+  {
+   "node": "g002",
+   "label": "costillas der inferiores",
+   "system": "hueso",
+   "bone": "mixamorig_Neck",
+   "tris": 1026,
+   "center": [
+    -0.0697,
+    1.2514,
+    0.0091
+   ],
+   "parts": [
+    "First rib.r",
+    "Eleventh rib.r",
+    "Twelfth rib.r",
+    "Ninth rib.r",
+    "Tenth rib.r",
+    "Costal cartilage of seventh rib.r",
+    "Costal cartilage of eighth rib.r",
+    "Costal cartilage of tenth rib.r",
+    "Costal cartilage of ninth rib.r"
+   ]
+  },
+  {
+   "node": "g003",
+   "label": "costillas der superiores",
+   "system": "hueso",
+   "bone": "mixamorig_Spine2",
+   "tris": 1812,
+   "center": [
+    -0.0772,
+    1.2858,
+    0.008
+   ],
+   "parts": [
+    "Fifth rib.r",
+    "Fourth rib.r",
+    "Second rib.r",
+    "Seventh rib.r",
+    "Sixth rib.r",
+    "Third rib.r",
+    "Eighth rib.r",
+    "Costal cartilage of first rib.r",
+    "Costal cartilage of second rib.r",
+    "Costal cartilage of third rib.r",
+    "Costal cartilage of fourth rib.r",
+    "Costal cartilage of fifth rib.r",
+    "Costal cartilage of sixth rib.r"
+   ]
+  },
+  {
+   "node": "g004",
+   "label": "costillas izq inferiores",
+   "system": "hueso",
+   "bone": "mixamorig_Neck",
+   "tris": 1026,
+   "center": [
+    0.0697,
+    1.2514,
+    0.0091
+   ],
+   "parts": [
+    "First rib.l",
+    "Eleventh rib.l",
+    "Twelfth rib.l",
+    "Ninth rib.l",
+    "Tenth rib.l",
+    "Costal cartilage of seventh rib.l",
+    "Costal cartilage of eighth rib.l",
+    "Costal cartilage of tenth rib.l",
+    "Costal cartilage of ninth rib.l"
+   ]
+  },
+  {
+   "node": "g005",
+   "label": "costillas izq superiores",
+   "system": "hueso",
+   "bone": "mixamorig_Spine2",
+   "tris": 1812,
+   "center": [
+    0.0772,
+    1.2856,
+    0.008
+   ],
+   "parts": [
+    "Fifth rib.l",
+    "Fourth rib.l",
+    "Second rib.l",
+    "Seventh rib.l",
+    "Sixth rib.l",
+    "Third rib.l",
+    "Costal cartilage of first rib.l",
+    "Costal cartilage of second rib.l",
+    "Costal cartilage of third rib.l",
+    "Costal cartilage of fourth rib.l",
+    "Costal cartilage of fifth rib.l",
+    "Costal cartilage of sixth rib.l",
+    "Eighth rib.l"
+   ]
+  },
+  {
+   "node": "g006",
+   "label": "cráneo",
+   "system": "hueso",
+   "bone": "mixamorig_Head",
+   "tris": 7961,
+   "center": [
+    -0.0001,
+    1.622,
+    0.0062
+   ],
+   "parts": [
+    "Parietal bone.r",
+    "Parietal bone.l",
+    "Sinus of frontal bone",
+    "Frontal bone",
+    "Occipital bone",
+    "Sinus of sphenoid bone",
+    "Sphenoid bone",
+    "Temporal bone.r",
+    "Ethmoid bone",
+    "Inferior nasal concha bone.r",
+    "Lacrimal bone.r",
+    "Nasal bone.r",
+    "Maxilla.r",
+    "Palatine bone.r",
+    "Zygomatic bone.r",
+    "Malleus.r",
+    "Incus.r",
+    "Stapes.r",
+    "Lateral process of nasal septal cartilage.r",
+    "Nasal septal cartilage",
+    "Temporal bone.l",
+    "Inferior nasal concha bone.l",
+    "Lacrimal bone.l",
+    "Nasal bone.l",
+    "Vomer",
+    "Maxilla.l",
+    "Palatine bone.l",
+    "Zygomatic bone.l",
+    "Malleus.l",
+    "Incus.l",
+    "Stapes.l",
+    "Lateral process of nasal septal cartilage.l",
+    "Posterior cells of ethmoid bone.l",
+    "Middle cells of ethmoid bone.l",
+    "Anterior cells of ethmoid bone.l",
+    "Posterior cells of ethmoid bone.r",
+    "Middle cells of ethmoid bone.r",
+    "Anterior cells of ethmoid bone.r"
+   ]
+  },
+  {
+   "node": "g007",
+   "label": "cúbito der",
+   "system": "hueso",
+   "bone": "mixamorig_RightForeArm",
+   "tris": 274,
+   "center": [
+    -0.2295,
+    0.9837,
+    -0.0185
+   ],
+   "parts": [
+    "Ulna.r"
+   ]
+  },
+  {
+   "node": "g008",
+   "label": "cúbito izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftForeArm",
+   "tris": 274,
+   "center": [
+    0.2295,
+    0.9837,
+    -0.0185
+   ],
+   "parts": [
+    "Ulna.l"
+   ]
+  },
+  {
+   "node": "g009",
+   "label": "dientes",
+   "system": "hueso",
+   "bone": "mixamorig_Neck",
+   "tris": 348,
+   "center": [
+    0.0,
+    1.5356,
+    0.0509
+   ],
+   "parts": [
+    "Upper first molar tooth.r",
+    "Upper second molar tooth.r",
+    "Lower first molar tooth.r",
+    "Lower second molar tooth.r",
+    "Upper first molar tooth.l",
+    "Upper second molar tooth.l",
+    "Lower first molar tooth.l",
+    "Lower second molar tooth.l"
+   ]
+  },
+  {
+   "node": "g010",
+   "label": "escápula der",
+   "system": "hueso",
+   "bone": "mixamorig_RightShoulder",
+   "tris": 1456,
+   "center": [
+    -0.1171,
+    1.336,
+    -0.0559
+   ],
+   "parts": [
+    "Scapula.r"
+   ]
+  },
+  {
+   "node": "g011",
+   "label": "escápula izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftShoulder",
+   "tris": 1456,
+   "center": [
+    0.1172,
+    1.3359,
+    -0.0558
+   ],
+   "parts": [
+    "Scapula.l"
+   ]
+  },
+  {
+   "node": "g012",
+   "label": "esternón",
+   "system": "hueso",
+   "bone": "mixamorig_Spine2",
+   "tris": 338,
+   "center": [
+    -0.0002,
+    1.3124,
+    0.0714
+   ],
+   "parts": [
+    "Manubrium of sternum",
+    "Xiphoid process",
+    "Body of sternum"
+   ]
+  },
+  {
+   "node": "g013",
+   "label": "fémur der",
+   "system": "hueso",
+   "bone": "mixamorig_RightUpLeg",
+   "tris": 564,
+   "center": [
+    -0.0895,
+    0.6573,
+    -0.0198
+   ],
+   "parts": [
+    "Femur.r"
+   ]
+  },
+  {
+   "node": "g014",
+   "label": "fémur izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftUpLeg",
+   "tris": 564,
+   "center": [
+    0.0895,
+    0.6573,
+    -0.0198
+   ],
+   "parts": [
+    "Femur.l"
+   ]
+  },
+  {
+   "node": "g015",
+   "label": "huesos de cabeza",
+   "system": "hueso",
+   "bone": "mixamorig_Head",
+   "tris": 84,
+   "center": [
+    0.0,
+    1.5554,
+    0.1004
+   ],
+   "parts": [
+    "Major alar cartilage.r",
+    "Major alar cartilage.l"
+   ]
+  },
+  {
+   "node": "g016",
+   "label": "huesos de cuello",
+   "system": "hueso",
+   "bone": "mixamorig_Neck",
+   "tris": 2202,
+   "center": [
+    0.0,
+    1.5073,
+    0.0468
+   ],
+   "parts": [
+    "Upper medial incisor.r",
+    "Upper lateral incisor.r",
+    "Upper canine.r",
+    "Lower medial incisor.r",
+    "Lower lateral incisor.r",
+    "Lower canine.r",
+    "Upper first premolar.r",
+    "Upper second premolar.r",
+    "Lower first premolar.r",
+    "Lower second premolar.r",
+    "Thyroid cartilage",
+    "Cricoid cartilage",
+    "Arytenoid cartilage.r",
+    "Corniculate cartilage.r",
+    "Upper medial incisor.l",
+    "Upper lateral incisor.l",
+    "Upper canine.l",
+    "Lower medial incisor.l",
+    "Lower lateral incisor.l",
+    "Lower canine.l",
+    "Upper first premolar.l",
+    "Upper second premolar.l",
+    "Lower first premolar.l",
+    "Lower second premolar.l",
+    "Arytenoid cartilage.l",
+    "Corniculate cartilage.l"
+   ]
+  },
+  {
+   "node": "g017",
+   "label": "huesos de la mano der",
+   "system": "hueso",
+   "bone": "mixamorig_RightHand",
+   "tris": 704,
+   "center": [
+    -0.2765,
+    0.8142,
+    0.0316
+   ],
+   "parts": [
+    "First metacarpal bone.r",
+    "Second metacarpal bone.r",
+    "Third metacarpal bone.r",
+    "Fourth metacarpal bone.r",
+    "Fifth metacarpal bone.r",
+    "Capitate bone.r",
+    "Hamate bone.r",
+    "Lunate bone.r",
+    "Pisiform bone.r",
+    "Scaphoid bone.r",
+    "Trapezium bone.r",
+    "Triquetrum bone.r"
+   ]
+  },
+  {
+   "node": "g018",
+   "label": "huesos de la mano izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftHand",
+   "tris": 704,
+   "center": [
+    0.2765,
+    0.8142,
+    0.0316
+   ],
+   "parts": [
+    "First metacarpal bone.l",
+    "Second metacarpal bone.l",
+    "Third metacarpal bone.l",
+    "Fourth metacarpal bone.l",
+    "Fifth metacarpal bone.l",
+    "Capitate bone.l",
+    "Hamate bone.l",
+    "Lunate bone.l",
+    "Pisiform bone.l",
+    "Scaphoid bone.l",
+    "Trapezium bone.l",
+    "Triquetrum bone.l"
+   ]
+  },
+  {
+   "node": "g019",
+   "label": "huesos de mano der",
+   "system": "hueso",
+   "bone": "mixamorig_RightHand",
+   "tris": 322,
+   "center": [
+    -0.2807,
+    0.7581,
+    0.0654
+   ],
+   "parts": [
+    "Distal phalanx of first finger of hand.r",
+    "Distal phalanx of second finger of hand.r",
+    "Distal phalanx of third finger of hand.r",
+    "Distal phalanx of fourth finger of hand.r",
+    "Distal phalanx of fifth finger of hand.r",
+    "Middle phalanx of second finger of hand.r",
+    "Middle phalanx of third finger of hand.r",
+    "Middle phalanx of fourth finger of hand.r",
+    "Middle phalanx of fifth finger of hand.r",
+    "Proximal phalanx of first finger of hand.r",
+    "Proximal phalanx of second finger of hand.r",
+    "Proximal phalanx of third finger of hand.r",
+    "Proximal phalanx of fourth finger of hand.r",
+    "Proximal phalanx of fifth finger of hand.r"
+   ]
+  },
+  {
+   "node": "g020",
+   "label": "huesos de mano izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftHand",
+   "tris": 322,
+   "center": [
+    0.2805,
+    0.7581,
+    0.0654
+   ],
+   "parts": [
+    "Distal phalanx of first finger of hand.l",
+    "Distal phalanx of second finger of hand.l",
+    "Distal phalanx of third finger of hand.l",
+    "Distal phalanx of fourth finger of hand.l",
+    "Distal phalanx of fifth finger of hand.l",
+    "Middle phalanx of second finger of hand.l",
+    "Middle phalanx of third finger of hand.l",
+    "Middle phalanx of fourth finger of hand.l",
+    "Middle phalanx of fifth finger of hand.l",
+    "Proximal phalanx of first finger of hand.l",
+    "Proximal phalanx of second finger of hand.l",
+    "Proximal phalanx of third finger of hand.l",
+    "Proximal phalanx of fourth finger of hand.l",
+    "Proximal phalanx of fifth finger of hand.l"
+   ]
+  },
+  {
+   "node": "g021",
+   "label": "huesos de pelvis",
+   "system": "hueso",
+   "bone": "mixamorig_Hips",
+   "tris": 84,
+   "center": [
+    0.0,
+    0.8394,
+    0.0194
+   ],
+   "parts": [
+    "Trapezoid bone.r",
+    "Trapezoid bone.l"
+   ]
+  },
+  {
+   "node": "g022",
+   "label": "huesos de pie der",
+   "system": "hueso",
+   "bone": "mixamorig_RightFoot",
+   "tris": 362,
+   "center": [
+    -0.1032,
+    0.0195,
+    0.0968
+   ],
+   "parts": [
+    "Distal phalanx of fifth finger of foot.r",
+    "Distal phalanx of first finger of foot.r",
+    "Distal phalanx of fourth finger of foot.r",
+    "Distal phalanx of second finger of foot.r",
+    "Distal phalanx of third finger of foot.r",
+    "Middle phalanx of second finger of foot.r",
+    "Middle phalanx of third finger of foot.r",
+    "Middle phalanx of fourth finger of foot.r",
+    "Middle phalanx of fifth finger of foot.r",
+    "Proximal phalanx of first finger of foot.r",
+    "Proximal phalanx of second finger of foot.r",
+    "Proximal phalanx of third finger of foot.r",
+    "Proximal phalanx of fourth finger of foot.r",
+    "Proximal phalanx of fifth finger of foot.r",
+    "Sesamoid bones of foot.r"
+   ]
+  },
+  {
+   "node": "g023",
+   "label": "huesos de pie izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftFoot",
+   "tris": 362,
+   "center": [
+    0.1032,
+    0.0195,
+    0.0968
+   ],
+   "parts": [
+    "Distal phalanx of fifth finger of foot.l",
+    "Distal phalanx of first finger of foot.l",
+    "Distal phalanx of fourth finger of foot.l",
+    "Distal phalanx of second finger of foot.l",
+    "Distal phalanx of third finger of foot.l",
+    "Middle phalanx of second finger of foot.l",
+    "Middle phalanx of third finger of foot.l",
+    "Middle phalanx of fourth finger of foot.l",
+    "Middle phalanx of fifth finger of foot.l",
+    "Proximal phalanx of first finger of foot.l",
+    "Proximal phalanx of second finger of foot.l",
+    "Proximal phalanx of third finger of foot.l",
+    "Proximal phalanx of fourth finger of foot.l",
+    "Proximal phalanx of fifth finger of foot.l",
+    "Sesamoid bones of foot.l"
+   ]
+  },
+  {
+   "node": "g024",
+   "label": "huesos del pie der",
+   "system": "hueso",
+   "bone": "mixamorig_RightFoot",
+   "tris": 802,
+   "center": [
+    -0.0947,
+    0.0476,
+    -0.0025
+   ],
+   "parts": [
+    "Talus.r",
+    "Calcaneus.r",
+    "Navicular bone.r",
+    "Cuboid bone.r",
+    "Intermediate cuneiform bone.r",
+    "Lateral cuneiform bone.r",
+    "Medial cuneiform bone.r",
+    "First metatarsal bone.r",
+    "Fifth metatarsal bone.r",
+    "Second metatarsal bone.r",
+    "Third metatarsal bone.r",
+    "Fourth metatarsal bone.r"
+   ]
+  },
+  {
+   "node": "g025",
+   "label": "huesos del pie izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftFoot",
+   "tris": 802,
+   "center": [
+    0.0947,
+    0.0476,
+    -0.0025
+   ],
+   "parts": [
+    "Talus.l",
+    "Calcaneus.l",
+    "Navicular bone.l",
+    "Cuboid bone.l",
+    "Intermediate cuneiform bone.l",
+    "Lateral cuneiform bone.l",
+    "Medial cuneiform bone.l",
+    "First metatarsal bone.l",
+    "Fifth metatarsal bone.l",
+    "Second metatarsal bone.l",
+    "Third metatarsal bone.l",
+    "Fourth metatarsal bone.l"
+   ]
+  },
+  {
+   "node": "g026",
+   "label": "húmero der",
+   "system": "hueso",
+   "bone": "mixamorig_RightArm",
+   "tris": 598,
+   "center": [
+    -0.1969,
+    1.246,
+    -0.0273
+   ],
+   "parts": [
+    "Humerus.r"
+   ]
+  },
+  {
+   "node": "g027",
+   "label": "húmero izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftArm",
+   "tris": 598,
+   "center": [
+    0.1969,
+    1.246,
+    -0.0277
+   ],
+   "parts": [
+    "Humerus.l"
+   ]
+  },
+  {
+   "node": "g028",
+   "label": "mandíbula",
+   "system": "hueso",
+   "bone": "mixamorig_Neck",
+   "tris": 1254,
+   "center": [
+    0.0005,
+    1.5371,
+    0.0429
+   ],
+   "parts": [
+    "Mandible"
+   ]
+  },
+  {
+   "node": "g029",
+   "label": "pelvis",
+   "system": "hueso",
+   "bone": "mixamorig_Hips",
+   "tris": 2188,
+   "center": [
+    0.0,
+    0.9044,
+    -0.0196
+   ],
+   "parts": [
+    "Coccyx",
+    "Hip bone.r",
+    "Sacrum",
+    "Hip bone.l"
+   ]
+  },
+  {
+   "node": "g030",
+   "label": "peroné der",
+   "system": "hueso",
+   "bone": "mixamorig_RightLeg",
+   "tris": 324,
+   "center": [
+    -0.107,
+    0.2366,
+    -0.043
+   ],
+   "parts": [
+    "Fibula.r"
+   ]
+  },
+  {
+   "node": "g031",
+   "label": "peroné izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 324,
+   "center": [
+    0.107,
+    0.2366,
+    -0.043
+   ],
+   "parts": [
+    "Fibula.l"
+   ]
+  },
+  {
+   "node": "g032",
+   "label": "radio der",
+   "system": "hueso",
+   "bone": "mixamorig_RightForeArm",
+   "tris": 254,
+   "center": [
+    -0.2578,
+    0.9747,
+    -0.0079
+   ],
+   "parts": [
+    "Radius.r"
+   ]
+  },
+  {
+   "node": "g033",
+   "label": "radio izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftForeArm",
+   "tris": 254,
+   "center": [
+    0.2578,
+    0.9747,
+    -0.0079
+   ],
+   "parts": [
+    "Radius.l"
+   ]
+  },
+  {
+   "node": "g034",
+   "label": "rótula der",
+   "system": "hueso",
+   "bone": "mixamorig_RightLeg",
+   "tris": 152,
+   "center": [
+    -0.0846,
+    0.4441,
+    0.0071
+   ],
+   "parts": [
+    "Patella.r"
+   ]
+  },
+  {
+   "node": "g035",
+   "label": "rótula izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 152,
+   "center": [
+    0.0846,
+    0.4441,
+    0.0071
+   ],
+   "parts": [
+    "Patella.l"
+   ]
+  },
+  {
+   "node": "g036",
+   "label": "tibia der",
+   "system": "hueso",
+   "bone": "mixamorig_RightLeg",
+   "tris": 374,
+   "center": [
+    -0.0771,
+    0.2533,
+    -0.0288
+   ],
+   "parts": [
+    "Tibia.r"
+   ]
+  },
+  {
+   "node": "g037",
+   "label": "tibia izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 374,
+   "center": [
+    0.0771,
+    0.2533,
+    -0.0288
+   ],
+   "parts": [
+    "Tibia.l"
+   ]
+  },
+  {
+   "node": "g038",
+   "label": "vértebras cervicales",
+   "system": "hueso",
+   "bone": "mixamorig_Neck",
+   "tris": 828,
+   "center": [
+    -0.0001,
+    1.4957,
+    -0.0189
+   ],
+   "parts": [
+    "Hyoid bone",
+    "Atlas (C1)",
+    "Vertebra C6",
+    "Vertebra C3",
+    "Vertebra C5",
+    "Vertebra C7",
+    "Vertebra C4",
+    "Axis (C2)"
+   ]
+  },
+  {
+   "node": "g039",
+   "label": "vértebras lumbares",
+   "system": "hueso",
+   "bone": "mixamorig_Spine1",
+   "tris": 656,
+   "center": [
+    0.0005,
+    1.0457,
+    -0.0258
+   ],
+   "parts": [
+    "Vertebra L1",
+    "Vertebra L2",
+    "Vertebra L4",
+    "Vertebra L5",
+    "Vertebra L3"
+   ]
+  },
+  {
+   "node": "g040",
+   "label": "vértebras torácicas inferiores",
+   "system": "hueso",
+   "bone": "mixamorig_Spine1",
+   "tris": 432,
+   "center": [
+    -0.0003,
+    1.2823,
+    -0.0462
+   ],
+   "parts": [
+    "Vertebra T10",
+    "Vertebra T11",
+    "Vertebra T12",
+    "Vertebra T1"
+   ]
+  },
+  {
+   "node": "g041",
+   "label": "vértebras torácicas superiores",
+   "system": "hueso",
+   "bone": "mixamorig_Spine2",
+   "tris": 951,
+   "center": [
+    -0.0001,
+    1.3186,
+    -0.0581
+   ],
+   "parts": [
+    "Vertebra T2",
+    "Vertebra T3",
+    "Vertebra T4",
+    "Vertebra T5",
+    "Vertebra T6",
+    "Vertebra T7",
+    "Vertebra T9",
+    "Vertebra T8"
+   ]
+  },
+  {
+   "node": "g042",
+   "label": "músculos de abdomen",
+   "system": "musculo",
+   "bone": "mixamorig_Spine1",
+   "tris": 4502,
+   "center": [
+    -0.0,
+    1.1147,
+    0.0013
+   ],
+   "parts": [
+    "Iliocostalis lumborum muscle.r",
+    "Iliocostalis lumborum muscle.l",
+    "Longissimus thoracis muscle.r",
+    "Longissimus thoracis muscle.l",
+    "Multifidus lumborum muscle.r",
+    "Multifidus lumborum muscle.l",
+    "Interspinales lumborum muscles.r",
+    "Interspinales lumborum muscles.l",
+    "Dorsal parts of lateral intertransversarii lumborum muscles.r",
+    "Ventral parts of lateral intertransversarii lumborum muscles.r",
+    "Dorsal parts of lateral intertransversarii lumborum muscles.l",
+    "Ventral parts of lateral intertransversarii lumborum muscles.l",
+    "Latissimus dorsi muscle.r",
+    "Serratus posterior inferior muscle.r",
+    "Latissimus dorsi muscle.l",
+    "Serratus posterior inferior muscle.l",
+    "Diaphragm",
+    "Rectus abdominis muscle.r",
+    "Rectus abdominis muscle.l",
+    "External abdominal oblique muscle.r",
+    "External abdominal oblique muscle.l",
+    "Internal abdominal oblique muscle.r",
+    "Internal abdominal oblique muscle.l",
+    "Transversus abdominis muscle.r",
+    "Transversus abdominis muscle.l",
+    "Quadratus lumborum muscle.r",
+    "Quadratus lumborum muscle.l",
+    "Psoas major.r",
+    "Psoas major.l"
+   ]
+  },
+  {
+   "node": "g043",
+   "label": "músculos de abdomen bajo",
+   "system": "musculo",
+   "bone": "mixamorig_Spine",
+   "tris": 1202,
+   "center": [
+    -0.0,
+    0.8627,
+    -0.0165
+   ],
+   "parts": [
+    "Inguinal ligament.l",
+    "Inguinal ligament.r",
+    "Pyramidalis muscle.r",
+    "Pyramidalis muscle.l",
+    "Iliacus muscle.r",
+    "Iliacus muscle.l",
+    "Gluteus medius muscle.r",
+    "Gluteus maximus muscle.r",
+    "Gluteus minimus muscle.r",
+    "Gluteus medius muscle.l",
+    "Gluteus maximus muscle.l",
+    "Gluteus minimus muscle.l",
+    "Piriformis muscle.r",
+    "Piriformis muscle.l",
+    "Iliopectineal arch.r",
+    "Iliopectineal arch.l"
+   ]
+  },
+  {
+   "node": "g044",
+   "label": "músculos de antebrazo der",
+   "system": "musculo",
+   "bone": "mixamorig_RightForeArm",
+   "tris": 1552,
+   "center": [
+    -0.2568,
+    0.9649,
+    0.0032
+   ],
+   "parts": [
+    "Superficial head of pronator teres.r",
+    "Deep head of pronator teres.r",
+    "Humeral head of flexor carpi ulnaris.r",
+    "Ulnar head of flexor carpi ulnaris.r",
+    "Humero-ulnar head of flexor digitorum superficialis.r",
+    "Flexor carpi radialis.r",
+    "Palmaris longus muscle.r",
+    "Radial head of flexor digitorum superficialis.r",
+    "Flexor pollicis longus.r",
+    "Pronator quadratus.r",
+    "Ulnar head of extensor carpi ulnaris.r",
+    "Humeral head of extensor carpi ulnaris.r",
+    "Brachioradialis muscle.r",
+    "Extensor carpi radialis longus.r",
+    "Extensor carpi radialis brevis.r",
+    "Anconeus muscle.r",
+    "Extensor digiti minimi.r",
+    "Supinator.r",
+    "Abductor pollicis longus.r",
+    "Extensor pollicis brevis.r",
+    "Extensor pollicis longus.r"
+   ]
+  },
+  {
+   "node": "g045",
+   "label": "músculos de antebrazo izq",
+   "system": "musculo",
+   "bone": "mixamorig_LeftForeArm",
+   "tris": 1550,
+   "center": [
+    0.2568,
+    0.9654,
+    0.0032
+   ],
+   "parts": [
+    "Superficial head of pronator teres.l",
+    "Deep head of pronator teres.l",
+    "Humeral head of flexor carpi ulnaris.l",
+    "Ulnar head of flexor carpi ulnaris.l",
+    "Humero-ulnar head of flexor digitorum superficialis.l",
+    "Flexor carpi radialis.l",
+    "Palmaris longus muscle.l",
+    "Radial head of flexor digitorum superficialis.l",
+    "Flexor pollicis longus.l",
+    "Pronator quadratus.l",
+    "Ulnar head of extensor carpi ulnaris.l",
+    "Humeral head of extensor carpi ulnaris.l",
+    "Brachioradialis muscle.l",
+    "Extensor carpi radialis longus.l",
+    "Extensor carpi radialis brevis.l",
+    "Anconeus muscle.l",
+    "Extensor digiti minimi.l",
+    "Supinator.l",
+    "Abductor pollicis longus.l",
+    "Extensor pollicis brevis.l",
+    "Extensor pollicis longus.l"
+   ]
+  },
+  {
+   "node": "g046",
+   "label": "músculos de brazo der",
+   "system": "musculo",
+   "bone": "mixamorig_RightArm",
+   "tris": 760,
+   "center": [
+    -0.1676,
+    1.2365,
+    -0.0464
+   ],
+   "parts": [
+    "Acromial part of deltoid muscle.r",
+    "Scapular spinal part of deltoid muscle.r",
+    "Long head of biceps brachii.r",
+    "Short head of biceps brachii.r",
+    "Brachialis muscle.r",
+    "Coracobrachialis muscle.r",
+    "Medial head of triceps brachii.r",
+    "Lateral head of triceps brachii.r",
+    "Long head of triceps brachii.r"
+   ]
+  },
+  {
+   "node": "g047",
+   "label": "músculos de brazo izq",
+   "system": "musculo",
+   "bone": "mixamorig_LeftArm",
+   "tris": 760,
+   "center": [
+    0.1676,
+    1.2365,
+    -0.0464
+   ],
+   "parts": [
+    "Acromial part of deltoid muscle.l",
+    "Scapular spinal part of deltoid muscle.l",
+    "Long head of biceps brachii.l",
+    "Short head of biceps brachii.l",
+    "Brachialis muscle.l",
+    "Coracobrachialis muscle.l",
+    "Medial head of triceps brachii.l",
+    "Lateral head of triceps brachii.l",
+    "Long head of triceps brachii.l"
+   ]
+  },
+  {
+   "node": "g048",
+   "label": "músculos de cabeza",
+   "system": "musculo",
+   "bone": "mixamorig_Head",
+   "tris": 3840,
+   "center": [
+    -0.0,
+    1.614,
+    -0.0028
+   ],
+   "parts": [
+    "Lateral rectus muscle.l",
+    "Lateral rectus muscle.r",
+    "Superior oblique muscle.l",
+    "Superior oblique muscle.r",
+    "Common tendinous ring.r",
+    "Inferior oblique muscle.r",
+    "Inferior rectus muscle.r",
+    "Inferior tarsus.r",
+    "Levator palpebrae superioris.r",
+    "Medial rectus muscle.r",
+    "Superior rectus muscle.r",
+    "Superior tarsus.r",
+    "Trochlea of superior oblique muscle.r",
+    "Common tendinous ring.l",
+    "Inferior oblique muscle.l",
+    "Inferior rectus muscle.l",
+    "Inferior tarsus.l",
+    "Levator palpebrae superioris.l",
+    "Medial rectus muscle.l",
+    "Superior rectus muscle.l",
+    "Superior tarsus.l",
+    "Trochlea of superior oblique muscle.l",
+    "Frontalis muscle.r",
+    "Occipitalis muscle.r",
+    "Epicranial aponeurosis.r",
+    "Frontalis muscle.l",
+    "Occipitalis muscle.l",
+    "Epicranial aponeurosis.l",
+    "Temporoparietalis muscle.r",
+    "Temporoparietalis muscle.l",
+    "Nasalis muscle.r",
+    "Nasalis muscle.l",
+    "Orbital part of orbicularis oculi.r",
+    "Palpebral part of orbicularis oculi.r",
+    "Orbital part of orbicularis oculi.l",
+    "Palpebral part of orbicularis oculi.l",
+    "Corrugator supercilii.r",
+    "Levator anguli oris.r",
+    "Procerus muscle.r",
+    "Zygomaticus minor muscle.r",
+    "Levator labii superioris.r",
+    "Depressor septi nasi.r",
+    "Levator nasolabialis.r",
+    "Corrugator supercilii.l",
+    "Levator anguli oris.l",
+    "Procerus muscle.l",
+    "Zygomaticus minor muscle.l",
+    "Levator labii superioris.l",
+    "Depressor septi nasi.l",
+    "Levator nasolabialis.l",
+    "Medial pterygoid muscle.r",
+    "Medial pterygoid muscle.l",
+    "Inferior head of lateral pterygoid muscle.r",
+    "Superior head of lateral pterygoid muscle.r",
+    "Inferior head of lateral pterygoid muscle.l",
+    "Superior head of lateral pterygoid muscle.l",
+    "Temporalis muscle.r",
+    "Temporalis muscle.l",
+    "Superior pharyngeal constrictor.r",
+    "Superior pharyngeal constrictor.l"
+   ]
+  },
+  {
+   "node": "g049",
+   "label": "músculos de cuello",
+   "system": "musculo",
+   "bone": "mixamorig_Neck",
+   "tris": 6650,
+   "center": [
+    0.0,
+    1.455,
+    -0.0044
+   ],
+   "parts": [
+    "Orbicularis oris muscle.r",
+    "Orbicularis oris muscle.l",
+    "Zygomaticus major muscle.r",
+    "Depressor anguli oris.r",
+    "Depressor labii inferioris.r",
+    "Risorius muscle.r",
+    "Mentalis muscle.r",
+    "Bucinator.r",
+    "Zygomaticus major muscle.l",
+    "Depressor anguli oris.l",
+    "Depressor labii inferioris.l",
+    "Risorius muscle.l",
+    "Mentalis muscle.l",
+    "Bucinator.l",
+    "Superficial part of masseter.r",
+    "Deep part of masseter.r",
+    "Superficial part of masseter.l",
+    "Deep part of masseter.l",
+    "Hyoglossus muscle.r",
+    "Hyoglossus muscle.l",
+    "Genioglossus muscle.r",
+    "Genioglossus muscle.l",
+    "Palatopharyngeus muscle.r",
+    "Palatopharyngeus muscle.l",
+    "Sternocleidomastoid muscle.r",
+    "Sternocleidomastoid muscle.l",
+    "Intermediate tendon of digastric muscle.r",
+    "Anterior belly of digastric muscle.r",
+    "Posterior belly of digastric muscle.r",
+    "Intermediate tendon of digastric muscle.l",
+    "Anterior belly of digastric muscle.l",
+    "Posterior belly of digastric muscle.l",
+    "Mylohyoid muscle.r",
+    "Stylohyoid muscle.r",
+    "Geniohyoid muscle.r",
+    "Mylohyoid muscle.l",
+    "Stylohyoid muscle.l",
+    "Geniohyoid muscle.l",
+    "Omohyoid muscle.r",
+    "Omohyoid muscle.l",
+    "Sternohyoid muscle.r",
+    "Thyrohyoid muscle.r",
+    "Sternohyoid muscle.l",
+    "Thyrohyoid muscle.l",
+    "Middle pharyngeal constrictor.r",
+    "Middle pharyngeal constrictor.l",
+    "Inferior pharyngeal constrictor.r",
+    "Inferior pharyngeal constrictor.l",
+    "Stylopharyngeus muscle.r",
+    "Stylopharyngeus muscle.l",
+    "Oblique part of cricothyroid muscle.r",
+    "Straight part of cricothyroid muscle.r",
+    "Oblique part of cricothyroid muscle.l",
+    "Straight part of cricothyroid muscle.l",
+    "External part of thyro-arytenoid muscle.r",
+    "External part of thyro-arytenoid muscle.l",
+    "Ary-epiglottic part of oblique arytenoid muscle.r",
+    "Thyro-epiglottic part of thyro-arytenoid muscle.r",
+    "Ary-epiglottic part of oblique arytenoid muscle.l",
+    "Thyro-epiglottic part of thyro-arytenoid muscle.l"
+   ]
+  },
+  {
+   "node": "g050",
+   "label": "músculos de mano der",
+   "system": "musculo",
+   "bone": "mixamorig_RightHand",
+   "tris": 897,
+   "center": [
+    -0.2725,
+    0.9088,
+    0.0185
+   ],
+   "parts": [
+    "Flexor digitorum profundus.r",
+    "Extensor digitorum.r",
+    "Extensor indicis.r",
+    "Superficial head of flexor pollicis brevis.r",
+    "Deep head of flexor pollicis brevis.r",
+    "Transverse head of adductor pollicis.r",
+    "Abductor pollicis brevis.r",
+    "Opponens pollicis muscle.r",
+    "Abductor digiti minimi of hand.r",
+    "Flexor digiti minimi of hand.r",
+    "Opponens digiti minimi muscle of hand.r",
+    "Lumbrical muscles of hand.r",
+    "Dorsal interossei muscles of hand.r",
+    "Palmar interossei muscles.r",
+    "Superficial transverse metacarpal ligament.r",
+    "Palmar aponeurosis.r",
+    "Cruciform part of fibrous sheath of digit of hand.r"
+   ]
+  },
+  {
+   "node": "g051",
+   "label": "músculos de mano izq",
+   "system": "musculo",
+   "bone": "mixamorig_LeftHand",
+   "tris": 897,
+   "center": [
+    0.2725,
+    0.9088,
+    0.0185
+   ],
+   "parts": [
+    "Flexor digitorum profundus.l",
+    "Extensor digitorum.l",
+    "Extensor indicis.l",
+    "Superficial head of flexor pollicis brevis.l",
+    "Deep head of flexor pollicis brevis.l",
+    "Transverse head of adductor pollicis.l",
+    "Abductor pollicis brevis.l",
+    "Opponens pollicis muscle.l",
+    "Abductor digiti minimi of hand.l",
+    "Flexor digiti minimi of hand.l",
+    "Opponens digiti minimi muscle of hand.l",
+    "Lumbrical muscles of hand.l",
+    "Dorsal interossei muscles of hand.l",
+    "Palmar interossei muscles.l",
+    "Superficial transverse metacarpal ligament.l",
+    "Palmar aponeurosis.l",
+    "Cruciform part of fibrous sheath of digit of hand.l"
+   ]
+  },
+  {
+   "node": "g052",
+   "label": "músculos de muslo der",
+   "system": "musculo",
+   "bone": "mixamorig_RightUpLeg",
+   "tris": 1932,
+   "center": [
+    -0.0854,
+    0.6728,
+    -0.0079
+   ],
+   "parts": [
+    "Quadratus femoris muscle.r",
+    "Rectus femoris muscle.r",
+    "Vastus lateralis muscle.r",
+    "Vastus medialis muscle.r",
+    "Vastus intermedius muscle.r",
+    "Sartorius muscle.r",
+    "Adductor magnus.r",
+    "Adductor longus.r",
+    "Adductor brevis.r",
+    "(Adductor minimus).r",
+    "Gracilis muscle.r",
+    "Long head of biceps femoris.r",
+    "Short head of biceps femoris.r",
+    "Semimembranosus muscle.r",
+    "Semitendinosus muscle.r",
+    "Iliotibial tract.r"
+   ]
+  },
+  {
+   "node": "g053",
+   "label": "músculos de muslo izq",
+   "system": "musculo",
+   "bone": "mixamorig_LeftUpLeg",
+   "tris": 1932,
+   "center": [
+    0.0854,
+    0.6728,
+    -0.0079
+   ],
+   "parts": [
+    "Quadratus femoris muscle.l",
+    "Rectus femoris muscle.l",
+    "Vastus lateralis muscle.l",
+    "Vastus medialis muscle.l",
+    "Vastus intermedius muscle.l",
+    "Sartorius muscle.l",
+    "Adductor magnus.l",
+    "Adductor longus.l",
+    "Adductor brevis.l",
+    "(Adductor minimus).l",
+    "Gracilis muscle.l",
+    "Long head of biceps femoris.l",
+    "Short head of biceps femoris.l",
+    "Semimembranosus muscle.l",
+    "Semitendinosus muscle.l",
+    "Iliotibial tract.l"
+   ]
+  },
+  {
+   "node": "g054",
+   "label": "músculos de pelvis",
+   "system": "musculo",
+   "bone": "mixamorig_Hips",
+   "tris": 1272,
+   "center": [
+    0.0,
+    0.8068,
+    -0.0109
+   ],
+   "parts": [
+    "Coccygeus muscle.r",
+    "Iliococcygeus muscle.r",
+    "Pubo-analis muscle.r",
+    "Pubococcygeus muscle.r",
+    "Coccygeus muscle.l",
+    "Iliococcygeus muscle.l",
+    "Pubo-analis muscle.l",
+    "Pubococcygeus muscle.l",
+    "Oblique head of adductor pollicis.r",
+    "Oblique head of adductor pollicis.l",
+    "Inferior gemellus muscle.r",
+    "Obturator internus.r",
+    "Superior gemellus muscle.r",
+    "Inferior gemellus muscle.l",
+    "Obturator internus.l",
+    "Superior gemellus muscle.l",
+    "Pectineus muscle.r",
+    "Obturator externus.r",
+    "Pectineus muscle.l",
+    "Obturator externus.l",
+    "External anal sphincter.r",
+    "External anal sphincter.l",
+    "Tendinous arch of levator ani.r",
+    "Tendinous arch of levator ani.l"
+   ]
+  },
+  {
+   "node": "g055",
+   "label": "músculos de pie der",
+   "system": "musculo",
+   "bone": "mixamorig_RightFoot",
+   "tris": 1070,
+   "center": [
+    -0.0955,
+    0.1781,
+    0.0281
+   ],
+   "parts": [
+    "Tendon of extensor digitorum longus.r",
+    "Fibularis tertius muscle.r",
+    "Flexor digitorum longus.r",
+    "Medial head of flexor hallucis brevis.r",
+    "Lateral head of flexor hallucis brevis.r",
+    "Oblique head of adductor hallucis.r",
+    "Transverse head of adductor hallucis.r",
+    "Abductor digiti minimi of foot.r",
+    "Abductor hallucis.r",
+    "Extensor digitorum brevis.r",
+    "Extensor hallucis brevis.r",
+    "Dorsal interossei muscles of foot.r",
+    "Flexor digitorum brevis.r",
+    "Flexor digiti minimi of foot.r",
+    "Lumbrical muscles of foot.r",
+    "(Opponens digiti minimi muscle of foot).r",
+    "Plantar interossei muscles.r",
+    "Quadratus plantae muscle.r",
+    "Superficial transverse metatarsal ligament.r",
+    "Plantar aponeurosis.r"
+   ]
+  },
+  {
+   "node": "g056",
+   "label": "músculos de pie izq",
+   "system": "musculo",
+   "bone": "mixamorig_LeftFoot",
+   "tris": 1070,
+   "center": [
+    0.0955,
+    0.1781,
+    0.0281
+   ],
+   "parts": [
+    "Tendon of extensor digitorum longus.l",
+    "Fibularis tertius muscle.l",
+    "Flexor digitorum longus.l",
+    "Medial head of flexor hallucis brevis.l",
+    "Lateral head of flexor hallucis brevis.l",
+    "Oblique head of adductor hallucis.l",
+    "Transverse head of adductor hallucis.l",
+    "Abductor digiti minimi of foot.l",
+    "Abductor hallucis.l",
+    "Extensor digitorum brevis.l",
+    "Extensor hallucis brevis.l",
+    "Dorsal interossei muscles of foot.l",
+    "Flexor digitorum brevis.l",
+    "Flexor digiti minimi of foot.l",
+    "Lumbrical muscles of foot.l",
+    "(Opponens digiti minimi muscle of foot).l",
+    "Plantar interossei muscles.l",
+    "Quadratus plantae muscle.l",
+    "Superficial transverse metatarsal ligament.l",
+    "Plantar aponeurosis.l"
+   ]
+  },
+  {
+   "node": "g057",
+   "label": "músculos de pierna der",
+   "system": "musculo",
+   "bone": "mixamorig_RightLeg",
+   "tris": 1010,
+   "center": [
+    -0.089,
+    0.2605,
+    0.0122
+   ],
+   "parts": [
+    "Extensor digitorum longus.r",
+    "Tibialis anterior muscle.r",
+    "Extensor hallucis longus.r",
+    "Fibularis longus muscle.r",
+    "Fibularis brevis muscle.r",
+    "Calcaneal tendon.r",
+    "Soleus muscle.r",
+    "Plantaris muscle.r",
+    "Tibialis posterior muscle.r",
+    "Flexor hallucis longus.r"
+   ]
+  },
+  {
+   "node": "g058",
+   "label": "músculos de pierna izq",
+   "system": "musculo",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 1010,
+   "center": [
+    0.089,
+    0.2605,
+    0.0122
+   ],
+   "parts": [
+    "Extensor digitorum longus.l",
+    "Tibialis anterior muscle.l",
+    "Extensor hallucis longus.l",
+    "Fibularis longus muscle.l",
+    "Fibularis brevis muscle.l",
+    "Calcaneal tendon.l",
+    "Soleus muscle.l",
+    "Plantaris muscle.l",
+    "Tibialis posterior muscle.l",
+    "Flexor hallucis longus.l"
+   ]
+  },
+  {
+   "node": "g059",
+   "label": "músculos de rodilla der",
+   "system": "musculo",
+   "bone": "mixamorig_RightLeg",
+   "tris": 280,
+   "center": [
+    -0.0841,
+    0.3577,
+    -0.0617
+   ],
+   "parts": [
+    "Lateral head of gastrocnemius.r",
+    "Medial head of gastrocnemius.r",
+    "Popliteus muscle.r"
+   ]
+  },
+  {
+   "node": "g060",
+   "label": "músculos de rodilla izq",
+   "system": "musculo",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 280,
+   "center": [
+    0.0841,
+    0.3577,
+    -0.0617
+   ],
+   "parts": [
+    "Lateral head of gastrocnemius.l",
+    "Medial head of gastrocnemius.l",
+    "Popliteus muscle.l"
+   ]
+  },
+  {
+   "node": "g061",
+   "label": "músculos de tórax",
+   "system": "musculo",
+   "bone": "mixamorig_Spine2",
+   "tris": 6896,
+   "center": [
+    -0.0,
+    1.2159,
+    -0.0008
+   ],
+   "parts": [
+    "Sternothyroid muscle.r",
+    "Sternothyroid muscle.l",
+    "Iliocostalis thoracis muscle.r",
+    "Iliocostalis colli muscle.r",
+    "Iliocostalis thoracis muscle.l",
+    "Iliocostalis colli muscle",
+    "Spinalis thoracis muscle.r",
+    "Spinalis thoracis muscle.l",
+    "Splenius colli muscle.r",
+    "Splenius colli muscle.l",
+    "Multifidus thoracis muscle.r",
+    "Multifidus thoracis muscle.l",
+    "Semispinalis thoracis muscle.r",
+    "Semispinalis thoracis muscle.l",
+    "Rotatores.l",
+    "Rotatores.r",
+    "Interspinales thoracis muscles.r",
+    "Interspinales thoracis muscles.l",
+    "Descending part of trapezius muscle.r",
+    "Transverse part of trapezius muscle.r",
+    "Descending part of trapezius muscle.l",
+    "Transverse part of trapezius muscle.l",
+    "Rhomboid major muscle.r",
+    "Rhomboid minor muscle.r",
+    "Serratus posterior superior muscle.r",
+    "Rhomboid major muscle.l",
+    "Rhomboid minor muscle.l",
+    "Serratus posterior superior muscle.l",
+    "Clavicular head of pectoralis major muscle.r",
+    "Sternocostal head of pectoralis major muscle.r",
+    "(Abdominal part of pectoralis major muscle).r",
+    "Clavicular head of pectoralis major muscle.l",
+    "Sternocostal head of pectoralis major muscle.l",
+    "(Abdominal part of pectoralis major muscle).l",
+    "Levatores longi costarum.r",
+    "Levatores breves costarum.r",
+    "Levatores longi costarum.l",
+    "Levatores breves costarum.l",
+    "Pectoralis minor muscle.r",
+    "External intercostal muscles.r",
+    "Internal intercostal muscles.r",
+    "Serratus anterior muscle.r",
+    "Innermost intercostal muscles.r",
+    "Subclavius muscle.r",
+    "Transversus thoracis muscle.r",
+    "Pectoralis minor muscle.l",
+    "External intercostal muscles.l",
+    "Internal intercostal muscles.l",
+    "Serratus anterior muscle.l",
+    "Innermost intercostal muscles.l",
+    "Subclavius muscle.l",
+    "Transversus thoracis muscle.l",
+    "Clavicular part of deltoid muscle.r",
+    "Clavicular part of deltoid muscle.l",
+    "Subscapularis muscle.r",
+    "Supraspinatus muscle.r",
+    "Teres minor muscle.r",
+    "Infraspinatus muscle.r",
+    "Subscapularis muscle.l",
+    "Supraspinatus muscle.l"
+   ]
+  },
+  {
+   "node": "g062",
+   "label": "cerebelo y tronco cerebral",
+   "system": "nervio",
+   "bone": "mixamorig_Head",
+   "tris": 1044,
+   "center": [
+    -0.0,
+    1.6104,
+    -0.0356
+   ],
+   "parts": [
+    "Tentorium cerebelli.r",
+    "Superior parietal lobule.l",
+    "Base of peduncle.r",
+    "Base of peduncle.l",
+    "Aqueduct of midbrain",
+    "Midbrain.r",
+    "Midbrain.l",
+    "Pons.r",
+    "Pons.l",
+    "Medulla oblongata.l",
+    "Pyramid of medulla oblongata.l",
+    "Pyramid of medulla oblongata.r",
+    "Wing of central lobule.l",
+    "Uvula of vermis",
+    "Tuber of vermis",
+    "Tonsil of cerebellum.l",
+    "Superior semilunar lobule.l",
+    "Superior cerebellar peduncle.l",
+    "Pyramis of vermis",
+    "Posterior quadrangular lobule.l",
+    "Peduncle of flocculus.l",
+    "Lingula of cerebellum",
+    "Inferior semilunar lobule.l",
+    "Gracile lobule.l",
+    "Folium of vermis",
+    "Central lobule",
+    "Biventral lobule.l",
+    "Anterior quadrangular lobule.l",
+    "Superior parietal lobule.r",
+    "Wing of central lobule.r",
+    "Tonsil of cerebellum.r",
+    "Superior semilunar lobule.r",
+    "Superior cerebellar peduncle.r",
+    "Posterior quadrangular lobule.r",
+    "Peduncle of flocculus.r",
+    "Inferior semilunar lobule.r",
+    "Gracile lobule.r",
+    "Biventral lobule.r",
+    "Anterior quadrangular lobule.r",
+    "Tentorium cerebelli.l",
+    "Medulla oblongata.r"
+   ]
+  },
+  {
+   "node": "g063",
+   "label": "cerebro",
+   "system": "nervio",
+   "bone": "mixamorig_Head",
+   "tris": 985,
+   "center": [
+    0.0,
+    1.6411,
+    -0.0079
+   ],
+   "parts": [
+    "Falx cerebri",
+    "Opercular part of inferior frontal gyrus.l",
+    "Orbital part of  inferior frontal gyrus.l",
+    "Triangular part of inferior frontal gyrus.l",
+    "Straight gyrus (Gyrus rectus).l",
+    "Middle frontal gyrus.l",
+    "Precentral gyrus.l",
+    "Superior frontal gyrus.l",
+    "Angular gyrus.l",
+    "Supramarginal gyrus.l",
+    "Postcentral gyrus.l",
+    "Lingual gyrus.l",
+    "Superior temporal gyrus (Lateral part).l",
+    "Lateral occipitotemporal gyrus.l",
+    "Medial occipitotemporal gyrus (Parahippocampal*).l",
+    "Inferior temporal gyrus.l",
+    "Middle temporal gyrus.l",
+    "Insula (Subcentral gyrus and ant. and post. sulci*).l",
+    "Cingulate gyrus (Posteroventral part*).l",
+    "Hippocampus.r",
+    "Hippocampus.l",
+    "Putamen.r",
+    "Putamen.l",
+    "Corpus callosum",
+    "Fornix.r",
+    "Fornix.l",
+    "White matter of telencephalon.l",
+    "Thalamus.r",
+    "Thalamus.l",
+    "Hypothalamus",
+    "Opercular part of inferior frontal gyrus.r",
+    "Orbital part of  inferior frontal gyrus.r",
+    "Triangular part of inferior frontal gyrus.r",
+    "Straight gyrus (Gyrus rectus).r",
+    "Middle frontal gyrus.r",
+    "Precentral gyrus.r",
+    "Superior frontal gyrus.r",
+    "Angular gyrus.r",
+    "Supramarginal gyrus.r",
+    "Postcentral gyrus.r",
+    "Lingual gyrus.r",
+    "Superior temporal gyrus (Lateral part).r",
+    "Lateral occipitotemporal gyrus.r",
+    "Medial occipitotemporal gyrus (Parahippocampal*).r",
+    "Inferior temporal gyrus.r",
+    "Middle temporal gyrus.r",
+    "Insula (Subcentral gyrus and ant. and post. sulci*).r",
+    "Cingulate gyrus (Posteroventral part*).r",
+    "White matter of telencephalon.r"
+   ]
+  },
+  {
+   "node": "g064",
+   "label": "médula espinal",
+   "system": "nervio",
+   "bone": "mixamorig_Spine",
+   "tris": 179,
+   "center": [
+    0.0012,
+    1.2119,
+    -0.0495
+   ],
+   "parts": [
+    "Cauda equina",
+    "Spinal ganglion.r",
+    "Spinal ganglion.l",
+    "Posterior root of spinal nerve.r",
+    "Anterior root of spinal nerve.r",
+    "Posterior root of spinal nerve.l",
+    "Anterior root of spinal nerve.l"
+   ]
+  },
+  {
+   "node": "g065",
+   "label": "nervios de abdomen",
+   "system": "nervio",
+   "bone": "mixamorig_Spine1",
+   "tris": 974,
+   "center": [
+    0.0,
+    1.109,
+    0.0418
+   ],
+   "parts": [
+    "Intercostal nerves.r",
+    "Intercostal nerves.l",
+    "Obturator nerve.r",
+    "Obturator nerve.l"
+   ]
+  },
+  {
+   "node": "g066",
+   "label": "nervios de abdomen bajo",
+   "system": "nervio",
+   "bone": "mixamorig_Spine",
+   "tris": 1008,
+   "center": [
+    -0.0,
+    0.9485,
+    0.0054
+   ],
+   "parts": [
+    "Ilio-inguinal nerve.r",
+    "Ilio-inguinal nerve.l",
+    "Femoral branch of genitofemoral nerve.r",
+    "Genital branch of genitofemoral nerve.r",
+    "Femoral branch of genitofemoral nerve.l",
+    "Genital branch of genitofemoral nerve.l",
+    "Nerve to quadratus femoris muscle.r",
+    "Nerve to quadratus femoris muscle.l"
+   ]
+  },
+  {
+   "node": "g067",
+   "label": "nervios de antebrazo der",
+   "system": "nervio",
+   "bone": "mixamorig_RightForeArm",
+   "tris": 1208,
+   "center": [
+    -0.2464,
+    0.9162,
+    -0.0025
+   ],
+   "parts": [
+    "Lateral antebrachial cutaneous nerve.r",
+    "Posterior interosseous nerve of forearm.r",
+    "Posterior antebrachial cutaneous nerve.r",
+    "Posterior branch of medial antebrachial cutaneous nerve.r",
+    "Palmar branch of ulnar nerve.r",
+    "Median nerve.r",
+    "Anterior interosseous nerve of forearm.r"
+   ]
+  },
+  {
+   "node": "g068",
+   "label": "nervios de antebrazo izq",
+   "system": "nervio",
+   "bone": "mixamorig_LeftForeArm",
+   "tris": 1546,
+   "center": [
+    0.2323,
+    1.0,
+    -0.0025
+   ],
+   "parts": [
+    "Lateral antebrachial cutaneous nerve.l",
+    "Posterior interosseous nerve of forearm.l",
+    "Posterior antebrachial cutaneous nerve.l",
+    "Anterior branch of medial antebrachial cutaneous nerve.l",
+    "Posterior branch of medial antebrachial cutaneous nerve.l",
+    "Palmar branch of ulnar nerve.l",
+    "Median nerve.l",
+    "Anterior interosseous nerve of forearm.l"
+   ]
+  },
+  {
+   "node": "g069",
+   "label": "nervios de brazo der",
+   "system": "nervio",
+   "bone": "mixamorig_RightArm",
+   "tris": 64,
+   "center": [
+    -0.1922,
+    1.162,
+    -0.0266
+   ],
+   "parts": [
+    "Musculocutaneous nerve.r",
+    "Radial nerve.r",
+    "Medial antebrachial cutaneous nerve.r",
+    "Ulnar nerve.r"
+   ]
+  },
+  {
+   "node": "g070",
+   "label": "nervios de brazo izq",
+   "system": "nervio",
+   "bone": "mixamorig_LeftArm",
+   "tris": 64,
+   "center": [
+    0.1928,
+    1.1422,
+    -0.0201
+   ],
+   "parts": [
+    "Musculocutaneous nerve.l",
+    "Radial nerve.l",
+    "Medial antebrachial cutaneous nerve.l",
+    "Ulnar nerve.l"
+   ]
+  },
+  {
+   "node": "g071",
+   "label": "nervios de cabeza",
+   "system": "nervio",
+   "bone": "mixamorig_Head",
+   "tris": 963,
+   "center": [
+    0.0,
+    1.5682,
+    -0.0126
+   ],
+   "parts": [
+    "Choroid plexus.r",
+    "Choroid plexus.l",
+    "Temporal pole.l",
+    "Occipital pole.l",
+    "Lat_Fis-ant-Vertical.l",
+    "Orbital gyri.l",
+    "Orbital sulci (H-shaped orbital sulci*).l",
+    "Precuneus.l",
+    "Cuneus.l",
+    "Superior occipital gyri.l",
+    "Transverse temporal gyri.l",
+    "Amygdaloid body.r",
+    "Amygdaloid body.l",
+    "Globus pallidus.r",
+    "Globus pallidus.l",
+    "Stria terminalis.r",
+    "Stria terminalis.l",
+    "Lateral ventricle.r",
+    "Lateral ventricle.l",
+    "Lat_Fis-ant-Horizont.l",
+    "Lat_Fis-post.l",
+    "Stria medullaris thalami.r",
+    "Stria medullaris thalami.l",
+    "Third ventricle",
+    "Superior colliculus.r",
+    "Superior colliculus.l",
+    "Fourth ventricle",
+    "Cochlear nerve",
+    "Vagus nerve (X).l",
+    "Lacrimal gland.r",
+    "Lacrimal gland.l",
+    "Lacrimal sac.r",
+    "Lacrimal sac.l",
+    "Nasolacrimal duct.r",
+    "Nasolacrimal duct.l",
+    "Flocculus.l",
+    "Declive",
+    "Culmen",
+    "Temporal pole.r",
+    "Occipital pole.r",
+    "Lat_Fis-ant-Vertical.r",
+    "Orbital gyri.r",
+    "Orbital sulci (H-shaped orbital sulci*).r",
+    "Precuneus.r",
+    "Cuneus.r",
+    "Superior occipital gyri.r",
+    "Transverse temporal gyri.r",
+    "Lat_Fis-ant-Horizont.r",
+    "Lat_Fis-post.r",
+    "Flocculus.r",
+    "Vitreous body.r",
+    "Vitreous body.l"
+   ]
+  },
+  {
+   "node": "g072",
+   "label": "nervios de cuello",
+   "system": "nervio",
+   "bone": "mixamorig_Neck",
+   "tris": 392,
+   "center": [
+    0.0016,
+    1.4355,
+    -0.0395
+   ],
+   "parts": [
+    "Glossopharyngeal nerve (IX).r",
+    "Glossopharyngeal nerve (IX).l",
+    "Accessory nerve (XI).r",
+    "Accessory nerve (XI).l"
+   ]
+  },
+  {
+   "node": "g073",
+   "label": "nervios de mano der",
+   "system": "nervio",
+   "bone": "mixamorig_RightHand",
+   "tris": 510,
+   "center": [
+    -0.2792,
+    0.786,
+    0.0493
+   ],
+   "parts": [
+    "Deep branch of radial nerve.r",
+    "Superficial branch of radial nerve.r",
+    "Dorsal digital branches of radial nerve.r",
+    "Proper palmar digital branches of ulnar nerve.r",
+    "Proper palmar digital branches of median nerve.r"
+   ]
+  },
+  {
+   "node": "g074",
+   "label": "nervios de mano izq",
+   "system": "nervio",
+   "bone": "mixamorig_LeftHand",
+   "tris": 519,
+   "center": [
+    0.2761,
+    0.7858,
+    0.0498
+   ],
+   "parts": [
+    "Deep branch of radial nerve.l",
+    "Superficial branch of radial nerve.l",
+    "Dorsal digital branches of radial nerve.l",
+    "Proper palmar digital branches of ulnar nerve.l",
+    "Proper palmar digital branches of median nerve.l"
+   ]
+  },
+  {
+   "node": "g075",
+   "label": "nervios de muslo der",
+   "system": "nervio",
+   "bone": "mixamorig_RightUpLeg",
+   "tris": 1148,
+   "center": [
+    -0.0547,
+    0.7462,
+    -0.0267
+   ],
+   "parts": [
+    "Medial sural cutaneous nerve.r",
+    "Femoral nerve.r",
+    "Posterior branch of obturator nerve.r",
+    "Anterior branch of obturator nerve.r",
+    "Sciatic nerve.r",
+    "Posterior femoral cutaneous nerve.r"
+   ]
+  },
+  {
+   "node": "g076",
+   "label": "nervios de muslo izq",
+   "system": "nervio",
+   "bone": "mixamorig_LeftUpLeg",
+   "tris": 1157,
+   "center": [
+    0.0484,
+    0.7462,
+    -0.0267
+   ],
+   "parts": [
+    "Medial sural cutaneous nerve.l",
+    "Femoral nerve.l",
+    "Posterior branch of obturator nerve.l",
+    "Anterior branch of obturator nerve.l",
+    "Sciatic nerve.l",
+    "Posterior femoral cutaneous nerve.l"
+   ]
+  },
+  {
+   "node": "g077",
+   "label": "nervios de pierna der",
+   "system": "nervio",
+   "bone": "mixamorig_RightLeg",
+   "tris": 82,
+   "center": [
+    -0.0865,
+    0.2023,
+    -0.0402
+   ],
+   "parts": [
+    "Sural nerve.r",
+    "Superficial fibular nerve.r",
+    "Deep fibular nerve.r",
+    "Tibial nerve.r"
+   ]
+  },
+  {
+   "node": "g078",
+   "label": "nervios de pierna izq",
+   "system": "nervio",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 190,
+   "center": [
+    0.0864,
+    0.1993,
+    -0.0415
+   ],
+   "parts": [
+    "Sural nerve.l",
+    "Superficial fibular nerve.l",
+    "Deep fibular nerve.l",
+    "Tibial nerve.l"
+   ]
+  },
+  {
+   "node": "g079",
+   "label": "nervios de rodilla der",
+   "system": "nervio",
+   "bone": "mixamorig_RightLeg",
+   "tris": 14,
+   "center": [
+    -0.1056,
+    0.4422,
+    -0.0539
+   ],
+   "parts": [
+    "Common fibular nerve.r"
+   ]
+  },
+  {
+   "node": "g080",
+   "label": "nervios de rodilla izq",
+   "system": "nervio",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 14,
+   "center": [
+    0.1056,
+    0.4422,
+    -0.0539
+   ],
+   "parts": [
+    "Common fibular nerve.l"
+   ]
+  },
+  {
+   "node": "g081",
+   "label": "nervios de tórax",
+   "system": "nervio",
+   "bone": "mixamorig_Spine2",
+   "tris": 1060,
+   "center": [
+    -0.001,
+    1.3414,
+    0.0081
+   ],
+   "parts": [
+    "Vagus nerve (X).r",
+    "Dorsal scapular nerve.r",
+    "Long thoracic nerve.r",
+    "Suprascapular nerve.r",
+    "Dorsal scapular nerve.l",
+    "Long thoracic nerve.l",
+    "Suprascapular nerve.l",
+    "Lateral pectoral nerve.r",
+    "Lateral pectoral nerve.l",
+    "Medial brachial cutaneous nerve.r",
+    "Medial brachial cutaneous nerve.l",
+    "Sympathetic nerves.r",
+    "Ganglia of sympathetic trunk.r",
+    "Sympathetic trunk.r",
+    "Sympathetic nerves.l",
+    "Ganglia of sympathetic trunk.l",
+    "Sympathetic trunk.l",
+    "Thoracodorsal nerve.r",
+    "Thoracodorsal nerve.l"
+   ]
+  },
+  {
+   "node": "g082",
+   "label": "ojo",
+   "system": "nervio",
+   "bone": "mixamorig_Head",
+   "tris": 794,
+   "center": [
+    -0.0,
+    1.5902,
+    0.0642
+   ],
+   "parts": [
+    "Suspensory ligament of eyeball.r",
+    "Suspensory ligament of eyeball.l",
+    "Retina.r",
+    "Retina.l",
+    "Sclera.r",
+    "Sclera.l",
+    "Posterior segment of eyeball.r",
+    "Posterior segment of eyeball.l",
+    "Anterior segment of eyeball.r",
+    "Anterior segment of eyeball.l"
+   ]
+  },
+  {
+   "node": "g083",
+   "label": "corazón",
+   "system": "organo",
+   "bone": "mixamorig_Spine2",
+   "tris": 2276,
+   "center": [
+    0.0226,
+    1.291,
+    0.0251
+   ],
+   "parts": [
+    "Inferior leaflet of right atrioventricular valve",
+    "Septal leaflet of right atrioventricular valve",
+    "Posterior leaflet of left atrioventricular valve",
+    "Left coronary leaflet",
+    "Non-coronary leaflet",
+    "Right coronary leaflet",
+    "Anterior semilunar leaflet of pulmonary valve",
+    "Left semilunar leaflet of pulmonary valve",
+    "Right semilunar leaflet of pulmonary valve",
+    "Right atrium",
+    "Inferior papillary muscle of right ventricle",
+    "Anterior papillary muscle of right ventricle",
+    "Septal papillary muscle of right ventricle",
+    "Right ventricle",
+    "Left atrium",
+    "Inferior papillary muscle of left ventricle",
+    "Left ventricle"
+   ]
+  },
+  {
+   "node": "g084",
+   "label": "estómago",
+   "system": "organo",
+   "bone": "mixamorig_Spine1",
+   "tris": 489,
+   "center": [
+    0.0386,
+    1.1657,
+    0.0366
+   ],
+   "parts": [
+    "Stomach",
+    "Mucosa of stomach"
+   ]
+  },
+  {
+   "node": "g085",
+   "label": "esófago",
+   "system": "organo",
+   "bone": "mixamorig_Spine2",
+   "tris": 158,
+   "center": [
+    0.0043,
+    1.3347,
+    -0.0079
+   ],
+   "parts": [
+    "Oesophagus"
+   ]
+  },
+  {
+   "node": "g086",
+   "label": "hígado",
+   "system": "organo",
+   "bone": "mixamorig_Spine2",
+   "tris": 1430,
+   "center": [
+    -0.012,
+    1.1737,
+    0.0208
+   ],
+   "parts": [
+    "Left posterior lateral segment of liver (II)",
+    "Left anterior lateral segment of liver (III)",
+    "Left medial segment of liver (IV)",
+    "Anterior medial segment of liver (V)",
+    "Anterior lateral segment of liver (VI)",
+    "Posterior lateral segment of liver (VII)",
+    "Posterior segment of liver (I)",
+    "Posterior medial segment of liver (VIII)",
+    "Liver"
+   ]
+  },
+  {
+   "node": "g087",
+   "label": "intestinos",
+   "system": "organo",
+   "bone": "mixamorig_Spine1",
+   "tris": 2761,
+   "center": [
+    -0.0005,
+    1.0032,
+    0.0081
+   ],
+   "parts": [
+    "Duodenum",
+    "Jejunum",
+    "Vermiform appendix",
+    "Free taenia",
+    "Mesocolic taenia",
+    "Omental taenia",
+    "Sigmoid colon",
+    "Ascending colon",
+    "Descending colon",
+    "Transverse colon",
+    "Mesocolon",
+    "Meso-appendix",
+    "Greater omentum",
+    "Lesser omentum"
+   ]
+  },
+  {
+   "node": "g088",
+   "label": "pulmón",
+   "system": "organo",
+   "bone": "mixamorig_Spine2",
+   "tris": 418,
+   "center": [
+    -0.0005,
+    1.3046,
+    0.0087
+   ],
+   "parts": [
+    "Pleura"
+   ]
+  },
+  {
+   "node": "g089",
+   "label": "pulmón der",
+   "system": "organo",
+   "bone": "mixamorig_Spine2",
+   "tris": 2420,
+   "center": [
+    -0.0631,
+    1.3004,
+    0.0091
+   ],
+   "parts": [
+    "Superior segmental bronchus of right lung (BVI)",
+    "Lateral segmental bronchus of right lung (BIV)",
+    "Right inferior lobar bronchus",
+    "Posterior basal segmental bronchus of right lung (BX)",
+    "Medial basal segmental bronchus of right lung (BVII)",
+    "Lateral basal segmental bronchus of right lung (BIX)",
+    "Anterior basal segmental bronchus of right lung (BVIII)",
+    "Anterior segmental bronchus of right lung (BIII)",
+    "Apical segmental bronchus of right lung (BI)",
+    "Posterior segmental bronchus of right lung (BII)",
+    "Right superior lobar bronchus",
+    "Right main bronchus",
+    "Superior lobe of right lung",
+    "Middle lobe of right lung",
+    "Inferior lobe of right lung",
+    "Middle lobar bronchus.r",
+    "Intermediate bronchus.r",
+    "Medial segmental bronchus of right lung (BV)"
+   ]
+  },
+  {
+   "node": "g090",
+   "label": "pulmón izq",
+   "system": "organo",
+   "bone": "mixamorig_Spine2",
+   "tris": 1955,
+   "center": [
+    0.0652,
+    1.2987,
+    0.0085
+   ],
+   "parts": [
+    "Left superior lobar bronchus",
+    "Apicoposterior segmental bronchus of left lung (BI+BII)",
+    "Anterior segmental bronchus of left lung (BIII)",
+    "Superior lingular segmental bronchus of left lung (BIV)",
+    "Inferior lingular segmental bronchus of left lung (BV)",
+    "Superior segmental bronchus of left lung (BVI)",
+    "Medial basal segmental bronchus of left lung (BVII)",
+    "Anterior basal segmental bronchus of left lung (BVIII)",
+    "Left inferior lobar bronchus",
+    "Lateral basal segmental bronchus of left lung (BIX)",
+    "Left main bronchus",
+    "Superior lobe of left lung",
+    "Inferior lobe of left lung",
+    "Posterior basal segmental bronchus of left lung (BX)",
+    "(Anteromedial basal segmental bronchus of left lung)"
+   ]
+  },
+  {
+   "node": "g091",
+   "label": "páncreas",
+   "system": "organo",
+   "bone": "mixamorig_Spine1",
+   "tris": 220,
+   "center": [
+    0.0112,
+    1.1147,
+    0.0217
+   ],
+   "parts": [
+    "Accessory pancreatic duct",
+    "Pancreas"
+   ]
+  },
+  {
+   "node": "g092",
+   "label": "riñón der",
+   "system": "organo",
+   "bone": "mixamorig_Spine1",
+   "tris": 248,
+   "center": [
+    -0.0476,
+    1.0165,
+    -0.0061
+   ],
+   "parts": [
+    "Kidney.r",
+    "Ureter.r",
+    "Suprarenal gland.r"
+   ]
+  },
+  {
+   "node": "g093",
+   "label": "riñón izq",
+   "system": "organo",
+   "bone": "mixamorig_Spine1",
+   "tris": 280,
+   "center": [
+    0.0573,
+    1.0289,
+    -0.009
+   ],
+   "parts": [
+    "Kidney.l",
+    "Ureter.l",
+    "Suprarenal gland.l"
+   ]
+  },
+  {
+   "node": "g094",
+   "label": "tiroides",
+   "system": "organo",
+   "bone": "mixamorig_Neck",
+   "tris": 126,
+   "center": [
+    0.0002,
+    1.4722,
+    0.0163
+   ],
+   "parts": [
+    "Thyroid gland",
+    "Inferior parathyroid gland.r",
+    "Superior parathyroid gland.r",
+    "Inferior parathyroid gland.l",
+    "Superior parathyroid gland.l"
+   ]
+  },
+  {
+   "node": "g095",
+   "label": "tráquea y laringe",
+   "system": "organo",
+   "bone": "mixamorig_Neck",
+   "tris": 331,
+   "center": [
+    0.0005,
+    1.4712,
+    0.0272
+   ],
+   "parts": [
+    "Epiglottis",
+    "Trachea",
+    "Oropharynx",
+    "Nasopharynx",
+    "Laryngopharynx"
+   ]
+  },
+  {
+   "node": "g096",
+   "label": "vejiga",
+   "system": "organo",
+   "bone": "mixamorig_Hips",
+   "tris": 464,
+   "center": [
+    0.0,
+    0.8088,
+    0.0219
+   ],
+   "parts": [
+    "Urinary bladder",
+    "Urethra",
+    "Testis.r",
+    "Testis.l",
+    "Ductus deferens.l",
+    "Ductus deferens.r",
+    "Seminal gland.r",
+    "Seminal gland.l",
+    "Prostate"
+   ]
+  },
+  {
+   "node": "g097",
+   "label": "vesícula",
+   "system": "organo",
+   "bone": "mixamorig_Spine1",
+   "tris": 32,
+   "center": [
+    -0.0468,
+    1.1363,
+    0.0552
+   ],
+   "parts": [
+    "Gallbladder"
+   ]
+  },
+  {
+   "node": "g098",
+   "label": "órganos de abdomen",
+   "system": "organo",
+   "bone": "mixamorig_Spine1",
+   "tris": 143,
+   "center": [
+    0.0032,
+    1.1091,
+    0.006
+   ],
+   "parts": [
+    "Bile duct",
+    "Renal pelvis.l",
+    "Renal pelvis.r"
+   ]
+  },
+  {
+   "node": "g099",
+   "label": "órganos de cabeza",
+   "system": "organo",
+   "bone": "mixamorig_Head",
+   "tris": 1105,
+   "center": [
+    0.0,
+    1.5746,
+    0.0402
+   ],
+   "parts": [
+    "Anterior communicating artery",
+    "Basilar venous plexus",
+    "Cavernous sinus.r",
+    "Cavernous sinus.l",
+    "Uvula of palate",
+    "Parotid gland.r",
+    "(Accessory parotid gland).r",
+    "Parotid gland.l",
+    "(Accessory parotid gland).l",
+    "Parotid duct.l",
+    "Parotid duct.r",
+    "Adenohypophysis",
+    "Neurohypophysis",
+    "Pineal gland",
+    "Mucosa of nasal cavity",
+    "Soft palate"
+   ]
+  },
+  {
+   "node": "g100",
+   "label": "órganos de cuello",
+   "system": "organo",
+   "bone": "mixamorig_Neck",
+   "tris": 394,
+   "center": [
+    0.0001,
+    1.5253,
+    0.0565
+   ],
+   "parts": [
+    "Gingiva",
+    "Sublingual gland.l",
+    "Sublingual gland.r",
+    "Submandibular gland.l",
+    "Submandibular gland.r",
+    "Submandibular duct.l",
+    "Submandibular duct.r",
+    "Tongue"
+   ]
+  },
+  {
+   "node": "g101",
+   "label": "órganos de muslo der",
+   "system": "organo",
+   "bone": "mixamorig_RightUpLeg",
+   "tris": 26,
+   "center": [
+    -0.0216,
+    0.7498,
+    0.0535
+   ],
+   "parts": [
+    "Epididymis.r"
+   ]
+  },
+  {
+   "node": "g102",
+   "label": "órganos de muslo izq",
+   "system": "organo",
+   "bone": "mixamorig_LeftUpLeg",
+   "tris": 26,
+   "center": [
+    0.0216,
+    0.7498,
+    0.0535
+   ],
+   "parts": [
+    "Epididymis.l"
+   ]
+  },
+  {
+   "node": "g103",
+   "label": "órganos de pelvis",
+   "system": "organo",
+   "bone": "mixamorig_Hips",
+   "tris": 186,
+   "center": [
+    0.0001,
+    0.7913,
+    0.0358
+   ],
+   "parts": [
+    "Ejaculatory duct.l",
+    "Ejaculatory duct.r",
+    "Glans penis",
+    "Corpus cavernosum of penis",
+    "Corpus spongiosum of penis"
+   ]
+  },
+  {
+   "node": "g104",
+   "label": "órganos de tórax",
+   "system": "organo",
+   "bone": "mixamorig_Spine2",
+   "tris": 18,
+   "center": [
+    0.0281,
+    1.3379,
+    0.0445
+   ],
+   "parts": [
+    "Pulmonary trunk"
+   ]
+  },
+  {
+   "node": "g105",
+   "label": "aorta y grandes vasos",
+   "system": "vaso",
+   "bone": "mixamorig_Spine2",
+   "tris": 95,
+   "center": [
+    0.0072,
+    1.1944,
+    -0.004
+   ],
+   "parts": [
+    "Thoracic aorta",
+    "Abdominal aorta",
+    "Inferior vena cava (abdominal part)"
+   ]
+  },
+  {
+   "node": "g106",
+   "label": "arterias y venas de abdomen",
+   "system": "vaso",
+   "bone": "mixamorig_Spine1",
+   "tris": 2148,
+   "center": [
+    -0.0007,
+    1.1868,
+    0.0164
+   ],
+   "parts": [
+    "Posterior intercostal arteries.l",
+    "Posterior intercostal arteries.r",
+    "Anterior inferior pancreaticoduodenal artery",
+    "Superior mesenteric artery",
+    "Marginal artery",
+    "Musculophrenic artery.l",
+    "Superior epigastric artery.l",
+    "Superior epigastric artery.r",
+    "Musculophrenic artery.r",
+    "Superficial epigastric artery.r",
+    "Superficial epigastric artery.l",
+    "Left ascending lumbar vein",
+    "Right ascending lumbar vein",
+    "Right superior phrenic vein",
+    "Musculophrenic veins.l",
+    "Superior epigastric veins.r",
+    "Musculophrenic veins.r",
+    "Superior epigastric veins.l",
+    "Lateral thoracic vein.r",
+    "Lateral thoracic vein.l",
+    "Superior mesenteric vein",
+    "Inferior mesenteric vein"
+   ]
+  },
+  {
+   "node": "g107",
+   "label": "arterias y venas de abdomen bajo",
+   "system": "vaso",
+   "bone": "mixamorig_Spine",
+   "tris": 824,
+   "center": [
+    0.0,
+    0.911,
+    0.0164
+   ],
+   "parts": [
+    "Right testicular artery.r",
+    "Median sacral artery",
+    "Inferior epigastric artery.r",
+    "Inferior epigastric artery.l",
+    "Inferior gluteal veins.r",
+    "Inferior gluteal veins.l",
+    "Inferior epigastric vein.r",
+    "Inferior epigastric vein.l",
+    "Superficial epigastric vein.r",
+    "Superficial epigastric vein.l",
+    "Left testicular artery",
+    "Superior anorectal artery"
+   ]
+  },
+  {
+   "node": "g108",
+   "label": "arterias y venas de antebrazo der",
+   "system": "vaso",
+   "bone": "mixamorig_RightForeArm",
+   "tris": 306,
+   "center": [
+    -0.2386,
+    0.9624,
+    0.0068
+   ],
+   "parts": [
+    "Radial artery.r",
+    "Posterior interosseous artery.r",
+    "Ulnar artery.r",
+    "Median antebrachial vein.r",
+    "Ulnar veins.r",
+    "Radial veins.r"
+   ]
+  },
+  {
+   "node": "g109",
+   "label": "arterias y venas de antebrazo izq",
+   "system": "vaso",
+   "bone": "mixamorig_LeftForeArm",
+   "tris": 306,
+   "center": [
+    0.2386,
+    0.9624,
+    0.0068
+   ],
+   "parts": [
+    "Radial artery.l",
+    "Posterior interosseous artery.l",
+    "Ulnar artery.l",
+    "Median antebrachial vein.l",
+    "Ulnar veins.l",
+    "Radial veins.l"
+   ]
+  },
+  {
+   "node": "g110",
+   "label": "arterias y venas de brazo der",
+   "system": "vaso",
+   "bone": "mixamorig_RightArm",
+   "tris": 306,
+   "center": [
+    -0.1966,
+    1.1186,
+    -0.0144
+   ],
+   "parts": [
+    "Radial collateral artery.r",
+    "Brachial artery.r",
+    "Cephalic vein.r",
+    "Basilic vein.r",
+    "Brachial veins.r"
+   ]
+  },
+  {
+   "node": "g111",
+   "label": "arterias y venas de brazo izq",
+   "system": "vaso",
+   "bone": "mixamorig_LeftArm",
+   "tris": 306,
+   "center": [
+    0.1966,
+    1.1186,
+    -0.0144
+   ],
+   "parts": [
+    "Radial collateral artery.l",
+    "Brachial artery.l",
+    "Cephalic vein.l",
+    "Basilic vein.l",
+    "Brachial veins.l"
+   ]
+  },
+  {
+   "node": "g112",
+   "label": "arterias y venas de cabeza",
+   "system": "vaso",
+   "bone": "mixamorig_Head",
+   "tris": 646,
+   "center": [
+    0.0,
+    1.6275,
+    -0.0122
+   ],
+   "parts": [
+    "Occipital artery.r",
+    "Occipital artery.l",
+    "Superficial temporal artery.r",
+    "Superficial temporal artery.l",
+    "Superior sagittal sinus"
+   ]
+  },
+  {
+   "node": "g113",
+   "label": "arterias y venas de cuello",
+   "system": "vaso",
+   "bone": "mixamorig_Neck",
+   "tris": 472,
+   "center": [
+    0.0,
+    1.4942,
+    -0.0092
+   ],
+   "parts": [
+    "Vertebral artery.r",
+    "Vertebral artery.l",
+    "Vertebral vein.r",
+    "Vertebral vein.l",
+    "Internal jugular vein.r",
+    "Internal jugular vein.l",
+    "External jugular vein.r",
+    "External jugular vein.l"
+   ]
+  },
+  {
+   "node": "g114",
+   "label": "arterias y venas de mano der",
+   "system": "vaso",
+   "bone": "mixamorig_RightHand",
+   "tris": 356,
+   "center": [
+    -0.2776,
+    0.7712,
+    0.0593
+   ],
+   "parts": [
+    "Proper palmar digital arteries.r",
+    "Palmar digital veins.r"
+   ]
+  },
+  {
+   "node": "g115",
+   "label": "arterias y venas de mano izq",
+   "system": "vaso",
+   "bone": "mixamorig_LeftHand",
+   "tris": 356,
+   "center": [
+    0.2776,
+    0.7712,
+    0.0593
+   ],
+   "parts": [
+    "Proper palmar digital arteries.l",
+    "Palmar digital veins.l"
+   ]
+  },
+  {
+   "node": "g116",
+   "label": "arterias y venas de muslo der",
+   "system": "vaso",
+   "bone": "mixamorig_RightUpLeg",
+   "tris": 494,
+   "center": [
+    -0.0812,
+    0.6537,
+    -0.0097
+   ],
+   "parts": [
+    "Descending branch of lateral circumflex femoral artery",
+    "Perforating femoral arteries.r",
+    "Deep femoral artery.r",
+    "Superior medial genicular artery.r",
+    "Femoral artery.r",
+    "Deep femoral vein.r",
+    "Perforating veins.r",
+    "Popliteal vein.r",
+    "Femoral vein.r"
+   ]
+  },
+  {
+   "node": "g117",
+   "label": "arterias y venas de muslo izq",
+   "system": "vaso",
+   "bone": "mixamorig_LeftUpLeg",
+   "tris": 494,
+   "center": [
+    0.0812,
+    0.6537,
+    -0.0097
+   ],
+   "parts": [
+    "Descending branch of lateral circumflex femoral artery.l",
+    "Deep femoral artery.l",
+    "Superior medial genicular artery.l",
+    "Femoral artery.l",
+    "Deep femoral vein.l",
+    "Popliteal vein.l",
+    "Femoral vein.l",
+    "Perforating femoral arteries.l",
+    "Perforating veins.l"
+   ]
+  },
+  {
+   "node": "g118",
+   "label": "arterias y venas de pelvis",
+   "system": "vaso",
+   "bone": "mixamorig_Hips",
+   "tris": 512,
+   "center": [
+    0.0064,
+    0.866,
+    0.0469
+   ],
+   "parts": [
+    "Dorsal artery of penis.r",
+    "Dorsal artery of penis.l",
+    "Right testicular vein",
+    "Left testicular vein"
+   ]
+  },
+  {
+   "node": "g119",
+   "label": "arterias y venas de pie der",
+   "system": "vaso",
+   "bone": "mixamorig_RightFoot",
+   "tris": 440,
+   "center": [
+    -0.1075,
+    0.0183,
+    0.0629
+   ],
+   "parts": [
+    "Dorsal digital arteries of foot.r",
+    "Proper plantar digital arteries.r",
+    "Plantar digital veins.r"
+   ]
+  },
+  {
+   "node": "g120",
+   "label": "arterias y venas de pie izq",
+   "system": "vaso",
+   "bone": "mixamorig_LeftFoot",
+   "tris": 440,
+   "center": [
+    0.1075,
+    0.0183,
+    0.0629
+   ],
+   "parts": [
+    "Dorsal digital arteries of foot.l",
+    "Proper plantar digital arteries.l",
+    "Plantar digital veins.l"
+   ]
+  },
+  {
+   "node": "g121",
+   "label": "arterias y venas de pierna der",
+   "system": "vaso",
+   "bone": "mixamorig_RightLeg",
+   "tris": 484,
+   "center": [
+    -0.0826,
+    0.2611,
+    -0.0558
+   ],
+   "parts": [
+    "Anterior tibial artery.r",
+    "Fibular artery.r",
+    "Posterior tibial artery.r",
+    "Anterior tibial veins.r",
+    "Posterior tibial veins.r",
+    "Fibular veins.r",
+    "Small saphenous vein.r"
+   ]
+  },
+  {
+   "node": "g122",
+   "label": "arterias y venas de pierna izq",
+   "system": "vaso",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 484,
+   "center": [
+    0.0826,
+    0.2611,
+    -0.0558
+   ],
+   "parts": [
+    "Anterior tibial artery.l",
+    "Fibular artery.l",
+    "Posterior tibial artery.l",
+    "Anterior tibial veins.l",
+    "Posterior tibial veins.l",
+    "Fibular veins.l",
+    "Small saphenous vein.l"
+   ]
+  },
+  {
+   "node": "g123",
+   "label": "arterias y venas de rodilla der",
+   "system": "vaso",
+   "bone": "mixamorig_RightLeg",
+   "tris": 342,
+   "center": [
+    -0.0706,
+    0.4671,
+    -0.0059
+   ],
+   "parts": [
+    "Popliteal artery.r",
+    "Patellar anastomosis.r",
+    "Great saphenous vein.r",
+    "Genicular veins.r"
+   ]
+  },
+  {
+   "node": "g124",
+   "label": "arterias y venas de rodilla izq",
+   "system": "vaso",
+   "bone": "mixamorig_LeftLeg",
+   "tris": 342,
+   "center": [
+    0.0706,
+    0.4671,
+    -0.0059
+   ],
+   "parts": [
+    "Popliteal artery.l",
+    "Patellar anastomosis.l",
+    "Great saphenous vein.l",
+    "Genicular veins.l"
+   ]
+  },
+  {
+   "node": "g125",
+   "label": "arterias y venas de tórax",
+   "system": "vaso",
+   "bone": "mixamorig_Spine2",
+   "tris": 1634,
+   "center": [
+    0.0023,
+    1.2539,
+    -0.0031
+   ],
+   "parts": [
+    "Lateral basal segmental artery of left lung",
+    "Posterior basal segmental artery of left lung",
+    "Superior phrenic arteries",
+    "Internal thoracic artery.l",
+    "Internal thoracic artery.r",
+    "(Deep branch of transverse cervical artery).r",
+    "(Deep branch of transverse cervical artery).l",
+    "(Superficial branch of transverse cervical artery).l",
+    "Pectoral branches of thoraco-acromial artery.r",
+    "Pectoral branches of thoraco-acromial artery.l",
+    "Lateral thoracic artery.r",
+    "Lateral thoracic artery.l",
+    "Accessory hemi-azygos vein",
+    "Azygos vein",
+    "Internal thoracic veins.l",
+    "Internal thoracic veins.r",
+    "Left superior intercostal vein",
+    "Right superior intercostal vein",
+    "(Superficial branch of transverse cervical artery).r"
+   ]
+  }
+ ]
+}
