@@ -77,6 +77,9 @@ func attach(world_root: Node3D) -> void:
 		m.visible = false
 		_root.add_child(m)
 		_marks.append(m)
+	var blood := Blood.new()
+	blood.name = "Sangre"
+	_root.add_child(blood)
 	_lights.clear()
 	_lights_t.clear()
 	for i in 3:
@@ -305,15 +308,19 @@ func impact(pos: Vector3, normal: Vector3, material: String) -> void:
 		"glass":
 			emit("glass", pos, normal)
 		"flesh":
-			emit("blood", pos, normal)
+			blood(pos, normal, 1.0)
 			return
 		_:
 			emit("dust", pos, normal)
 			emit("spark", pos, normal, 0.3)
 	mark(pos, normal)
 
+## Sangre líquida (gotas que caen y manchan). scale > 1 = herida grave.
 func blood(pos: Vector3, dir: Vector3, scale := 1.0) -> void:
-	emit("blood", pos, dir, scale)
+	if Blood.instance:
+		Blood.instance.drops(pos, dir, clampf(0.3 * scale, 0.1, 1.0), 3.0 + scale, 30.0)
+	else:
+		emit("blood", pos, dir, scale)
 
 func mark(pos: Vector3, normal: Vector3) -> void:
 	if _marks.is_empty():

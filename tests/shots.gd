@@ -21,7 +21,7 @@ func _ready() -> void:
 	p.health = 100000.0
 	g.controller.set_physics_process(false)
 	_freeze_bots(true)
-	var list := ["inicio", "apunta_atras", "escalera", "colgado", "rayos_x", "destello", "explosion", "patada", "caja", "ascensor", "caida", "menu_config"]
+	var list := ["inicio", "apunta_atras", "escalera", "colgado", "rayos_x", "destello", "explosion", "patada", "caja", "ascensor", "caida", "arteria", "menu_config"]
 	for s in list:
 		if which == "all" or which == s:
 			await call("_s_" + s)
@@ -243,3 +243,27 @@ func _s_caida() -> void:
 	p.use_medical("bandage")
 	await _wait_phys(200)
 	print("  tras la venda: ", p.injuries.summary(), " vida ", p.health)
+
+func _s_arteria() -> void:
+	# tiro al cuello / muslo sin matar: chorro arterial pulsátil que sigue al cuerpo, gotas y manchas en el piso
+	var e: Actor = g.tower.enemies[1]
+	e.max_health = 2000.0
+	e.health = 2000.0
+	await _place(Vector3(50.0, 0.05, 0), Vector2(1, 0.0))
+	e.global_position = Vector3(53.5, 0.05, 0)
+	e.facing = -1
+	await _wait_phys(10)
+	for bone in ["mixamorig_Neck", "mixamorig_RightUpLeg", "mixamorig_Spine1"]:
+		var b := e.skel.find_bone(bone)
+		var tgt := e.skel.global_transform * e.skel.get_bone_global_pose(b).origin + (Vector3(0, -0.15, 0) if bone.ends_with("UpLeg") else Vector3(0, 0.03, 0))
+		e.take_damage({"type": "bullet", "damage": 20.0, "zone": "neck" if bone.ends_with("Neck") else ("leg" if bone.ends_with("UpLeg") else "torso"),
+			"bone": bone, "point": tgt - Vector3(0.12, 0, 0), "dir": Vector3.RIGHT, "shooter": p, "penetration": 6.0})
+	print("  hemorragias: ", e.injuries.bleeds.map(func(x): return "%s %.1f/s %s" % [x.text, x.rate, "ARTERIAL" if x.src and x.src.arterial else "venosa"]))
+	g.bullet_time.skip()
+	TimeFx.end_slowmo()
+	g.camera.override_target(e.global_position + Vector3(-0.6, 1.2, 2.6), e.global_position + Vector3(0, 0.9, 0), 34.0)
+	await _wait(25)
+	await _shot("arteria_1")
+	await _wait(15)
+	await _shot("arteria_2")
+	g.camera.release_override()

@@ -75,7 +75,21 @@ recupera brazo, mano, cabeza y respiración. Con corazón o aorta perforados hay
   de rayos X. Si el disparo va a matar, antes la cámara sigue a la bala.
 * **Heridas graves que no matan**: destello rápido de las partes dañadas a través del cuerpo, sin cámara lenta.
 * **Puñetazos**: nada (sólo la vida).
-* Sangre siempre: chorro de entrada, de salida en los tiros que atraviesan, goteo con hemorragia.
+* **Sangre líquida** (`systems/fx/blood.gd`, idea de BLACK VEIL rehecha con grupos fijos): gotas que se estiran con la
+  velocidad, caen con gravedad y dejan manchas en piso y paredes; charco que crece bajo el cuerpo.
+  * Entrada y salida del tiro (la salida, más fuerte, cuando la bala atraviesa).
+  * **Arteria / corazón / aorta rotos: chorro pulsátil** al ritmo del corazón (75 → 140 latidos por minuto a medida que se
+    desangra), con presión que baja con la vida. Sale de la herida y sigue al cuerpo cuando se mueve.
+  * **Vísceras y músculos: sangre oscura que mana y gotea.**
+  * Una fuente por hueso (se suman las heridas); la venda o el botiquín las cortan; al morir se apagan y queda el charco.
+
+## ¿Daño modelado en Blender?
+
+Todavía no. Blender (`bpy`) se usa para exportar Z-Anatomy; las heridas se dibujan en el juego con un shader sobre la
+anatomía (corte dentado con astillas en el hueso, túnel de bala, estallido). Ventaja: aparecen exactamente donde pega
+cada bala. Siguiente paso posible: pre-romper en Blender los huesos largos, el cráneo y las costillas en fragmentos
+reales (Cell Fracture) y los órganos grandes en versiones reventadas, ajustarlos igual que la anatomía y, en el
+impacto, mostrar los fragmentos más cercanos a la herida desplazándose.
 
 ## Referencias usadas para calibrar
 

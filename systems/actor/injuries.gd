@@ -26,7 +26,10 @@ var hand := 0.0           ## 0..1 mano
 var head := 0.0           ## 0..1 cabeza / ojos
 var breath := false       ## pulmón / tráquea: no corre
 var deaf := 0.0           ## segundos de sordera (tímpanos)
-var bleeds: Array = []    ## [{rate, treat, text}]
+var bleeds: Array = []    ## [{rate, treat, text, src: Blood.BleedSource}]
+var _actor: Actor
+var _anat: AnatomyBody
+var _sources := {}        ## hueso → Blood.BleedSource
 var log: Array[String] = []
 var bleeding: float:
 	get:
@@ -59,6 +62,8 @@ static func effect_of(label: String) -> Dictionary:
 func process(actor: Actor, info: Dictionary) -> Dictionary:
 	var res := {"hp": 0.0, "texts": [], "nodes": [], "death": false, "main": "", "applied": {}}
 	var anat := AnatomyBody.for_actor(actor)
+	_actor = actor
+	_anat = anat
 	var t := str(info.get("type", "bullet"))
 	var point: Vector3 = info.get("point", actor.global_position + Vector3.UP * 1.2)
 	var dir: Vector3 = info.get("dir", Vector3(-actor.facing, 0, 0))
@@ -116,7 +121,7 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 						var n := anat.find_group(lab)
 						if n != "":
 							anat.add_wound(n, anat.groups[n].center, Vector3.UP, 0.05, 2)
-							_apply_effect(lab, "Estallido de %s por la onda expansiva" % lab, res, 0.6)
+							_apply_effect(lab, "Estallido de %s por la onda expansiva" % lab, res, 0.6, _loc(n, anat.groups[n].center, Vector3.UP))
 							res.nodes.append(n)
 		"impact":
 			# lanzado por la explosión contra pared / piso
@@ -160,10 +165,10 @@ func _fall(anat: AnatomyBody, actor: Actor, info: Dictionary, res: Dictionary) -
 			var g: Dictionary = anat.groups[n]
 			if g.system == "hueso":
 				anat.add_wound(n, g.center, Vector3.UP, 0.01, 0)
-				_apply_effect(g.label, "Fractura de %s por la caída" % g.label, res, 1.0)
+				_apply_effect(g.label, "Fractura de %s por la caída" % g.label, res, 1.0, _loc(n, g.center, Vector3.DOWN))
 			else:
 				anat.add_wound(n, g.center, Vector3.UP, 0.035, 2)
-				_apply_effect(g.label, "Rotura de %s por el impacto" % g.label, res, 1.0)
+				_apply_effect(g.label, "Rotura de %s por el impacto" % g.label, res, 1.0, _loc(n, g.center, Vector3.DOWN))
 			res.nodes.append(n)
 
 func _fracture_by_label(anat: AnatomyBody, actor: Actor, lab: String, point: Vector3, dir: Vector3, res: Dictionary, r: float, text: String) -> void:
@@ -171,7 +176,7 @@ func _fracture_by_label(anat: AnatomyBody, actor: Actor, lab: String, point: Vec
 	if n == "":
 		return
 	anat.add_wound(n, anat.groups[n].center, anat.dir_to_bind(n, dir), r, 0)
-	_apply_effect(anat.groups[n].label, text, res, 0.7)
+	_apply_effect(anat.groups[n].label, text, res, 0.7, _loc(n, anat.groups[n].center, dir))
 	res.nodes.append(n)
 
 func _hit_structure(anat: AnatomyBody, actor: Actor, h: Dictionary, t: String, r: float, res: Dictionary, point: Vector3, dir: Vector3) -> void:
@@ -182,7 +187,7 @@ func _hit_structure(anat: AnatomyBody, actor: Actor, h: Dictionary, t: String, r
 	if sys == "hueso":
 		anat.add_wound(n, h.p_in, h.dir, r * 1.6, 0)
 		var txt := ("Fractura expuesta de %s" if t == "bullet" else "Fractura de %s") % lab
-		_apply_effect(lab, txt, res, 1.0)
+		_apply_effect(lab, txt, res, 1.0, _loc(n, h.p_in, dir))
 		# astilla de hueso hacia un órgano vecino
 		var fx := effect_of(lab)
 		for sh in fx.get("shard", []):
@@ -191,19 +196,28 @@ func _hit_structure(anat: AnatomyBody, actor: Actor, h: Dictionary, t: String, r
 				if target != "" and target != n:
 					var tc: Vector3 = anat.groups[target].center
 					anat.add_wound(target, tc, anat.dir_to_bind(target, dir), 0.006, 3, 0.4)
-					_apply_effect(str(anat.groups[target].label), "Astilla de %s perforó %s" % [lab, anat.groups[target].label], res, 1.0)
+					_apply_effect(str(anat.groups[target].label), "Astilla de %s perforó %s" % [lab, anat.groups[target].label], res, 1.0, _loc(target, tc, dir))
 					res.nodes.append(target)
 					break
 	else:
 		var depth := (float(h.t_out) - float(h.t_in)) / 0.25
 		anat.add_wound(n, h.p_in, h.dir, r, 3 if lodged else 1, clampf(depth, 0.05, 0.99))
 		var verb := "Esquirla alojada en" if t == "fragment" else ("Puñalada en" if t == "knife" else "Perforación de")
-		_apply_effect(lab, "%s %s" % [verb, lab], res, 1.0)
+		_apply_effect(lab, "%s %s" % [verb, lab], res, 1.0, _loc(n, h.p_in, dir))
 	res.nodes.append(n)
 	if res.main == "":
 		res.main = n
 
-func _apply_effect(label: String, text: String, res: Dictionary, k: float) -> void:
+## Ubicación (mundo) de una herida para la hemorragia: hueso que la mueve, punto y dirección de salida.
+func _loc(node: String, p_bind: Vector3, dir: Vector3) -> Dictionary:
+	if _anat == null or not _anat.groups.has(node):
+		return {}
+	return {"bone": str(_anat.groups[node].bone), "point": _anat.bind_to_world(node, p_bind), "dir": dir}
+
+const ARTERIAL := ["corazón", "aorta", "arterias y venas de cuello", "arterias y venas de muslo", "arterias y venas de brazo",
+	"arterias y venas de tórax", "arterias y venas de abdomen", "arterias y venas de pelvis"]
+
+func _apply_effect(label: String, text: String, res: Dictionary, k: float, loc := {}) -> void:
 	res.texts.append(text)
 	# la misma estructura dañada dos veces en un golpe (astilla + bala) cuenta una sola vez
 	if res.applied.has(label):
@@ -213,7 +227,24 @@ func _apply_effect(label: String, text: String, res: Dictionary, k: float) -> vo
 	res.hp += float(fx.get("hp", 0)) * k
 	var b := float(fx.get("bleed", 0)) * k
 	if b > 0.0:
-		bleeds.append({"rate": b, "treat": str(fx.get("treat", "bandage")), "text": label})
+		var entry := {"rate": b, "treat": str(fx.get("treat", "bandage")), "text": label, "src": null}
+		# sangre líquida que sale de esa herida y sigue al cuerpo: chorro pulsátil (arterias) o mana / gotea (vísceras)
+		# (una sola fuente por hueso: si ya sangra ahí, se suma; con que una sea arteria, el chorro es pulsátil)
+		if not loc.is_empty() and _actor and is_instance_valid(_actor) and Blood.instance:
+			var art := false
+			for a in ARTERIAL:
+				if label.begins_with(a):
+					art = true
+			var src: Blood.BleedSource = _sources.get(str(loc.bone))
+			if src == null or not is_instance_valid(src):
+				src = Blood.BleedSource.new()
+				src.rate = 0.0
+				src.setup(_actor, str(loc.bone), loc.point, loc.dir)
+				_sources[str(loc.bone)] = src
+			src.arterial = src.arterial or art
+			src.rate += b
+			entry.src = src
+		bleeds.append(entry)
 	match str(fx.get("effect", "")):
 		"death":
 			res.death = true
@@ -242,8 +273,11 @@ func treat(item: String) -> float:
 			var keep := []
 			for b in bleeds:
 				if str(b.treat) == "bandage":
+					_stop(b)
 					continue
 				b.rate = float(b.rate) * 0.5
+				if b.src and is_instance_valid(b.src):
+					b.src.rate = b.rate
 				keep.append(b)
 			bleeds = keep
 			if not paralysis:
@@ -252,6 +286,8 @@ func treat(item: String) -> float:
 			changed.emit()
 			return 15.0
 		"medkit":
+			for b in bleeds:
+				_stop(b)
 			bleeds.clear()
 			if not paralysis:
 				leg_broken = false
@@ -262,6 +298,21 @@ func treat(item: String) -> float:
 			changed.emit()
 			return 60.0
 	return 0.0
+
+func _stop(b: Dictionary) -> void:
+	if b.src and is_instance_valid(b.src):
+		b.src.rate -= float(b.rate)
+		if b.src.rate <= 0.05:
+			b.src.queue_free()
+
+## Al morir: los chorros se apagan (sin pulso) y después de un rato se cortan; queda el charco.
+func on_death() -> void:
+	for b in bleeds:
+		if b.src and is_instance_valid(b.src):
+			b.src.arterial = false
+			b.src.rate = minf(float(b.rate), 1.5)
+			var s: Node = b.src
+			s.get_tree().create_timer(6.0).timeout.connect(func(): if is_instance_valid(s): s.queue_free())
 
 func aim_penalty() -> float:
 	return 1.0 + arm * 1.6 + hand * 2.4 + head * 1.0

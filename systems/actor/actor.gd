@@ -342,9 +342,6 @@ func _physics_process(delta: float) -> void:
 	if injuries.bleeding > 0.0 and state != State.DEAD:
 		health -= injuries.bleeding * delta
 		_bleed_t -= delta
-		if _bleed_t <= 0.0:
-			_bleed_t = 0.6
-			Fx.blood(global_position + Vector3(0, 1.0, 0.1), Vector3.DOWN, 0.3)
 		if health <= 0.0:
 			_die({"type": "bleed", "zone": "torso", "dir": Vector3.DOWN})
 	_grab_cool = maxf(_grab_cool - delta, 0.0)
@@ -933,9 +930,12 @@ func take_damage(info: Dictionary) -> void:
 	damaged.emit(info)
 	var dir: Vector3 = info.get("dir", Vector3(-facing, 0, 0))
 	if t in ["bullet", "fragment", "knife", "blast", "impact"] or (t in ["punch", "kick"] and amount > 12.0):
-		Fx.blood(info.get("point", global_position + Vector3.UP * 1.2), dir, 1.0)
-		if t == "bullet" and zone in ["head", "neck", "arm", "leg", "hand", "foot"]:
-			Fx.blood(info.get("point", global_position + Vector3.UP * 1.2) + dir * 0.2, dir, 1.2)   # orificio de salida
+		var bp: Vector3 = info.get("point", global_position + Vector3.UP * 1.2)
+		var through: bool = t == "bullet" and zone in ["head", "neck", "arm", "leg", "hand", "foot"]
+		if Blood.instance:
+			Blood.instance.spray(bp, dir, through, amount > 30.0)      # entrada y, si atravesó, salida
+		else:
+			Fx.blood(bp, dir, 1.0)
 	if health <= 0.0:
 		_die(info)
 		return
@@ -1026,6 +1026,10 @@ func _die(info: Dictionary) -> void:
 	if w:
 		w.visible = false
 	_play(anim_name, 0.12, 1.0, true)
+	injuries.on_death()
+	if Blood.instance and (injuries.bleeding > 0.0 or str(info.get("type", "")) in ["bullet", "fragment", "knife", "blast"]):
+		var pos := global_position
+		get_tree().create_timer(1.2).timeout.connect(func(): if Blood.instance: Blood.instance.pool(pos))
 	collision_layer = 0
 	for h in hitboxes:
 		h.collision_layer = 0

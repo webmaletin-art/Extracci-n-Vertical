@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## 0.2.1 — sangre líquida
+
+* Sangre líquida (gotas con gravedad, manchas en piso y paredes, charco); chorro arterial pulsátil que sigue al cuerpo;
+  sangre oscura de vísceras; se corta con venda / botiquín.
+
 ## 0.2.0 — anatomía completa y daño interno
 
 * Anatomía completa de Z-Anatomy (huesos, músculos, órganos, arterias y venas, encéfalo, médula, nervios) ajustada DENTRO
