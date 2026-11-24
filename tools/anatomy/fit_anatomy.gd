@@ -19,6 +19,8 @@ extends SceneTree
 
 const SRC := "res://tools/anatomy/anatomy_src.glb"
 const GROUPS := "res://tools/anatomy/anatomy_groups.json"
+const FRAG := "res://tools/anatomy/anatomy_frag.glb"           ## huesos rotos en Blender (fracture_bones.py)
+const FRAGS := "res://tools/anatomy/anatomy_frags.json"
 const OUT_DIR := "res://assets/anatomy/fit/"
 const MARGIN := 0.008
 const P := "mixamorig_"
@@ -39,6 +41,19 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	var src := _load_src()
 	var meta: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(GROUPS))
+	# fragmentos de hueso: se ajustan igual que su hueso (mismo hueso Mixamo y región)
+	if FileAccess.file_exists(FRAGS):
+		var fsrc := _load_src(FRAG)
+		var by_node := {}
+		for g in meta.groups:
+			by_node[str(g.node)] = g
+		var fm: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(FRAGS))
+		for f in fm.fragments:
+			var par: Dictionary = by_node.get(str(f.parent), {})
+			if par.is_empty() or not fsrc.has(str(f.node)):
+				continue
+			src[str(f.node)] = fsrc[str(f.node)]
+			meta.groups.append({"node": f.node, "label": par.label, "system": "hueso", "bone": par.bone, "parent": f.parent})
 	# cuerpo estático para los rayos contra la piel del personaje
 	space = PhysicsServer3D.space_get_direct_state(root.get_world_3d().space)
 	body_rid = PhysicsServer3D.body_create()
@@ -52,10 +67,10 @@ func _run() -> void:
 		print("  %s listo en %.1f s" % [id, (Time.get_ticks_msec() - t0) / 1000.0])
 	quit()
 
-func _load_src() -> Dictionary:
+func _load_src(path := SRC) -> Dictionary:
 	var doc := GLTFDocument.new()
 	var st := GLTFState.new()
-	doc.append_from_file(ProjectSettings.globalize_path(SRC), st)
+	doc.append_from_file(ProjectSettings.globalize_path(path), st)
 	var scene := doc.generate_scene(st)
 	var out := {}
 	for mi in scene.find_children("*", "MeshInstance3D", true, false):
@@ -67,7 +82,7 @@ func _load_src() -> Dictionary:
 		vv.resize(v.size())
 		for i in v.size():
 			vv[i] = xf * v[i]
-		out[str(m.name)] = {"v": vv, "i": arr[Mesh.ARRAY_INDEX]}
+		out[str(m.name)] = {"v": vv, "i": arr[Mesh.ARRAY_INDEX], "c": arr[Mesh.ARRAY_COLOR]}
 	scene.free()
 	return out
 
@@ -442,7 +457,11 @@ func _fit(id: String, src: Dictionary, meta: Dictionary) -> void:
 		st.set_custom_format(0, SurfaceTool.CUSTOM_RGB_FLOAT)
 		var bindv: PackedVector3Array = gd.bind
 		var idx: PackedInt32Array = gd.idx
+		var cols = src[str(g.node)].get("c")
+		var has_col: bool = cols is PackedColorArray and (cols as PackedColorArray).size() == bindv.size()
 		for i in bindv.size():
+			if has_col:
+				st.set_color((cols as PackedColorArray)[i])
 			var b := PackedInt32Array([gd.bones[i * 4], gd.bones[i * 4 + 1], gd.bones[i * 4 + 2], gd.bones[i * 4 + 3]])
 			var w := PackedFloat32Array([gd.weights[i * 4], gd.weights[i * 4 + 1], gd.weights[i * 4 + 2], gd.weights[i * 4 + 3]])
 			st.set_bones(b)
@@ -478,6 +497,8 @@ func _fit(id: String, src: Dictionary, meta: Dictionary) -> void:
 		mi.set_meta("bone", sk.get_bone_name(dom))
 		mi.set_meta("center_bind", center)
 		mi.set_meta("radius", aabb.size.length() * 0.5)
+		if g.has("parent"):
+			mi.set_meta("parent", str(g.parent))
 		out_root.add_child(mi)
 		mi.owner = out_root
 	var ps := PackedScene.new()

@@ -82,7 +82,7 @@
    "label": "clavícula der",
    "system": "hueso",
    "bone": "mixamorig_RightShoulder",
-   "tris": 360,
+   "tris": 378,
    "center": [
     -0.0829,
     1.4076,
@@ -97,7 +97,7 @@
    "label": "clavícula izq",
    "system": "hueso",
    "bone": "mixamorig_LeftShoulder",
-   "tris": 360,
+   "tris": 378,
    "center": [
     0.0829,
     1.4076,
@@ -112,7 +112,7 @@
    "label": "costillas der inferiores",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 1026,
+   "tris": 1086,
    "center": [
     -0.0697,
     1.2514,
@@ -135,7 +135,7 @@
    "label": "costillas der superiores",
    "system": "hueso",
    "bone": "mixamorig_Spine2",
-   "tris": 1812,
+   "tris": 1914,
    "center": [
     -0.0772,
     1.2858,
@@ -162,7 +162,7 @@
    "label": "costillas izq inferiores",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 1026,
+   "tris": 1086,
    "center": [
     0.0697,
     1.2514,
@@ -185,7 +185,7 @@
    "label": "costillas izq superiores",
    "system": "hueso",
    "bone": "mixamorig_Spine2",
-   "tris": 1812,
+   "tris": 1914,
    "center": [
     0.0772,
     1.2856,
@@ -212,11 +212,11 @@
    "label": "cráneo",
    "system": "hueso",
    "bone": "mixamorig_Head",
-   "tris": 7961,
+   "tris": 8418,
    "center": [
     -0.0001,
     1.622,
-    0.0062
+    0.0063
    ],
    "parts": [
     "Parietal bone.r",
@@ -264,11 +264,11 @@
    "label": "cúbito der",
    "system": "hueso",
    "bone": "mixamorig_RightForeArm",
-   "tris": 274,
+   "tris": 290,
    "center": [
     -0.2295,
     0.9837,
-    -0.0185
+    -0.0188
    ],
    "parts": [
     "Ulna.r"
@@ -279,11 +279,11 @@
    "label": "cúbito izq",
    "system": "hueso",
    "bone": "mixamorig_LeftForeArm",
-   "tris": 274,
+   "tris": 290,
    "center": [
     0.2295,
     0.9837,
-    -0.0185
+    -0.0188
    ],
    "parts": [
     "Ulna.l"
@@ -291,10 +291,66 @@
   },
   {
    "node": "g009",
+   "label": "dedos de la mano der",
+   "system": "hueso",
+   "bone": "mixamorig_RightHand",
+   "tris": 322,
+   "center": [
+    -0.2807,
+    0.7581,
+    0.0654
+   ],
+   "parts": [
+    "Distal phalanx of first finger of hand.r",
+    "Distal phalanx of second finger of hand.r",
+    "Distal phalanx of third finger of hand.r",
+    "Distal phalanx of fourth finger of hand.r",
+    "Distal phalanx of fifth finger of hand.r",
+    "Middle phalanx of second finger of hand.r",
+    "Middle phalanx of third finger of hand.r",
+    "Middle phalanx of fourth finger of hand.r",
+    "Middle phalanx of fifth finger of hand.r",
+    "Proximal phalanx of first finger of hand.r",
+    "Proximal phalanx of second finger of hand.r",
+    "Proximal phalanx of third finger of hand.r",
+    "Proximal phalanx of fourth finger of hand.r",
+    "Proximal phalanx of fifth finger of hand.r"
+   ]
+  },
+  {
+   "node": "g010",
+   "label": "dedos de la mano izq",
+   "system": "hueso",
+   "bone": "mixamorig_LeftHand",
+   "tris": 322,
+   "center": [
+    0.2805,
+    0.7581,
+    0.0654
+   ],
+   "parts": [
+    "Distal phalanx of first finger of hand.l",
+    "Distal phalanx of second finger of hand.l",
+    "Distal phalanx of third finger of hand.l",
+    "Distal phalanx of fourth finger of hand.l",
+    "Distal phalanx of fifth finger of hand.l",
+    "Middle phalanx of second finger of hand.l",
+    "Middle phalanx of third finger of hand.l",
+    "Middle phalanx of fourth finger of hand.l",
+    "Middle phalanx of fifth finger of hand.l",
+    "Proximal phalanx of first finger of hand.l",
+    "Proximal phalanx of second finger of hand.l",
+    "Proximal phalanx of third finger of hand.l",
+    "Proximal phalanx of fourth finger of hand.l",
+    "Proximal phalanx of fifth finger of hand.l"
+   ]
+  },
+  {
+   "node": "g011",
    "label": "dientes",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 348,
+   "tris": 372,
    "center": [
     0.0,
     1.5356,
@@ -312,11 +368,11 @@
    ]
   },
   {
-   "node": "g010",
+   "node": "g012",
    "label": "escápula der",
    "system": "hueso",
    "bone": "mixamorig_RightShoulder",
-   "tris": 1456,
+   "tris": 1538,
    "center": [
     -0.1171,
     1.336,
@@ -327,11 +383,11 @@
    ]
   },
   {
-   "node": "g011",
+   "node": "g013",
    "label": "escápula izq",
    "system": "hueso",
    "bone": "mixamorig_LeftShoulder",
-   "tris": 1456,
+   "tris": 1538,
    "center": [
     0.1172,
     1.3359,
@@ -342,11 +398,11 @@
    ]
   },
   {
-   "node": "g012",
+   "node": "g014",
    "label": "esternón",
    "system": "hueso",
    "bone": "mixamorig_Spine2",
-   "tris": 338,
+   "tris": 355,
    "center": [
     -0.0002,
     1.3124,
@@ -359,44 +415,44 @@
    ]
   },
   {
-   "node": "g013",
+   "node": "g015",
    "label": "fémur der",
    "system": "hueso",
    "bone": "mixamorig_RightUpLeg",
-   "tris": 564,
+   "tris": 594,
    "center": [
     -0.0895,
-    0.6573,
-    -0.0198
+    0.657,
+    -0.0194
    ],
    "parts": [
     "Femur.r"
    ]
   },
   {
-   "node": "g014",
+   "node": "g016",
    "label": "fémur izq",
    "system": "hueso",
    "bone": "mixamorig_LeftUpLeg",
-   "tris": 564,
+   "tris": 594,
    "center": [
     0.0895,
-    0.6573,
-    -0.0198
+    0.657,
+    -0.0194
    ],
    "parts": [
     "Femur.l"
    ]
   },
   {
-   "node": "g015",
+   "node": "g017",
    "label": "huesos de cabeza",
    "system": "hueso",
    "bone": "mixamorig_Head",
-   "tris": 84,
+   "tris": 88,
    "center": [
     0.0,
-    1.5554,
+    1.5548,
     0.1004
    ],
    "parts": [
@@ -405,11 +461,11 @@
    ]
   },
   {
-   "node": "g016",
+   "node": "g018",
    "label": "huesos de cuello",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 2202,
+   "tris": 2338,
    "center": [
     0.0,
     1.5073,
@@ -445,11 +501,11 @@
    ]
   },
   {
-   "node": "g017",
+   "node": "g019",
    "label": "huesos de la mano der",
    "system": "hueso",
    "bone": "mixamorig_RightHand",
-   "tris": 704,
+   "tris": 746,
    "center": [
     -0.2765,
     0.8142,
@@ -471,11 +527,11 @@
    ]
   },
   {
-   "node": "g018",
+   "node": "g020",
    "label": "huesos de la mano izq",
    "system": "hueso",
    "bone": "mixamorig_LeftHand",
-   "tris": 704,
+   "tris": 746,
    "center": [
     0.2765,
     0.8142,
@@ -497,71 +553,15 @@
    ]
   },
   {
-   "node": "g019",
-   "label": "huesos de mano der",
-   "system": "hueso",
-   "bone": "mixamorig_RightHand",
-   "tris": 322,
-   "center": [
-    -0.2807,
-    0.7581,
-    0.0654
-   ],
-   "parts": [
-    "Distal phalanx of first finger of hand.r",
-    "Distal phalanx of second finger of hand.r",
-    "Distal phalanx of third finger of hand.r",
-    "Distal phalanx of fourth finger of hand.r",
-    "Distal phalanx of fifth finger of hand.r",
-    "Middle phalanx of second finger of hand.r",
-    "Middle phalanx of third finger of hand.r",
-    "Middle phalanx of fourth finger of hand.r",
-    "Middle phalanx of fifth finger of hand.r",
-    "Proximal phalanx of first finger of hand.r",
-    "Proximal phalanx of second finger of hand.r",
-    "Proximal phalanx of third finger of hand.r",
-    "Proximal phalanx of fourth finger of hand.r",
-    "Proximal phalanx of fifth finger of hand.r"
-   ]
-  },
-  {
-   "node": "g020",
-   "label": "huesos de mano izq",
-   "system": "hueso",
-   "bone": "mixamorig_LeftHand",
-   "tris": 322,
-   "center": [
-    0.2805,
-    0.7581,
-    0.0654
-   ],
-   "parts": [
-    "Distal phalanx of first finger of hand.l",
-    "Distal phalanx of second finger of hand.l",
-    "Distal phalanx of third finger of hand.l",
-    "Distal phalanx of fourth finger of hand.l",
-    "Distal phalanx of fifth finger of hand.l",
-    "Middle phalanx of second finger of hand.l",
-    "Middle phalanx of third finger of hand.l",
-    "Middle phalanx of fourth finger of hand.l",
-    "Middle phalanx of fifth finger of hand.l",
-    "Proximal phalanx of first finger of hand.l",
-    "Proximal phalanx of second finger of hand.l",
-    "Proximal phalanx of third finger of hand.l",
-    "Proximal phalanx of fourth finger of hand.l",
-    "Proximal phalanx of fifth finger of hand.l"
-   ]
-  },
-  {
    "node": "g021",
    "label": "huesos de pelvis",
    "system": "hueso",
    "bone": "mixamorig_Hips",
-   "tris": 84,
+   "tris": 92,
    "center": [
     0.0,
-    0.8394,
-    0.0194
+    0.8395,
+    0.0197
    ],
    "parts": [
     "Trapezoid bone.r",
@@ -573,7 +573,7 @@
    "label": "huesos de pie der",
    "system": "hueso",
    "bone": "mixamorig_RightFoot",
-   "tris": 362,
+   "tris": 364,
    "center": [
     -0.1032,
     0.0195,
@@ -602,7 +602,7 @@
    "label": "huesos de pie izq",
    "system": "hueso",
    "bone": "mixamorig_LeftFoot",
-   "tris": 362,
+   "tris": 364,
    "center": [
     0.1032,
     0.0195,
@@ -631,11 +631,11 @@
    "label": "huesos del pie der",
    "system": "hueso",
    "bone": "mixamorig_RightFoot",
-   "tris": 802,
+   "tris": 848,
    "center": [
     -0.0947,
     0.0476,
-    -0.0025
+    -0.003
    ],
    "parts": [
     "Talus.r",
@@ -657,11 +657,11 @@
    "label": "huesos del pie izq",
    "system": "hueso",
    "bone": "mixamorig_LeftFoot",
-   "tris": 802,
+   "tris": 848,
    "center": [
     0.0947,
     0.0476,
-    -0.0025
+    -0.003
    ],
    "parts": [
     "Talus.l",
@@ -683,11 +683,11 @@
    "label": "húmero der",
    "system": "hueso",
    "bone": "mixamorig_RightArm",
-   "tris": 598,
+   "tris": 632,
    "center": [
     -0.1969,
     1.246,
-    -0.0273
+    -0.0277
    ],
    "parts": [
     "Humerus.r"
@@ -698,7 +698,7 @@
    "label": "húmero izq",
    "system": "hueso",
    "bone": "mixamorig_LeftArm",
-   "tris": 598,
+   "tris": 632,
    "center": [
     0.1969,
     1.246,
@@ -713,9 +713,9 @@
    "label": "mandíbula",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 1254,
+   "tris": 1324,
    "center": [
-    0.0005,
+    0.0003,
     1.5371,
     0.0429
    ],
@@ -728,7 +728,7 @@
    "label": "pelvis",
    "system": "hueso",
    "bone": "mixamorig_Hips",
-   "tris": 2188,
+   "tris": 2312,
    "center": [
     0.0,
     0.9044,
@@ -746,7 +746,7 @@
    "label": "peroné der",
    "system": "hueso",
    "bone": "mixamorig_RightLeg",
-   "tris": 324,
+   "tris": 342,
    "center": [
     -0.107,
     0.2366,
@@ -761,7 +761,7 @@
    "label": "peroné izq",
    "system": "hueso",
    "bone": "mixamorig_LeftLeg",
-   "tris": 324,
+   "tris": 342,
    "center": [
     0.107,
     0.2366,
@@ -776,11 +776,11 @@
    "label": "radio der",
    "system": "hueso",
    "bone": "mixamorig_RightForeArm",
-   "tris": 254,
+   "tris": 270,
    "center": [
     -0.2578,
     0.9747,
-    -0.0079
+    -0.0077
    ],
    "parts": [
     "Radius.r"
@@ -791,11 +791,11 @@
    "label": "radio izq",
    "system": "hueso",
    "bone": "mixamorig_LeftForeArm",
-   "tris": 254,
+   "tris": 270,
    "center": [
     0.2578,
     0.9747,
-    -0.0079
+    -0.0077
    ],
    "parts": [
     "Radius.l"
@@ -806,7 +806,7 @@
    "label": "rótula der",
    "system": "hueso",
    "bone": "mixamorig_RightLeg",
-   "tris": 152,
+   "tris": 160,
    "center": [
     -0.0846,
     0.4441,
@@ -821,7 +821,7 @@
    "label": "rótula izq",
    "system": "hueso",
    "bone": "mixamorig_LeftLeg",
-   "tris": 152,
+   "tris": 160,
    "center": [
     0.0846,
     0.4441,
@@ -836,10 +836,10 @@
    "label": "tibia der",
    "system": "hueso",
    "bone": "mixamorig_RightLeg",
-   "tris": 374,
+   "tris": 394,
    "center": [
     -0.0771,
-    0.2533,
+    0.2535,
     -0.0288
    ],
    "parts": [
@@ -851,10 +851,10 @@
    "label": "tibia izq",
    "system": "hueso",
    "bone": "mixamorig_LeftLeg",
-   "tris": 374,
+   "tris": 394,
    "center": [
     0.0771,
-    0.2533,
+    0.2535,
     -0.0288
    ],
    "parts": [
@@ -866,7 +866,7 @@
    "label": "vértebras cervicales",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 828,
+   "tris": 874,
    "center": [
     -0.0001,
     1.4957,
@@ -888,11 +888,11 @@
    "label": "vértebras lumbares",
    "system": "hueso",
    "bone": "mixamorig_Spine1",
-   "tris": 656,
+   "tris": 692,
    "center": [
     0.0005,
     1.0457,
-    -0.0258
+    -0.0263
    ],
    "parts": [
     "Vertebra L1",
@@ -907,7 +907,7 @@
    "label": "vértebras torácicas inferiores",
    "system": "hueso",
    "bone": "mixamorig_Spine1",
-   "tris": 432,
+   "tris": 462,
    "center": [
     -0.0003,
     1.2823,
@@ -925,7 +925,7 @@
    "label": "vértebras torácicas superiores",
    "system": "hueso",
    "bone": "mixamorig_Spine2",
-   "tris": 951,
+   "tris": 991,
    "center": [
     -0.0001,
     1.3186,
@@ -2184,30 +2184,74 @@
   },
   {
    "node": "g082",
-   "label": "ojo",
+   "label": "ojo der",
    "system": "nervio",
    "bone": "mixamorig_Head",
-   "tris": 794,
+   "tris": 397,
    "center": [
-    -0.0,
+    -0.0305,
     1.5902,
     0.0642
    ],
    "parts": [
     "Suspensory ligament of eyeball.r",
-    "Suspensory ligament of eyeball.l",
     "Retina.r",
-    "Retina.l",
     "Sclera.r",
-    "Sclera.l",
     "Posterior segment of eyeball.r",
-    "Posterior segment of eyeball.l",
-    "Anterior segment of eyeball.r",
-    "Anterior segment of eyeball.l"
+    "Anterior segment of eyeball.r"
    ]
   },
   {
    "node": "g083",
+   "label": "ojo izq",
+   "system": "nervio",
+   "bone": "mixamorig_Head",
+   "tris": 397,
+   "center": [
+    0.0305,
+    1.5896,
+    0.0644
+   ],
+   "parts": [
+    "Suspensory ligament of eyeball.l",
+    "Retina.l",
+    "Sclera.l",
+    "Posterior segment of eyeball.l",
+    "Anterior segment of eyeball.l"
+   ]
+  },
+  {
+   "node": "g084",
+   "label": "oreja der",
+   "system": "oreja",
+   "bone": "mixamorig_Head",
+   "tris": 296,
+   "center": [
+    -0.0665,
+    1.5798,
+    -0.0055
+   ],
+   "parts": [
+    "Auricular region.r"
+   ]
+  },
+  {
+   "node": "g085",
+   "label": "oreja izq",
+   "system": "oreja",
+   "bone": "mixamorig_Head",
+   "tris": 296,
+   "center": [
+    0.0665,
+    1.5798,
+    -0.0055
+   ],
+   "parts": [
+    "Auricular region.l"
+   ]
+  },
+  {
+   "node": "g086",
    "label": "corazón",
    "system": "organo",
    "bone": "mixamorig_Spine2",
@@ -2238,7 +2282,7 @@
    ]
   },
   {
-   "node": "g084",
+   "node": "g087",
    "label": "estómago",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2254,7 +2298,7 @@
    ]
   },
   {
-   "node": "g085",
+   "node": "g088",
    "label": "esófago",
    "system": "organo",
    "bone": "mixamorig_Spine2",
@@ -2269,7 +2313,7 @@
    ]
   },
   {
-   "node": "g086",
+   "node": "g089",
    "label": "hígado",
    "system": "organo",
    "bone": "mixamorig_Spine2",
@@ -2292,7 +2336,7 @@
    ]
   },
   {
-   "node": "g087",
+   "node": "g090",
    "label": "intestinos",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2320,7 +2364,7 @@
    ]
   },
   {
-   "node": "g088",
+   "node": "g091",
    "label": "pulmón",
    "system": "organo",
    "bone": "mixamorig_Spine2",
@@ -2335,7 +2379,7 @@
    ]
   },
   {
-   "node": "g089",
+   "node": "g092",
    "label": "pulmón der",
    "system": "organo",
    "bone": "mixamorig_Spine2",
@@ -2367,7 +2411,7 @@
    ]
   },
   {
-   "node": "g090",
+   "node": "g093",
    "label": "pulmón izq",
    "system": "organo",
    "bone": "mixamorig_Spine2",
@@ -2396,7 +2440,7 @@
    ]
   },
   {
-   "node": "g091",
+   "node": "g094",
    "label": "páncreas",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2412,7 +2456,7 @@
    ]
   },
   {
-   "node": "g092",
+   "node": "g095",
    "label": "riñón der",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2429,7 +2473,7 @@
    ]
   },
   {
-   "node": "g093",
+   "node": "g096",
    "label": "riñón izq",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2446,7 +2490,7 @@
    ]
   },
   {
-   "node": "g094",
+   "node": "g097",
    "label": "tiroides",
    "system": "organo",
    "bone": "mixamorig_Neck",
@@ -2465,7 +2509,7 @@
    ]
   },
   {
-   "node": "g095",
+   "node": "g098",
    "label": "tráquea y laringe",
    "system": "organo",
    "bone": "mixamorig_Neck",
@@ -2484,7 +2528,7 @@
    ]
   },
   {
-   "node": "g096",
+   "node": "g099",
    "label": "vejiga",
    "system": "organo",
    "bone": "mixamorig_Hips",
@@ -2507,7 +2551,7 @@
    ]
   },
   {
-   "node": "g097",
+   "node": "g100",
    "label": "vesícula",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2522,7 +2566,7 @@
    ]
   },
   {
-   "node": "g098",
+   "node": "g101",
    "label": "órganos de abdomen",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2539,7 +2583,7 @@
    ]
   },
   {
-   "node": "g099",
+   "node": "g102",
    "label": "órganos de cabeza",
    "system": "organo",
    "bone": "mixamorig_Head",
@@ -2569,7 +2613,7 @@
    ]
   },
   {
-   "node": "g100",
+   "node": "g103",
    "label": "órganos de cuello",
    "system": "organo",
    "bone": "mixamorig_Neck",
@@ -2591,7 +2635,7 @@
    ]
   },
   {
-   "node": "g101",
+   "node": "g104",
    "label": "órganos de muslo der",
    "system": "organo",
    "bone": "mixamorig_RightUpLeg",
@@ -2606,7 +2650,7 @@
    ]
   },
   {
-   "node": "g102",
+   "node": "g105",
    "label": "órganos de muslo izq",
    "system": "organo",
    "bone": "mixamorig_LeftUpLeg",
@@ -2621,7 +2665,7 @@
    ]
   },
   {
-   "node": "g103",
+   "node": "g106",
    "label": "órganos de pelvis",
    "system": "organo",
    "bone": "mixamorig_Hips",
@@ -2640,7 +2684,7 @@
    ]
   },
   {
-   "node": "g104",
+   "node": "g107",
    "label": "órganos de tórax",
    "system": "organo",
    "bone": "mixamorig_Spine2",
@@ -2655,7 +2699,7 @@
    ]
   },
   {
-   "node": "g105",
+   "node": "g108",
    "label": "aorta y grandes vasos",
    "system": "vaso",
    "bone": "mixamorig_Spine2",
@@ -2672,7 +2716,7 @@
    ]
   },
   {
-   "node": "g106",
+   "node": "g109",
    "label": "arterias y venas de abdomen",
    "system": "vaso",
    "bone": "mixamorig_Spine1",
@@ -2708,7 +2752,7 @@
    ]
   },
   {
-   "node": "g107",
+   "node": "g110",
    "label": "arterias y venas de abdomen bajo",
    "system": "vaso",
    "bone": "mixamorig_Spine",
@@ -2734,7 +2778,7 @@
    ]
   },
   {
-   "node": "g108",
+   "node": "g111",
    "label": "arterias y venas de antebrazo der",
    "system": "vaso",
    "bone": "mixamorig_RightForeArm",
@@ -2754,7 +2798,7 @@
    ]
   },
   {
-   "node": "g109",
+   "node": "g112",
    "label": "arterias y venas de antebrazo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftForeArm",
@@ -2774,7 +2818,7 @@
    ]
   },
   {
-   "node": "g110",
+   "node": "g113",
    "label": "arterias y venas de brazo der",
    "system": "vaso",
    "bone": "mixamorig_RightArm",
@@ -2793,7 +2837,7 @@
    ]
   },
   {
-   "node": "g111",
+   "node": "g114",
    "label": "arterias y venas de brazo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftArm",
@@ -2812,7 +2856,7 @@
    ]
   },
   {
-   "node": "g112",
+   "node": "g115",
    "label": "arterias y venas de cabeza",
    "system": "vaso",
    "bone": "mixamorig_Head",
@@ -2831,7 +2875,7 @@
    ]
   },
   {
-   "node": "g113",
+   "node": "g116",
    "label": "arterias y venas de cuello",
    "system": "vaso",
    "bone": "mixamorig_Neck",
@@ -2853,7 +2897,7 @@
    ]
   },
   {
-   "node": "g114",
+   "node": "g117",
    "label": "arterias y venas de mano der",
    "system": "vaso",
    "bone": "mixamorig_RightHand",
@@ -2869,7 +2913,7 @@
    ]
   },
   {
-   "node": "g115",
+   "node": "g118",
    "label": "arterias y venas de mano izq",
    "system": "vaso",
    "bone": "mixamorig_LeftHand",
@@ -2885,7 +2929,7 @@
    ]
   },
   {
-   "node": "g116",
+   "node": "g119",
    "label": "arterias y venas de muslo der",
    "system": "vaso",
    "bone": "mixamorig_RightUpLeg",
@@ -2908,7 +2952,7 @@
    ]
   },
   {
-   "node": "g117",
+   "node": "g120",
    "label": "arterias y venas de muslo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftUpLeg",
@@ -2931,7 +2975,7 @@
    ]
   },
   {
-   "node": "g118",
+   "node": "g121",
    "label": "arterias y venas de pelvis",
    "system": "vaso",
    "bone": "mixamorig_Hips",
@@ -2949,7 +2993,7 @@
    ]
   },
   {
-   "node": "g119",
+   "node": "g122",
    "label": "arterias y venas de pie der",
    "system": "vaso",
    "bone": "mixamorig_RightFoot",
@@ -2966,7 +3010,7 @@
    ]
   },
   {
-   "node": "g120",
+   "node": "g123",
    "label": "arterias y venas de pie izq",
    "system": "vaso",
    "bone": "mixamorig_LeftFoot",
@@ -2983,7 +3027,7 @@
    ]
   },
   {
-   "node": "g121",
+   "node": "g124",
    "label": "arterias y venas de pierna der",
    "system": "vaso",
    "bone": "mixamorig_RightLeg",
@@ -3004,7 +3048,7 @@
    ]
   },
   {
-   "node": "g122",
+   "node": "g125",
    "label": "arterias y venas de pierna izq",
    "system": "vaso",
    "bone": "mixamorig_LeftLeg",
@@ -3025,7 +3069,7 @@
    ]
   },
   {
-   "node": "g123",
+   "node": "g126",
    "label": "arterias y venas de rodilla der",
    "system": "vaso",
    "bone": "mixamorig_RightLeg",
@@ -3043,7 +3087,7 @@
    ]
   },
   {
-   "node": "g124",
+   "node": "g127",
    "label": "arterias y venas de rodilla izq",
    "system": "vaso",
    "bone": "mixamorig_LeftLeg",
@@ -3061,7 +3105,7 @@
    ]
   },
   {
-   "node": "g125",
+   "node": "g128",
    "label": "arterias y venas de tórax",
    "system": "vaso",
    "bone": "mixamorig_Spine2",

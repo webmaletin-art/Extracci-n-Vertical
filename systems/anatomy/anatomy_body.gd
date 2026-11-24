@@ -8,15 +8,21 @@ extends Node
 ##    estructura que atraviesa (hueso, músculo, órgano, vaso, nervio) con su punto de entrada y salida. Se calcula en el
 ##    espacio de enlace (el de la malla sin deformar) con el hueso dominante de cada grupo, contra los triángulos reales.
 ##  * Las heridas se guardan en ese espacio de enlace: quedan pegadas al órgano aunque el cuerpo se mueva.
-##  * Sólo se dibujan las partes DAÑADAS: destello rápido en el juego (show_flash) o la toma lenta de la muerte
-##    (show_killcam). Shader de heridas: fractura dentada con astillas, túnel de bala (entrada y salida), esquirla alojada,
-##    estallido por onda expansiva. Usa la posición de enlace guardada en CUSTOM0 (no la deformada).
+##  * RAYOS X LOCALIZADOS (como Sniper Elite): el cuerpo y la ropa se siguen viendo; sólo en la zona de la herida se abre
+##    una ventana de rayos X (borde azul) y adentro se ve lo que hay ahí: huesos, órganos, arterias y venas, ojos, cerebro,
+##    los músculos dañados y el proyectil (en vuelo o alojado y aplastado).
+##  * Huesos rotos DE VERDAD: Blender los partió en fragmentos (tools/anatomy/fracture_bones.py). Al quebrarse se ven
+##    las grietas entre fragmentos y los más cercanos al impacto se desprenden y salen volando (Gibs).
+##  * Shader de heridas sobre la anatomía: túnel de bala, esquirla alojada, estallido. Usa la posición de enlace (CUSTOM0).
 
 const FIT_DIR := "res://assets/anatomy/fit/"
 const MAX_WOUNDS := 6
 
 static var _scenes := {}         ## id → PackedScene
 static var _cpu := {}            ## id → {node: {v, i, aabb, label, system, bone, center}}
+static var _cpu_frags := {}      ## id → {grupo padre: [{node, mesh, v, i, b, w, center}]}
+static var _frag_shader: Shader
+static var _zone_skin_shader: Shader
 static var _wound_shader: Shader
 static var _flash_shader: Shader
 static var _skin_shader: Shader
@@ -29,9 +35,18 @@ var groups := {}                 ## node → datos de CPU (compartidos)
 var meshes := {}                 ## node → MeshInstance3D (se crean recién cuando hacen falta)
 var wounds := {}                 ## node → Array de heridas {pos, dir, r, type, depth}
 var _bind_of := {}               ## hueso → índice de enlace
-var _flash_t := 0.0
+var frags := {}                  ## grupo padre → fragmentos (compartidos)
+var broken := {}                 ## grupo padre → {fragmento: true} desprendidos
+var frag_meshes := {}            ## fragmento → MeshInstance3D
+var lodged: Array = []           ## balas alojadas [{node, pos, dir, mi}]
+var zones: Array = []            ## ventanas de rayos X [{node, pos}] (espacio de enlace)
+var zone_r := 0.17
+var _bone_of_bind := {}
+var _show_t := 0.0
 var _killcam := false
+var _showing := false
 var _skin_saved := {}
+var _skin_mats: Array[ShaderMaterial] = []
 var available := false
 
 static func for_actor(a: Actor) -> AnatomyBody:
@@ -58,6 +73,7 @@ func _setup() -> void:
 		if b < 0:
 			b = skel.find_bone(str(skin.get_bind_name(i)).replace(":", "_"))
 		_bind_of[b] = i
+		_bone_of_bind[i] = b
 	var id := actor.character_id
 	var path := FIT_DIR + id + ".scn"
 	if not ResourceLoader.exists(path):
@@ -68,15 +84,24 @@ func _setup() -> void:
 	if not _cpu.has(id):
 		var inst: Node = (_scenes[id] as PackedScene).instantiate()
 		var data := {}
+		var fr := {}
 		for mi in inst.get_children():
 			var m := mi as MeshInstance3D
 			var arr := m.mesh.surface_get_arrays(0)
+			if m.has_meta("parent"):
+				var list: Array = fr.get(str(m.get_meta("parent")), [])
+				list.append({"node": str(m.name), "mesh": m.mesh, "v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX],
+					"b": arr[Mesh.ARRAY_BONES], "w": arr[Mesh.ARRAY_WEIGHTS], "center": m.get_meta("center_bind")})
+				fr[str(m.get_meta("parent"))] = list
+				continue
 			data[str(m.name)] = {"v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX], "aabb": m.mesh.get_aabb(),
 				"label": str(m.get_meta("label")), "system": str(m.get_meta("system")), "bone": str(m.get_meta("bone")),
-				"center": m.get_meta("center_bind"), "mesh": m.mesh}
+				"center": m.get_meta("center_bind"), "radius": float(m.get_meta("radius", 0.1)), "mesh": m.mesh}
 		inst.free()
 		_cpu[id] = data
+		_cpu_frags[id] = fr
 	groups = _cpu[id]
+	frags = _cpu_frags[id]
 	available = true
 
 # ---------------------------------------------------------------- espacios
@@ -185,28 +210,129 @@ func add_wound(node: String, pos_bind: Vector3, dir_bind: Vector3, r: float, typ
 	if meshes.has(node):
 		_update_material(node)
 
+## Hueso que se quiebra en `pos_bind`: se marca roto (se verán sus fragmentos con grietas) y los fragmentos más cercanos
+## al impacto se desprenden y salen volando. strength: 0 = sólo grietas (caída), 1 = bala, 2 = bala potente / explosión.
+func break_bone(node: String, pos_bind: Vector3, dir_world: Vector3, strength: float) -> void:
+	if not frags.has(node):
+		return
+	var det: Dictionary = broken.get(node, {})
+	broken[node] = det
+	if strength <= 0.0:
+		return
+	var list: Array = frags[node]
+	var order := []
+	for f in list:
+		if not det.has(f.node):
+			order.append([(f.center as Vector3).distance_to(pos_bind), f])
+	order.sort_custom(func(a, b): return a[0] < b[0])
+	var n := clampi(int(round(strength * 2.0)), 1, 5)
+	var wound_w := bind_to_world(node, pos_bind)
+	for k in mini(n, order.size()):
+		if order[k][0] > 0.03 + strength * 0.035 and k > 0:
+			break
+		var f: Dictionary = order[k][1]
+		det[f.node] = true
+		_spawn_gib(f, wound_w, dir_world, strength)
+
+## El fragmento se vuelve un trozo suelto: se calcula su forma ACTUAL (piel por CPU con la pose del momento).
+func _spawn_gib(f: Dictionary, wound_w: Vector3, dir_world: Vector3, strength: float) -> void:
+	if Gibs.instance == null:
+		return
+	var v: PackedVector3Array = f.v
+	var b: PackedInt32Array = f.b
+	var w: PackedFloat32Array = f.w
+	var mats := {}
+	var pts := PackedVector3Array()
+	pts.resize(v.size())
+	var center := Vector3.ZERO
+	for i in v.size():
+		var t := Transform3D()
+		t.basis = Basis(Vector3.ZERO, Vector3.ZERO, Vector3.ZERO)
+		t.origin = Vector3.ZERO
+		for k in 4:
+			var ww := w[i * 4 + k]
+			if ww <= 0.0:
+				continue
+			var bi := b[i * 4 + k]
+			if not mats.has(bi):
+				mats[bi] = skel.global_transform * skel.get_bone_global_pose(_bone_of_bind.get(bi, 0)) * skin.get_bind_pose(bi) * mesh_xf
+			var m: Transform3D = mats[bi]
+			t.basis.x += m.basis.x * ww
+			t.basis.y += m.basis.y * ww
+			t.basis.z += m.basis.z * ww
+			t.origin += m.origin * ww
+		pts[i] = t * v[i]
+		center += pts[i]
+	center /= maxf(v.size(), 1)
+	var arr := (f.mesh as Mesh).surface_get_arrays(0)
+	var local := PackedVector3Array()
+	local.resize(pts.size())
+	for i in pts.size():
+		local[i] = pts[i] - center
+	var na := []
+	na.resize(Mesh.ARRAY_MAX)
+	na[Mesh.ARRAY_VERTEX] = local
+	na[Mesh.ARRAY_INDEX] = arr[Mesh.ARRAY_INDEX]
+	na[Mesh.ARRAY_COLOR] = arr[Mesh.ARRAY_COLOR]
+	var st := SurfaceTool.new()
+	var am := ArrayMesh.new()
+	am.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, na)
+	st.create_from(am, 0)
+	st.generate_normals()
+	var out := (center - wound_w).normalized() if center.distance_to(wound_w) > 0.001 else dir_world
+	var vel := dir_world.normalized() * randf_range(1.5, 3.5) * (0.6 + strength * 0.5) + out * randf_range(0.6, 2.0) + Vector3.UP * randf_range(0.2, 1.0)
+	vel.z = clampf(vel.z, -0.6, 1.2)
+	var spin := Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)).normalized() * randf_range(6.0, 18.0)
+	Gibs.instance.spawn(st.commit(), Transform3D(Basis.IDENTITY, center), vel, spin)
+
+## Bala que quedó adentro del cuerpo, aplastada (en hongo). Se ve en los rayos X.
+func add_lodged(node: String, pos_bind: Vector3, dir_bind: Vector3) -> void:
+	lodged.append({"node": node, "pos": pos_bind, "dir": dir_bind.normalized(), "mi": null})
+	if lodged.size() > 6:
+		var old: Dictionary = lodged.pop_front()
+		if old.mi:
+			(old.mi as Node).queue_free()
+
+# ---------------------------------------------------------------- mallas
+
 func _mesh(node: String) -> MeshInstance3D:
 	if meshes.has(node):
 		return meshes[node]
+	var mi := _skinned(groups[node].mesh)
+	meshes[node] = mi
+	_update_material(node)
+	return mi
+
+func _frag_mesh(f: Dictionary) -> MeshInstance3D:
+	if frag_meshes.has(f.node):
+		return frag_meshes[f.node]
+	var mi := _skinned(f.mesh)
+	var m := ShaderMaterial.new()
+	m.shader = _fshader()
+	m.set_shader_parameter("center", f.center)
+	mi.material_override = m
+	frag_meshes[f.node] = mi
+	return mi
+
+func _skinned(mesh: Mesh) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
-	mi.mesh = groups[node].mesh
+	mi.mesh = mesh
 	mi.skin = skin
 	mi.transform = mesh_xf
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.visible = false
 	skel.add_child(mi)
 	mi.skeleton = mi.get_path_to(skel)
-	meshes[node] = mi
-	_update_material(node)
 	return mi
 
-const SYS_COLOR := {"hueso": Color(0.95, 0.92, 0.82), "musculo": Color(0.72, 0.17, 0.15), "organo": Color(0.78, 0.26, 0.28),
-	"vaso": Color(0.75, 0.05, 0.08), "nervio": Color(0.95, 0.8, 0.45)}
+## Colores realistas (como un atlas de anatomía): hueso marfil, músculo rojo con fibras, vasos rojo oscuro.
+const SYS_COLOR := {"hueso": Color(0.86, 0.8, 0.66), "musculo": Color(0.55, 0.09, 0.07), "organo": Color(0.62, 0.2, 0.2),
+	"vaso": Color(0.5, 0.02, 0.04), "nervio": Color(0.9, 0.78, 0.55), "oreja": Color(0.8, 0.55, 0.48)}
 
-func _update_material(node: String, overlay := false) -> void:
+func _update_material(node: String) -> void:
 	var mi: MeshInstance3D = meshes[node]
 	var m := ShaderMaterial.new()
-	m.shader = _wshader(overlay)
+	m.shader = _wshader()
 	var g: Dictionary = groups[node]
 	var aabb: AABB = g.aabb
 	var axis := Vector3.UP
@@ -216,6 +342,7 @@ func _update_material(node: String, overlay := false) -> void:
 		axis = Vector3.BACK
 	m.set_shader_parameter("axis", axis)
 	m.set_shader_parameter("base_color", SYS_COLOR.get(g.system, Color.WHITE))
+	m.set_shader_parameter("is_muscle", 1.0 if g.system == "musculo" else 0.0)
 	var ps := PackedVector4Array()
 	var ds := PackedVector4Array()
 	var arr: Array = wounds.get(node, [])
@@ -228,67 +355,176 @@ func _update_material(node: String, overlay := false) -> void:
 	m.set_shader_parameter("w_pos", ps)
 	m.set_shader_parameter("w_dir", ds)
 	m.set_shader_parameter("w_count", arr.size())
-	m.set_shader_parameter("flash", 0.0)
 	mi.material_override = m
 
-# ---------------------------------------------------------------- mostrar
+# ---------------------------------------------------------------- rayos X localizados
 
-## Destello en pleno juego: las partes recién dañadas se ven a través del cuerpo un instante (sin cámara lenta).
-func show_flash(nodes: Array, seconds := 0.9) -> void:
-	if Settings.xray == 0 or not available:
+## Abre las ventanas de rayos X en las heridas. kill = toma de muerte (más grande y más tiempo).
+func show_xray(zone_list: Array, seconds: float, kill: bool) -> void:
+	if not available or Settings.xray == 0 or zone_list.is_empty():
 		return
-	for n in nodes:
-		var mi := _mesh(n)
-		_update_material(n, true)
-		mi.visible = Settings.xray >= 2 or groups[n].system == "hueso"
-		(mi.material_override as ShaderMaterial).set_shader_parameter("flash", 1.0)
-	_flash_t = seconds
+	zones = zone_list.slice(0, 4)
+	zone_r = 0.24 if kill else 0.15
+	_killcam = kill
+	_show_t = seconds
+	_showing = true
+	_apply_skin()
+	_refresh_visible()
 
-## Toma de muerte: todas las heridas acumuladas, el cuerpo transparente alrededor.
-func show_killcam() -> void:
-	if not available:
-		return
-	_killcam = true
+## Toma de muerte con todas las heridas (la principal primero).
+func show_killcam(main := "") -> void:
+	var zl := []
+	if main != "" and wounds.has(main):
+		var w: Dictionary = wounds[main][-1]
+		zl.append({"node": main, "pos": w.pos})
 	for n in wounds:
-		var mi := _mesh(n)
-		_update_material(n, false)
-		mi.visible = true
-	for mi in actor.model.find_children("*", "MeshInstance3D", true, false):
-		if (mi as MeshInstance3D).has_meta("actor_mesh"):
-			_skin_saved[mi] = (mi as MeshInstance3D).material_override
-			(mi as MeshInstance3D).material_override = _skin_mat_xray()
+		if zl.size() >= 4:
+			break
+		if n == main:
+			continue
+		var w: Dictionary = wounds[n][-1]
+		var dup := false
+		for z in zl:
+			if bind_to_world(z.node, z.pos).distance_to(bind_to_world(n, w.pos)) < 0.12:
+				dup = true
+		if not dup:
+			zl.append({"node": n, "pos": w.pos})
+	show_xray(zl, 99.0, true)
+
+## Destello en el juego (heridas graves que no matan).
+func show_flash(nodes: Array, seconds := 0.9) -> void:
+	var zl := []
+	for n in nodes:
+		if wounds.has(n) and zl.size() < 3:
+			zl.append({"node": n, "pos": wounds[n][-1].pos})
+	show_xray(zl, seconds, false)
 
 func hide_all() -> void:
 	_killcam = false
-	_flash_t = 0.0
+	_showing = false
+	_show_t = 0.0
 	for n in meshes:
 		(meshes[n] as MeshInstance3D).visible = false
+	for n in frag_meshes:
+		(frag_meshes[n] as MeshInstance3D).visible = false
+	for l in lodged:
+		if l.mi:
+			(l.mi as MeshInstance3D).visible = false
 	for mi in _skin_saved:
 		if is_instance_valid(mi):
 			(mi as MeshInstance3D).material_override = _skin_saved[mi]
 	_skin_saved.clear()
 
+func _zone_world() -> PackedVector4Array:
+	var out := PackedVector4Array()
+	for z in zones:
+		var p := bind_to_world(z.node, z.pos)
+		out.append(Vector4(p.x, p.y, p.z, 0))
+	while out.size() < 4:
+		out.append(Vector4(0, -1000, 0, 0))
+	return out
+
+## Qué se dibuja: todo lo que cae en las ventanas (huesos, órganos, vasos, nervios, ojos, orejas) y los músculos (en
+## anillo alrededor del centro, como en Sniper Elite). Los huesos rotos, como sus fragmentos.
+func _refresh_visible() -> void:
+	for n in meshes:
+		(meshes[n] as MeshInstance3D).visible = false
+	for n in frag_meshes:
+		(frag_meshes[n] as MeshInstance3D).visible = false
+	var zw := _zone_world()
+	for n in groups:
+		var g: Dictionary = groups[n]
+		if Settings.xray == 1 and g.system != "hueso" and not wounds.has(n):
+			continue
+		var c := bind_to_world(n, g.center)
+		var near := false
+		for i in zones.size():
+			var z := Vector3(zw[i].x, zw[i].y, zw[i].z)
+			if c.distance_to(z) < zone_r + float(g.radius) * 0.6:
+				near = true
+		if not near:
+			continue
+		if broken.has(n) and frags.has(n):
+			for f in frags[n]:
+				if not (broken[n] as Dictionary).has(f.node):
+					_frag_mesh(f).visible = true
+			continue
+		_mesh(n).visible = true
+
+func _apply_skin() -> void:
+	if not _skin_saved.is_empty():
+		return
+	_skin_mats.clear()
+	for mi in actor.model.find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		if not m.has_meta("actor_mesh"):
+			continue
+		_skin_saved[m] = m.material_override
+		var src: Material = m.material_override if m.material_override else (m.mesh.surface_get_material(0) if m.mesh else null)
+		var zm := ShaderMaterial.new()
+		zm.shader = _zshader()
+		if src is StandardMaterial3D:
+			zm.set_shader_parameter("albedo_tex", (src as StandardMaterial3D).albedo_texture)
+			zm.set_shader_parameter("albedo_color", (src as StandardMaterial3D).albedo_color)
+		m.material_override = zm
+		_skin_mats.append(zm)
+
 func _process(delta: float) -> void:
-	if _flash_t > 0.0 and not _killcam:
-		_flash_t -= delta / maxf(Engine.time_scale, 0.05)
-		var k := clampf(_flash_t / 0.4, 0.0, 1.0)
-		for n in meshes:
-			var mi: MeshInstance3D = meshes[n]
+	if not _showing:
+		return
+	_show_t -= delta / maxf(Engine.time_scale, 0.05)
+	if _show_t <= 0.0:
+		hide_all()
+		return
+	var zw := _zone_world()
+	var k := 1.0 if _killcam else clampf(_show_t / 0.3, 0.0, 1.0)
+	var r := zone_r * k
+	for zm in _skin_mats:
+		zm.set_shader_parameter("zone_c", zw)
+		zm.set_shader_parameter("zone_n", zones.size())
+		zm.set_shader_parameter("zone_r", r)
+	for coll in [meshes, frag_meshes]:
+		for n in coll:
+			var mi: MeshInstance3D = coll[n]
 			if mi.visible:
-				(mi.material_override as ShaderMaterial).set_shader_parameter("flash", k)
-		if _flash_t <= 0.0:
-			for n in meshes:
-				(meshes[n] as MeshInstance3D).visible = false
+				var sm := mi.material_override as ShaderMaterial
+				sm.set_shader_parameter("zone_c", zw)
+				sm.set_shader_parameter("zone_n", zones.size())
+				sm.set_shader_parameter("zone_r", r)
+	# balas alojadas
+	for l in lodged:
+		if l.mi == null and Gibs.instance:
+			var mi := MeshInstance3D.new()
+			mi.mesh = Gibs.instance.bullet_mesh
+			var mat := StandardMaterial3D.new()
+			mat.vertex_color_use_as_albedo = true
+			mat.metallic = 0.8
+			mat.roughness = 0.3
+			mi.material_override = mat
+			mi.top_level = true
+			add_child(mi)
+			l.mi = mi
+		if l.mi:
+			var p := bind_to_world(l.node, l.pos)
+			var d: Vector3 = (_skin_mat(groups[l.node].bone).basis * l.dir).normalized() if groups.has(l.node) else Vector3.RIGHT
+			(l.mi as MeshInstance3D).global_transform = Transform3D(Basis.looking_at(d, Vector3.UP if absf(d.y) < 0.95 else Vector3.RIGHT).scaled(Vector3.ONE * 2.2), p)
+			(l.mi as MeshInstance3D).visible = true
 
 # ---------------------------------------------------------------- shaders
 
-## overlay = true: se dibuja por encima del cuerpo (destello en el juego); false: dentro (toma de muerte, piel de rayos X).
-static func _wshader(overlay := false) -> Shader:
-	if overlay:
-		if _flash_shader == null:
-			_flash_shader = Shader.new()
-			_flash_shader.code = _wshader(false).code.replace("render_mode cull_disabled, depth_draw_opaque;", "render_mode cull_disabled, depth_test_disabled, unshaded;")
-		return _flash_shader
+const _ZONE_FUNC := """
+uniform vec4 zone_c[4];
+uniform int zone_n = 0;
+uniform float zone_r = 0.2;
+float zone_d(vec3 wp) {
+	float d = 1e6;
+	for (int i = 0; i < 4; i++) { if (i >= zone_n) break; d = min(d, distance(wp, zone_c[i].xyz)); }
+	return d;
+}
+"""
+
+## Anatomía: realista y recortada a las ventanas; los músculos sólo en el anillo de afuera (se ve el hueso al centro).
+static func _wshader() -> Shader:
 	if _wound_shader == null:
 		_wound_shader = Shader.new()
 		_wound_shader.code = """
@@ -296,39 +532,22 @@ shader_type spatial;
 render_mode cull_disabled, depth_draw_opaque;
 uniform vec3 axis = vec3(0.0, 1.0, 0.0);
 uniform vec4 base_color : source_color = vec4(0.9, 0.9, 0.8, 1.0);
-uniform vec4 w_pos[6];      // xyz = punto (enlace), w = radio
-uniform vec4 w_dir[6];      // xyz = dirección, w = tipo (0 fractura, 1 túnel, 2 estallido, 3 alojada, 4 contusión) + profundidad
+uniform float is_muscle = 0.0;
+uniform vec4 w_pos[6];
+uniform vec4 w_dir[6];
 uniform int w_count = 0;
-uniform float flash = 0.0;  // destello en el juego (se ve a través del cuerpo)
+""" + _ZONE_FUNC + """
 varying vec3 lp;
-varying float wound_k;
-
+varying vec3 wp;
 float hash(vec3 p) { return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453); }
-
 void vertex() {
 	lp = CUSTOM0.xyz;
-	wound_k = 0.0;
-	for (int i = 0; i < 6; i++) {
-		if (i >= w_count) break;
-		vec3 c = w_pos[i].xyz;
-		float r = w_pos[i].w;
-		int t = int(floor(w_dir[i].w));
-		if (t == 0) {
-			// fractura: los extremos quebrados se astillan hacia afuera
-			float d = abs(dot(lp - c, axis));
-			float near_break = 1.0 - smoothstep(r * 0.3, r * 2.2, d) * step(length((lp - c) - axis * dot(lp - c, axis)), r * 6.0);
-			VERTEX += NORMAL * near_break * (0.004 + hash(floor(lp * 400.0)) * 0.012);
-			wound_k = max(wound_k, near_break);
-		} else if (t == 2) {
-			float d = length(lp - c);
-			float k = 1.0 - smoothstep(r * 0.5, r * 1.6, d);
-			VERTEX += NORMAL * k * hash(floor(lp * 300.0)) * 0.01;
-			wound_k = max(wound_k, k);
-		}
-	}
+	wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
-
 void fragment() {
+	float zd = zone_d(wp);
+	if (zd > zone_r) { discard; }
+	if (is_muscle > 0.5 && zd < zone_r * 0.62) { discard; }   // anillo de músculo, hueso al centro
 	float rim = 0.0;
 	for (int i = 0; i < 6; i++) {
 		if (i >= w_count) break;
@@ -337,51 +556,91 @@ void fragment() {
 		vec3 dir = w_dir[i].xyz;
 		int t = int(floor(w_dir[i].w));
 		float depth = fract(w_dir[i].w);
-		if (t == 0) {
-			float s = dot(lp - c, axis);
-			float jag = (sin(lp.x * 830.0) * sin(lp.z * 610.0) + sin(lp.y * 520.0)) * r * 0.3;
-			float radial = length((lp - c) - axis * s);
-			if (abs(s + jag) < r * 0.35 && radial < r * 8.0) { discard; }
-			rim = max(rim, 1.0 - smoothstep(r * 0.35, r * 2.0, abs(s + jag)));
-			// el túnel de la bala también atraviesa el hueso
-			float dl = length(cross(lp - c, dir));
-			if (dl < r * 0.6) { discard; }
-		} else if (t == 1 || t == 3) {
-			float along = dot(lp - c, dir);
-			float dl = length(cross(lp - c, dir));
-			bool inside_len = (t == 1) || (along > -r && along < depth * 0.25);
-			if (dl < r && inside_len) { discard; }
-			if (inside_len) { rim = max(rim, 1.0 - smoothstep(r, r * 2.6, dl)); }
-		} else if (t == 2) {
+		float along = dot(lp - c, dir);
+		float dl = length(cross(lp - c, dir));
+		bool inside_len = (t == 1) || (t == 0) || (along > -r && along < depth * 0.25);
+		if (t == 2) {
 			float d = length(lp - c);
-			float n = hash(floor(lp * 120.0));
-			if (d < r && n > 0.45) { discard; }
+			if (d < r && hash(floor(lp * 120.0)) > 0.45) { discard; }
 			rim = max(rim, 1.0 - smoothstep(r * 0.6, r * 1.8, d));
 		} else {
-			rim = max(rim, (1.0 - smoothstep(0.0, r * 2.0, length(lp - c))) * 0.6);
+			if (dl < r && inside_len) { discard; }
+			if (inside_len) { rim = max(rim, 1.0 - smoothstep(r, r * 3.0, dl)); }
 		}
 	}
-	vec3 wound = vec3(0.5, 0.02, 0.02);
-	ALBEDO = mix(base_color.rgb, wound, clamp(rim + wound_k * 0.5, 0.0, 1.0));
-	ROUGHNESS = 0.55;
-	EMISSION = base_color.rgb * (0.25 + flash * 0.9) + vec3(1.0, 0.1, 0.02) * rim * 1.8;
-
+	vec3 col = base_color.rgb;
+	if (is_muscle > 0.5) {
+		// fibras musculares a lo largo del eje
+		float fib = sin(dot(lp, normalize(axis + vec3(0.2, 0.1, 0.0))) * 900.0) * 0.5 + 0.5;
+		col *= 0.75 + fib * 0.35;
+	}
+	// sangre manchando lo que está cerca de la herida y salpicaduras
+	float splat = step(0.82, hash(floor(lp * 90.0))) * 0.35;
+	col = mix(col, vec3(0.35, 0.01, 0.01), clamp(rim * 1.2 + splat * rim, 0.0, 0.9));
+	// luz propia de la toma (cálida, desde la cámara): no la tiñen las luces de colores del escenario
+	float nl = clamp(dot(NORMAL, normalize(VIEW + vec3(0.35, 0.6, 0.0))), 0.0, 1.0);
+	float edge = smoothstep(zone_r, zone_r * 0.88, zd) * 0.6 + 0.4;   // borde oscuro del corte de la ventana
+	ALBEDO = col * 0.12;
+	ROUGHNESS = is_muscle > 0.5 ? 0.4 : 0.55;
+	SPECULAR = 0.5;
+	EMISSION = (col * (0.22 + 0.9 * nl) * vec3(1.0, 0.96, 0.9) + vec3(0.6, 0.02, 0.0) * rim * 0.5) * edge;
 }
 """
 	return _wound_shader
 
-static var _xray_skin: ShaderMaterial
-static func _skin_mat_xray() -> ShaderMaterial:
-	if _xray_skin == null:
-		var sh := Shader.new()
-		sh.code = """
+## Fragmento de hueso roto (de Blender): color por vértice (hueso / médula en el corte) y un poco encogido hacia su centro
+## para que se vean las grietas entre fragmentos.
+static func _fshader() -> Shader:
+	if _frag_shader == null:
+		_frag_shader = Shader.new()
+		_frag_shader.code = """
 shader_type spatial;
-render_mode unshaded, blend_add, depth_draw_never, cull_back;
+render_mode cull_disabled;
+uniform vec3 center;
+""" + _ZONE_FUNC + """
+varying vec3 wp;
+void vertex() {
+	VERTEX -= (CUSTOM0.xyz - center) * 0.06;
+	wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+}
 void fragment() {
-	float f = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 2.2);
-	ALBEDO = vec3(0.35, 0.75, 1.0) * (0.06 + f * 0.8);
+	if (zone_d(wp) > zone_r) { discard; }
+	float nl = clamp(dot(NORMAL, normalize(VIEW + vec3(0.35, 0.6, 0.0))), 0.0, 1.0);
+	vec3 col = COLOR.rgb * vec3(0.92, 0.86, 0.74);
+	ALBEDO = col * 0.12;
+	ROUGHNESS = 0.55;
+	SPECULAR = 0.5;
+	EMISSION = col * (0.22 + 0.9 * nl);
 }
 """
-		_xray_skin = ShaderMaterial.new()
-		_xray_skin.shader = sh
-	return _xray_skin
+	return _frag_shader
+
+## Piel / ropa del personaje: normal afuera; dentro de la ventana desaparece y queda la silueta oscura (caras de atrás).
+static func _zshader() -> Shader:
+	if _zone_skin_shader == null:
+		_zone_skin_shader = Shader.new()
+		_zone_skin_shader.code = """
+shader_type spatial;
+render_mode cull_disabled;
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
+uniform vec4 albedo_color : source_color = vec4(1.0);
+""" + _ZONE_FUNC + """
+varying vec3 wp;
+void vertex() { wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz; }
+void fragment() {
+	float zd = zone_d(wp);
+	if (zd < zone_r) {
+		if (FRONT_FACING) { discard; }
+		ALBEDO = vec3(0.015, 0.012, 0.012);    // interior del cuerpo: silueta negra detrás de la anatomía
+		ROUGHNESS = 1.0;
+	} else {
+		if (!FRONT_FACING) { discard; }
+		vec4 t = texture(albedo_tex, UV) * albedo_color;
+		// borde quemado alrededor del corte, como en Sniper Elite
+		float edge = 1.0 - smoothstep(zone_r, zone_r * 1.12, zd);
+		ALBEDO = mix(t.rgb, vec3(0.05, 0.0, 0.0), edge * 0.85);
+		ROUGHNESS = 0.85;
+	}
+}
+"""
+	return _zone_skin_shader

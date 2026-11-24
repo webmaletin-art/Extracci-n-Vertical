@@ -21,7 +21,7 @@ func _ready() -> void:
 	p.health = 100000.0
 	g.controller.set_physics_process(false)
 	_freeze_bots(true)
-	var list := ["inicio", "apunta_atras", "escalera", "colgado", "rayos_x", "destello", "explosion", "patada", "caja", "ascensor", "caida", "arteria", "menu_config"]
+	var list := ["inicio", "apunta_atras", "escalera", "colgado", "rayos_x", "destello", "explosion", "patada", "caja", "ascensor", "caida", "arteria", "rafaga", "menu_config"]
 	for s in list:
 		if which == "all" or which == s:
 			await call("_s_" + s)
@@ -267,3 +267,46 @@ func _s_arteria() -> void:
 	await _wait(15)
 	await _shot("arteria_2")
 	g.camera.release_override()
+
+func _s_rafaga() -> void:
+	# varios disparos al mismo enemigo (mano, rodilla, pecho y el último a la cabeza): la toma de muerte muestra todo
+	Settings.bullet_time = 1
+	Settings.xray = 2
+	var e: Actor = g.tower.enemies[0]
+	await _place(Vector3(50.0, 0.05, 0), Vector2(1, 0.0))
+	e.global_position = Vector3(53.0, 0.05, 0)
+	e.facing = -1
+	e.health = 400.0
+	await _wait_phys(10)
+	var shots := [["mixamorig_RightHand", "hand", Vector3.ZERO], ["mixamorig_LeftLeg", "leg", Vector3(0, 0.02, 0)],
+		["mixamorig_Spine2", "torso", Vector3(0, 0.05, 0)], ["mixamorig_Head", "head", Vector3(0, 0.08, 0)]]
+	for s in shots:
+		var b := e.skel.find_bone(s[0])
+		var tgt: Vector3 = e.skel.global_transform * e.skel.get_bone_global_pose(b).origin + s[2]
+		if s[1] == "head":
+			e.health = 1.0
+		e.take_damage({"type": "bullet", "damage": 30.0, "zone": s[1], "bone": s[0], "point": tgt - Vector3(0.15, 0, 0),
+			"dir": Vector3.RIGHT, "shooter": p, "penetration": 6.0})
+		print("  ", s[0], " vida ", e.health, " estado ", Actor.State.keys()[e.state], " fase ", g.bullet_time.phase)
+		await _wait(3)
+	print("  lesiones: ", e.injuries.log)
+	var bt := g.bullet_time
+	var t := 0
+	while bt.phase != "kill" and t < 60:
+		await get_tree().process_frame
+		t += 1
+	e.ap.speed_scale = 0.0          # (captura) congelar la caída para encuadrar
+	bt._t0 = TimeFx.now() - BulletTime.KILL_SECONDS * 0.35
+	bt._until = TimeFx.now() + 120.0
+	await _wait(6)
+	await _shot("rafaga_1")
+	bt._t0 = TimeFx.now() - BulletTime.KILL_SECONDS * 0.95
+	await _wait(8)
+	await _shot("rafaga_2")
+	# vista general con todas las ventanas
+	bt.phase = "hold"
+	g.camera.override_target(e.global_position + Vector3(-0.3, 1.0, 2.6), e.global_position + Vector3(0, 0.9, 0), 40.0)
+	await _wait(10)
+	await _shot("rafaga_3")
+	bt.phase = "kill"
+	bt.skip()

@@ -18,7 +18,7 @@ argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
 BLEND, OUT = argv[0], argv[1]
 bpy.ops.wm.open_mainfile(filepath=BLEND)
 
-SYSTEMS = {"1": "hueso", "4": "musculo", "5": "vaso", "7": "nervio", "8": "organo"}
+SYSTEMS = {"1": "hueso", "4": "musculo", "5": "vaso", "7": "nervio", "8": "organo", "9": "oreja"}
 SKIP = ("bursa", "tendon sheath", "synovial", "fascia", "retinaculum", "aponeurosis of", "septum", "surface of tooth",
         "region", "sulcus", "fissure", "gyrus*", "line", "plane", "notch")
 
@@ -44,7 +44,10 @@ for c in bpy.context.scene.collection.children:
         if n.endswith((".j", ".i", ".t")) or o.hide_get() or o.hide_viewport:
             continue
         low = n.lower()
-        if any(s in low for s in SKIP):
+        if sysname == "oreja":
+            if not n.startswith("Auricular region."):
+                continue                 # de las regiones del cuerpo sólo se toma la oreja completa
+        elif any(s in low for s in SKIP):
             continue
         dims = max(o.dimensions)
         if sysname in ("vaso", "nervio") and o.type == "CURVE" and dims < 0.12:

@@ -83,24 +83,29 @@ recupera brazo, mano, cabeza y respiración. Con corazón o aorta perforados hay
   * **Vísceras y músculos: sangre oscura que mana y gotea.**
   * Una fuente por hueso (se suman las heridas); la venda o el botiquín las cortan; al morir se apagan y queda el charco.
 
-## ¿Daño modelado en Blender?
+## Rotura real en Blender
 
-Todavía no. Blender (`bpy`) se usa para exportar Z-Anatomy; las heridas se dibujan en el juego con un shader sobre la
-anatomía (corte dentado con astillas en el hueso, túnel de bala, estallido). Ventaja: aparecen exactamente donde pega
-cada bala. Siguiente paso posible: pre-romper en Blender los huesos largos, el cráneo y las costillas en fragmentos
-reales (Cell Fracture) y los órganos grandes en versiones reventadas, ajustarlos igual que la anatomía y, en el
-impacto, mostrar los fragmentos más cercanos a la herida desplazándose.
+`tools/anatomy/fracture_bones.py` (Blender, `bpy`) parte cada hueso en fragmentos de Voronoi con las caras de corte
+cerradas, dentadas con ruido y marcadas como hueso esponjoso / médula: cráneo en 16 placas, costillas en 11–12 trozos,
+fémur 8–9, húmero y tibia 8, dedos 10, vértebras 8, pelvis 10… (41 huesos, 301 fragmentos). `build_fragments.py` los
+empaqueta y `fit_anatomy.gd` los ajusta dentro de cada personaje igual que el resto de la anatomía.
 
-## Referencias usadas para calibrar
+En el juego (`AnatomyBody.break_bone`): el hueso golpeado se muestra como sus fragmentos con grietas visibles; los más
+cercanos al impacto se desprenden (piel calculada por CPU con la pose del momento) y salen volando como trozos reales
+(`systems/fx/gibs.gd`): giran, rebotan y quedan en el piso. Con varios disparos los pedazos que faltan siguen faltando.
 
-* Fuerza de puñetazo de boxeadores olímpicos ≈ 3 427 N (Walilko et al., 2005): https://pubmed.ncbi.nlm.nih.gov/16183766/
-* ≈ 3 300 N dan ≈ 25 % de fisurar una costilla; el nocaut depende del giro de la cabeza (C. Bir):
-  https://livescience.com/6040-brute-force-humans-punch.html
-* Caídas de pie > 3 m: el talón es la fractura más frecuente, luego pie, tobillo y tibia:
-  https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12491098/ · altura ≥ 5 m aumenta la gravedad; caer de costado o de
-  espalda es peor: https://link.springer.com/10.1038/s41598-021-95226-w
-* Lesiones por explosión (primarias: tímpano desde ~5 psi, pulmón 15–50 psi; secundarias: esquirlas, principal causa
-  de bajas; terciarias: ser lanzado; peor en lugar cerrado): https://en.wikipedia.org/wiki/Blast_injury ·
-  https://msdmanuals.com/professional/multimedia/table/mechanisms-of-blast-injury
+## La bala adentro del cuerpo
 
-Los valores del juego son de balance, inspirados en esas referencias, no un modelo médico.
+* Al pegar en un hueso denso (cráneo, fémur, húmero, tibia, pelvis, vértebras…) la bala puede **desviarse** 15–45° y
+  seguir rompiendo en otra dirección (hasta dos veces).
+* La que no sale queda **aplastada en hongo** y alojada al final del recorrido (se ve en los rayos X).
+* **Rebotes**: en metal con ángulo rasante y en pisos / paredes casi de costado la bala rebota, llega deformada y
+  girando: abre una herida el doble de ancha y se frena antes.
+
+## Rayos X localizados (como Sniper Elite)
+
+El cuerpo y la ropa se ven normales; en la zona de cada herida la piel y la ropa desaparecen (queda la silueta oscura y un
+borde quemado) y adentro se ve lo que hay: huesos (rotos en fragmentos), órganos, arterias y venas, ojos, orejas,
+cerebro y un anillo de músculo alrededor (el hueso al centro). Luz propia cálida para que no la tiñan las luces del
+escenario. Muerte: ventanas grandes en todas las heridas, cámara lenta que sigue la herida que mató mientras el cuerpo
+cae. Heridas graves sin muerte: ventana chica y rápida.

@@ -1,5 +1,14 @@
 # Registro de cambios
 
+## 0.3.0 — huesos rotos de verdad y rayos X como Sniper Elite
+
+* Huesos partidos en Blender (301 fragmentos de 41 huesos) y ajustados a cada personaje; los cercanos al impacto se
+  desprenden y vuelan (trozos con física simple, reutilizables).
+* Bala que se desvía en huesos densos, que queda aplastada en hongo adentro, rebotes en metal y piso que hieren más.
+* Rayos X localizados: la ropa queda, la zona de la herida se abre y muestra huesos, órganos, vasos, ojos, orejas y
+  músculos; cámara de muerte que sigue la herida.
+* Anatomía: orejas, dedos de la mano y ojos izquierdo / derecho como grupos propios.
+
 ## 0.2.1 — sangre líquida
 
 * Sangre líquida (gotas con gravedad, manchas en piso y paredes, charco); chorro arterial pulsátil que sigue al cuerpo;

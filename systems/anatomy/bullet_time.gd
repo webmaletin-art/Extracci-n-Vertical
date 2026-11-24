@@ -21,6 +21,9 @@ var _victim: Actor
 var _until := 0.0
 var _t0 := 0.0
 var _focus := Vector3.ZERO
+var _main := ""                  ## grupo anatómico de la herida que mató (la cámara la sigue mientras cae el cuerpo)
+var _main_pos := Vector3.ZERO
+var _kind := ""
 var _side := 1.0
 var _connected := false
 
@@ -101,15 +104,19 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 	_focus = info.get("point", a.global_position + Vector3.UP * 1.2)
 	var anat := AnatomyBody.for_actor(a)
 	var main := str(info.get("anatomy_main", ""))
+	_main = ""
 	if main != "" and anat.groups.has(main):
-		_focus = anat.bind_to_world(main, anat.groups[main].center)
+		_main = main
+		_main_pos = anat.wounds[main][-1].pos if anat.wounds.has(main) else anat.groups[main].center
+		_focus = anat.bind_to_world(main, _main_pos)
+	_kind = t
 	if t == "fall":
 		_focus = a.global_position + Vector3.UP * 0.4
 	elif t in ["blast", "impact"]:
 		_focus = a.global_position + Vector3.UP * 1.1
 	var d: Vector3 = info.get("dir", Vector3.RIGHT)
 	_side = -signf(d.x) if absf(d.x) > 0.1 else 1.0
-	anat.show_killcam()
+	anat.show_killcam(main)
 	TimeFx.slowmo(0.06, KILL_SECONDS + 0.4, "kill", 0.02)
 	_t0 = _now()
 	_until = _t0 + KILL_SECONDS
@@ -132,12 +139,20 @@ func _process(_d: float) -> void:
 				_killcam(v2, v2.last_hit_info)
 		return
 	# toma de muerte: la cámara se acerca a la herida y gira un poco
+	if is_instance_valid(_victim):
+		var anat := AnatomyBody.for_actor(_victim)
+		if _main != "":
+			_focus = anat.bind_to_world(_main, _main_pos)
+		elif _kind == "fall":
+			_focus = _victim.global_position + Vector3.UP * 0.4
+		else:
+			_focus = _victim.global_position + Vector3.UP * 1.1
 	var k := clampf((_now() - _t0) / KILL_SECONDS, 0.0, 1.0)
 	var e := 1.0 - pow(1.0 - k, 3.0)
-	var dist := lerpf(1.9, 0.55, e)
+	var dist := lerpf(2.0, 0.8, e)
 	var ang := lerpf(-0.45, 0.25, e) * _side
 	var off := Vector3(sin(ang) * _side, 0.12, cos(ang)).normalized() * dist
-	camera.override_target(_focus + off, _focus, lerpf(34.0, 26.0, e))
+	camera.override_target(_focus + off, _focus, lerpf(36.0, 30.0, e))
 	if _now() > _until:
 		_end()
 

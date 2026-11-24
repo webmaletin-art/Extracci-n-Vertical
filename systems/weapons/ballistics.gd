@@ -143,6 +143,7 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 			info["zone"] = (col as Area3D).get_meta("zone", "torso")
 			info["bone"] = (col as Area3D).get_meta("bone", "")
 			info["type"] = "fragment" if _kind[i] == "fragment" else "bullet"
+			info["ricochet"] = _kind[i] == "ricochet"
 			info["penetration"] = _pen[i]
 			projectile_hit.emit(i, info)
 			if is_instance_valid(actor) and actor.has_method("take_damage"):
@@ -183,15 +184,23 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 			_exclude[i] = _exclude[i] + [hit.rid]
 			from = point + dir * 0.02
 			continue
-		# rebote: metal y ángulo rasante
+		# rebote: en metal con ángulo rasante y en pisos / paredes de hormigón casi de costado. La bala sigue
+		# deformada y girando: si después pega en alguien abre una herida más ancha (info.ricochet)
 		var graze := -dir.dot(normal)
-		if surface == "metal" and graze < 0.35 and randf() < _ric[i]:
-			var r := dir.bounce(normal)
+		var chance := 0.0
+		if surface == "metal" and graze < 0.4:
+			chance = _ric[i] * 1.6
+		elif surface in ["concrete", "wood"] and graze < 0.22:
+			chance = _ric[i] * (1.4 if normal.y > 0.7 else 0.8)
+		if _kind[i] != "fragment" and randf() < chance:
+			var r := dir.bounce(normal).rotated(Vector3.BACK, randf_range(-0.15, 0.15))
 			r.z = 0.0
-			_vel[i] = r.normalized() * _vel[i].length() * 0.6
-			_dmg[i] *= 0.5
+			_vel[i] = r.normalized() * _vel[i].length() * randf_range(0.45, 0.7)
+			_dmg[i] *= 0.6
 			_pos[i] = point + normal * 0.02
+			_kind[i] = "ricochet"
 			Fx.emit("spark", point, r)
+			Sfx.play("impact_metal", point, -4.0, randf_range(1.2, 1.5), 8.0)
 			return
 		_kill(i)
 		return

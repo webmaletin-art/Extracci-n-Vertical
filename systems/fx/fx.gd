@@ -80,6 +80,9 @@ func attach(world_root: Node3D) -> void:
 	var blood := Blood.new()
 	blood.name = "Sangre"
 	_root.add_child(blood)
+	var gibs := Gibs.new()
+	gibs.name = "Trozos"
+	_root.add_child(gibs)
 	_lights.clear()
 	_lights_t.clear()
 	for i in 3:

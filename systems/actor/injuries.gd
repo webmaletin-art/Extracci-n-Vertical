@@ -92,17 +92,56 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 				max_depth = 0.13
 			elif zone in ["torso", "pelvis"] and float(info.get("penetration", 6.0)) < 10.0:
 				max_depth = randf_range(0.14, 0.26)     # la bala se frena adentro del torso
-			var path := anat.trace(point - dir * 0.3, dir, 0.9, max_depth)
-			if path.is_empty():
-				for n in anat.near(point, 0.07):
-					path.append({"node": n, "label": anat.groups[n].label, "system": anat.groups[n].system,
-						"p_in": anat.world_to_bind(n, point), "dir": anat.dir_to_bind(n, dir), "t_in": 0.0, "t_out": 0.02})
-					break
+			var ricochet := bool(info.get("ricochet", false))
+			if ricochet:
+				max_depth = randf_range(0.05, 0.14)     # rebotada: llega deformada, gira y se frena antes
 			var r := 0.007 if t != "knife" else 0.004
 			if float(info.get("pellets", 1)) > 1:
 				r = 0.005
-			for h in path:
-				_hit_structure(anat, actor, h, t, r, res, point, dir)
+			if ricochet:
+				r *= 2.0                                 # la bala deformada abre una herida más ancha
+			_strength = clampf(float(info.get("damage", 30.0)) / 30.0, 0.6, 2.5) * (1.4 if ricochet else 1.0)
+			if t == "fragment":
+				_strength = 0.6
+			# recorrido por dentro: al pegar en un hueso duro la bala puede desviarse y seguir rompiendo en otra dirección
+			var o := point - dir * 0.3
+			var d := dir
+			var left_depth := max_depth
+			var length := 0.9
+			var seen := {}
+			var last_hit := {}
+			for leg in 3:
+				var path := anat.trace(o, d, length, left_depth)
+				path = path.filter(func(x): return not seen.has(x.node))
+				if leg == 0 and path.is_empty():
+					for n in anat.near(point, 0.07):
+						path.append({"node": n, "label": anat.groups[n].label, "system": anat.groups[n].system,
+							"p_in": anat.world_to_bind(n, point), "dir": anat.dir_to_bind(n, dir), "t_in": 0.0, "t_out": 0.02})
+						break
+				var deflect := {}
+				for h in path:
+					seen[h.node] = true
+					_hit_structure(anat, actor, h, t, r, res, o, d)
+					last_hit = h
+					if t == "bullet" and h.system == "hueso" and leg < 2 and randf() < DEFLECT.get(_bone_key(str(h.label)), 0.0):
+						deflect = h
+						break
+				if deflect.is_empty():
+					break
+				# la bala se desvía en el hueso: nueva dirección y sigue desde la salida
+				var exit_w := anat.bind_to_world(str(deflect.node), deflect.p_out)
+				var ang := deg_to_rad(randf_range(15.0, 45.0)) * (1.0 if randf() < 0.5 else -1.0)
+				d = d.rotated(Vector3.BACK, ang).normalized()
+				o = exit_w
+				length = 0.45
+				if left_depth < INF:
+					left_depth = maxf(left_depth - float(deflect.t_out), 0.04)
+				res.texts.append("La bala se desvió en %s" % deflect.label)
+			# la bala que quedó adentro: aplastada en hongo, alojada al final del recorrido
+			if t in ["bullet", "fragment"] and max_depth < INF and not last_hit.is_empty():
+				var ln := str(last_hit.node)
+				anat.add_lodged(ln, last_hit.p_out, last_hit.dir)
+				res.texts.append(("Bala aplastada alojada en %s" if t == "bullet" else "Esquirla alojada en %s") % last_hit.label)
 		"punch":
 			if zone in ["head", "neck"] and randf() < 0.2:
 				res.texts.append("Conmoción por golpe en la cabeza")
@@ -165,6 +204,7 @@ func _fall(anat: AnatomyBody, actor: Actor, info: Dictionary, res: Dictionary) -
 			var g: Dictionary = anat.groups[n]
 			if g.system == "hueso":
 				anat.add_wound(n, g.center, Vector3.UP, 0.01, 0)
+				anat.break_bone(n, g.center, Vector3.DOWN, 0.0 if h < 9.0 else 0.6)
 				_apply_effect(g.label, "Fractura de %s por la caída" % g.label, res, 1.0, _loc(n, g.center, Vector3.DOWN))
 			else:
 				anat.add_wound(n, g.center, Vector3.UP, 0.035, 2)
@@ -176,8 +216,20 @@ func _fracture_by_label(anat: AnatomyBody, actor: Actor, lab: String, point: Vec
 	if n == "":
 		return
 	anat.add_wound(n, anat.groups[n].center, anat.dir_to_bind(n, dir), r, 0)
+	anat.break_bone(n, anat.groups[n].center, dir, 0.0)
 	_apply_effect(anat.groups[n].label, text, res, 0.7, _loc(n, anat.groups[n].center, dir))
 	res.nodes.append(n)
+
+var _strength := 1.0
+## Probabilidad de que una bala se desvíe al pegar en cada hueso (los densos desvían más).
+const DEFLECT := {"cráneo": 0.35, "fémur": 0.4, "húmero": 0.35, "tibia": 0.35, "pelvis": 0.35, "vértebras": 0.3,
+	"mandíbula": 0.3, "escápula": 0.25, "clavícula": 0.25, "costillas": 0.2, "esternón": 0.2}
+
+static func _bone_key(label: String) -> String:
+	for k in DEFLECT:
+		if label.begins_with(k):
+			return k
+	return ""
 
 func _hit_structure(anat: AnatomyBody, actor: Actor, h: Dictionary, t: String, r: float, res: Dictionary, point: Vector3, dir: Vector3) -> void:
 	var n := str(h.node)
@@ -186,6 +238,8 @@ func _hit_structure(anat: AnatomyBody, actor: Actor, h: Dictionary, t: String, r
 	var lodged := bool(h.get("lodged", false)) or t in ["fragment", "knife"]
 	if sys == "hueso":
 		anat.add_wound(n, h.p_in, h.dir, r * 1.6, 0)
+		# rotura real (fragmentos de Blender): los más cercanos se desprenden
+		anat.break_bone(n, h.p_in, dir, _strength if t != "knife" else 0.3)
 		var txt := ("Fractura expuesta de %s" if t == "bullet" else "Fractura de %s") % lab
 		_apply_effect(lab, txt, res, 1.0, _loc(n, h.p_in, dir))
 		# astilla de hueso hacia un órgano vecino

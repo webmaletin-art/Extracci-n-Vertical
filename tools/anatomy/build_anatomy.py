@@ -23,8 +23,8 @@ d = np.load(SRC)
 names, systems = [str(x) for x in d["names"]], [str(x) for x in d["systems"]]
 V, F, voff, foff = d["verts"], d["faces"], d["voff"], d["foff"]
 
-BUDGET = {"hueso": 36000, "musculo": 40000, "organo": 16000, "vaso": 12000, "nervio": 7000}
-MIN_TRIS = {"hueso": 24, "musculo": 24, "organo": 16, "vaso": 12, "nervio": 12}
+BUDGET = {"hueso": 38000, "musculo": 40000, "organo": 16000, "vaso": 12000, "nervio": 7000, "oreja": 1600}
+MIN_TRIS = {"hueso": 24, "musculo": 24, "organo": 16, "vaso": 12, "nervio": 12, "oreja": 200}
 
 
 def piece(i):
@@ -103,7 +103,8 @@ def region(c, name, system):
 
 BONES = [(r"^femur", "fémur"), (r"^tibia", "tibia"), (r"^fibula", "peroné"), (r"^patella", "rótula"), (r"^humerus", "húmero"),
          (r"^radius", "radio"), (r"^ulna", "cúbito"),
-         (r"carpal|scaphoid|lunate|triquetr|pisiform|trapezi|capitate|hamate|of (index|middle|ring|little) finger|of thumb", "huesos de la mano"),
+         (r"phalanx of .*finger of hand|phalanx of thumb|phalanx of (index|middle|ring|little) finger|of thumb", "dedos de la mano"),
+         (r"carpal|scaphoid|lunate|triquetr|pisiform|trapezi|capitate|hamate|metacarpal", "huesos de la mano"),
          (r"metatarsal|calcaneus|talus|cuboid|cuneiform|navicular|toe", "huesos del pie"), (r"^hip bone|^sacrum|^coccyx", "pelvis"),
          (r"^clavicle", "clavícula"), (r"^scapula", "escápula"), (r"^mandible", "mandíbula"), (r"tooth|teeth", "dientes"),
          (r"frontal bone|parietal|temporal bone|occipital bone|sphenoid|ethmoid|zygomatic|maxilla|nasal|lacrimal|palatine|vomer|concha|skull|ossicle|malleus|incus|stapes", "cráneo"),
@@ -147,12 +148,14 @@ def label(i, c):
     if s == "nervio":
         for rx, lab in NERVES:
             if re.search(rx, n, re.I):
-                return lab, bone
+                return (lab + sfx) if lab == "ojo" else lab, bone
         return "nervios de " + reg, bone
     if s == "vaso":
         if re.search(r"aorta|vena cava|pulmonary trunk|brachiocephalic", n, re.I):
             return "aorta y grandes vasos", bone
         return "arterias y venas de " + reg, bone
+    if s == "oreja":
+        return "oreja" + sfx, "mixamorig_Head"
     return "músculos de " + reg, bone
 
 
@@ -199,7 +202,7 @@ for s, idxs in per_sys.items():
         g["n"] += len(v)
         g["parts"].append(names[i])
 
-COL = {"hueso": [235, 228, 205, 255], "musculo": [170, 45, 40, 255], "organo": [190, 70, 75, 255], "vaso": [170, 15, 25, 255], "nervio": [235, 200, 120, 255]}
+COL = {"oreja": [215, 160, 140, 255], "hueso": [235, 228, 205, 255], "musculo": [170, 45, 40, 255], "organo": [190, 70, 75, 255], "vaso": [170, 15, 25, 255], "nervio": [235, 200, 120, 255]}
 scene = trimesh.Scene()
 meta = {"source": "Z-Anatomy (CC BY-SA 4.0)", "marks": {k: {a: [round(float(x), 4) for x in b] for a, b in m.items()} for k, m in marks.items()}, "groups": []}
 total = {}
