@@ -13,7 +13,7 @@ signal injury_report(victim: Actor, lines: Array)
 
 const KILL_SECONDS := 2.6
 ## Tomas de cerca: comienzo del nombre del grupo → [radio de la ventana de rayos X (m), distancia final de la cámara (m), ángulo final (rad, 0 = de costado)]
-const CLOSEUPS := {"cráneo": [0.17, 0.55, 1.3], "cerebro": [0.17, 0.55, 1.3], "ojo": [0.075, 0.38, 0.95], "testículos": [0.11, 0.62, 0.55], "estómago": [0.15, 0.8, 0.45], "oreja": [0.08, 0.4, 0.8],
+const CLOSEUPS := {"mandíbula": [0.16, 0.5, 1.2], "vértebras": [0.14, 0.55, 0.9], "costillas": [0.17, 0.7, 0.8], "cráneo": [0.17, 0.55, 1.3], "cerebro": [0.17, 0.55, 1.3], "ojo": [0.075, 0.38, 0.95], "testículos": [0.11, 0.62, 0.55], "estómago": [0.15, 0.8, 0.45], "oreja": [0.08, 0.4, 0.8],
 	"corazón": [0.16, 0.8, 0.4], "hígado": [0.15, 0.8, 0.45]}
 
 var camera: SideCamera
@@ -111,6 +111,7 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 		return
 	phase = "kill"
 	closeup_active = true
+	_set_vignette(true)
 	_victim = a
 	if Ballistics.instance:
 		Ballistics.instance.tracked = -1
@@ -208,6 +209,7 @@ func skip() -> void:
 
 func _end() -> void:
 	closeup_active = false
+	_set_vignette(false)
 	if Blood.instance:
 		Blood.instance.set_closeup(false)
 	if is_instance_valid(_victim):
@@ -221,3 +223,21 @@ func _end() -> void:
 	if camera:
 		camera.release_override()
 	get_tree().call_group("hud", "set_cinematic", false)
+
+## Efecto foco: los bordes de la pantalla se oscurecen y la mirada va al centro (la herida).
+var _vig: CanvasLayer
+func _set_vignette(on: bool) -> void:
+	if _vig == null:
+		_vig = CanvasLayer.new()
+		_vig.layer = 4
+		var r := ColorRect.new()
+		r.set_anchors_preset(Control.PRESET_FULL_RECT)
+		r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var sh := Shader.new()
+		sh.code = "shader_type canvas_item;\nvoid fragment() { vec2 d = UV - vec2(0.5); float v = smoothstep(0.28, 0.78, length(d * vec2(1.25, 1.0))); COLOR = vec4(0.0, 0.0, 0.0, v * 0.85); }"
+		var m := ShaderMaterial.new()
+		m.shader = sh
+		r.material = m
+		_vig.add_child(r)
+		add_child(_vig)
+	_vig.visible = on

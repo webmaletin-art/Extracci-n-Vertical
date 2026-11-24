@@ -343,6 +343,14 @@ func _fit(id: String, src: Dictionary, meta: Dictionary) -> void:
 		pv.resize(v.size())
 		for i in v.size():
 			pv[i] = _map_point(v[i], str(g.bone), region, body, mk, kj, vm, side)
+		# el cerebro se encoge un poco hacia su centro: que quede DENTRO del cráneo y no lo atraviese
+		if str(g.label).begins_with("cerebro") or str(g.label).begins_with("cerebelo"):
+			var cen := Vector3.ZERO
+			for q in pv:
+				cen += q
+			cen /= maxf(pv.size(), 1.0)
+			for i in pv.size():
+				pv[i] = cen + (pv[i] - cen) * 0.86
 		# --- 3. adentro de la piel (pose anatómica)
 		for i in pv.size():
 			var c := _closest_on_axis(segs_a[region], pv[i])

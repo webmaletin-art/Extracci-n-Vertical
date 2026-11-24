@@ -742,10 +742,14 @@ void fragment() {
 	float pores = vnoise(lp * 260.0) * 0.5 + vnoise(lp * 70.0) * 0.5;
 	vec3 bone = mix(vec3(0.80, 0.72, 0.58), vec3(0.95, 0.91, 0.82), pores);
 	vec3 col = mix(bone, COLOR.rgb * vec3(0.9, 0.5, 0.45), step(COLOR.g, 0.5));
+	// sombra suave: grietas y poros más oscuros, borde (Fresnel) claro y reflejo seco
+	float cav = 0.72 + 0.28 * vnoise(lp * 520.0);
+	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 2.5);
+	float spec = pow(clamp(dot(NORMAL, normalize(normalize(VIEW + vec3(0.35, 0.6, 0.0)) + VIEW)), 0.0, 1.0), 40.0);
 	ALBEDO = col * 0.12;
 	ROUGHNESS = 0.55;
 	SPECULAR = 0.5;
-	EMISSION = col * (0.22 + 0.9 * nl);
+	EMISSION = col * (0.12 + 1.0 * nl * nl) * cav + vec3(1.0, 0.95, 0.85) * (fres * 0.22 + spec * 0.2);
 }
 """
 	return _frag_shader
@@ -779,9 +783,7 @@ bool tunnel(vec3 p) {
 void fragment() {
 	float zd = zone_d(wp);
 	if (zd < zone_r || tunnel(wp)) {
-		if (FRONT_FACING) { discard; }
-		ALBEDO = vec3(0.015, 0.012, 0.012);    // interior del cuerpo: silueta negra detrás de la anatomía
-		ROUGHNESS = 1.0;
+		discard;                                 // la ropa desaparece por completo en la zona: queda sólo la anatomía
 	} else {
 		if (!FRONT_FACING) { discard; }
 		vec4 t = texture(albedo_tex, UV) * albedo_color;

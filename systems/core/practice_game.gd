@@ -26,6 +26,7 @@ const ZONES := {
 	"libre": ["", 0.0], "ojo": ["ojo", 0.0], "cabeza": ["cráneo", 0.0], "cuello": ["arterias y venas de cuello", 0.0],
 	"corazón": ["corazón", 0.0], "estómago": ["estómago", 0.0], "testículos": ["testículos", 0.0], "rodilla": ["rótula der", 0.0],
 	"mano": ["huesos de la mano der", 0.0], "muslo": ["arterias y venas de muslo der", 0.0], "hígado": ["hígado", 0.0],
+	"costilla": ["costillas izq", 0.0], "columna": ["vértebras cervicales", 0.0], "mandíbula": ["mandíbula", 0.0],
 }
 const ARENA_W := 44.0
 
