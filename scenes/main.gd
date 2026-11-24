@@ -1,6 +1,7 @@
 extends Node
 ## Pantalla principal: JUGAR (Torre Alfa), CONFIGURACIÓN, ANALIZAR RENDIMIENTO, SALIR; y el resumen al terminar.
-## Argumentos (para pruebas y capturas): -- --play  (entra directo a la partida) · --probe (corre el captador y sale)
+## Argumentos (para pruebas y capturas): -- --play  (entra directo a la partida) · --probe [--quick] (corre el captador y sale)
+## · --baja / --media / --alta (fuerza ese preset de calidad)
 
 var game: Game
 var menu: Control
@@ -11,6 +12,9 @@ func _ready() -> void:
 	ui.layer = 10
 	add_child(ui)
 	var args := OS.get_cmdline_user_args()
+	for lv in ["baja", "media", "alta"]:
+		if "--" + lv in args:
+			Settings.preset(["baja", "media", "alta"].find(lv))
 	if "--play" in args or "--probe" in args:
 		start_game()
 		if "--probe" in args:

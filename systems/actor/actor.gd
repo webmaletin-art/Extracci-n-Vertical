@@ -53,6 +53,7 @@ var injuries := Injuries.new()
 var laser: MeshInstance3D           ## láser desde la boca del cañón hasta donde pega
 var laser_dot: MeshInstance3D
 var _bleed_t := 0.0
+var blob: MeshInstance3D            ## sombra simple (círculo oscuro en el piso): reemplaza a las sombras reales en teléfonos flojos
 var _thrown := false                ## lanzado por una explosión (choque contra pared / piso = lesión terciaria)
 var _bad_fall := false              ## la próxima caída no es de pie (lanzado, derribado, soltado de un borde)
 var state := State.GROUND
@@ -130,6 +131,7 @@ func _ready() -> void:
 	add_child(_cap)
 	_build_body()
 	_build_reach()
+	_build_blob()
 	inventory = Inventory.new()
 	if is_player:
 		add_to_group("player")
@@ -255,6 +257,51 @@ func _build_hitboxes() -> void:
 		att.add_child(area)
 		hitboxes.append(area)
 
+static var _blob_mat: StandardMaterial3D
+func _build_blob() -> void:
+	if _blob_mat == null:
+		var g := Gradient.new()
+		g.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
+		g.colors = PackedColorArray([Color(0, 0, 0, 0.62), Color(0, 0, 0, 0.35), Color(0, 0, 0, 0)])
+		var t := GradientTexture2D.new()
+		t.gradient = g
+		t.fill = GradientTexture2D.FILL_RADIAL
+		t.fill_from = Vector2(0.5, 0.5)
+		t.fill_to = Vector2(1.0, 0.5)
+		t.width = 64
+		t.height = 64
+		_blob_mat = StandardMaterial3D.new()
+		_blob_mat.albedo_texture = t
+		_blob_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_blob_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_blob_mat.render_priority = 2
+	blob = MeshInstance3D.new()
+	var q := QuadMesh.new()
+	q.size = Vector2(1.1, 0.8)
+	q.orientation = PlaneMesh.FACE_Y
+	blob.mesh = q
+	blob.material_override = _blob_mat
+	blob.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	blob.top_level = true
+	blob.add_to_group("blob_shadow")
+	add_child(blob)
+
+func _update_blob() -> void:
+	var on := Settings.shadows >= 1 and state != State.DEAD and visible
+	blob.visible = on
+	if not on:
+		return
+	var from := global_position + Vector3(0, 0.6, 0)
+	var q := PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * 6.0, 1 | 8)
+	q.exclude = [get_rid()]
+	var h := get_world_3d().direct_space_state.intersect_ray(q)
+	if h.is_empty():
+		blob.visible = false
+		return
+	var k := clampf(1.0 - (from.y - (h.position as Vector3).y - 0.6) / 5.0, 0.2, 1.0)
+	blob.global_position = (h.position as Vector3) + Vector3(0, 0.015, 0.05)
+	blob.scale = Vector3.ONE * k
+
 func _build_reach() -> void:
 	reach = Area3D.new()
 	reach.collision_layer = 0
@@ -365,6 +412,7 @@ func _physics_process(delta: float) -> void:
 			_move_locked(delta)
 	position.z = 0.0
 	velocity.z = 0.0
+	_update_blob()
 	_update_action(delta)
 	_find_interactable()
 	inp.clear_edges()

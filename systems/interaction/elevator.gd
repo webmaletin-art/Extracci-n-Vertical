@@ -40,7 +40,7 @@ func _build() -> void:
 	add_child(platform)
 	var deck := CollisionShape3D.new()
 	var b := BoxShape3D.new()
-	b.size = Vector3(width, 0.16, 2.2)
+	b.size = Vector3(width, 0.16, 1.7)
 	deck.shape = b
 	deck.position.y = -0.08
 	platform.add_child(deck)
@@ -67,14 +67,14 @@ func _build() -> void:
 		pm.size = Vector3(0.08, 2.4, 0.08)
 		post.mesh = pm
 		post.material_override = yellow
-		post.position = Vector3(sx * (width * 0.5 - 0.04), 1.2, -1.0)
+		post.position = Vector3(sx * (width * 0.5 - 0.04), 1.2, -0.8)
 		platform.add_child(post)
 		# baranda que se levanta al moverse
 		var gate := Node3D.new()
 		gate.position = Vector3(sx * (width * 0.5 - 0.03), 0.0, 0)
 		var gm := MeshInstance3D.new()
 		var gbm := BoxMesh.new()
-		gbm.size = Vector3(0.05, 0.06, 2.0)
+		gbm.size = Vector3(0.05, 0.06, 1.6)
 		gm.mesh = gbm
 		gm.material_override = yellow
 		gm.position.y = 1.0
@@ -84,7 +84,7 @@ func _build() -> void:
 		_gates.append(gate)
 		var gs := CollisionShape3D.new()
 		var gb := BoxShape3D.new()
-		gb.size = Vector3(0.06, 1.1, 2.0)
+		gb.size = Vector3(0.06, 1.1, 1.6)
 		gs.shape = gb
 		gs.position = Vector3(sx * (width * 0.5 - 0.03), 0.55, 0)
 		gs.disabled = true
@@ -95,7 +95,7 @@ func _build() -> void:
 	tm.size = Vector3(width, 0.08, 0.08)
 	top.mesh = tm
 	top.material_override = yellow
-	top.position = Vector3(0, 2.4, -1.0)
+	top.position = Vector3(0, 2.4, -0.8)
 	platform.add_child(top)
 	var lamp := OmniLight3D.new()
 	lamp.light_color = Color(1.0, 0.7, 0.35)
@@ -106,7 +106,7 @@ func _build() -> void:
 	platform.add_child(lamp)
 	var panel := ElevatorPanel.new()
 	panel.elevator = self
-	panel.position = Vector3(width * 0.5 - 0.35, 1.1, -0.6)
+	panel.position = Vector3(width * 0.5 - 0.35, 1.1, -0.4)
 	platform.add_child(panel)
 	var pmesh := MeshInstance3D.new()
 	var pbm := BoxMesh.new()
@@ -118,7 +118,7 @@ func _build() -> void:
 	pmat.emission = Color(0.1, 0.9, 0.3)
 	pmat.emission_energy_multiplier = 0.6
 	pmesh.material_override = pmat
-	pmesh.position = Vector3(width * 0.5 - 0.15, 1.2, -0.95)
+	pmesh.position = Vector3(width * 0.5 - 0.15, 1.2, -0.75)
 	platform.add_child(pmesh)
 	# guías del hueco (columnas fijas a todo lo alto)
 	var h := stops[-1] - stops[0] + 4.0
@@ -132,7 +132,7 @@ func _build() -> void:
 		steel.metallic = 0.7
 		steel.roughness = 0.4
 		rail.material_override = steel
-		rail.position = Vector3(sx * (width * 0.5 + 0.1), stops[0] + h * 0.5, -1.15)
+		rail.position = Vector3(sx * (width * 0.5 + 0.1), stops[0] + h * 0.5, -1.0)
 		add_child(rail)
 
 func go_to(stop: int) -> void:

@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## 0.4.0 — escenario liviano (según el informe del Mali-G57)
+
+* Pisos y paredes con shader sin luces reales y luz pintada; tuberías y cables pintados; pool de 0 / 2 / 4 luces reales;
+  resolución 3D relativa a 720p; sombras simples; sin niebla ni brillo; pisos más cortos; 507 → 196 dibujos en ALTA.
+
 ## 0.3.1 — huesos más lindos
 
 * Sombreado suave (los colores por cara facetaban todo), huesos con 72 000 triángulos (cráneo ≈ 29 000), cráneo en 9

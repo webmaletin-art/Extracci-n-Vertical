@@ -67,7 +67,7 @@ func t_velocidad() -> String:
 func t_settings() -> String:
 	var keep := Settings.quality_preset
 	Settings.preset(0)
-	if Settings.shadows != 0 or Settings.particles != 0 or Settings.render_scale > 0.7:
+	if Settings.shadows > 1 or Settings.particles != 0 or Settings.render_scale > 0.8 or Settings.lights != 0:
 		return "preset BAJA no baja todo"
 	Settings.set_value("smoke", 2)
 	if Settings.quality_preset != 3:

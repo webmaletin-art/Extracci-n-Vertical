@@ -38,7 +38,7 @@ const CATEGORIES := [
 	["Estructura (losas y paredes)", "perf_estructura"],
 	["Partículas y fragmentos", "_fx"],
 	["Niebla y brillo", "_env"],
-	["Escala de render (→ 60 %)", "_scale"],
+	["Resolución 3D (→ 60 % de la actual)", "_scale"],
 ]
 
 func _measure(frames: int) -> Dictionary:
@@ -89,12 +89,8 @@ func _set_category(cat: String, hidden: bool) -> void:
 	var tree := get_tree()
 	match cat:
 		"_shadows":
-			for l in tree.get_nodes_in_group("dyn_light"):
-				if hidden:
-					l.set_meta("probe_shadow", (l as Light3D).shadow_enabled)
-					(l as Light3D).shadow_enabled = false
-				else:
-					(l as Light3D).shadow_enabled = bool(l.get_meta("probe_shadow", false))
+			for l in tree.get_nodes_in_group("blob_shadow"):
+				(l as Node3D).visible = not hidden and Settings.shadows >= 1
 			var moon: DirectionalLight3D = game.tower.moon
 			if hidden:
 				moon.set_meta("probe_shadow", moon.shadow_enabled)
@@ -116,7 +112,7 @@ func _set_category(cat: String, hidden: bool) -> void:
 				env.fog_enabled = p[0]
 				env.glow_enabled = p[1]
 		"_scale":
-			get_viewport().scaling_3d_scale = 0.6 if hidden else Settings.render_scale
+			get_viewport().scaling_3d_scale = 0.6 * Settings.effective_scale() if hidden else Settings.effective_scale()
 		_:
 			for n in tree.get_nodes_in_group(cat):
 				if n is Node3D:
@@ -226,8 +222,8 @@ func _report() -> String:
 	var lines := []
 	lines.append("EXTRACCIÓN VERTICAL · INFORME DE RENDIMIENTO")
 	lines.append("Fecha: %s · Equipo: %s · %s" % [Time.get_datetime_string_from_system(), OS.get_model_name(), RenderingServer.get_video_adapter_name()])
-	lines.append("Calidad: %s · escala %d%% · sombras %d · luces %d · partículas %d · humo %d · explosiones %d · decorado %d" % [
-		Settings.PRESETS[Settings.quality_preset], int(Settings.render_scale * 100), Settings.shadows, Settings.lights, Settings.particles,
+	lines.append("Calidad: %s · alto de la imagen 3D %d px · sombras %d · luces %d · partículas %d · humo %d · explosiones %d · decorado %d" % [
+		Settings.PRESETS[Settings.quality_preset], int(Settings.effective_scale() * DisplayServer.window_get_size().y), Settings.shadows, Settings.lights, Settings.particles,
 		Settings.smoke, Settings.explosions, Settings.decor])
 	var bms := float(baseline.ms)
 	lines.append("Línea base (promedio de estaciones): %.2f ms/cuadro (%.0f FPS) · %.0f llamadas de dibujo · %.0f primitivas · %.0f objetos" % [

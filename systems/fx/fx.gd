@@ -23,8 +23,16 @@ var _root: Node3D
 var _mats := {}
 var stats := {"emitted": 0, "debris": 0}
 
+var _flash_g := {"p": Vector3(0, -1000, 0), "range": 4.0, "c": Color.BLACK, "e": 0.0, "decay": 30.0}
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
+	# el escenario es «unshaded» con la luz pintada (fast_surface.gdshader): los fogonazos y explosiones lo iluminan por
+	# estas dos variables globales (una sola luz de destello a la vez, la más fuerte)
+	var names := RenderingServer.global_shader_parameter_get_list()
+	for n in ["flash_p", "flash_c"]:
+		if not StringName(n) in names:
+			RenderingServer.global_shader_parameter_add(n, RenderingServer.GLOBAL_VAR_TYPE_VEC4, Vector4(0, -1000, 0, 1) if n == "flash_p" else Vector4(0, 0, 0, 0))
 
 ## Se llama al cargar un mapa: los nodos viven dentro del mundo (para que se vean con su cámara y su física).
 func attach(world_root: Node3D) -> void:
@@ -95,6 +103,11 @@ func attach(world_root: Node3D) -> void:
 		_lights_t.append(0.0)
 
 func _process(delta: float) -> void:
+	if _flash_g.e > 0.0:
+		_flash_g.e = maxf(_flash_g.e - delta * _flash_g.decay, 0.0)
+		var c: Color = _flash_g.c
+		RenderingServer.global_shader_parameter_set("flash_p", Vector4(_flash_g.p.x, _flash_g.p.y, _flash_g.p.z, _flash_g.range))
+		RenderingServer.global_shader_parameter_set("flash_c", Vector4(c.r * _flash_g.e * 0.5, c.g * _flash_g.e * 0.5, c.b * _flash_g.e * 0.5, 1.0))
 	if _root == null or not is_instance_valid(_root):
 		return
 	for i in _lights.size():
@@ -342,7 +355,15 @@ func muzzle(pos: Vector3, dir: Vector3) -> void:
 
 ## Luz breve (fogonazo, explosión). Sólo hay 3 a la vez; con luces en BAJA se omiten las chicas.
 func flash(pos: Vector3, energy: float, range_m: float, seconds: float, color := Color(1, 0.7, 0.35)) -> void:
-	if _lights.is_empty() or (Settings.lights == 0 and energy < 4.0):
+	# luz del escenario (casi gratis): el destello más fuerte manda
+	if energy >= _flash_g.e:
+		_flash_g.p = pos
+		_flash_g.range = range_m
+		_flash_g.c = color
+		_flash_g.e = energy
+		_flash_g.decay = energy / maxf(seconds, 0.01)
+	# luz real sobre personajes y objetos: sólo las grandes (explosiones) y no en el preset sin luces
+	if _lights.is_empty() or Settings.lights == 0 or energy < 4.0:
 		return
 	var best := 0
 	for i in _lights.size():

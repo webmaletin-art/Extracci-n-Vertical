@@ -13,8 +13,8 @@ extends Node3D
 
 signal extracted(actor: Actor, label: String)
 
-const Z_BACK := -1.7
-const Z_FRONT := 1.25
+const Z_BACK := -1.25            ## pared del fondo (el jugador camina en z = 0)
+const Z_FRONT := 0.7             ## borde delantero de los pisos: sólo hace falta lugar para pisar
 const DEPTH := Z_FRONT - Z_BACK
 
 var data := {}
@@ -23,7 +23,11 @@ var floors_nodes: Array[Node3D] = []
 var covers := {}               ## id de sector → MeshInstance3D (velo del sector sin descubrir)
 var revealed := {}
 var elevator: Elevator
-var lamps: Array[OmniLight3D] = []
+var lamp_data: Array = []         ## [{pos, color, energy, floor, alarm}] focos PINTADOS en los materiales (no son luces reales)
+var light_pool: Array[OmniLight3D] = []   ## 0–4 luces reales que siguen al jugador (sólo afectan personajes y objetos)
+var _pool_t := 0.0
+var cm := {}                     ## materiales del escenario del piso que se está armando (shader liviano, luz pintada)
+var _floor_mats := {}
 var enemies: Array[Actor] = []
 var mats := {}
 var stats := {"tris_static": 0, "props": 0, "lamps": 0}
@@ -34,6 +38,7 @@ func build(d: Dictionary) -> void:
 	_make_materials()
 	var fh := float(d.floor_h)
 	var nf: int = d.floors.size()
+	_collect_lamps(d)
 	for f in d.floors:
 		var node := Node3D.new()
 		node.name = "Piso%d" % f.id
@@ -49,7 +54,21 @@ func build(d: Dictionary) -> void:
 	_build_elevator(d)
 	_build_background(d)
 	_build_covers()
+	_build_light_pool()
 	_build_environment()
+
+## Focos del escenario (de los datos del mapa): se pintan en los materiales y se dibuja un artefacto emisivo en cada uno.
+func _collect_lamps(d: Dictionary) -> void:
+	var fh := float(d.floor_h)
+	var slab := float(TorreAlfa.SLAB)
+	for f in d.floors:
+		var y := float(f.id) * fh
+		for lx in f.lamps:
+			lamp_data.append({"pos": Vector3(float(lx), y + fh - slab - 0.55, 0.2), "color": Color(1.0, 0.8, 0.55), "energy": 1.5,
+				"floor": int(f.id), "alarm": false})
+		if int(f.id) % 2 == 1:
+			lamp_data.append({"pos": Vector3(float(f.lamps[0]) + 1.5, y + 2.8, Z_BACK + 0.4), "color": Color(1.0, 0.12, 0.05), "energy": 1.1,
+				"floor": int(f.id), "alarm": true})
 
 # ---------------------------------------------------------------- materiales
 
@@ -73,6 +92,55 @@ func _col_mat(c: Color, metal := 0.0, rough := 0.8, emission := Color.BLACK, e_e
 		m.emission = emission
 		m.emission_energy_multiplier = e_energy
 	return m
+
+## Materiales livianos del escenario para un piso: shader sin luces reales con la luz de SUS lámparas pintada
+## (fast_surface.gdshader). Se crean una vez por piso porque cada piso tiene sus propias lámparas.
+func _fast(tex: String, tint: Color, uv: float, paint: int, lamps: Array, ambient := 0.30) -> ShaderMaterial:
+	var m := ShaderMaterial.new()
+	m.shader = load("res://systems/map/fast_surface.gdshader")
+	if tex != "":
+		m.set_shader_parameter("tex", load("res://assets/textures/%s.png" % tex))
+	else:
+		m.set_shader_parameter("tex", _white_tex())
+	m.set_shader_parameter("tint", tint)
+	m.set_shader_parameter("uv_scale", uv)
+	m.set_shader_parameter("paint", paint)
+	m.set_shader_parameter("ambient", ambient)
+	m.set_shader_parameter("floor_h", float(data.get("floor_h", 4.5)))
+	var ps := PackedVector4Array()
+	var cs := PackedVector4Array()
+	for l in lamps:
+		ps.append(Vector4(l.pos.x, l.pos.y, l.pos.z, 64.0 if not l.alarm else 36.0))
+		cs.append(Vector4(l.color.r * l.energy, l.color.g * l.energy, l.color.b * l.energy, 1.0))
+	while ps.size() < 8:
+		ps.append(Vector4(0, -1000, 0, 1))
+		cs.append(Vector4(0, 0, 0, 0))
+	m.set_shader_parameter("lamp_p", ps)
+	m.set_shader_parameter("lamp_c", cs)
+	return m
+
+static var _wt: Texture2D
+static func _white_tex() -> Texture2D:
+	if _wt == null:
+		var img := Image.create(4, 4, false, Image.FORMAT_RGB8)
+		img.fill(Color.WHITE)
+		_wt = ImageTexture.create_from_image(img)
+	return _wt
+
+func _use_floor(fi: int) -> void:
+	if not _floor_mats.has(fi):
+		var ls := lamp_data.filter(func(l): return int(l.floor) == fi)
+		_floor_mats[fi] = {
+			"concrete": _fast("concrete", Color.WHITE, 1.0, 1, ls),
+			"concrete_dark": _fast("concrete", Color(0.55, 0.55, 0.58), 1.0, 2, ls, 0.26),
+			"floor": _fast("floor_plate", Color.WHITE, 1.0, 2, ls),
+			"metal_panel": _fast("metal_panel", Color.WHITE, 1.0, 1, ls),
+			"hazard": _fast("hazard", Color.WHITE, 2.0, 0, ls),
+			"rubble": _fast("concrete", Color(0.62, 0.58, 0.52), 2.0, 2, ls),
+			"steel": _fast("", Color(0.22, 0.23, 0.26), 1.0, 0, ls),
+			"yellow": _fast("", Color(0.9, 0.66, 0.08), 1.0, 0, ls, 0.5),
+		}
+	cm = _floor_mats[fi]
 
 func _make_materials() -> void:
 	mats.concrete = _tex_mat("concrete", 1.0, 0.0, 0.9)
@@ -129,6 +197,7 @@ func _shape(sb: StaticBody3D, center: Vector3, size: Vector3, basis := Basis.IDE
 	sb.add_child(cs)
 
 func _build_floor(node: Node3D, f: Dictionary, fh: float) -> void:
+	_use_floor(int(f.id))
 	var y := float(f.id) * fh
 	var w := float(data.width)
 	var bb := BoxBatcher.new()
@@ -140,20 +209,20 @@ func _build_floor(node: Node3D, f: Dictionary, fh: float) -> void:
 		var x1 := float(s[1])
 		var c := Vector3((x0 + x1) * 0.5, y - slab * 0.5, (Z_BACK + Z_FRONT) * 0.5)
 		var sz := Vector3(x1 - x0, slab, DEPTH)
-		bb.add_box("floor", mats.floor, c + Vector3(0, slab * 0.25, 0), Vector3(sz.x, slab * 0.5, sz.z))
-		bb.add_box("concrete_dark", mats.concrete_dark, c - Vector3(0, slab * 0.25, 0), Vector3(sz.x, slab * 0.5, sz.z))
+		bb.add_box("floor", cm.floor, c + Vector3(0, slab * 0.25, 0), Vector3(sz.x, slab * 0.5, sz.z))
+		bb.add_box("concrete_dark", cm.concrete_dark, c - Vector3(0, slab * 0.25, 0), Vector3(sz.x, slab * 0.5, sz.z))
 		_shape(body, c, sz)
 	# bordes de los huecos: franjas de peligro y barandas bajas en el frente
 	for h in f.holes:
 		for edge in [float(h[0]), float(h[1])]:
-			bb.add_box("hazard", mats.hazard, Vector3(edge, y + 0.01, (Z_BACK + Z_FRONT) * 0.5), Vector3(0.18, 0.02, DEPTH))
+			bb.add_box("hazard", cm.hazard, Vector3(edge, y + 0.01, (Z_BACK + Z_FRONT) * 0.5), Vector3(0.18, 0.02, DEPTH))
 	# pared del fondo
-	var wall_mat: Material = mats.concrete if f.wall_tex == "concrete" else mats.metal_panel
+	var wall_mat: Material = cm.concrete if f.wall_tex == "concrete" else cm.metal_panel
 	bb.add_box("wall_" + str(f.wall_tex), wall_mat, Vector3(w * 0.5, y + (fh - slab) * 0.5, Z_BACK - 0.1), Vector3(w, fh - slab, 0.2))
 	_shape(body, Vector3(w * 0.5, y + (fh - slab) * 0.5, Z_BACK - 0.1), Vector3(w, fh - slab, 0.2))
 	# paredes exteriores (con ventanas en el lado derecho)
 	for ex in [-0.15, w + 0.15]:
-		bb.add_box("concrete", mats.concrete, Vector3(ex, y + (fh - slab) * 0.5, (Z_BACK + Z_FRONT) * 0.5), Vector3(0.3, fh - slab, DEPTH))
+		bb.add_box("concrete", cm.concrete, Vector3(ex, y + (fh - slab) * 0.5, (Z_BACK + Z_FRONT) * 0.5), Vector3(0.3, fh - slab, DEPTH))
 		_shape(body, Vector3(ex, y + (fh - slab) * 0.5, (Z_BACK + Z_FRONT) * 0.5), Vector3(0.3, fh - slab, DEPTH))
 	# tabiques
 	for wl in f.walls:
@@ -164,36 +233,22 @@ func _build_floor(node: Node3D, f: Dictionary, fh: float) -> void:
 		var x1 := float(p[1])
 		var hgt := float(p[2])
 		if hgt <= 1.35:
-			var c := Vector3((x0 + x1) * 0.5, y + hgt * 0.5, -0.2)
-			bb.add_box("metal_panel", mats.metal_panel, c, Vector3(x1 - x0, hgt, 2.2))
-			bb.add_box("hazard", mats.hazard, Vector3(c.x, y + hgt + 0.005, 0.85), Vector3(x1 - x0, 0.01, 0.12))
-			_shape(body, c, Vector3(x1 - x0, hgt, 2.2))
+			var c := Vector3((x0 + x1) * 0.5, y + hgt * 0.5, -0.3)
+			bb.add_box("metal_panel", cm.metal_panel, c, Vector3(x1 - x0, hgt, 1.9))
+			bb.add_box("hazard", cm.hazard, Vector3(c.x, y + hgt + 0.005, 0.6), Vector3(x1 - x0, 0.01, 0.12))
+			_shape(body, c, Vector3(x1 - x0, hgt, 1.9))
 		else:
-			var c := Vector3((x0 + x1) * 0.5, y + hgt - 0.1, -0.35)
-			bb.add_box("floor", mats.floor, c, Vector3(x1 - x0, 0.2, 2.4))
-			_shape(body, c, Vector3(x1 - x0, 0.2, 2.4))
+			var c := Vector3((x0 + x1) * 0.5, y + hgt - 0.1, -0.3)
+			bb.add_box("floor", cm.floor, c, Vector3(x1 - x0, 0.2, 1.9))
+			_shape(body, c, Vector3(x1 - x0, 0.2, 1.9))
 			for px in [x0 + 0.15, x1 - 0.15]:
-				bb.add_box("steel", mats.steel, Vector3(px, y + (hgt - 0.2) * 0.5, 0.6), Vector3(0.12, hgt - 0.2, 0.12))
-				bb.add_box("steel", mats.steel, Vector3(px, y + (hgt - 0.2) * 0.5, -1.4), Vector3(0.12, hgt - 0.2, 0.12))
+				bb.add_box("steel", cm.steel, Vector3(px, y + (hgt - 0.2) * 0.5, 0.45), Vector3(0.12, hgt - 0.2, 0.12))
+				bb.add_box("steel", cm.steel, Vector3(px, y + (hgt - 0.2) * 0.5, -1.05), Vector3(0.12, hgt - 0.2, 0.12))
 			# baranda del frente
-			bb.add_box("yellow", mats.yellow, Vector3(c.x, y + hgt + 0.95, 0.75), Vector3(x1 - x0, 0.05, 0.05))
-	# tuberías y cables del fondo (decorado barato, una malla)
-	var pipes := BoxBatcher.new()
-	pipes.add_box("pipe", mats.pipe, Vector3(w * 0.5, y + fh - slab - 0.45, Z_BACK + 0.15), Vector3(w, 0.16, 0.16))
-	pipes.add_box("pipe_red", mats.pipe_red, Vector3(w * 0.5, y + fh - slab - 0.75, Z_BACK + 0.12), Vector3(w, 0.1, 0.1))
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 100 + int(f.id)
-	for i in 7:
-		var px := rng.randf_range(1.0, w - 1.0)
-		pipes.add_box("pipe", mats.pipe, Vector3(px, y + (fh - slab) * 0.5, Z_BACK + 0.1), Vector3(0.1, fh - slab, 0.1))
-	var pipe_node := Node3D.new()
-	pipe_node.name = "Tuberias"
-	pipe_node.add_to_group("perf_tuberias")
-	pipe_node.add_to_group("decor_1")
-	node.add_child(pipe_node)
-	pipes.commit(pipe_node, false)
-	var meshes := bb.commit(node)
-	stats.tris_static += bb.tris + pipes.tris
+			bb.add_box("yellow", cm.yellow, Vector3(c.x, y + hgt + 0.95, 0.6), Vector3(x1 - x0, 0.05, 0.05))
+	# tuberías, cables y manchas: PINTADOS en el shader de la pared (sin geometría)
+	var meshes := bb.commit(node, false)
+	stats.tris_static += bb.tris
 	for m in meshes:
 		m.add_to_group("perf_estructura")
 	# carteles (B0..B4) y número de piso
@@ -214,7 +269,7 @@ func _build_floor(node: Node3D, f: Dictionary, fh: float) -> void:
 		_red_light(node, Vector3(float(f.lamps[0]) + 1.5, y + 2.8, Z_BACK + 0.05))
 	# decorado (galería) y coberturas
 	for p in f.props:
-		_prop(node, str(p[1]), Vector3(float(p[0]), y, -0.9 if str(p[3]) == "decor" else -0.3), float(p[2]), str(p[3]))
+		_prop(node, str(p[1]), Vector3(float(p[0]), y, -0.7 if str(p[3]) == "decor" else -0.3), float(p[2]), str(p[3]))
 	# cajas y contenedores
 	for c in f.crates:
 		_crate(node, float(c[0]), y + float(c[3]), str(c[1]), str(c[2]), int(f.id))
@@ -237,17 +292,17 @@ func _build_wall(node: Node3D, bb: BoxBatcher, body: StaticBody3D, x: float, y: 
 	match type:
 		"door":
 			var dh := 2.5
-			bb.add_box("concrete", mats.concrete, Vector3(x, y + dh + (h - dh) * 0.5, -0.2), Vector3(t, h - dh, DEPTH - 0.1))
+			bb.add_box("concrete", cm.concrete, Vector3(x, y + dh + (h - dh) * 0.5, -0.2), Vector3(t, h - dh, DEPTH - 0.1))
 			_shape(body, Vector3(x, y + dh + (h - dh) * 0.5, -0.2), Vector3(t, h - dh, DEPTH - 0.1))
 			# marco de la puerta
-			bb.add_box("steel", mats.steel, Vector3(x, y + dh - 0.05, 0.9), Vector3(t + 0.08, 0.1, 0.1))
-			bb.add_box("steel", mats.steel, Vector3(x, y + dh * 0.5, Z_BACK + 0.25), Vector3(t + 0.08, dh, 0.12))
+			bb.add_box("steel", cm.steel, Vector3(x, y + dh - 0.05, 0.55), Vector3(t + 0.08, 0.1, 0.1))
+			bb.add_box("steel", cm.steel, Vector3(x, y + dh * 0.5, Z_BACK + 0.25), Vector3(t + 0.08, dh, 0.12))
 		"duct":
 			var dh := 1.3
-			bb.add_box("metal_panel", mats.metal_panel, Vector3(x, y + dh + (h - dh) * 0.5, -0.2), Vector3(t, h - dh, DEPTH - 0.1))
+			bb.add_box("metal_panel", cm.metal_panel, Vector3(x, y + dh + (h - dh) * 0.5, -0.2), Vector3(t, h - dh, DEPTH - 0.1))
 			_shape(body, Vector3(x, y + dh + (h - dh) * 0.5, -0.2), Vector3(t, h - dh, DEPTH - 0.1))
 			# boca del conducto: rejilla y franja
-			bb.add_box("hazard", mats.hazard, Vector3(x, y + dh + 0.06, 0.9), Vector3(t + 0.1, 0.12, 0.1))
+			bb.add_box("hazard", cm.hazard, Vector3(x, y + dh + 0.06, 0.55), Vector3(t + 0.1, 0.12, 0.1))
 			var grate := MeshInstance3D.new()
 			var qm := QuadMesh.new()
 			qm.size = Vector2(1.6, 1.2)
@@ -262,10 +317,11 @@ func _build_wall(node: Node3D, bb: BoxBatcher, body: StaticBody3D, x: float, y: 
 			node.add_child(door)
 			door.global_position = Vector3(x, y, -0.2)
 		"solid":
-			bb.add_box("concrete", mats.concrete, Vector3(x, y + h * 0.5, -0.2), Vector3(t, h, DEPTH - 0.1))
+			bb.add_box("concrete", cm.concrete, Vector3(x, y + h * 0.5, -0.2), Vector3(t, h, DEPTH - 0.1))
 			_shape(body, Vector3(x, y + h * 0.5, -0.2), Vector3(t, h, DEPTH - 0.1))
 
-func _lamp(parent: Node3D, pos: Vector3, floor_i: int) -> void:
+## Artefacto de la lámpara (emisivo). La luz está pintada en los materiales del piso; las luces reales las maneja el pool.
+func _lamp(parent: Node3D, pos: Vector3, _floor_i: int) -> void:
 	var fix := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = Vector3(1.1, 0.08, 0.25)
@@ -274,18 +330,6 @@ func _lamp(parent: Node3D, pos: Vector3, floor_i: int) -> void:
 	fix.position = pos
 	fix.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	parent.add_child(fix)
-	var l := OmniLight3D.new()
-	l.light_color = Color(1.0, 0.8, 0.55)
-	l.light_energy = 1.6
-	l.omni_range = 7.5
-	l.omni_attenuation = 1.2
-	l.position = pos + Vector3(0, -0.3, 0.6)
-	l.shadow_enabled = false
-	l.set_meta("floor", floor_i)
-	l.add_to_group("dyn_light")
-	l.add_to_group("perf_luces")
-	parent.add_child(l)
-	lamps.append(l)
 	stats.lamps += 1
 
 func _red_light(parent: Node3D, pos: Vector3) -> void:
@@ -293,21 +337,52 @@ func _red_light(parent: Node3D, pos: Vector3) -> void:
 	var sm := SphereMesh.new()
 	sm.radius = 0.09
 	sm.height = 0.18
+	sm.radial_segments = 8
+	sm.rings = 4
 	mi.mesh = sm
 	mi.material_override = mats.red_light
 	mi.position = pos
 	mi.add_to_group("decor_1")
 	parent.add_child(mi)
-	var l := OmniLight3D.new()
-	l.light_color = Color(1, 0.12, 0.05)
-	l.light_energy = 1.2
-	l.omni_range = 4.0
-	l.position = pos + Vector3(0, 0, 0.4)
-	l.add_to_group("dyn_light")
-	l.add_to_group("perf_luces")
-	l.set_meta("alarm", true)
-	parent.add_child(l)
-	lamps.append(l)
+
+## Luces reales: un grupo chico que se coloca en las lámparas más cercanas al jugador (Settings.lights: 0, 2 o 4).
+func _build_light_pool() -> void:
+	for i in 4:
+		var l := OmniLight3D.new()
+		l.light_energy = 0.0
+		l.omni_range = 8.0
+		l.omni_attenuation = 1.0
+		l.light_specular = 0.2
+		l.shadow_enabled = false
+		l.visible = false
+		l.add_to_group("perf_luces")
+		l.set_meta("target", Vector3(0, -1000, 0))
+		l.set_meta("energy", 0.0)
+		add_child(l)
+		light_pool.append(l)
+
+func update_lights(player_pos: Vector3, delta: float) -> void:
+	var n: int = [0, 2, 4][clampi(Settings.lights, 0, 2)]
+	_pool_t -= delta
+	if _pool_t <= 0.0:
+		_pool_t = 0.25
+		var order := lamp_data.duplicate()
+		order.sort_custom(func(a, b): return (a.pos as Vector3).distance_squared_to(player_pos) < (b.pos as Vector3).distance_squared_to(player_pos))
+		for i in light_pool.size():
+			var l := light_pool[i]
+			if i < n and i < order.size() and (order[i].pos as Vector3).distance_to(player_pos) < 14.0:
+				var d: Dictionary = order[i]
+				l.set_meta("target", (d.pos as Vector3) + Vector3(0, -0.2, 0.6))
+				l.set_meta("energy", 1.6 if not d.alarm else 1.0)
+				l.light_color = d.color
+			else:
+				l.set_meta("energy", 0.0)
+	for l in light_pool:
+		var e := float(l.get_meta("energy"))
+		l.light_energy = move_toward(l.light_energy, e, delta * 4.0)
+		l.visible = l.light_energy > 0.02
+		var t: Vector3 = l.get_meta("target")
+		l.position = t if l.position.distance_to(t) > 12.0 else l.position.lerp(t, clampf(delta * 6.0, 0.0, 1.0))
 
 static var _prop_defs := {}
 func _prop(parent: Node3D, id: String, pos: Vector3, scale: float, role: String) -> void:
@@ -332,7 +407,7 @@ func _prop(parent: Node3D, id: String, pos: Vector3, scale: float, role: String)
 		n.add_to_group("decor_%d" % (1 if id.begins_with("sf_") or id.begins_with("shelf") else 2))
 		n.add_to_group("perf_decorado")
 	for mi in n.find_children("*", "MeshInstance3D", true, false):
-		(mi as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if role == "decor" else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		(mi as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 const CRATE_SIZE := {"crate_wood": Vector3(0.75, 0.62, 0.75), "crate_metal": Vector3(0.95, 0.7, 0.7), "barrel": Vector3(0.6, 0.9, 0.6),
 	"suitcase": Vector3(0.6, 0.22, 0.42), "lab_case": Vector3(0.7, 0.32, 0.5), "glass": Vector3(0.08, 2.0, 1.6), "cardboard": Vector3(0.55, 0.45, 0.5)}
@@ -395,13 +470,13 @@ func _moving_platform(parent: Node3D, mp: Array, y: float) -> void:
 	body.set_meta("surface", "metal")
 	parent.add_child(body)
 	var w := 1.8
-	_shape_static(body, Vector3(0, -0.1, -0.2), Vector3(w, 0.2, 2.2))
+	_shape_static(body, Vector3(0, -0.1, -0.3), Vector3(w, 0.2, 1.8))
 	var mi := MeshInstance3D.new()
 	var bm := BoxMesh.new()
-	bm.size = Vector3(w, 0.2, 2.2)
+	bm.size = Vector3(w, 0.2, 1.8)
 	mi.mesh = bm
 	mi.material_override = mats.hazard
-	mi.position = Vector3(0, -0.1, -0.2)
+	mi.position = Vector3(0, -0.1, -0.3)
 	body.add_child(mi)
 	var x0 := float(mp[0]) + w * 0.5
 	var x1 := float(mp[1]) - w * 0.5
@@ -435,8 +510,8 @@ func _hazard(parent: Node3D, hz: Array, y: float) -> void:
 	parent.add_child(n)
 	n.global_position = Vector3((n.x0 + n.x1) * 0.5, y, 0)
 	var bb := BoxBatcher.new()
-	bb.add_box("hazard", mats.hazard, Vector3((n.x0 + n.x1) * 0.5, y + 0.01, 0), Vector3(n.x1 - n.x0, 0.02, 1.8))
-	bb.commit(parent)
+	bb.add_box("hazard", cm.hazard, Vector3((n.x0 + n.x1) * 0.5, y + 0.01, 0), Vector3(n.x1 - n.x0, 0.02, 1.4))
+	bb.commit(parent, false)
 
 func _extraction(parent: Node3D, pos: Vector3, label: String) -> void:
 	var z := WorldInteractables.ExtractionZone.new()
@@ -485,13 +560,15 @@ func _drop_enemy_loot(a: Actor, weapon_id: String) -> void:
 
 ## Cimientos y vereda bajo el P0 (si no, debajo del primer piso se ve el vacío).
 func _build_ground(d: Dictionary) -> void:
+	_use_floor(0)
 	var bb := BoxBatcher.new()
 	var w := float(d.width)
-	bb.add_box("concrete_dark", mats.concrete_dark, Vector3(w * 0.5, -3.3, -10.0), Vector3(w + 200.0, 6.0, 40.0))
-	bb.add_box("hazard", mats.hazard, Vector3(w * 0.5, -0.32, Z_FRONT + 0.2), Vector3(w, 0.06, 0.2))
+	bb.add_box("concrete_dark", cm.concrete_dark, Vector3(w * 0.5, -3.3, -10.0), Vector3(w + 200.0, 6.0, 40.0))
+	bb.add_box("hazard", cm.hazard, Vector3(w * 0.5, -0.32, Z_FRONT + 0.2), Vector3(w, 0.06, 0.2))
 	bb.commit(floors_nodes[0], false)
 
 func _build_roof(d: Dictionary, y: float) -> void:
+	_use_floor(d.floors.size())
 	var node := Node3D.new()
 	node.name = "Azotea"
 	node.add_to_group("floor_%d" % d.floors.size())
@@ -503,15 +580,15 @@ func _build_roof(d: Dictionary, y: float) -> void:
 	var slab := float(TorreAlfa.SLAB)
 	for s in _segments(0.0, w, d.roof.get("holes", [])):
 		var c := Vector3((float(s[0]) + float(s[1])) * 0.5, y - slab * 0.5, (Z_BACK + Z_FRONT) * 0.5)
-		bb.add_box("concrete", mats.concrete, c, Vector3(float(s[1]) - float(s[0]), slab, DEPTH))
+		bb.add_box("concrete", cm.concrete, c, Vector3(float(s[1]) - float(s[0]), slab, DEPTH))
 		_shape(body, c, Vector3(float(s[1]) - float(s[0]), slab, DEPTH))
 	# parapetos y antena
 	for ex in [0.2, w - 0.2]:
-		bb.add_box("concrete", mats.concrete, Vector3(ex, y + 0.5, (Z_BACK + Z_FRONT) * 0.5), Vector3(0.4, 1.0, DEPTH))
+		bb.add_box("concrete", cm.concrete, Vector3(ex, y + 0.5, (Z_BACK + Z_FRONT) * 0.5), Vector3(0.4, 1.0, DEPTH))
 		_shape(body, Vector3(ex, y + 0.5, (Z_BACK + Z_FRONT) * 0.5), Vector3(0.4, 1.0, DEPTH))
-	bb.add_box("steel", mats.steel, Vector3(12.0, y + 4.0, Z_BACK), Vector3(0.2, 8.0, 0.2))
-	bb.add_box("steel", mats.steel, Vector3(20.0, y + 1.2, Z_BACK + 0.3), Vector3(3.0, 2.4, 1.2))
-	bb.commit(node)
+	bb.add_box("steel", cm.steel, Vector3(12.0, y + 4.0, Z_BACK), Vector3(0.2, 8.0, 0.2))
+	bb.add_box("steel", cm.steel, Vector3(20.0, y + 1.2, Z_BACK + 0.3), Vector3(3.0, 2.4, 1.2))
+	bb.commit(node, false)
 	_red_light(node, Vector3(12.0, y + 8.1, Z_BACK + 0.2))
 	if d.roof.has("extraction"):
 		_extraction(node, Vector3(float(d.roof.extraction[0]), y, 0), str(d.roof.extraction[1]))
@@ -559,6 +636,7 @@ func _build_ladders(d: Dictionary) -> void:
 
 func _build_stairs(d: Dictionary) -> void:
 	for s in d.stairs:
+		_use_floor(int(s[2]))
 		var x0 := float(s[0])
 		var x1 := float(s[1])
 		var y0 := float(s[2]) * float(d.floor_h)
@@ -569,21 +647,22 @@ func _build_stairs(d: Dictionary) -> void:
 		var dy := y1 - y0
 		var ang := atan2(dy, dx)
 		var length := sqrt(dx * dx + dy * dy)
-		var c := Vector3((x0 + x1) * 0.5, (y0 + y1) * 0.5 - 0.1, -0.6)
+		var c := Vector3((x0 + x1) * 0.5, (y0 + y1) * 0.5 - 0.1, -0.45)
 		var basis := Basis(Vector3.BACK, ang)
-		_shape(body, c, Vector3(length, 0.2, 1.4), basis)
+		_shape(body, c, Vector3(length, 0.2, 1.3), basis)
 		var bb := BoxBatcher.new()
 		var steps := int(dy / 0.22)
 		for i in steps:
 			var k := (i + 0.5) / steps
-			bb.add_box("steel", mats.steel, Vector3(x0 + dx * k, y0 + dy * k - 0.08, -0.6), Vector3(dx / steps + 0.02, 0.06, 1.3))
-		bb.add_box("yellow", mats.yellow, c + Vector3(0, 0.95, 0.7), Vector3(length, 0.05, 0.05), basis)
-		bb.add_box("yellow", mats.yellow, c + Vector3(0, 0.0, -1.3 + 0.6), Vector3(length, 0.18, 0.06), basis)
-		bb.commit(parent)
+			bb.add_box("steel", cm.steel, Vector3(x0 + dx * k, y0 + dy * k - 0.08, -0.45), Vector3(dx / steps + 0.02, 0.06, 1.2))
+		bb.add_box("yellow", cm.yellow, c + Vector3(0, 0.95, 0.55), Vector3(length, 0.05, 0.05), basis)
+		bb.add_box("yellow", cm.yellow, c + Vector3(0, 0.0, -0.65), Vector3(length, 0.18, 0.06), basis)
+		bb.commit(parent, false)
 
 func _build_crater(d: Dictionary) -> void:
 	if d.crater.is_empty():
 		return
+	_use_floor(1)
 	var parent: Node3D = floors_nodes[1]
 	var y0 := float(d.floor_h)
 	var bb := BoxBatcher.new()
@@ -595,20 +674,20 @@ func _build_crater(d: Dictionary) -> void:
 		var x1 := float(p[1])
 		var top := float(p[2])
 		var c := Vector3((x0 + x1) * 0.5, (y0 + top) * 0.5, -0.3)
-		bb.add_box("rubble", mats.rubble, c, Vector3(x1 - x0, top - y0, 2.0))
-		_shape(body, c, Vector3(x1 - x0, top - y0, 2.0))
+		bb.add_box("rubble", cm.rubble, c, Vector3(x1 - x0, top - y0, 1.7))
+		_shape(body, c, Vector3(x1 - x0, top - y0, 1.7))
 		# trozos sueltos (sólo imagen)
 		for i in 3:
 			var s := rng.randf_range(0.25, 0.6)
-			bb.add_box("rubble", mats.rubble, Vector3(rng.randf_range(x0, x1), top + s * 0.3, rng.randf_range(-1.2, 0.4)),
+			bb.add_box("rubble", cm.rubble, Vector3(rng.randf_range(x0, x1), top + s * 0.3, rng.randf_range(-1.0, 0.4)),
 				Vector3(s, s * 0.6, s), Basis.from_euler(Vector3(rng.randf() * 0.6, rng.randf() * 3.0, rng.randf() * 0.6)))
 	# bordes rotos de las losas alrededor del cráter
 	for i in 14:
 		var x := rng.randf_range(37.5, 47.5)
 		var yy: float = [float(d.floor_h) * 2.0, float(d.floor_h) * 3.0][i % 2]
-		bb.add_box("rubble", mats.rubble, Vector3(x, yy - 0.35, rng.randf_range(-1.4, 0.9)), Vector3(rng.randf_range(0.3, 0.9), 0.25, 0.5),
+		bb.add_box("rubble", cm.rubble, Vector3(x, yy - 0.35, rng.randf_range(-1.0, 0.5)), Vector3(rng.randf_range(0.3, 0.9), 0.25, 0.5),
 			Basis.from_euler(Vector3(rng.randf() * 0.5, rng.randf() * 3.0, rng.randf() * 0.5)))
-	var meshes := bb.commit(parent)
+	var meshes := bb.commit(parent, false)
 	for m in meshes:
 		m.add_to_group("perf_escombros")
 
@@ -672,14 +751,17 @@ func _build_covers() -> void:
 			mi.visible = false     # la azotea es exterior
 
 ## Revela el sector `id` (y deja a los ya vistos semi-oscuros: el jugador sólo ve bien donde está).
+var _cur_floor := 0
 func update_covers(current_id: String, delta: float) -> void:
 	revealed[current_id] = true
+	_cur_floor = int(graph.room(current_id).get("floor", 0))
 	for id in covers:
 		var mi: MeshInstance3D = covers[id]
 		var target := 0.0 if id == current_id else (0.35 if revealed.has(id) else 0.9)
 		var mm := mi.material_override as StandardMaterial3D
 		mm.albedo_color.a = move_toward(mm.albedo_color.a, target, delta * 2.5)
-		mi.visible = mm.albedo_color.a > 0.01 and int(graph.room(id).get("floor", 0)) < data.floors.size()
+		var rf := int(graph.room(id).get("floor", 0))
+		mi.visible = mm.albedo_color.a > 0.01 and rf < data.floors.size() and absi(rf - _cur_floor) <= 1
 
 func room_id_at(pos: Vector3) -> String:
 	var fi := clampi(int(floor((pos.y + 0.5) / float(data.floor_h))), 0, data.floors.size())
@@ -700,9 +782,7 @@ func _build_environment() -> void:
 	env.ambient_light_energy = 0.55
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.tonemap_exposure = 1.05
-	env.fog_enabled = true
-	env.fog_light_color = Color(0.08, 0.09, 0.12)
-	env.fog_density = 0.012
+	env.fog_enabled = false           # sin niebla ni brillo: son pasadas de pantalla completa (17 % del cuadro en el Mali-G57)
 	env.glow_enabled = false
 	world_env.environment = env
 	add_child(world_env)
@@ -714,19 +794,12 @@ func _build_environment() -> void:
 	moon.directional_shadow_max_distance = 30.0
 	add_child(moon)
 
-## Aplica la configuración gráfica que depende del mapa (luces, sombras, fondo, decorado, niebla, brillo).
-func apply_settings(player_floor: int) -> void:
-	moon.shadow_enabled = Settings.shadows >= 1
-	var env := world_env.environment
-	env.glow_enabled = Settings.quality_preset == 2
-	env.fog_enabled = Settings.background >= 2
-	for l in lamps:
-		if not is_instance_valid(l):
-			continue
-		var lf := int(l.get_meta("floor", player_floor))
-		var near := absi(lf - player_floor) <= 1
-		l.visible = Settings.lights >= 2 or (Settings.lights == 1 and near) or bool(l.get_meta("alarm", false)) and Settings.lights >= 1
-		l.shadow_enabled = Settings.shadows >= 2 and lf == player_floor
+## Aplica la configuración gráfica que depende del mapa (luces reales, sombras, fondo, decorado).
+func apply_settings(_player_floor: int) -> void:
+	moon.shadow_enabled = Settings.shadows >= 2          # sólo en ALTA: sombras reales de la luna sobre personajes
+	moon.light_energy = 0.35 if Settings.lights > 0 else 0.5
+	world_env.environment.glow_enabled = false
+	world_env.environment.fog_enabled = false
 	for n in get_tree().get_nodes_in_group("bg_1"):
 		(n as Node3D).visible = Settings.background >= 1
 	for n in get_tree().get_nodes_in_group("bg_2"):

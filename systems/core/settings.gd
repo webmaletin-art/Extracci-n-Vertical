@@ -12,9 +12,9 @@ const PRESETS := ["Baja", "Media", "Alta", "Personalizada"]
 
 ## ---------- gráficos ----------
 var quality_preset := 1             ## 0..2, 3 = personalizada
-var render_scale := 0.85            ## escala de la imagen 3D (0.5..1.0); el HUD siempre a resolución completa
-var shadows := 1                    ## 0 sin sombras · 1 sombra del sol baja · 2 sombras de sol y lámparas
-var lights := 1                     ## 0 sólo luces horneadas/emisivas · 1 lámparas cercanas · 2 todas
+var render_scale := 1.0             ## resolución 3D relativa a 720p de alto (1.0 = 720p, 0.75 = 540p, 1.25 = 900p); el HUD siempre a resolución completa
+var shadows := 1                    ## 0 sin sombras · 1 sombra simple (círculo bajo cada personaje, casi gratis) · 2 sombras reales de la luna sobre personajes
+var lights := 1                     ## luces REALES sobre personajes y objetos: 0 ninguna (el escenario ya trae la luz pintada) · 1 dos · 2 cuatro (siguen al jugador)
 var msaa := 0                       ## 0 · 1 = 2x · 2 = 4x
 var fxaa := false
 var particles := 1                  ## chispas, polvo, sangre, fragmentos
@@ -43,8 +43,8 @@ var character_id := "alfa"
 
 ## Lo que cambia cada nivel de calidad (BAJA / MEDIA / ALTA).
 const PRESET_VALUES := {
-	"render_scale": [0.6, 0.85, 1.0],
-	"shadows": [0, 1, 2],
+	"render_scale": [0.75, 1.0, 1.25],
+	"shadows": [1, 1, 2],
 	"lights": [0, 1, 2],
 	"msaa": [0, 0, 1],
 	"fxaa": [false, true, false],
@@ -105,11 +105,17 @@ func autodetect() -> int:
 			return 0
 	return 1
 
+## Escala 3D real: se calcula contra el alto de la pantalla para que 1.0 sea siempre 720p (un teléfono de 1080×2400 no
+## dibuja 2,5 veces más píxeles de los que hacen falta). Nunca agranda por encima de la resolución nativa.
+func effective_scale() -> float:
+	var h := float(maxi(DisplayServer.window_get_size().y, 1))
+	return clampf(720.0 * render_scale / h, 0.3, 1.0)
+
 func apply() -> void:
 	var vp := get_viewport()
 	if vp:
 		vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
-		vp.scaling_3d_scale = clampf(render_scale, 0.5, 1.0)
+		vp.scaling_3d_scale = effective_scale()
 		vp.msaa_3d = [Viewport.MSAA_DISABLED, Viewport.MSAA_2X, Viewport.MSAA_4X][clampi(msaa, 0, 2)]
 		vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA if fxaa else Viewport.SCREEN_SPACE_AA_DISABLED
 	Engine.max_fps = fps_target
