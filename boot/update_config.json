@@ -1,0 +1,5 @@
+{
+ "_doc": "Dónde busca el lanzador las actualizaciones de contenido. El enlace «latest» apunta siempre a la última publicación (Releases del repositorio, público: no hace falta cuenta ni clave).",
+ "manifest_url": "https://github.com/webmaletin-art/Extracci-n-Vertical/releases/latest/download/manifest.json",
+ "apk_url": "https://github.com/webmaletin-art/Extracci-n-Vertical/releases/latest/download/ExtraccionVertical.apk"
+}

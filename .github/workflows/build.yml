@@ -1,21 +1,31 @@
-name: Pruebas y APK
+name: Pruebas, APK liviana y paquetes
 
-# Corre las pruebas automáticas y compila un APK de prueba (debug, firmado con una clave descartable que se genera en
-# cada ejecución: no hay claves en el repositorio). Se lanza a mano (Actions → Pruebas y APK → Run workflow) o al subir
-# cambios. El APK queda en «Artifacts» de la ejecución.
+# APK liviana (motor + código, firmada SIEMPRE con la misma clave: se instala encima de la anterior sin perder datos) y
+# paquetes de contenido (.pck) que el juego descarga al abrirse. Cada subida a main publica un Release con:
+#   ExtraccionVertical.apk · manifest.json · los paquetes que cambiaron (los que no, se reutilizan de Releases anteriores).
+# Enlace permanente de la última APK:
+#   https://github.com/webmaletin-art/Extracci-n-Vertical/releases/latest/download/ExtraccionVertical.apk
 on:
   workflow_dispatch:
   push:
     branches: ["**"]
     paths-ignore: ["docs/**", "*.md"]
 
+permissions:
+  contents: write
+
 env:
   GODOT_VERSION: "4.7.2"
+  REPO: webmaletin-art/Extracci-n-Vertical
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  android:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -36,13 +46,11 @@ jobs:
           unzip -q godot.zip && rm godot.zip
           curl -sSL -o tpl.tpz "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
           unzip -q tpl.tpz && rm tpl.tpz
-      - name: Configurar Godot y clave de prueba descartable
+      - name: Configurar Godot
         run: |
           mkdir -p ~/.local/share/godot/export_templates
           ln -sfn ~/godot/templates ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
           sudo ln -sf ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 /usr/local/bin/godot
-          keytool -genkeypair -v -keystore ~/debug.keystore -storepass android -alias androiddebugkey -keypass android \
-            -keyalg RSA -validity 9999 -dname "CN=Android Debug,O=Android,C=US" >/dev/null
           mkdir -p ~/.config/godot
           cat > ~/.config/godot/editor_settings-${GODOT_VERSION%.*}.tres <<EOF2
           [gd_resource type="EditorSettings" format=3]
@@ -50,21 +58,84 @@ jobs:
           [resource]
           export/android/android_sdk_path = "${ANDROID_SDK_ROOT}"
           export/android/java_sdk_path = "${JAVA_HOME}"
-          export/android/debug_keystore = "$HOME/debug.keystore"
-          export/android/debug_keystore_user = "androiddebugkey"
-          export/android/debug_keystore_pass = "android"
           EOF2
       - name: Importar
         run: godot --headless --path . --import 2>&1 | tail -n 3 || true
       - name: Pruebas
         run: tools/run_tests.sh
-      - name: Exportar APK (debug)
+
+      - name: Firma (clave estable)
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
-          mkdir -p build
-          sed -i "s/^version\/code=.*/version\/code=${{ github.run_number }}/; s/^version\/name=.*/version\/name=\"0.1.${{ github.run_number }}\"/" export_presets.cfg
-          godot --headless --path . --export-debug "Android" build/ExtraccionVertical.apk 2>&1 | grep -vE "RID|Leaked|resources still" | tail -n 20
-          test -f build/ExtraccionVertical.apk
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_PATH=$RUNNER_TEMP/release.keystore" >> $GITHUB_ENV
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_USER=${KS_ALIAS:-evrelease}" >> $GITHUB_ENV
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD=$KS_PASS" >> $GITHUB_ENV
+            echo "Firmando con la clave PRIVADA de los secretos."
+          else
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_PATH=$GITHUB_WORKSPACE/build/dev.keystore" >> $GITHUB_ENV
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_USER=evdev" >> $GITHUB_ENV
+            echo "GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD=extraccionvertical" >> $GITHUB_ENV
+            echo "::notice::Firmando con la clave de DESARROLLO (build/dev.keystore): estable, sirve para actualizar encima. Para publicar en una tienda, cargar los secretos ANDROID_KEYSTORE_B64, ANDROID_KEYSTORE_PASSWORD y ANDROID_KEY_ALIAS."
+          fi
+
+      - name: Exportar APK liviana
+        run: |
+          N=${{ github.run_number }}
+          mkdir -p out
+          echo "{\"apk\": $N}" > boot/local_version.json
+          sed -i "s/^version\/code=.*/version\/code=$N/; s/^version\/name=.*/version\/name=\"0.2.$N\"/" export_presets.cfg
+          godot --headless --path . --export-release "Android" out/ExtraccionVertical.apk 2>&1 | grep -vE "RID|Leaked|resources still" | tail -n 15
+          test -f out/ExtraccionVertical.apk
+          ls -la out
+
+      - name: Paquetes de contenido
+        if: github.ref == 'refs/heads/main'
+        run: |
+          N=${{ github.run_number }}
+          PREV=$(curl -sfL "https://github.com/$REPO/releases/latest/download/manifest.json" || echo '{"packs":[]}')
+          MIN=$(cat build/min_apk.txt 2>/dev/null || echo 1)
+          packs='[]'
+          add_pack() { # nombre, preset, descripción, carpetas...
+            name=$1; preset=$2; desc=$3; shift 3
+            ver=$(find "$@" -type f | LC_ALL=C sort | xargs sha256sum | sha256sum | cut -c1-16)
+            pv=$(echo "$PREV" | jq -r --arg n "$name" '.packs[]? | select(.name==$n) | .version')
+            if [ "$pv" = "$ver" ]; then
+              echo "$name sin cambios ($ver): se reutiliza el de la publicación anterior"
+              entry=$(echo "$PREV" | jq -c --arg n "$name" '.packs[] | select(.name==$n)')
+            else
+              godot --headless --path . --export-pack "$preset" "out/$name.pck" 2>&1 | grep -E "ERROR|DONE" | tail -n 3
+              sha=$(sha256sum "out/$name.pck" | cut -d' ' -f1); size=$(stat -c%s "out/$name.pck")
+              entry=$(jq -nc --arg n "$name" --arg v "$ver" --arg d "$desc" --arg u "https://github.com/$REPO/releases/download/v$N/$name.pck" --arg s "$sha" --argjson z "$size" \
+                '{name:$n, version:$v, desc:$d, url:$u, sha256:$s, size:$z, required:true}')
+              NEW_FILES="$NEW_FILES out/$name.pck"
+            fi
+            packs=$(echo "$packs" | jq -c --argjson e "$entry" '. + [$e]')
+          }
+          NEW_FILES=""
+          add_pack personajes "Paquete personajes" "personajes, armas, anatomía y sonidos" assets/characters assets/anatomy assets/anims assets/weapons assets/ammo assets/sounds assets/icons
+          add_pack mapa_torre_alfa "Paquete mapa Torre Alfa" "mapa Torre Alfa (decorado y texturas)" assets/props assets/textures
+          jq -n --argjson apk "$N" --argjson min "$MIN" --argjson packs "$packs" --arg notes "$(git log -1 --pretty=%s | head -c 200)" \
+            '{apk:$apk, min_apk:$min, notes:$notes, packs:$packs}' > out/manifest.json
+          cat out/manifest.json
+          echo "NEW_FILES=$NEW_FILES" >> $GITHUB_ENV
+
+      - name: Publicar (Release)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          N=${{ github.run_number }}
+          gh release create "v$N" out/ExtraccionVertical.apk out/manifest.json $NEW_FILES \
+            --repo "$REPO" --title "Extracción Vertical 0.2.$N" --notes "Commit ${GITHUB_SHA::7}: $(git log -1 --pretty=%s)" --latest
+          echo "APK: https://github.com/$REPO/releases/latest/download/ExtraccionVertical.apk" >> $GITHUB_STEP_SUMMARY
+
       - uses: actions/upload-artifact@v4
         with:
           name: ExtraccionVertical-apk
-          path: build/ExtraccionVertical.apk
+          path: out/ExtraccionVertical.apk
+          retention-days: 7
