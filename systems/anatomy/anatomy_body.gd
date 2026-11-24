@@ -533,6 +533,9 @@ func _process(delta: float) -> void:
 		zm.set_shader_parameter("zone_c", zw)
 		zm.set_shader_parameter("zone_n", zones.size())
 		zm.set_shader_parameter("zone_r", r)
+		var cam := get_viewport().get_camera_3d()
+		if cam:
+			zm.set_shader_parameter("cam_pos", cam.global_position)
 	for coll in [meshes, frag_meshes]:
 		for n in coll:
 			var mi: MeshInstance3D = coll[n]
@@ -742,11 +745,25 @@ render_mode cull_disabled;
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
 uniform vec4 albedo_color : source_color = vec4(1.0);
 """ + _ZONE_FUNC + """
+uniform vec3 cam_pos = vec3(0.0);
 varying vec3 wp;
 void vertex() { wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz; }
+// la ropa también desaparece en el «túnel» entre la cámara y la herida: nada tapa la vista
+bool tunnel(vec3 p) {
+	for (int i = 0; i < 4; i++) {
+		if (i >= zone_n) break;
+		vec3 c = zone_c[i].xyz;
+		vec3 v = c - cam_pos;
+		float len = length(v);
+		vec3 d = v / max(len, 0.0001);
+		float t = dot(p - cam_pos, d);
+		if (t < len + zone_r * 0.5 && t > 0.0 && length(cross(p - cam_pos, d)) < zone_r * 1.25) { return true; }
+	}
+	return false;
+}
 void fragment() {
 	float zd = zone_d(wp);
-	if (zd < zone_r) {
+	if (zd < zone_r || tunnel(wp)) {
 		if (FRONT_FACING) { discard; }
 		ALBEDO = vec3(0.015, 0.012, 0.012);    // interior del cuerpo: silueta negra detrás de la anatomía
 		ROUGHNESS = 1.0;
