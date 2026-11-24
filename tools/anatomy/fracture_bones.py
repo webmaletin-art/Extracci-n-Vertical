@@ -52,14 +52,90 @@ def seeds_for(bm, n):
     return pts
 
 
+def islands_of(base):
+    """Piezas sueltas del grupo (cada costilla, cada vértebra, cada hueso del cráneo): se rompen por separado, así el
+    corte nunca tiende «láminas» de una costilla a otra."""
+    base.faces.ensure_lookup_table()
+    seen = set()
+    out = []
+    for f0 in base.faces:
+        if f0.index in seen:
+            continue
+        stack = [f0]
+        seen.add(f0.index)
+        isl = []
+        while stack:
+            f = stack.pop()
+            isl.append(f)
+            for v in f.verts:
+                for g in v.link_faces:
+                    if g.index not in seen:
+                        seen.add(g.index)
+                        stack.append(g)
+        out.append(isl)
+    return out
+
+
+def sub_bmesh(faces):
+    bm = bmesh.new()
+    vmap = {}
+    for f in faces:
+        for v in f.verts:
+            if v.index not in vmap:
+                vmap[v.index] = bm.verts.new(v.co)
+    for f in faces:
+        try:
+            bm.faces.new([vmap[v.index] for v in f.verts])
+        except ValueError:
+            pass
+    return bm
+
+
 def fracture(obj, n):
     me = obj.data
     base = bmesh.new()
     base.from_mesh(me)
     base.transform(obj.matrix_world)
+    bmesh.ops.remove_doubles(base, verts=base.verts, dist=0.0003)   # costuras de la malla original: una sola pieza
     bmesh.ops.triangulate(base, faces=base.faces)
+    base.verts.index_update()
+    base.faces.index_update()
+    isl = islands_of(base)
+    sizes = []
+    for faces in isl:
+        pts = [v.co for f in faces for v in f.verts]
+        lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
+        hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
+        sizes.append((hi - lo).length)
+    big = max(sizes) if sizes else 1.0
+    out = []
+    loose = []
+    for faces, sz in zip(isl, sizes):
+        if len(faces) < 40 or sz < 0.012:
+            loose.extend(faces)            # trocitos (dientes sueltos, cartílagos): van juntos en un fragmento
+            continue
+        k = max(1, min(n, round(n * sz / big)))
+        sub = sub_bmesh(faces)
+        out.extend(fracture_bm(sub, k, max(sz, 0.01)) if k > 1 else [whole(sub)])
+        sub.free()
+    if loose:
+        sub = sub_bmesh(loose)
+        out.append(whole(sub))
+        sub.free()
+    base.free()
+    return out
+
+
+def whole(bm):
+    bmesh.ops.triangulate(bm, faces=bm.faces)
+    bm.verts.index_update()
+    verts = np.array([tuple(v.co) for v in bm.verts], dtype=np.float32)
+    faces = np.array([[v.index for v in f.verts] for f in bm.faces], dtype=np.int32)
+    return (verts, faces, np.zeros(len(faces), dtype=np.uint8))
+
+
+def fracture_bm(base, n, size):
     seeds = seeds_for(base, n)
-    size = max((Vector(obj.dimensions)).length, 0.01)
     out = []
     for i, si in enumerate(seeds):
         bm = base.copy()
@@ -112,7 +188,6 @@ def fracture(obj, n):
         cut = np.array([1 if f.material_index == 1 else 0 for f in bm.faces], dtype=np.uint8)
         out.append((verts, faces, cut))
         bm.free()
-    base.free()
     return out
 
 

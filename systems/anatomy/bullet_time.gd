@@ -345,10 +345,12 @@ func _replay_step() -> bool:
 	basis = basis * Basis(Vector3.BACK, _rp_spin)                       # gira sobre su eje (estrías del cañón)
 	if _rp_tumble:
 		basis = basis * Basis(Vector3.RIGHT, _rp_spin * 0.55)           # se desvió: da vueltas
-	var sc := Vector3(1.0, 1.0, 1.0) * 1.6
+	# tamaño real (~4 cm) y centrada: el modelo de la bala trae el origen corrido
+	var sc := Vector3.ONE * 0.2
 	if _rp_flat:
-		sc = Vector3(1.7, 1.7, 0.6) * 1.6                                 # se aplastó contra el hueso duro
-	_rp_bullet.global_transform = Transform3D(basis.scaled(sc), pos)
+		sc = Vector3(1.7, 1.7, 0.6) * 0.2                                 # se aplastó contra el hueso duro
+	var mc := _rp_bullet.mesh.get_aabb().get_center() if _rp_bullet.mesh else Vector3.ZERO
+	_rp_bullet.global_transform = Transform3D(basis.scaled(sc), pos) * Transform3D(Basis.IDENTITY, -mc)
 	# cámara pegada a la bala, del lado de la cámara del juego, un poco por delante
 	var side := Vector3(0, 0, 1)
 	var cam_p := pos + side * 0.34 + Vector3.UP * 0.06 - fwd * 0.10
