@@ -1279,6 +1279,8 @@ func _weapon_target(w: Firearm) -> Transform3D:
 ## Láser desde la boca del cañón en la dirección real del disparo (con temblor y retroceso) hasta lo primero que toca.
 ## Rojo para el jugador, ámbar para los enemigos (delata su puntería: lectura táctica). Se apaga en Configuración.
 func _update_laser(w: Firearm, on: bool) -> void:
+	if BulletTime.closeup_active:
+		on = false
 	if laser == null:
 		laser = MeshInstance3D.new()
 		var bm := BoxMesh.new()

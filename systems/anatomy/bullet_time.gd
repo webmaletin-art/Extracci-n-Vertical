@@ -13,11 +13,12 @@ signal injury_report(victim: Actor, lines: Array)
 
 const KILL_SECONDS := 2.6
 ## Tomas de cerca: comienzo del nombre del grupo → [radio de la ventana de rayos X (m), distancia final de la cámara (m), ángulo final (rad, 0 = de costado)]
-const CLOSEUPS := {"ojo": [0.075, 0.38, 0.95], "testículos": [0.11, 0.62, 0.55], "estómago": [0.15, 0.8, 0.45], "oreja": [0.08, 0.4, 0.8],
+const CLOSEUPS := {"cráneo": [0.17, 0.55, 1.3], "cerebro": [0.17, 0.55, 1.3], "ojo": [0.075, 0.38, 0.95], "testículos": [0.11, 0.62, 0.55], "estómago": [0.15, 0.8, 0.45], "oreja": [0.08, 0.4, 0.8],
 	"corazón": [0.16, 0.8, 0.4], "hígado": [0.15, 0.8, 0.45]}
 
 var camera: SideCamera
 var player: Actor
+static var closeup_active := false     ## durante la toma de rayos X no se dibujan los láseres
 var phase := ""              ## "" | "bullet" | "kill"
 var _proj := -1
 var _victim: Actor
@@ -109,6 +110,7 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 	if phase == "kill":
 		return
 	phase = "kill"
+	closeup_active = true
 	_victim = a
 	if Ballistics.instance:
 		Ballistics.instance.tracked = -1
@@ -205,6 +207,7 @@ func skip() -> void:
 		_end()
 
 func _end() -> void:
+	closeup_active = false
 	if Blood.instance:
 		Blood.instance.set_closeup(false)
 	if is_instance_valid(_victim):
