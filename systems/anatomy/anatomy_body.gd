@@ -17,6 +17,7 @@ extends Node
 
 const FIT_DIR := "res://assets/anatomy/fit/"
 const MAX_WOUNDS := 6
+static var hide_muscles := false      ## (prueba) no dibujar los músculos en los rayos X: sólo huesos, órganos, vasos y ojos
 
 static var _scenes := {}         ## id → PackedScene
 static var _cpu := {}            ## id → {node: {v, i, aabb, label, system, bone, center}}
@@ -479,6 +480,8 @@ func _refresh_visible() -> void:
 	for n in groups:
 		var g: Dictionary = groups[n]
 		if Settings.xray == 1 and g.system != "hueso" and not wounds.has(n):
+			continue
+		if hide_muscles and g.system == "musculo":
 			continue
 		var c := bind_to_world(n, g.center)
 		var near := false
