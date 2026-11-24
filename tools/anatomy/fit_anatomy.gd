@@ -52,6 +52,7 @@ func _run() -> void:
 			var par: Dictionary = by_node.get(str(f.parent), {})
 			if par.is_empty() or not fsrc.has(str(f.node)):
 				continue
+			par["has_frags"] = true
 			src[str(f.node)] = fsrc[str(f.node)]
 			meta.groups.append({"node": f.node, "label": par.label, "system": "hueso", "bone": par.bone, "parent": f.parent})
 	# cuerpo estático para los rayos contra la piel del personaje
@@ -332,8 +333,8 @@ func _fit(id: String, src: Dictionary, meta: Dictionary) -> void:
 	var group_data := []
 	for g in meta.groups:
 		var node := str(g.node)
-		if not src.has(node):
-			continue
+		if not src.has(node) or g.get("has_frags", false):
+			continue                    # el hueso entero ES la unión de sus fragmentos (no se guarda dos veces)
 		var v: PackedVector3Array = src[node].v
 		var region := region_of_bone(str(g.bone))
 		var side := "Left" if region.ends_with("L") else "Right"
@@ -501,6 +502,17 @@ func _fit(id: String, src: Dictionary, meta: Dictionary) -> void:
 			mi.set_meta("parent", str(g.parent))
 		out_root.add_child(mi)
 		mi.owner = out_root
+	# marcadores de los huesos que se guardan como fragmentos: nombre, sistema y hueso Mixamo del grupo
+	for g in meta.groups:
+		if g.get("has_frags", false):
+			var mk := Node3D.new()
+			mk.name = str(g.node)
+			mk.set_meta("label", g.label)
+			mk.set_meta("system", g.system)
+			mk.set_meta("bone", g.bone)
+			mk.set_meta("fragmented", true)
+			out_root.add_child(mk)
+			mk.owner = out_root
 	var ps := PackedScene.new()
 	ps.pack(out_root)
 	var err := ResourceSaver.save(ps, OUT_DIR + id + ".scn", ResourceSaver.FLAG_COMPRESS)

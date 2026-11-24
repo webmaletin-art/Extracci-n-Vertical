@@ -23,7 +23,7 @@ d = np.load(SRC)
 names, systems = [str(x) for x in d["names"]], [str(x) for x in d["systems"]]
 V, F, voff, foff = d["verts"], d["faces"], d["voff"], d["foff"]
 
-BUDGET = {"hueso": 38000, "musculo": 40000, "organo": 16000, "vaso": 12000, "nervio": 7000, "oreja": 1600}
+BUDGET = {"hueso": 72000, "musculo": 40000, "organo": 16000, "vaso": 12000, "nervio": 7000, "oreja": 1600}
 MIN_TRIS = {"hueso": 24, "musculo": 24, "organo": 16, "vaso": 12, "nervio": 12, "oreja": 200}
 
 
@@ -162,7 +162,9 @@ def label(i, c):
 def weight(i, ntris):
     w = np.sqrt(ntris)
     n = names[i].lower()
-    if systems[i] == "hueso" and re.search(r"femur|tibia|fibula|humerus|radius|ulna|hip bone|sacrum|mandible|frontal|parietal|occipital|temporal bone|clavicle|scapula|patella", n):
+    if systems[i] == "hueso" and re.search(r"frontal|parietal|occipital|temporal bone|sphenoid|maxilla|zygomatic|mandible", n):
+        w *= 7.0                       # el cráneo es lo que más se ve en la cámara de muerte
+    elif systems[i] == "hueso" and re.search(r"femur|tibia|fibula|humerus|radius|ulna|hip bone|sacrum|clavicle|scapula|patella|vertebra", n):
         w *= 4.0
     elif re.search(r"phalanx|tooth|malleus|incus|stapes|cartilage of", n):
         w *= 0.4
@@ -208,7 +210,8 @@ meta = {"source": "Z-Anatomy (CC BY-SA 4.0)", "marks": {k: {a: [round(float(x), 
 total = {}
 for k, ((sy, lab), g) in enumerate(sorted(groups.items(), key=lambda kv: kv[0])):
     mesh = trimesh.Trimesh(vertices=np.concatenate(g["v"]), faces=np.concatenate(g["f"]), process=True)
-    mesh.visual = trimesh.visual.ColorVisuals(mesh, face_colors=np.tile(np.array(COL[sy], dtype=np.uint8), (len(mesh.faces), 1)))
+    mesh.merge_vertices()
+    # sin color por cara (separaría los vértices y todo se vería facetado): el color lo pone el shader del juego
     node = f"g{k:03d}"
     scene.add_geometry(mesh, node_name=node, geom_name=node)
     total[sy] = total.get(sy, 0) + len(mesh.faces)

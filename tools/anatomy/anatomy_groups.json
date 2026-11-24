@@ -82,10 +82,10 @@
    "label": "clavícula der",
    "system": "hueso",
    "bone": "mixamorig_RightShoulder",
-   "tris": 378,
+   "tris": 488,
    "center": [
-    -0.0829,
-    1.4076,
+    -0.0827,
+    1.4077,
     -0.0008
    ],
    "parts": [
@@ -97,10 +97,10 @@
    "label": "clavícula izq",
    "system": "hueso",
    "bone": "mixamorig_LeftShoulder",
-   "tris": 378,
+   "tris": 488,
    "center": [
-    0.0829,
-    1.4076,
+    0.0827,
+    1.4077,
     -0.0008
    ],
    "parts": [
@@ -111,20 +111,18 @@
    "node": "g002",
    "label": "costillas der inferiores",
    "system": "hueso",
-   "bone": "mixamorig_Neck",
-   "tris": 1086,
+   "bone": "mixamorig_Spine1",
+   "tris": 1080,
    "center": [
-    -0.0697,
-    1.2514,
-    0.0091
+    -0.0755,
+    1.1575,
+    0.0079
    ],
    "parts": [
-    "First rib.r",
     "Eleventh rib.r",
     "Twelfth rib.r",
     "Ninth rib.r",
     "Tenth rib.r",
-    "Costal cartilage of seventh rib.r",
     "Costal cartilage of eighth rib.r",
     "Costal cartilage of tenth rib.r",
     "Costal cartilage of ninth rib.r"
@@ -135,14 +133,15 @@
    "label": "costillas der superiores",
    "system": "hueso",
    "bone": "mixamorig_Spine2",
-   "tris": 1914,
+   "tris": 2784,
    "center": [
-    -0.0772,
-    1.2858,
-    0.008
+    -0.0738,
+    1.2906,
+    0.0082
    ],
    "parts": [
     "Fifth rib.r",
+    "First rib.r",
     "Fourth rib.r",
     "Second rib.r",
     "Seventh rib.r",
@@ -154,27 +153,26 @@
     "Costal cartilage of third rib.r",
     "Costal cartilage of fourth rib.r",
     "Costal cartilage of fifth rib.r",
-    "Costal cartilage of sixth rib.r"
+    "Costal cartilage of sixth rib.r",
+    "Costal cartilage of seventh rib.r"
    ]
   },
   {
    "node": "g004",
    "label": "costillas izq inferiores",
    "system": "hueso",
-   "bone": "mixamorig_Neck",
-   "tris": 1086,
+   "bone": "mixamorig_Spine1",
+   "tris": 1080,
    "center": [
-    0.0697,
-    1.2514,
-    0.0091
+    0.0755,
+    1.1575,
+    0.0079
    ],
    "parts": [
-    "First rib.l",
     "Eleventh rib.l",
     "Twelfth rib.l",
     "Ninth rib.l",
     "Tenth rib.l",
-    "Costal cartilage of seventh rib.l",
     "Costal cartilage of eighth rib.l",
     "Costal cartilage of tenth rib.l",
     "Costal cartilage of ninth rib.l"
@@ -185,14 +183,15 @@
    "label": "costillas izq superiores",
    "system": "hueso",
    "bone": "mixamorig_Spine2",
-   "tris": 1914,
+   "tris": 2784,
    "center": [
-    0.0772,
-    1.2856,
-    0.008
+    0.0738,
+    1.2906,
+    0.0082
    ],
    "parts": [
     "Fifth rib.l",
+    "First rib.l",
     "Fourth rib.l",
     "Second rib.l",
     "Seventh rib.l",
@@ -204,6 +203,7 @@
     "Costal cartilage of fourth rib.l",
     "Costal cartilage of fifth rib.l",
     "Costal cartilage of sixth rib.l",
+    "Costal cartilage of seventh rib.l",
     "Eighth rib.l"
    ]
   },
@@ -212,10 +212,10 @@
    "label": "cráneo",
    "system": "hueso",
    "bone": "mixamorig_Head",
-   "tris": 8418,
+   "tris": 22432,
    "center": [
-    -0.0001,
-    1.622,
+    0.0,
+    1.6215,
     0.0063
    ],
    "parts": [
@@ -264,10 +264,10 @@
    "label": "cúbito der",
    "system": "hueso",
    "bone": "mixamorig_RightForeArm",
-   "tris": 290,
+   "tris": 372,
    "center": [
     -0.2295,
-    0.9837,
+    0.9833,
     -0.0188
    ],
    "parts": [
@@ -279,10 +279,10 @@
    "label": "cúbito izq",
    "system": "hueso",
    "bone": "mixamorig_LeftForeArm",
-   "tris": 290,
+   "tris": 372,
    "center": [
     0.2295,
-    0.9837,
+    0.9833,
     -0.0188
    ],
    "parts": [
@@ -294,7 +294,7 @@
    "label": "dedos de la mano der",
    "system": "hueso",
    "bone": "mixamorig_RightHand",
-   "tris": 322,
+   "tris": 328,
    "center": [
     -0.2807,
     0.7581,
@@ -322,7 +322,7 @@
    "label": "dedos de la mano izq",
    "system": "hueso",
    "bone": "mixamorig_LeftHand",
-   "tris": 322,
+   "tris": 328,
    "center": [
     0.2805,
     0.7581,
@@ -350,10 +350,10 @@
    "label": "dientes",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 372,
+   "tris": 480,
    "center": [
     0.0,
-    1.5356,
+    1.5354,
     0.0509
    ],
    "parts": [
@@ -372,10 +372,10 @@
    "label": "escápula der",
    "system": "hueso",
    "bone": "mixamorig_RightShoulder",
-   "tris": 1538,
+   "tris": 1976,
    "center": [
     -0.1171,
-    1.336,
+    1.3359,
     -0.0559
    ],
    "parts": [
@@ -387,9 +387,9 @@
    "label": "escápula izq",
    "system": "hueso",
    "bone": "mixamorig_LeftShoulder",
-   "tris": 1538,
+   "tris": 1976,
    "center": [
-    0.1172,
+    0.1171,
     1.3359,
     -0.0558
    ],
@@ -402,9 +402,9 @@
    "label": "esternón",
    "system": "hueso",
    "bone": "mixamorig_Spine2",
-   "tris": 355,
+   "tris": 457,
    "center": [
-    -0.0002,
+    -0.0001,
     1.3124,
     0.0714
    ],
@@ -419,11 +419,11 @@
    "label": "fémur der",
    "system": "hueso",
    "bone": "mixamorig_RightUpLeg",
-   "tris": 594,
+   "tris": 764,
    "center": [
-    -0.0895,
-    0.657,
-    -0.0194
+    -0.0906,
+    0.6571,
+    -0.0199
    ],
    "parts": [
     "Femur.r"
@@ -434,11 +434,11 @@
    "label": "fémur izq",
    "system": "hueso",
    "bone": "mixamorig_LeftUpLeg",
-   "tris": 594,
+   "tris": 764,
    "center": [
-    0.0895,
-    0.657,
-    -0.0194
+    0.0906,
+    0.6571,
+    -0.0199
    ],
    "parts": [
     "Femur.l"
@@ -449,10 +449,10 @@
    "label": "huesos de cabeza",
    "system": "hueso",
    "bone": "mixamorig_Head",
-   "tris": 88,
+   "tris": 112,
    "center": [
     0.0,
-    1.5548,
+    1.5549,
     0.1004
    ],
    "parts": [
@@ -465,11 +465,11 @@
    "label": "huesos de cuello",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 2338,
+   "tris": 3010,
    "center": [
     0.0,
     1.5073,
-    0.0468
+    0.0469
    ],
    "parts": [
     "Upper medial incisor.r",
@@ -505,10 +505,10 @@
    "label": "huesos de la mano der",
    "system": "hueso",
    "bone": "mixamorig_RightHand",
-   "tris": 746,
+   "tris": 960,
    "center": [
-    -0.2765,
-    0.8142,
+    -0.2764,
+    0.8143,
     0.0316
    ],
    "parts": [
@@ -531,10 +531,10 @@
    "label": "huesos de la mano izq",
    "system": "hueso",
    "bone": "mixamorig_LeftHand",
-   "tris": 746,
+   "tris": 960,
    "center": [
-    0.2765,
-    0.8142,
+    0.2764,
+    0.8143,
     0.0316
    ],
    "parts": [
@@ -557,10 +557,10 @@
    "label": "huesos de pelvis",
    "system": "hueso",
    "bone": "mixamorig_Hips",
-   "tris": 92,
+   "tris": 116,
    "center": [
     0.0,
-    0.8395,
+    0.8396,
     0.0197
    ],
    "parts": [
@@ -573,7 +573,7 @@
    "label": "huesos de pie der",
    "system": "hueso",
    "bone": "mixamorig_RightFoot",
-   "tris": 364,
+   "tris": 392,
    "center": [
     -0.1032,
     0.0195,
@@ -602,7 +602,7 @@
    "label": "huesos de pie izq",
    "system": "hueso",
    "bone": "mixamorig_LeftFoot",
-   "tris": 364,
+   "tris": 392,
    "center": [
     0.1032,
     0.0195,
@@ -631,11 +631,11 @@
    "label": "huesos del pie der",
    "system": "hueso",
    "bone": "mixamorig_RightFoot",
-   "tris": 848,
+   "tris": 1096,
    "center": [
     -0.0947,
-    0.0476,
-    -0.003
+    0.0477,
+    -0.0026
    ],
    "parts": [
     "Talus.r",
@@ -657,11 +657,11 @@
    "label": "huesos del pie izq",
    "system": "hueso",
    "bone": "mixamorig_LeftFoot",
-   "tris": 848,
+   "tris": 1096,
    "center": [
     0.0947,
-    0.0476,
-    -0.003
+    0.0477,
+    -0.0026
    ],
    "parts": [
     "Talus.l",
@@ -683,10 +683,10 @@
    "label": "húmero der",
    "system": "hueso",
    "bone": "mixamorig_RightArm",
-   "tris": 632,
+   "tris": 812,
    "center": [
     -0.1969,
-    1.246,
+    1.2462,
     -0.0277
    ],
    "parts": [
@@ -698,10 +698,10 @@
    "label": "húmero izq",
    "system": "hueso",
    "bone": "mixamorig_LeftArm",
-   "tris": 632,
+   "tris": 812,
    "center": [
     0.1969,
-    1.246,
+    1.2462,
     -0.0277
    ],
    "parts": [
@@ -713,11 +713,11 @@
    "label": "mandíbula",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 1324,
+   "tris": 2983,
    "center": [
-    0.0003,
-    1.5371,
-    0.0429
+    -0.0005,
+    1.5376,
+    0.0428
    ],
    "parts": [
     "Mandible"
@@ -728,11 +728,11 @@
    "label": "pelvis",
    "system": "hueso",
    "bone": "mixamorig_Hips",
-   "tris": 2312,
+   "tris": 2972,
    "center": [
     0.0,
     0.9044,
-    -0.0196
+    -0.0193
    ],
    "parts": [
     "Coccyx",
@@ -746,11 +746,11 @@
    "label": "peroné der",
    "system": "hueso",
    "bone": "mixamorig_RightLeg",
-   "tris": 342,
+   "tris": 440,
    "center": [
     -0.107,
     0.2366,
-    -0.043
+    -0.0431
    ],
    "parts": [
     "Fibula.r"
@@ -761,11 +761,11 @@
    "label": "peroné izq",
    "system": "hueso",
    "bone": "mixamorig_LeftLeg",
-   "tris": 342,
+   "tris": 440,
    "center": [
     0.107,
     0.2366,
-    -0.043
+    -0.0431
    ],
    "parts": [
     "Fibula.l"
@@ -776,7 +776,7 @@
    "label": "radio der",
    "system": "hueso",
    "bone": "mixamorig_RightForeArm",
-   "tris": 270,
+   "tris": 346,
    "center": [
     -0.2578,
     0.9747,
@@ -791,7 +791,7 @@
    "label": "radio izq",
    "system": "hueso",
    "bone": "mixamorig_LeftForeArm",
-   "tris": 270,
+   "tris": 346,
    "center": [
     0.2578,
     0.9747,
@@ -806,11 +806,11 @@
    "label": "rótula der",
    "system": "hueso",
    "bone": "mixamorig_RightLeg",
-   "tris": 160,
+   "tris": 206,
    "center": [
-    -0.0846,
-    0.4441,
-    0.0071
+    -0.0844,
+    0.4443,
+    0.0072
    ],
    "parts": [
     "Patella.r"
@@ -821,11 +821,11 @@
    "label": "rótula izq",
    "system": "hueso",
    "bone": "mixamorig_LeftLeg",
-   "tris": 160,
+   "tris": 206,
    "center": [
-    0.0846,
-    0.4441,
-    0.0071
+    0.0844,
+    0.4443,
+    0.0072
    ],
    "parts": [
     "Patella.l"
@@ -836,9 +836,9 @@
    "label": "tibia der",
    "system": "hueso",
    "bone": "mixamorig_RightLeg",
-   "tris": 394,
+   "tris": 506,
    "center": [
-    -0.0771,
+    -0.077,
     0.2535,
     -0.0288
    ],
@@ -851,9 +851,9 @@
    "label": "tibia izq",
    "system": "hueso",
    "bone": "mixamorig_LeftLeg",
-   "tris": 394,
+   "tris": 506,
    "center": [
-    0.0771,
+    0.077,
     0.2535,
     -0.0288
    ],
@@ -866,11 +866,11 @@
    "label": "vértebras cervicales",
    "system": "hueso",
    "bone": "mixamorig_Neck",
-   "tris": 874,
+   "tris": 3334,
    "center": [
     -0.0001,
     1.4957,
-    -0.0189
+    -0.0191
    ],
    "parts": [
     "Hyoid bone",
@@ -888,11 +888,11 @@
    "label": "vértebras lumbares",
    "system": "hueso",
    "bone": "mixamorig_Spine1",
-   "tris": 692,
+   "tris": 3590,
    "center": [
-    0.0005,
-    1.0457,
-    -0.0263
+    0.0004,
+    1.0454,
+    -0.0257
    ],
    "parts": [
     "Vertebra L1",
@@ -907,11 +907,11 @@
    "label": "vértebras torácicas inferiores",
    "system": "hueso",
    "bone": "mixamorig_Spine1",
-   "tris": 462,
+   "tris": 2390,
    "center": [
-    -0.0003,
-    1.2823,
-    -0.0462
+    0.0,
+    1.283,
+    -0.0444
    ],
    "parts": [
     "Vertebra T10",
@@ -925,11 +925,11 @@
    "label": "vértebras torácicas superiores",
    "system": "hueso",
    "bone": "mixamorig_Spine2",
-   "tris": 991,
+   "tris": 4704,
    "center": [
     -0.0001,
-    1.3186,
-    -0.0581
+    1.319,
+    -0.0587
    ],
    "parts": [
     "Vertebra T2",

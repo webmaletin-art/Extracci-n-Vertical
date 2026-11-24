@@ -86,8 +86,10 @@ recupera brazo, mano, cabeza y respiración. Con corazón o aorta perforados hay
 ## Rotura real en Blender
 
 `tools/anatomy/fracture_bones.py` (Blender, `bpy`) parte cada hueso en fragmentos de Voronoi con las caras de corte
-cerradas, dentadas con ruido y marcadas como hueso esponjoso / médula: cráneo en 16 placas, costillas en 11–12 trozos,
-fémur 8–9, húmero y tibia 8, dedos 10, vértebras 8, pelvis 10… (41 huesos, 301 fragmentos). `build_fragments.py` los
+cerradas, dentadas con ruido y marcadas como hueso esponjoso / médula: cráneo en 9 placas, costillas en 10 trozos,
+fémur 8–9, húmero y tibia 8, dedos 10, vértebras 8, pelvis 10… (41 huesos, 286 fragmentos; cráneo en 9 placas). El hueso entero ES la unión de sus fragmentos (sin grietas hasta que
+se rompe), así cada hueso se guarda una sola vez: huesos con 72 000 triángulos (cráneo ≈ 29 000) y sombreado suave,
+≈ 4,5 MB de anatomía por personaje. `build_fragments.py` los
 empaqueta y `fit_anatomy.gd` los ajusta dentro de cada personaje igual que el resto de la anatomía.
 
 En el juego (`AnatomyBody.break_bone`): el hueso golpeado se muestra como sus fragmentos con grietas visibles; los más

@@ -1,5 +1,11 @@
 # Registro de cambios
 
+## 0.3.1 — huesos más lindos
+
+* Sombreado suave (los colores por cara facetaban todo), huesos con 72 000 triángulos (cráneo ≈ 29 000), cráneo en 9
+  placas con cortes menos serruchados, poros y tono marfil en el shader; el hueso entero es la unión de sus fragmentos
+  (mismo peso por personaje). Trayectorias probadas fragmento por fragmento.
+
 ## 0.3.0 — huesos rotos de verdad y rayos X como Sniper Elite
 
 * Huesos partidos en Blender (301 fragmentos de 41 huesos) y ajustados a cada personaje; los cercanos al impacto se

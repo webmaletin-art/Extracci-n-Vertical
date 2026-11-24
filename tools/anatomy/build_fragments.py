@@ -22,8 +22,12 @@ for i, n in enumerate(names):
     f = F[foff[i]:foff[i + 1]]
     c = C[foff[i]:foff[i + 1]]
     m = trimesh.Trimesh(vertices=v, faces=f, process=False)
-    cols = np.where(c[:, None] == 1, MARROW, BONE)
-    m.visual = trimesh.visual.ColorVisuals(m, face_colors=cols)
+    m.merge_vertices()
+    # color por VÉRTICE (no por cara: separaría los vértices y se vería facetado): médula en los vértices del corte
+    vc = np.tile(BONE, (len(m.vertices), 1))
+    cut_v = np.unique(m.faces[c == 1].reshape(-1)) if (c == 1).any() else np.array([], dtype=int)
+    vc[cut_v] = MARROW
+    m.visual = trimesh.visual.ColorVisuals(m, vertex_colors=vc)
     scene.add_geometry(m, node_name=n, geom_name=n)
     meta["fragments"].append({"node": n, "parent": parents[i], "tris": int(len(f)), "center": [round(float(x), 4) for x in v.mean(axis=0)]})
 scene.export(os.path.join(OUT, "anatomy_frag.glb"))

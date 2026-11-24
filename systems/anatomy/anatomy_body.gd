@@ -85,7 +85,12 @@ func _setup() -> void:
 		var inst: Node = (_scenes[id] as PackedScene).instantiate()
 		var data := {}
 		var fr := {}
+		var placeholders := {}
 		for mi in inst.get_children():
+			if not mi is MeshInstance3D:
+				# hueso guardado sólo como fragmentos: sus datos se arman con la unión de los fragmentos
+				placeholders[str(mi.name)] = {"label": str(mi.get_meta("label")), "system": str(mi.get_meta("system")), "bone": str(mi.get_meta("bone"))}
+				continue
 			var m := mi as MeshInstance3D
 			var arr := m.mesh.surface_get_arrays(0)
 			if m.has_meta("parent"):
@@ -98,6 +103,32 @@ func _setup() -> void:
 				"label": str(m.get_meta("label")), "system": str(m.get_meta("system")), "bone": str(m.get_meta("bone")),
 				"center": m.get_meta("center_bind"), "radius": float(m.get_meta("radius", 0.1)), "mesh": m.mesh}
 		inst.free()
+		for n in placeholders:
+			var list: Array = fr.get(n, [])
+			if list.is_empty():
+				continue
+			var vv := PackedVector3Array()
+			var ii := PackedInt32Array()
+			var aabb := AABB()
+			var c := Vector3.ZERO
+			for k in list.size():
+				var f: Dictionary = list[k]
+				var off := vv.size()
+				vv.append_array(f.v)
+				for x in (f.i as PackedInt32Array):
+					ii.append(x + off)
+				var fa: AABB = (f.mesh as Mesh).get_aabb()
+				aabb = fa if k == 0 else aabb.merge(fa)
+				c += (f.center as Vector3)
+			var ph: Dictionary = placeholders[n]
+			var chunks := []
+			var istart := 0
+			for f in list:
+				var cnt := (f.i as PackedInt32Array).size()
+				chunks.append({"aabb": (f.mesh as Mesh).get_aabb(), "a": istart, "b": istart + cnt})
+				istart += cnt
+			data[n] = {"v": vv, "i": ii, "aabb": aabb, "label": ph.label, "system": ph.system, "bone": ph.bone,
+				"center": c / list.size(), "radius": aabb.size.length() * 0.5, "mesh": null, "chunks": chunks}
 		_cpu[id] = data
 		_cpu_frags[id] = fr
 	groups = _cpu[id]
@@ -161,14 +192,18 @@ func trace(origin: Vector3, dir: Vector3, length: float, max_depth := INF) -> Ar
 		var tmax := -INF
 		var seg := b - a
 		var sl := seg.length()
-		var tri_count := idx.size() / 3
-		var step := 1 if tri_count < 9000 else 2
-		for k in range(0, idx.size(), 3 * step):
-			var hit = Geometry3D.segment_intersects_triangle(a, b, v[idx[k]], v[idx[k + 1]], v[idx[k + 2]])
-			if hit != null:
-				var t := a.distance_to(hit) / maxf(sl, 1e-6) * length
-				tmin = minf(tmin, t)
-				tmax = maxf(tmax, t)
+		# por trozos (fragmentos): sólo se prueban los triángulos de los trozos que cruza el segmento
+		var chunks: Array = g.get("chunks", [{"aabb": g.aabb, "a": 0, "b": idx.size()}])
+		for ch in chunks:
+			var ca: AABB = (ch.aabb as AABB).grow(0.004)
+			if not ca.intersects_segment(a, b) and not ca.has_point(a):
+				continue
+			for k in range(int(ch.a), int(ch.b), 3):
+				var hit = Geometry3D.segment_intersects_triangle(a, b, v[idx[k]], v[idx[k + 1]], v[idx[k + 2]])
+				if hit != null:
+					var t := a.distance_to(hit) / maxf(sl, 1e-6) * length
+					tmin = minf(tmin, t)
+					tmax = maxf(tmax, t)
 		if tmin == INF:
 			continue
 		if tmax - tmin < 0.004:
@@ -444,10 +479,13 @@ func _refresh_visible() -> void:
 				near = true
 		if not near:
 			continue
-		if broken.has(n) and frags.has(n):
+		if frags.has(n):
+			var det: Dictionary = broken.get(n, {})
 			for f in frags[n]:
-				if not (broken[n] as Dictionary).has(f.node):
-					_frag_mesh(f).visible = true
+				if not det.has(f.node):
+					var fm := _frag_mesh(f)
+					fm.visible = true
+					(fm.material_override as ShaderMaterial).set_shader_parameter("crack", 0.06 if broken.has(n) else 0.0)
 			continue
 		_mesh(n).visible = true
 
@@ -597,16 +635,28 @@ static func _fshader() -> Shader:
 shader_type spatial;
 render_mode cull_disabled;
 uniform vec3 center;
+uniform float crack = 0.0;
 """ + _ZONE_FUNC + """
 varying vec3 wp;
+varying vec3 lp;
+float hash(vec3 p) { return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453); }
+float vnoise(vec3 p) {
+	vec3 i = floor(p); vec3 f = fract(p); f = f * f * (3.0 - 2.0 * f);
+	return mix(mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x), mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+		mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x), mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+}
 void vertex() {
-	VERTEX -= (CUSTOM0.xyz - center) * 0.06;
+	lp = CUSTOM0.xyz;
+	VERTEX -= (CUSTOM0.xyz - center) * crack;
 	wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 void fragment() {
 	if (zone_d(wp) > zone_r) { discard; }
 	float nl = clamp(dot(NORMAL, normalize(VIEW + vec3(0.35, 0.6, 0.0))), 0.0, 1.0);
-	vec3 col = COLOR.rgb * vec3(0.92, 0.86, 0.74);
+	// hueso: marfil con poros y vetas suaves; el corte (médula) rojo oscuro
+	float pores = vnoise(lp * 260.0) * 0.5 + vnoise(lp * 70.0) * 0.5;
+	vec3 bone = mix(vec3(0.80, 0.72, 0.58), vec3(0.95, 0.91, 0.82), pores);
+	vec3 col = mix(bone, COLOR.rgb * vec3(0.9, 0.5, 0.45), step(COLOR.g, 0.5));
 	ALBEDO = col * 0.12;
 	ROUGHNESS = 0.55;
 	SPECULAR = 0.5;
