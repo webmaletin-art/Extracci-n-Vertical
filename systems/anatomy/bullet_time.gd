@@ -12,6 +12,9 @@ extends Node
 signal injury_report(victim: Actor, lines: Array)
 
 const KILL_SECONDS := 2.6
+## Tomas de cerca: comienzo del nombre del grupo → [radio de la ventana de rayos X (m), distancia final de la cámara (m), ángulo final (rad, 0 = de costado)]
+const CLOSEUPS := {"ojo": [0.075, 0.38, 0.95], "testículos": [0.11, 0.62, 0.55], "estómago": [0.15, 0.8, 0.45], "oreja": [0.08, 0.4, 0.8],
+	"corazón": [0.16, 0.8, 0.4], "hígado": [0.15, 0.8, 0.45]}
 
 var camera: SideCamera
 var player: Actor
@@ -24,6 +27,10 @@ var _focus := Vector3.ZERO
 var _main := ""                  ## grupo anatómico de la herida que mató (la cámara la sigue mientras cae el cuerpo)
 var _main_pos := Vector3.ZERO
 var _kind := ""
+var focus_label := ""            ## (práctica) comienzo del nombre del grupo que la cámara debe enfocar
+var _dist0 := 2.0
+var _dist1 := 0.8
+var _ang1 := 0.25
 var _side := 1.0
 var _connected := false
 
@@ -33,8 +40,11 @@ func setup(cam: SideCamera, p: Actor) -> void:
 	player.shot_fired.connect(_on_shot)
 	player.damaged.connect(func(info): _on_damage(player, info))
 	for a in get_tree().get_nodes_in_group("enemies"):
-		var ac := a as Actor
-		ac.damaged.connect(func(info): _on_damage(ac, info))
+		watch(a as Actor)
+
+## Vigila a un personaje que aparece después (maniquíes del modo práctica).
+func watch(ac: Actor) -> void:
+	ac.damaged.connect(func(info): _on_damage(ac, info))
 
 func _now() -> float:
 	return TimeFx.now()
@@ -55,7 +65,7 @@ func _on_shot(idx: int, w: Firearm) -> void:
 		return
 	var zone := str((col as Area3D).get_meta("zone", "torso"))
 	var est := float(w.stats.damage) * float(Actor.ZONE_MULT.get(zone, 1.0)) * float(w.stats.pellets) * 0.5 + 12.0
-	if not (est >= victim.health or zone == "head"):
+	if Settings.bullet_time < 2 and not (est >= victim.health or zone == "head"):
 		return
 	if (pred.point as Vector3).distance_to(b.position_of(idx)) < 2.5:
 		return
@@ -90,6 +100,9 @@ func _on_damage(a: Actor, info: Dictionary) -> void:
 	var nodes: Array = info.get("anatomy_nodes", [])
 	if nodes.is_empty() or t == "punch":
 		return
+	if Settings.bullet_time >= 2 and phase == "":
+		_killcam(a, info)             # modo práctica: toma de cerca de cada herida
+		return
 	AnatomyBody.for_actor(a).show_flash(nodes, 0.9)
 
 func _killcam(a: Actor, info: Dictionary) -> void:
@@ -109,6 +122,21 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 		_main = main
 		_main_pos = anat.wounds[main][-1].pos if anat.wounds.has(main) else anat.groups[main].center
 		_focus = anat.bind_to_world(main, _main_pos)
+	if focus_label != "":
+		# modo práctica: la cámara enfoca la zona elegida (si esa estructura quedó herida) y no «la que más daño hizo»
+		var best := ""
+		var bd := INF
+		for n in anat.wounds:
+			if str(anat.groups[n].label).begins_with(focus_label):
+				var d := anat.bind_to_world(n, anat.wounds[n][-1].pos).distance_to(a.global_position + Vector3.UP * 1.3)
+				if best == "" or d < bd:
+					best = n
+					bd = d
+		if best != "":
+			main = best
+			_main = best
+			_main_pos = anat.wounds[best][-1].pos
+			_focus = anat.bind_to_world(best, _main_pos)
 	_kind = t
 	if t == "fall":
 		_focus = a.global_position + Vector3.UP * 0.4
@@ -116,7 +144,21 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 		_focus = a.global_position + Vector3.UP * 1.1
 	var d: Vector3 = info.get("dir", Vector3.RIGHT)
 	_side = -signf(d.x) if absf(d.x) > 0.1 else 1.0
-	anat.show_killcam(main)
+	# estructuras chicas y delicadas: ventana más chica y cámara más cerca, de costado hacia el frente, para verlas en detalle
+	_dist0 = 2.0
+	_dist1 = 0.8
+	_ang1 = 0.25
+	var radius := 0.0
+	if _main != "":
+		var lab := str(anat.groups[_main].label)
+		for k in CLOSEUPS:
+			if lab.begins_with(k):
+				var c: Array = CLOSEUPS[k]
+				radius = c[0]
+				_dist1 = c[1]
+				_dist0 = c[1] * 2.6
+				_ang1 = c[2]
+	anat.show_killcam(main, radius)
 	TimeFx.slowmo(0.06, KILL_SECONDS + 0.4, "kill", 0.02)
 	_t0 = _now()
 	_until = _t0 + KILL_SECONDS
@@ -135,7 +177,7 @@ func _process(_d: float) -> void:
 		if _now() > _until:
 			var v2 := _victim
 			_end()
-			if is_instance_valid(v2) and v2.is_dead():
+			if is_instance_valid(v2) and (v2.is_dead() or (Settings.bullet_time >= 2 and not (v2.last_hit_info.get("anatomy_nodes", []) as Array).is_empty())):
 				_killcam(v2, v2.last_hit_info)
 		return
 	# toma de muerte: la cámara se acerca a la herida y gira un poco
@@ -149,8 +191,8 @@ func _process(_d: float) -> void:
 			_focus = _victim.global_position + Vector3.UP * 1.1
 	var k := clampf((_now() - _t0) / KILL_SECONDS, 0.0, 1.0)
 	var e := 1.0 - pow(1.0 - k, 3.0)
-	var dist := lerpf(2.0, 0.8, e)
-	var ang := lerpf(-0.45, 0.25, e) * _side
+	var dist := lerpf(_dist0, _dist1, e)
+	var ang := lerpf(-0.45, _ang1, e) * _side
 	var off := Vector3(sin(ang) * _side, 0.12, cos(ang)).normalized() * dist
 	camera.override_target(_focus + off, _focus, lerpf(36.0, 30.0, e))
 	if _now() > _until:

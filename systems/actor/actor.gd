@@ -109,6 +109,7 @@ var _grenade_hold := false
 var _yaw := 0.0
 var _ik_w := 0.0
 var _model_offset := Vector3.ZERO
+var plane_shift := Vector3.ZERO     ## desplaza el modelo (no la física): el modo práctica pone la zona elegida en el plano de tiro z = 0
 var _cap: CollisionShape3D
 var _time := 0.0
 var _down_t := 0.0
@@ -987,6 +988,8 @@ func take_damage(info: Dictionary) -> void:
 		amount *= BOT_DAMAGE_TO_PLAYER
 	if bool(res.get("death", false)):
 		amount = maxf(amount, health + 1.0)
+	if is_player and Settings.haptics and amount > 3.0:
+		Input.vibrate_handheld(clampi(int(amount * 4.0), 30, 220))
 	info["final_damage"] = amount
 	info["victim"] = self
 	health -= amount
@@ -1219,7 +1222,7 @@ func _update_visual(delta: float) -> void:
 			_play(la[0], 0.2, la[1])
 	# --- orientación del cuerpo: 3/4 hacia la cámara mirando a donde apunta
 	var target_yaw := facing * deg_to_rad(70.0)
-	_model_offset = Vector3.ZERO
+	_model_offset = plane_shift
 	if state == State.LADDER:
 		# Climbing_Ladder de Mixamo viene girado 180° respecto de las demás: con 0 queda de espaldas a la cámara, mirando la pared
 		target_yaw = 0.0

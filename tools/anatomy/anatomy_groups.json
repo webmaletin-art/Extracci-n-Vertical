@@ -2491,6 +2491,31 @@
   },
   {
    "node": "g097",
+   "label": "testículos",
+   "system": "organo",
+   "bone": "mixamorig_Hips",
+   "tris": 474,
+   "center": [
+    0.0,
+    0.8088,
+    0.0311
+   ],
+   "parts": [
+    "Testis.r",
+    "Testis.l",
+    "Epididymis.r",
+    "Epididymis.l",
+    "Ductus deferens.l",
+    "Ductus deferens.r",
+    "Seminal gland.r",
+    "Seminal gland.l",
+    "Glans penis",
+    "Corpus cavernosum of penis",
+    "Corpus spongiosum of penis"
+   ]
+  },
+  {
+   "node": "g098",
    "label": "tiroides",
    "system": "organo",
    "bone": "mixamorig_Neck",
@@ -2509,7 +2534,7 @@
    ]
   },
   {
-   "node": "g098",
+   "node": "g099",
    "label": "tráquea y laringe",
    "system": "organo",
    "bone": "mixamorig_Neck",
@@ -2528,30 +2553,24 @@
    ]
   },
   {
-   "node": "g099",
+   "node": "g100",
    "label": "vejiga",
    "system": "organo",
    "bone": "mixamorig_Hips",
-   "tris": 464,
+   "tris": 160,
    "center": [
-    0.0,
-    0.8088,
-    0.0219
+    -0.0013,
+    0.8098,
+    0.0234
    ],
    "parts": [
     "Urinary bladder",
     "Urethra",
-    "Testis.r",
-    "Testis.l",
-    "Ductus deferens.l",
-    "Ductus deferens.r",
-    "Seminal gland.r",
-    "Seminal gland.l",
     "Prostate"
    ]
   },
   {
-   "node": "g100",
+   "node": "g101",
    "label": "vesícula",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2566,7 +2585,7 @@
    ]
   },
   {
-   "node": "g101",
+   "node": "g102",
    "label": "órganos de abdomen",
    "system": "organo",
    "bone": "mixamorig_Spine1",
@@ -2583,7 +2602,7 @@
    ]
   },
   {
-   "node": "g102",
+   "node": "g103",
    "label": "órganos de cabeza",
    "system": "organo",
    "bone": "mixamorig_Head",
@@ -2613,7 +2632,7 @@
    ]
   },
   {
-   "node": "g103",
+   "node": "g104",
    "label": "órganos de cuello",
    "system": "organo",
    "bone": "mixamorig_Neck",
@@ -2635,56 +2654,23 @@
    ]
   },
   {
-   "node": "g104",
-   "label": "órganos de muslo der",
-   "system": "organo",
-   "bone": "mixamorig_RightUpLeg",
-   "tris": 26,
-   "center": [
-    -0.0216,
-    0.7498,
-    0.0535
-   ],
-   "parts": [
-    "Epididymis.r"
-   ]
-  },
-  {
    "node": "g105",
-   "label": "órganos de muslo izq",
+   "label": "órganos de pelvis",
    "system": "organo",
-   "bone": "mixamorig_LeftUpLeg",
-   "tris": 26,
+   "bone": "mixamorig_Hips",
+   "tris": 68,
    "center": [
-    0.0216,
-    0.7498,
-    0.0535
+    0.0,
+    0.8312,
+    -0.027
    ],
    "parts": [
-    "Epididymis.l"
+    "Ejaculatory duct.l",
+    "Ejaculatory duct.r"
    ]
   },
   {
    "node": "g106",
-   "label": "órganos de pelvis",
-   "system": "organo",
-   "bone": "mixamorig_Hips",
-   "tris": 186,
-   "center": [
-    0.0001,
-    0.7913,
-    0.0358
-   ],
-   "parts": [
-    "Ejaculatory duct.l",
-    "Ejaculatory duct.r",
-    "Glans penis",
-    "Corpus cavernosum of penis",
-    "Corpus spongiosum of penis"
-   ]
-  },
-  {
-   "node": "g107",
    "label": "órganos de tórax",
    "system": "organo",
    "bone": "mixamorig_Spine2",
@@ -2699,7 +2685,7 @@
    ]
   },
   {
-   "node": "g108",
+   "node": "g107",
    "label": "aorta y grandes vasos",
    "system": "vaso",
    "bone": "mixamorig_Spine2",
@@ -2716,7 +2702,7 @@
    ]
   },
   {
-   "node": "g109",
+   "node": "g108",
    "label": "arterias y venas de abdomen",
    "system": "vaso",
    "bone": "mixamorig_Spine1",
@@ -2752,7 +2738,7 @@
    ]
   },
   {
-   "node": "g110",
+   "node": "g109",
    "label": "arterias y venas de abdomen bajo",
    "system": "vaso",
    "bone": "mixamorig_Spine",
@@ -2778,7 +2764,7 @@
    ]
   },
   {
-   "node": "g111",
+   "node": "g110",
    "label": "arterias y venas de antebrazo der",
    "system": "vaso",
    "bone": "mixamorig_RightForeArm",
@@ -2798,7 +2784,7 @@
    ]
   },
   {
-   "node": "g112",
+   "node": "g111",
    "label": "arterias y venas de antebrazo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftForeArm",
@@ -2818,7 +2804,7 @@
    ]
   },
   {
-   "node": "g113",
+   "node": "g112",
    "label": "arterias y venas de brazo der",
    "system": "vaso",
    "bone": "mixamorig_RightArm",
@@ -2837,7 +2823,7 @@
    ]
   },
   {
-   "node": "g114",
+   "node": "g113",
    "label": "arterias y venas de brazo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftArm",
@@ -2856,7 +2842,7 @@
    ]
   },
   {
-   "node": "g115",
+   "node": "g114",
    "label": "arterias y venas de cabeza",
    "system": "vaso",
    "bone": "mixamorig_Head",
@@ -2875,7 +2861,7 @@
    ]
   },
   {
-   "node": "g116",
+   "node": "g115",
    "label": "arterias y venas de cuello",
    "system": "vaso",
    "bone": "mixamorig_Neck",
@@ -2897,7 +2883,7 @@
    ]
   },
   {
-   "node": "g117",
+   "node": "g116",
    "label": "arterias y venas de mano der",
    "system": "vaso",
    "bone": "mixamorig_RightHand",
@@ -2913,7 +2899,7 @@
    ]
   },
   {
-   "node": "g118",
+   "node": "g117",
    "label": "arterias y venas de mano izq",
    "system": "vaso",
    "bone": "mixamorig_LeftHand",
@@ -2929,7 +2915,7 @@
    ]
   },
   {
-   "node": "g119",
+   "node": "g118",
    "label": "arterias y venas de muslo der",
    "system": "vaso",
    "bone": "mixamorig_RightUpLeg",
@@ -2952,7 +2938,7 @@
    ]
   },
   {
-   "node": "g120",
+   "node": "g119",
    "label": "arterias y venas de muslo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftUpLeg",
@@ -2975,7 +2961,7 @@
    ]
   },
   {
-   "node": "g121",
+   "node": "g120",
    "label": "arterias y venas de pelvis",
    "system": "vaso",
    "bone": "mixamorig_Hips",
@@ -2993,7 +2979,7 @@
    ]
   },
   {
-   "node": "g122",
+   "node": "g121",
    "label": "arterias y venas de pie der",
    "system": "vaso",
    "bone": "mixamorig_RightFoot",
@@ -3010,7 +2996,7 @@
    ]
   },
   {
-   "node": "g123",
+   "node": "g122",
    "label": "arterias y venas de pie izq",
    "system": "vaso",
    "bone": "mixamorig_LeftFoot",
@@ -3027,7 +3013,7 @@
    ]
   },
   {
-   "node": "g124",
+   "node": "g123",
    "label": "arterias y venas de pierna der",
    "system": "vaso",
    "bone": "mixamorig_RightLeg",
@@ -3048,7 +3034,7 @@
    ]
   },
   {
-   "node": "g125",
+   "node": "g124",
    "label": "arterias y venas de pierna izq",
    "system": "vaso",
    "bone": "mixamorig_LeftLeg",
@@ -3069,7 +3055,7 @@
    ]
   },
   {
-   "node": "g126",
+   "node": "g125",
    "label": "arterias y venas de rodilla der",
    "system": "vaso",
    "bone": "mixamorig_RightLeg",
@@ -3087,7 +3073,7 @@
    ]
   },
   {
-   "node": "g127",
+   "node": "g126",
    "label": "arterias y venas de rodilla izq",
    "system": "vaso",
    "bone": "mixamorig_LeftLeg",
@@ -3105,7 +3091,7 @@
    ]
   },
   {
-   "node": "g128",
+   "node": "g127",
    "label": "arterias y venas de tórax",
    "system": "vaso",
    "bone": "mixamorig_Spine2",

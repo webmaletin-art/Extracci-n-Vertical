@@ -41,10 +41,12 @@ func _ready() -> void:
 
 func _build() -> void:
 	left_stick = TouchStick.new()
+	left_stick.key = "stick_l"
 	left_stick.persist = false
 	left_stick.tint = Color(0.45, 0.8, 1.0)
 	add_child(left_stick)
 	right_stick = TouchStick.new()
+	right_stick.key = "stick_r"
 	right_stick.persist = true
 	right_stick.tint = Color(1.0, 0.75, 0.3)
 	add_child(right_stick)
@@ -79,25 +81,41 @@ func _build() -> void:
 	_layout()
 	get_viewport().size_changed.connect(_layout)
 
+## Disposición de fábrica (fracciones de pantalla). El joystick de apuntar queda bien a la derecha; los botones de acción
+## van entre los dos joysticks, al alcance de los pulgares sin tapar el apuntado.
+const DEFAULT_POS := {
+	"stick_l": Vector2(0.15, 0.76), "stick_r": Vector2(0.87, 0.74),
+	"fire": Vector2(0.67, 0.80), "jump": Vector2(0.56, 0.89), "melee": Vector2(0.55, 0.70), "grenade": Vector2(0.67, 0.60),
+	"crouch": Vector2(0.47, 0.84), "use": Vector2(0.58, 0.47), "reload": Vector2(0.73, 0.11), "swap": Vector2(0.79, 0.11),
+	"pause": Vector2(0.03, 0.07), "inventory": Vector2(0.09, 0.07), "heal": Vector2(0.27, 0.92)}
+
+func ctl_pos(n: String) -> Vector2:
+	var p: Vector2 = Settings.ctl_pos.get(n, DEFAULT_POS[n])
+	return Vector2(1.0 - p.x, p.y) if Settings.ctl_mirror else p
+
 func _layout() -> void:
 	var s := get_viewport_rect().size
 	var k := Settings.joystick_size
-	left_stick.position = Vector2(0, s.y * 0.35)
-	left_stick.size = Vector2(s.x * 0.42, s.y * 0.65)
-	right_stick.position = Vector2(s.x * 0.5, s.y * 0.35)
-	right_stick.size = Vector2(s.x * 0.3, s.y * 0.65)
-	var r := s.x - 80.0
-	_place("fire", Vector2(r - 30, s.y - 230))
-	_place("jump", Vector2(r - 10, s.y - 95))
-	_place("melee", Vector2(r - 130, s.y - 120))
-	_place("grenade", Vector2(r - 150, s.y - 240))
-	_place("use", Vector2(r - 200, s.y * 0.42))
-	_place("reload", Vector2(s.x - 262, 40))
-	_place("swap", Vector2(s.x - 330, 40))
-	_place("crouch", Vector2(r - 30, s.y - 360))
-	_place("pause", Vector2(40, 40))
-	_place("heal", Vector2(330, s.y - 60))
-	_place("inventory", Vector2(110, 40))
+	var mir := Settings.ctl_mirror
+	# zonas donde se apoya el dedo para sacar el joystick (los botones tienen prioridad)
+	var zl := Rect2(0, s.y * 0.30, s.x * 0.46, s.y * 0.70)
+	var zr := Rect2(s.x * 0.50, s.y * 0.20, s.x * 0.50, s.y * 0.80)
+	if mir:
+		var t := zl
+		zl = Rect2(s.x - zl.end.x, zl.position.y, zl.size.x, zl.size.y)
+		zr = Rect2(s.x - zr.end.x, zr.position.y, zr.size.x, zr.size.y)
+		t = zl
+	left_stick.position = zl.position
+	left_stick.size = zl.size
+	right_stick.position = zr.position
+	right_stick.size = zr.size
+	left_stick.set_rest_frac(((ctl_pos("stick_l") * s) - zl.position) / zl.size)
+	right_stick.set_rest_frac(((ctl_pos("stick_r") * s) - zr.position) / zr.size)
+	left_stick.scale = Vector2.ONE
+	for n in buttons:
+		_place(n, ctl_pos(n) * s)
+	left_stick.modulate.a = Settings.ctl_opacity
+	right_stick.modulate.a = Settings.ctl_opacity
 	_lbl.health.position = Vector2(20, s.y - 52)
 	_lbl.ammo.position = Vector2(s.x - 216, 8)
 	_lbl.weapon.position = Vector2(s.x - 216, 58)
@@ -114,16 +132,23 @@ func _layout() -> void:
 	_lbl.loot.position = Vector2(170, s.y - 52)
 	_lbl.status.position = Vector2(20, s.y - 150)
 	_lbl.status.add_theme_color_override("font_color", Color(1.0, 0.4, 0.35))
-	for b in buttons.values():
-		(b as TouchButton).scale_k = k
+	for n in buttons:
+		(buttons[n] as TouchButton).scale_k = k * float(Settings.ctl_scale.get(n, 1.0))
+		(buttons[n] as TouchButton).modulate.a = Settings.ctl_opacity
+	_place_all(s)
 	for n in ["fire", "jump", "melee", "grenade", "use", "reload", "swap", "crouch", "inventory", "heal"]:
 		(buttons[n] as Control).visible = touch_mode
 	left_stick.visible = touch_mode
 	right_stick.visible = touch_mode
 
+func _place_all(s: Vector2) -> void:
+	for n in buttons:
+		_place(n, ctl_pos(n) * s)
+
 func _place(n: String, p: Vector2) -> void:
 	var b: TouchButton = buttons[n]
-	b.size = Vector2(b.radius * 2.2, b.radius * 2.2)
+	var e := b.radius * 2.2 * float(Settings.ctl_scale.get(n, 1.0)) * Settings.joystick_size
+	b.size = Vector2(e, e)
 	b.position = p - b.size * 0.5
 
 # ---------------------------------------------------------------- toques (multitáctil)

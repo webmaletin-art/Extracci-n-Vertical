@@ -48,3 +48,11 @@
 * IA con oído y vista; sonidos de Nexus + 29 efectos de ElevenLabs.
 * Configuración gráfica BAJA/MEDIA/ALTA y captador de rendimiento.
 * 12 pruebas automáticas, workflow de APK.
+
+## 0.5.0 — Práctica, menús y controles
+- **Modo práctica** (ver `MODO_PRACTICA.md`): maniquí, armas y municiones, tiro dirigido a ojo / estómago / testículos, tomas de cerca, grabación de cuadros.
+- Anatomía: nuevo grupo **testículos** (antes dentro de «vejiga»), daño específico y textos detallados para ojo, estómago, intestinos y testículos (`data/anatomy_damage.json`, campos `text` y `stun`); el disparo de frente puede darle al globo ocular.
+- Rayos X: músculos con haces de fibras, fascia y tendones; vísceras húmedas; ojo con iris y venas.
+- **HUD táctil**: joystick de apuntar bien a la derecha, botones de acción entre los joysticks; **editor de controles** (mover, tamaño por botón, transparencia, modo zurdo), distancia de cámara y vibración en Configuración.
+- **Menú principal** con la Torre Alfa en corte girando (`MenuTower`) y **Configuración** rediseñada con navegación lateral (`UiTheme`).
+- Prueba de anatomía: hasta 8 intentos (la bala puede desviarse en el hueso por azar; falló una vez en CI).

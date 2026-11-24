@@ -284,7 +284,13 @@ func g_anatomia(p: Actor) -> String:
 	await _wait_phys(6)
 	var hb := e.skel.find_bone("mixamorig_Head")
 	var head := e.skel.global_transform * e.skel.get_bone_global_pose(hb).origin + Vector3(0, 0.07, 0)
-	var r := e.injuries.process(e, {"type": "bullet", "zone": "head", "bone": "mixamorig_Head", "point": head - Vector3(0.12, 0, 0), "dir": Vector3.RIGHT})
+	# la bala puede desviarse en el hueso (azar): hasta 8 intentos con un maniquí nuevo; alguno tiene que matar
+	var r: Dictionary = {}
+	for k in 8:
+		e.injuries = Injuries.new()
+		r = e.injuries.process(e, {"type": "bullet", "zone": "head", "bone": "mixamorig_Head", "point": head - Vector3(0.12, 0, 0), "dir": Vector3.RIGHT})
+		if r.death and str(r.texts).contains("cráneo"):
+			break
 	if not r.death or not str(r.texts).contains("cráneo"):
 		return "tiro a la cabeza: %s" % str(r.texts)
 	var sb := e.skel.find_bone("mixamorig_Spine2")

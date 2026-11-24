@@ -378,6 +378,15 @@ func _update_material(node: String) -> void:
 	m.set_shader_parameter("axis", axis)
 	m.set_shader_parameter("base_color", SYS_COLOR.get(g.system, Color.WHITE))
 	m.set_shader_parameter("is_muscle", 1.0 if g.system == "musculo" else 0.0)
+	m.set_shader_parameter("kind", {"organo": 1.0, "vaso": 2.0, "nervio": 3.0}.get(g.system, 0.0))
+	if str(g.label).begins_with("ojo"):
+		m.set_shader_parameter("kind", 4.0)
+		m.set_shader_parameter("eye_c", aabb.get_center())
+		m.set_shader_parameter("eye_r", maxf(aabb.size.x, aabb.size.y) * 0.5)
+	var an := axis.normalized()
+	var ext := [aabb.position.dot(an), aabb.end.dot(an)]
+	m.set_shader_parameter("ax_lo", minf(ext[0], ext[1]))
+	m.set_shader_parameter("ax_hi", maxf(ext[0], ext[1]))
 	var ps := PackedVector4Array()
 	var ds := PackedVector4Array()
 	var arr: Array = wounds.get(node, [])
@@ -395,11 +404,11 @@ func _update_material(node: String) -> void:
 # ---------------------------------------------------------------- rayos X localizados
 
 ## Abre las ventanas de rayos X en las heridas. kill = toma de muerte (más grande y más tiempo).
-func show_xray(zone_list: Array, seconds: float, kill: bool) -> void:
+func show_xray(zone_list: Array, seconds: float, kill: bool, radius := 0.0) -> void:
 	if not available or Settings.xray == 0 or zone_list.is_empty():
 		return
 	zones = zone_list.slice(0, 4)
-	zone_r = 0.24 if kill else 0.15
+	zone_r = radius if radius > 0.0 else (0.24 if kill else 0.15)
 	_killcam = kill
 	_show_t = seconds
 	_showing = true
@@ -407,7 +416,7 @@ func show_xray(zone_list: Array, seconds: float, kill: bool) -> void:
 	_refresh_visible()
 
 ## Toma de muerte con todas las heridas (la principal primero).
-func show_killcam(main := "") -> void:
+func show_killcam(main := "", radius := 0.0) -> void:
 	var zl := []
 	if main != "" and wounds.has(main):
 		var w: Dictionary = wounds[main][-1]
@@ -424,7 +433,7 @@ func show_killcam(main := "") -> void:
 				dup = true
 		if not dup:
 			zl.append({"node": n, "pos": w.pos})
-	show_xray(zl, 99.0, true)
+	show_xray(zl, 99.0, true, radius)
 
 ## Destello en el juego (heridas graves que no matan).
 func show_flash(nodes: Array, seconds := 0.9) -> void:
@@ -571,6 +580,11 @@ render_mode cull_disabled, depth_draw_opaque;
 uniform vec3 axis = vec3(0.0, 1.0, 0.0);
 uniform vec4 base_color : source_color = vec4(0.9, 0.9, 0.8, 1.0);
 uniform float is_muscle = 0.0;
+uniform float kind = 0.0;      // 0 hueso · 1 órgano · 2 vaso · 3 nervio / ojo
+uniform vec3 eye_c = vec3(0.0);
+uniform float eye_r = 0.012;
+uniform float ax_lo = 0.0;
+uniform float ax_hi = 1.0;
 uniform vec4 w_pos[6];
 uniform vec4 w_dir[6];
 uniform int w_count = 0;
@@ -578,6 +592,11 @@ uniform int w_count = 0;
 varying vec3 lp;
 varying vec3 wp;
 float hash(vec3 p) { return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453); }
+float vnoise(vec3 p) {
+	vec3 i = floor(p); vec3 f = fract(p); f = f * f * (3.0 - 2.0 * f);
+	return mix(mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x), mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+		mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x), mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+}
 void vertex() {
 	lp = CUSTOM0.xyz;
 	wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
@@ -607,21 +626,66 @@ void fragment() {
 		}
 	}
 	vec3 col = base_color.rgb;
+	float shine = 0.0;
+	float relief = 0.0;
 	if (is_muscle > 0.5) {
-		// fibras musculares a lo largo del eje
-		float fib = sin(dot(lp, normalize(axis + vec3(0.2, 0.1, 0.0))) * 900.0) * 0.5 + 0.5;
-		col *= 0.75 + fib * 0.35;
+		// músculo: haces de fibras (ruido estirado a lo largo del eje), vetas de fascia / grasa y tendón pálido en las puntas
+		vec3 ax = normalize(axis);
+		float along = dot(lp, ax);
+		vec3 perp = lp - ax * along;
+		float bun = vnoise(perp * 95.0 + ax * along * 9.0);
+		float fib = vnoise(perp * 520.0 + ax * along * 38.0) * 0.6 + vnoise(perp * 1100.0 + ax * along * 70.0) * 0.4;
+		col = mix(vec3(0.34, 0.035, 0.03), vec3(0.66, 0.11, 0.08), bun);
+		col = mix(col, vec3(0.86, 0.26, 0.18), smoothstep(0.55, 0.95, fib) * 0.55);
+		float fat = smoothstep(0.80, 0.92, vnoise(perp * 48.0 + ax * along * 5.0));
+		col = mix(col, vec3(0.90, 0.68, 0.55), fat * 0.5);
+		float u = clamp((along - ax_lo) / max(ax_hi - ax_lo, 0.001), 0.0, 1.0);
+		float tend = smoothstep(0.80, 0.97, abs(u - 0.5) * 2.0);
+		col = mix(col, vec3(0.90, 0.84, 0.72) * (0.85 + 0.15 * fib), tend);
+		relief = (fib - 0.5) * 0.9 + (bun - 0.5) * 0.5;
+		shine = 0.55 + fat * 0.3;
+	} else if (kind > 0.5 && kind < 1.5) {
+		// vísceras: manchas húmedas y vetas finas de capilares
+		float m1 = vnoise(lp * 38.0);
+		float m2 = vnoise(lp * 150.0);
+		col = mix(col * 0.72, col * 1.25 + vec3(0.06, 0.02, 0.02), m1);
+		col = mix(col, vec3(0.78, 0.40, 0.34), smoothstep(0.72, 0.9, m2) * 0.5);
+		relief = (m2 - 0.5) * 0.5;
+		shine = 0.8;
+	} else if (kind > 1.5 && kind < 2.5) {
+		col *= 0.8 + 0.4 * vnoise(lp * 300.0);
+		shine = 0.9;
+	} else if (kind > 3.5) {
+		// globo ocular: esclerótica blanca con venitas rojas, iris y pupila hacia delante (+Z), nervio óptico amarillento atrás
+		vec3 d = lp - eye_c;
+		float dl = length(d);
+		float front = d.z / max(dl, 0.0001);
+		float veins = smoothstep(0.72, 0.9, vnoise(lp * 900.0 + vec3(0.0, 3.0, 0.0)));
+		col = mix(vec3(0.93, 0.90, 0.86), vec3(0.78, 0.18, 0.15), veins * 0.55);
+		float iris = smoothstep(0.80, 0.84, front);
+		float fibers = vnoise(vec3(atan(d.y, d.x) * 9.0, front * 40.0, 0.0)) * 0.5 + 0.5;
+		col = mix(col, mix(vec3(0.15, 0.30, 0.45), vec3(0.45, 0.62, 0.72), fibers), iris);
+		col = mix(col, vec3(0.01), smoothstep(0.955, 0.965, front));
+		col = mix(col, vec3(0.80, 0.68, 0.40), smoothstep(-0.7, -0.95, front));
+		shine = 1.0;
+	} else if (kind > 2.5) {
+		col *= 0.9 + 0.2 * vnoise(lp * 200.0);
+		shine = 0.7;
 	}
 	// sangre manchando lo que está cerca de la herida y salpicaduras
 	float splat = step(0.82, hash(floor(lp * 90.0))) * 0.35;
 	col = mix(col, vec3(0.35, 0.01, 0.01), clamp(rim * 1.2 + splat * rim, 0.0, 0.9));
 	// luz propia de la toma (cálida, desde la cámara): no la tiñen las luces de colores del escenario
-	float nl = clamp(dot(NORMAL, normalize(VIEW + vec3(0.35, 0.6, 0.0))), 0.0, 1.0);
+	vec3 L = normalize(VIEW + vec3(0.35, 0.6, 0.0));
+	float nl = clamp(dot(NORMAL, L) + relief * 0.35, 0.0, 1.0);
 	float edge = smoothstep(zone_r, zone_r * 0.88, zd) * 0.6 + 0.4;   // borde oscuro del corte de la ventana
+	// brillo húmedo (carne mojada): reflejo estrecho + borde de Fresnel
+	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 3.0);
+	float spec = pow(clamp(dot(NORMAL, normalize(L + VIEW)), 0.0, 1.0), 48.0) * shine;
 	ALBEDO = col * 0.12;
-	ROUGHNESS = is_muscle > 0.5 ? 0.4 : 0.55;
+	ROUGHNESS = 0.3;
 	SPECULAR = 0.5;
-	EMISSION = (col * (0.22 + 0.9 * nl) * vec3(1.0, 0.96, 0.9) + vec3(0.6, 0.02, 0.0) * rim * 0.5) * edge;
+	EMISSION = (col * (0.22 + 0.9 * nl) * vec3(1.0, 0.96, 0.9) + vec3(0.6, 0.02, 0.0) * rim * 0.5 + vec3(1.0, 0.85, 0.8) * (spec * 0.55 + fres * shine * 0.12)) * edge;
 }
 """
 	return _wound_shader

@@ -16,17 +16,24 @@ var _touch := -1
 var _center := Vector2.ZERO
 var _knob := Vector2.ZERO
 var _rest := Vector2.ZERO
+var key := ""                          ## nombre en la disposición personalizada (stick_l / stick_r)
+var rest_frac := Vector2(0.5, 0.62)    ## posición de reposo del dibujo dentro de la zona (fracción)
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_rest = Vector2(size.x * 0.5, size.y * 0.62)
+	_rest = size * rest_frac
+
+func set_rest_frac(f: Vector2) -> void:
+	rest_frac = f
+	_rest = size * f
+	queue_redraw()
 
 func radius() -> float:
-	return base_radius * Settings.joystick_size
+	return base_radius * Settings.joystick_size * float(Settings.ctl_scale.get(key, 1.0))
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
-		_rest = Vector2(size.x * 0.5, size.y * 0.62)
+		_rest = size * rest_frac
 
 ## Lo llama el HUD con los eventos táctiles (posición en coordenadas del HUD). Devuelve true si lo tomó.
 func touch_event(index: int, pos: Vector2, pressed: bool, is_drag: bool) -> bool:

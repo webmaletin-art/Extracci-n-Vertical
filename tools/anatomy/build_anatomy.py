@@ -114,7 +114,8 @@ ORGANS = [(r"lung|pleura|bronch", "pulmón"), (r"atrium|ventricle|leaflet|valve|
           (r"liver|hepat|porta", "hígado"), (r"gallbladder", "vesícula"), (r"stomach", "estómago"), (r"oesophagus|esophag", "esófago"),
           (r"jejunum|ileum|duoden|colon|caecum|cecum|rectum|appendix|taenia|omentum|mesocolon|mesentery", "intestinos"),
           (r"kidney|ureter|suprarenal", "riñón"), (r"spleen", "bazo"), (r"pancrea", "páncreas"),
-          (r"bladder|urethra|prostate|ductus deferens|testis|seminal", "vejiga"),
+          (r"testis|epididym|ductus deferens|seminal|spermatic|penis|corpus cavernosum|corpus spongiosum|glans|scrot", "testículos"),
+          (r"bladder|urethra|prostate", "vejiga"),
           (r"trachea|laryn|epiglottis|pharynx|cartilage", "tráquea y laringe"), (r"thyroid", "tiroides")]
 NERVES = [(r"telencephalon|lobe\b|gyrus|cortex|hippocamp|thalamus|caudate|putamen|lentiform|amygdala|callosum|falx|commissure|fornix|insula|cerebral", "cerebro"),
           (r"cerebell|lobule|vermis|pons|midbrain|oblongata|peduncle", "cerebelo y tronco cerebral"),
@@ -143,6 +144,8 @@ def label(i, c):
                     low = n.lower()
                     side = "izq" if ("left" in low or n.endswith(".l")) else "der" if ("right" in low or n.endswith(".r")) else lado
                     return f"{lab} {side}".strip(), bone
+                if lab == "testículos":
+                    return lab, "mixamorig_Hips"          # cuelgan de la pelvis, no del muslo
                 return lab, bone
         return "órganos de " + reg, bone
     if s == "nervio":

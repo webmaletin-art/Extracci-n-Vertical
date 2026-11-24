@@ -7,6 +7,7 @@ extends Camera3D
 @export var distance := 9.0
 @export var height := 2.0
 var target: Actor
+var look_offset_x := 0.0          ## desplaza el encuadre en X (modo práctica: centra entre el tirador y el maniquí)
 var bounds := Rect2(0, -1, 60, 26)
 var _pos := Vector3.ZERO
 var _shake := 0.0
@@ -21,6 +22,7 @@ var base_fov := 40.0
 
 func _ready() -> void:
 	fov = base_fov
+	distance = Settings.camera_distance
 	near = 0.1
 	far = 140.0
 	TimeFx.shake_requested.connect(func(a: float): _shake = minf(_shake + a, 1.2))
@@ -32,7 +34,7 @@ func _desired() -> Vector3:
 	var p := target.global_position
 	var aim := Vector3(target.aim_dir.x, target.aim_dir.y, 0) * 1.6
 	var vel_look := Vector3(clampf(target.velocity.x * 0.25, -1.2, 1.2), 0, 0)
-	var x := clampf(p.x + aim.x + vel_look.x, bounds.position.x + 6.0, bounds.end.x - 6.0)
+	var x := clampf(p.x + aim.x + vel_look.x + look_offset_x, bounds.position.x + 6.0, bounds.end.x - 6.0)
 	var y := clampf(p.y + height + aim.y * 0.6, bounds.position.y + 2.0, bounds.end.y)
 	return Vector3(x, y, distance)
 

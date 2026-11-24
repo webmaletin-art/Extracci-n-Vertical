@@ -38,6 +38,12 @@ var vol_ambient := 0.7
 ## ---------- controles ----------
 var joystick_size := 1.0            ## escala de los joysticks virtuales
 var aim_sensitivity := 0.7             ## velocidad de giro del apuntado con joystick (1.0 = 170°/s)
+var ctl_pos := {}                   ## nombre del control → posición en fracciones de pantalla (Vector2); vacío = la de fábrica
+var ctl_scale := {}                 ## nombre del control → escala propia (1.0 = normal)
+var ctl_opacity := 0.9              ## transparencia de los controles táctiles
+var ctl_mirror := false             ## modo zurdo: espeja todo el HUD táctil
+var camera_distance := 9.0          ## distancia de la cámara lateral (m): menos = más cerca
+var haptics := true                 ## vibración al recibir daño (teléfonos)
 var auto_fire_stick := false        ## dispara al llevar el joystick derecho al borde (además del botón)
 var show_fps := false
 var character_id := "alfa"
@@ -135,7 +141,7 @@ func _apply_audio() -> void:
 
 const KEYS := ["quality_preset", "render_scale", "shadows", "lights", "msaa", "fxaa", "particles", "smoke", "explosions",
 	"decor", "background", "fog_war", "view_floors", "fps_target", "xray", "bullet_time", "camera_shake", "blood", "laser", "laser_enemies", "vol_master",
-	"vol_sfx", "vol_ambient", "joystick_size", "aim_sensitivity", "auto_fire_stick", "show_fps", "character_id"]
+	"vol_sfx", "vol_ambient", "joystick_size", "ctl_pos", "ctl_scale", "ctl_opacity", "ctl_mirror", "camera_distance", "haptics", "aim_sensitivity", "auto_fire_stick", "show_fps", "character_id"]
 
 func save_settings() -> void:
 	var cf := ConfigFile.new()

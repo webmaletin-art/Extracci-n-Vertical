@@ -60,7 +60,7 @@ static func effect_of(label: String) -> Dictionary:
 
 ## Procesa un golpe. Devuelve {hp: vida extra perdida, texts: [..], nodes: [grupos dañados], death: bool, main: grupo principal}
 func process(actor: Actor, info: Dictionary) -> Dictionary:
-	var res := {"hp": 0.0, "texts": [], "nodes": [], "death": false, "main": "", "applied": {}}
+	var res := {"hp": 0.0, "texts": [], "nodes": [], "death": false, "main": "", "main_w": -1.0, "applied": {}}
 	var anat := AnatomyBody.for_actor(actor)
 	_actor = actor
 	_anat = anat
@@ -82,7 +82,13 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 			mid = (bw.origin + (actor.skel.global_transform * actor.skel.get_bone_global_pose(kids[0])).origin) * 0.5
 		point.z = mid.z
 		if zone == "head":
-			point.y = clampf(point.y, mid.y - 0.06, mid.y + 0.08)
+			var eye_z := point.z
+			if t == "bullet" and absf(dir.x) > 0.6:
+				eye_z = _snap_to_eye(anat, point, dir, point.z)       # antes de acotar la altura: el ojo está bajo el centro de la cabeza
+			if eye_z == point.z:
+				point.y = clampf(point.y, mid.y - 0.06, mid.y + 0.08)
+			else:
+				point.z = eye_z
 	match t:
 		"bullet", "fragment", "knife":
 			var max_depth := INF
@@ -116,7 +122,7 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 				if leg == 0 and path.is_empty():
 					for n in anat.near(point, 0.07):
 						path.append({"node": n, "label": anat.groups[n].label, "system": anat.groups[n].system,
-							"p_in": anat.world_to_bind(n, point), "dir": anat.dir_to_bind(n, dir), "t_in": 0.0, "t_out": 0.02})
+							"p_in": anat.world_to_bind(n, point), "p_out": anat.world_to_bind(n, point + dir * 0.02), "dir": anat.dir_to_bind(n, dir), "t_in": 0.0, "t_out": 0.02})
 						break
 				var deflect := {}
 				for h in path:
@@ -257,10 +263,32 @@ func _hit_structure(anat: AnatomyBody, actor: Actor, h: Dictionary, t: String, r
 		var depth := (float(h.t_out) - float(h.t_in)) / 0.25
 		anat.add_wound(n, h.p_in, h.dir, r, 3 if lodged else 1, clampf(depth, 0.05, 0.99))
 		var verb := "Esquirla alojada en" if t == "fragment" else ("Puñalada en" if t == "knife" else "Perforación de")
-		_apply_effect(lab, "%s %s" % [verb, lab], res, 1.0, _loc(n, h.p_in, dir))
+		var detail := str(effect_of(lab).get("text", ""))
+		_apply_effect(lab, detail if detail != "" and t == "bullet" else "%s %s" % [verb, lab], res, 1.0, _loc(n, h.p_in, dir))
 	res.nodes.append(n)
-	if res.main == "":
+	# estructura «principal» (la que enfoca la cámara): la que más daño hace, no la primera que cruzó la bala
+	var fxm := effect_of(lab)
+	var wgt := float(fxm.get("hp", 0)) + float(fxm.get("bleed", 0)) * 4.0 + (50.0 if str(fxm.get("effect", "")) == "death" else 0.0)
+	if res.main == "" or wgt > float(res.main_w) + 0.01:
 		res.main = n
+		res.main_w = wgt
+
+## El disparo viaja en el plano z = 0 pero los ojos están a los lados de la cara: si la bala viene de frente y pasa a
+## menos de 2,4 cm de altura de un ojo, la trayectoria se pasa a la profundidad de ese ojo (le pega al globo ocular).
+func _snap_to_eye(anat: AnatomyBody, point: Vector3, dir: Vector3, z: float) -> float:
+	var best := z
+	var bd := 0.024
+	for lab in ["ojo der", "ojo izq"]:
+		var n := anat.find_group(lab)
+		if n == "":
+			continue
+		var c := anat.bind_to_world(n, anat.groups[n].center)
+		var toward: float = (c.x - _actor.global_position.x) * dir.x          # el ojo mira hacia el tirador
+		var d := absf(c.y - point.y)
+		if toward < 0.0 and d < bd:
+			bd = d
+			best = c.z
+	return best
 
 ## Ubicación (mundo) de una herida para la hemorragia: hueso que la mueve, punto y dirección de salida.
 func _loc(node: String, p_bind: Vector3, dir: Vector3) -> Dictionary:
@@ -299,6 +327,9 @@ func _apply_effect(label: String, text: String, res: Dictionary, k: float, loc :
 			src.rate += b
 			entry.src = src
 		bleeds.append(entry)
+	var st := float(fx.get("stun", 0.0))
+	if st > 0.0 and _actor and is_instance_valid(_actor):
+		_actor.stun(st)                   # dolor que paraliza un momento (ojo, testículos)
 	match str(fx.get("effect", "")):
 		"death":
 			res.death = true
