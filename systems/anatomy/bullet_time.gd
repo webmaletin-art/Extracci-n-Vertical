@@ -159,6 +159,8 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 				_dist0 = c[1] * 2.6
 				_ang1 = c[2]
 	anat.show_killcam(main, radius)
+	if Blood.instance:
+		Blood.instance.set_closeup(true)
 	TimeFx.slowmo(0.06, KILL_SECONDS + 0.4, "kill", 0.02)
 	_t0 = _now()
 	_until = _t0 + KILL_SECONDS
@@ -203,6 +205,8 @@ func skip() -> void:
 		_end()
 
 func _end() -> void:
+	if Blood.instance:
+		Blood.instance.set_closeup(false)
 	if is_instance_valid(_victim):
 		AnatomyBody.for_actor(_victim).hide_all()
 	phase = ""

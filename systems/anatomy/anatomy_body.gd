@@ -17,6 +17,7 @@ extends Node
 
 const FIT_DIR := "res://assets/anatomy/fit/"
 const MAX_WOUNDS := 6
+static var only_system := ""          ## (prueba) dibuja sólo ese sistema
 static var hide_muscles := false      ## (prueba) no dibujar los músculos en los rayos X: sólo huesos, órganos, vasos y ojos
 
 static var _scenes := {}         ## id → PackedScene
@@ -365,6 +366,11 @@ func _skinned(mesh: Mesh) -> MeshInstance3D:
 const SYS_COLOR := {"hueso": Color(0.86, 0.8, 0.66), "musculo": Color(0.55, 0.09, 0.07), "organo": Color(0.62, 0.2, 0.2),
 	"vaso": Color(0.5, 0.02, 0.04), "nervio": Color(0.9, 0.78, 0.55), "oreja": Color(0.8, 0.55, 0.48)}
 
+## Colores por órgano (un atlas): así se distinguen unos de otros y de los huesos.
+const ORGAN_COLOR := {"pulmón": Color(0.85, 0.5, 0.52), "corazón": Color(0.75, 0.1, 0.12), "hígado": Color(0.5, 0.2, 0.12),
+	"estómago": Color(0.85, 0.55, 0.45), "intestinos": Color(0.9, 0.6, 0.5), "riñón": Color(0.45, 0.15, 0.2), "bazo": Color(0.4, 0.12, 0.25),
+	"páncreas": Color(0.9, 0.7, 0.5), "vejiga": Color(0.9, 0.8, 0.5), "testículos": Color(0.8, 0.6, 0.55), "vesícula": Color(0.3, 0.5, 0.2)}
+
 func _update_material(node: String) -> void:
 	var mi: MeshInstance3D = meshes[node]
 	var m := ShaderMaterial.new()
@@ -377,7 +383,12 @@ func _update_material(node: String) -> void:
 	elif aabb.size.z >= aabb.size.y:
 		axis = Vector3.BACK
 	m.set_shader_parameter("axis", axis)
-	m.set_shader_parameter("base_color", SYS_COLOR.get(g.system, Color.WHITE))
+	var bc: Color = SYS_COLOR.get(g.system, Color.WHITE)
+	if g.system == "organo":
+		for k in ORGAN_COLOR:
+			if str(g.label).begins_with(k):
+				bc = ORGAN_COLOR[k]
+	m.set_shader_parameter("base_color", bc)
 	m.set_shader_parameter("is_muscle", 1.0 if g.system == "musculo" else 0.0)
 	m.set_shader_parameter("kind", {"organo": 1.0, "vaso": 2.0, "nervio": 3.0}.get(g.system, 0.0))
 	if str(g.label).begins_with("ojo"):
@@ -483,6 +494,8 @@ func _refresh_visible() -> void:
 			continue
 		if hide_muscles and g.system == "musculo":
 			continue
+		if only_system != "" and g.system != only_system:
+			continue
 		var c := bind_to_world(n, g.center)
 		var near := false
 		for i in zones.size():
@@ -582,7 +595,7 @@ static func _wshader() -> Shader:
 		_wound_shader = Shader.new()
 		_wound_shader.code = """
 shader_type spatial;
-render_mode cull_disabled, depth_draw_opaque;
+render_mode cull_disabled, depth_draw_always;
 uniform vec3 axis = vec3(0.0, 1.0, 0.0);
 uniform vec4 base_color : source_color = vec4(0.9, 0.9, 0.8, 1.0);
 uniform float is_muscle = 0.0;
@@ -688,6 +701,8 @@ void fragment() {
 	// brillo húmedo (carne mojada): reflejo estrecho + borde de Fresnel
 	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 3.0);
 	float spec = pow(clamp(dot(NORMAL, normalize(L + VIEW)), 0.0, 1.0), 48.0) * shine;
+	// órganos como cristal rojizo: se ven los huesos que están detrás
+	ALPHA = (kind > 0.5 && kind < 1.5) ? 0.38 : 1.0;
 	ALBEDO = col * 0.12;
 	ROUGHNESS = 0.3;
 	SPECULAR = 0.5;

@@ -5,6 +5,8 @@ func _ready() -> void:
 	var a := OS.get_cmdline_user_args()
 	var out := a[0]
 	AnatomyBody.hide_muscles = a[1] == "sin"
+	if OS.get_environment("SOLO") != "":
+		AnatomyBody.only_system = OS.get_environment("SOLO")
 	DirAccess.make_dir_recursive_absolute(out)
 	var pg := PracticeGame.new()
 	add_child(pg)
@@ -32,7 +34,7 @@ func _ready() -> void:
 		bt._t0 = TimeFx.now() - BulletTime.KILL_SECONDS * pr
 		bt._until = TimeFx.now() + 120.0
 		await _w(8)
-		await _snap(out, "%s_%d" % [a[1], int(pr * 100)])
+		await _snap(out, "%s_%s_%d" % [a[1], OS.get_environment("SOLO"), int(pr * 100)])
 	get_tree().quit()
 func _w(n: int) -> void:
 	for i in n:
