@@ -22,10 +22,10 @@ argv = sys.argv[sys.argv.index("--") + 1:]
 SRC, GROUPS, OUT = argv[0], argv[1], argv[2]
 
 # cuántos fragmentos por hueso (por el comienzo del nombre del grupo)
-CELLS = [("cráneo", 9), ("mandíbula", 4), ("costillas", 10), ("vértebras", 8), ("pelvis", 10), ("esternón", 4),
-         ("clavícula", 5), ("escápula", 7), ("húmero", 8), ("radio", 6), ("cúbito", 6), ("fémur", 9), ("tibia", 8),
-         ("peroné", 6), ("rótula", 4), ("huesos de la mano", 8), ("dedos de la mano", 10), ("huesos del pie", 7),
-         ("huesos de", 5)]
+CELLS = [("cráneo", 22), ("mandíbula", 8), ("costillas", 18), ("vértebras", 14), ("pelvis", 16), ("esternón", 6),
+         ("clavícula", 7), ("escápula", 10), ("húmero", 12), ("radio", 8), ("cúbito", 8), ("fémur", 14), ("tibia", 12),
+         ("peroné", 8), ("rótula", 5), ("huesos de la mano", 10), ("dedos de la mano", 12), ("huesos del pie", 9),
+         ("huesos de", 6)]
 
 random.seed(7)
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -83,13 +83,28 @@ def fracture(obj, n):
         if len(bm.faces) < 4:
             bm.free()
             continue
-        # bordes dentados: los vértices de las caras de corte se mueven con ruido (fractura, no corte limpio)
-        amp = size * 0.004
-        for f in bm.faces:
-            if f.material_index == 1:
-                for v in f.verts:
-                    p = v.co * (14.0 / size)
-                    v.co += Vector((noise.noise(p), noise.noise(p + Vector((5.2, 1.3, 7.1))), noise.noise(p + Vector((2.7, 9.4, 3.3))))) * amp
+        # superficie de fractura irregular: las caras del corte se subdividen y TODOS sus vértices se mueven con un campo
+        # de ruido que depende sólo de la posición (el mismo para los dos fragmentos vecinos: encajan sin costuras).
+        # Los vértices del borde (compartidos con la superficie del hueso) se mueven poco: el hueso entero no se deforma.
+        cut_faces = [f for f in bm.faces if f.material_index == 1]
+        if cut_faces:
+            bmesh.ops.triangulate(bm, faces=cut_faces)
+            for it in range(2):
+                cut_faces = [f for f in bm.faces if f.material_index == 1]
+                inner = [e for e in bm.edges if len(e.link_faces) == 2 and all(lf.material_index == 1 for lf in e.link_faces)
+                         and e.calc_length() > size * 0.012]
+                if inner:
+                    bmesh.ops.subdivide_edges(bm, edges=inner, cuts=1, use_grid_fill=False)
+                    bmesh.ops.triangulate(bm, faces=[f for f in bm.faces if f.material_index == 1])
+        amp = size * 0.022
+        for v in bm.verts:
+            fl = [lf.material_index for lf in v.link_faces]
+            if 1 not in fl:
+                continue
+            border = 0 in fl
+            p = v.co * (9.0 / size)
+            d = noise.noise_vector(p) + noise.noise_vector(p * 3.1 + Vector((4.0, 1.0, 7.0))) * 0.45
+            v.co += d * amp * (0.18 if border else 1.0)
         bmesh.ops.triangulate(bm, faces=bm.faces)
         verts = np.array([tuple(v.co) for v in bm.verts], dtype=np.float32)
         bm.verts.index_update()

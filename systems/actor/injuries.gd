@@ -116,6 +116,8 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 			var length := 0.9
 			var seen := {}
 			var last_hit := {}
+			res["path"] = []                 # recorrido de la bala por dentro (para la repetición en cámara lenta)
+			res["seq0"] = anat._seq + 1
 			for leg in 3:
 				var path := anat.trace(o, d, length, left_depth)
 				path = path.filter(func(x): return not seen.has(x.node))
@@ -125,13 +127,25 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 							"p_in": anat.world_to_bind(n, point), "p_out": anat.world_to_bind(n, point + dir * 0.02), "dir": anat.dir_to_bind(n, dir), "t_in": 0.0, "t_out": 0.02})
 						break
 				var deflect := {}
+				var events := []
 				for h in path:
 					seen[h.node] = true
+					var sq := anat.next_seq()
 					_hit_structure(anat, actor, h, t, r, res, o, d)
+					if (res.path as Array).is_empty():
+						res.path.append({"node": h.node, "p": h.p_in - (h.dir as Vector3) * 0.35, "seq": -1})
+					events.append({"t": float(h.t_in), "node": h.node, "p": h.p_in, "seq": sq, "sys": h.system})
+					events.append({"t": float(h.t_out), "node": h.node, "p": h.p_out, "seq": sq, "sys": h.system})
 					last_hit = h
 					if t == "bullet" and h.system == "hueso" and leg < 2 and randf() < DEFLECT.get(_bone_key(str(h.label)), 0.0):
 						deflect = h
 						break
+				events.sort_custom(func(x, y): return x.t < y.t)
+				if not deflect.is_empty():
+					events = events.filter(func(e): return e.t <= float(deflect.t_out) + 0.0001)
+					if not events.is_empty():
+						events[-1]["deflect"] = true
+				res.path.append_array(events)
 				if deflect.is_empty():
 					break
 				# la bala se desvía en el hueso: nueva dirección y sigue desde la salida
@@ -144,6 +158,12 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 					left_depth = maxf(left_depth - float(deflect.t_out), 0.04)
 				res.texts.append("La bala se desvió en %s" % deflect.label)
 			# la bala que quedó adentro: aplastada en hongo, alojada al final del recorrido
+			if not last_hit.is_empty() and not (res.path as Array).is_empty():
+				if max_depth < INF:
+					res.path[-1]["lodged"] = true
+				else:
+					res.path.append({"node": last_hit.node, "p": last_hit.p_out + (last_hit.dir as Vector3) * 0.35, "seq": -1, "exit": true})
+			res["seq1"] = anat._seq
 			if t in ["bullet", "fragment"] and max_depth < INF and not last_hit.is_empty():
 				var ln := str(last_hit.node)
 				anat.add_lodged(ln, last_hit.p_out, last_hit.dir)

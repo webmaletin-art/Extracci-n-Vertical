@@ -18,7 +18,7 @@ extends Node
 const FIT_DIR := "res://assets/anatomy/fit/"
 const MAX_WOUNDS := 6
 static var only_system := ""          ## (prueba) dibuja sólo ese sistema
-static var hide_muscles := false      ## (prueba) no dibujar los músculos en los rayos X: sólo huesos, órganos, vasos y ojos
+static var hide_muscles := true       ## los rayos X no dibujan músculos: huesos, órganos, vasos y ojos (como Sniper Elite)
 
 static var _scenes := {}         ## id → PackedScene
 static var _cpu := {}            ## id → {node: {v, i, aabb, label, system, bone, center}}
@@ -50,6 +50,8 @@ var _showing := false
 var _skin_saved := {}
 var _skin_mats: Array[ShaderMaterial] = []
 var available := false
+var _seq := 0                    ## número de la próxima herida (orden en que la bala las hizo)
+var reveal_seq := 1 << 30        ## heridas visibles hasta este número (la repetición lo va subiendo)
 
 static func for_actor(a: Actor) -> AnatomyBody:
 	var x := a.get_node_or_null("Anatomia") as AnatomyBody
@@ -98,12 +100,14 @@ func _setup() -> void:
 			if m.has_meta("parent"):
 				var list: Array = fr.get(str(m.get_meta("parent")), [])
 				list.append({"node": str(m.name), "mesh": m.mesh, "v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX],
-					"b": arr[Mesh.ARRAY_BONES], "w": arr[Mesh.ARRAY_WEIGHTS], "center": m.get_meta("center_bind")})
+					"b": arr[Mesh.ARRAY_BONES], "w": arr[Mesh.ARRAY_WEIGHTS], "center": m.get_meta("center_bind"),
+					"r": m.mesh.get_aabb().size.length() * 0.5})
 				fr[str(m.get_meta("parent"))] = list
 				continue
 			data[str(m.name)] = {"v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX], "aabb": m.mesh.get_aabb(),
 				"label": str(m.get_meta("label")), "system": str(m.get_meta("system")), "bone": str(m.get_meta("bone")),
-				"center": m.get_meta("center_bind"), "radius": float(m.get_meta("radius", 0.1)), "mesh": m.mesh}
+				"center": m.get_meta("center_bind"), "radius": float(m.get_meta("radius", 0.1)), "mesh": m.mesh,
+				"chunks": _make_chunks(arr[Mesh.ARRAY_VERTEX], arr[Mesh.ARRAY_INDEX])}
 		inst.free()
 		for n in placeholders:
 			var list: Array = fr.get(n, [])
@@ -136,6 +140,21 @@ func _setup() -> void:
 	groups = _cpu[id]
 	frags = _cpu_frags[id]
 	available = true
+
+## Divide los triángulos en trozos de ~1500 con su caja: el trazado de la bala sólo prueba los trozos que cruza
+## (las mallas de calidad máxima tienen decenas de miles de triángulos).
+static func _make_chunks(v: PackedVector3Array, idx: PackedInt32Array) -> Array:
+	var out := []
+	var step := 1500 * 3
+	var a := 0
+	while a < idx.size():
+		var b := mini(a + step, idx.size())
+		var box := AABB(v[idx[a]], Vector3.ZERO)
+		for k in range(a, b):
+			box = box.expand(v[idx[k]])
+		out.append({"aabb": box, "a": a, "b": b})
+		a = b
+	return out
 
 # ---------------------------------------------------------------- espacios
 
@@ -238,38 +257,95 @@ func near(point: Vector3, radius: float, system := "") -> Array:
 # ---------------------------------------------------------------- heridas
 
 ## type: 0 fractura · 1 túnel (bala/cuchillo) · 2 estallido (onda expansiva) · 3 esquirla alojada · 4 contusión
+## Repetición: muestra sólo lo que la bala ya hizo hasta la herida número `s` (INF = todo).
+func set_reveal(s: int) -> void:
+	if s == reveal_seq:
+		return
+	reveal_seq = s
+	for n in meshes:
+		if wounds.has(n):
+			_update_material(n)
+	_flush_gibs()
+	if _showing:
+		_refresh_visible()
+
+## Avanza el número de herida (lo llama Injuries en cada estructura que cruza la bala, en orden).
+func next_seq() -> int:
+	_seq += 1
+	return _seq
+
 func add_wound(node: String, pos_bind: Vector3, dir_bind: Vector3, r: float, type: int, depth := 1.0) -> void:
 	var arr: Array = wounds.get(node, [])
 	if arr.size() >= MAX_WOUNDS:
 		arr.pop_front()
-	arr.append({"pos": pos_bind, "dir": dir_bind.normalized(), "r": r, "type": type, "depth": depth})
+	arr.append({"pos": pos_bind, "dir": dir_bind.normalized(), "r": r, "type": type, "depth": depth, "seq": _seq})
 	wounds[node] = arr
 	if meshes.has(node):
 		_update_material(node)
 
-## Hueso que se quiebra en `pos_bind`: se marca roto (se verán sus fragmentos con grietas) y los fragmentos más cercanos
-## al impacto se desprenden y salen volando. strength: 0 = sólo grietas (caída), 1 = bala, 2 = bala potente / explosión.
+## Hueso que se quiebra en `pos_bind`. Hasta acá el hueso se ve ENTERO (malla original); desde ahora se dibujan sus
+## fragmentos de Blender: los cercanos al impacto se abren, se corren y muestran el corte (hueso esponjoso con sangre),
+## los lejanos quedan en su lugar y no se nota que el hueso está partido. Sólo esquirlas CHICAS se desprenden.
+## strength: 0 = sólo fisura (caída), 1 = bala, 2 = bala potente / explosión.
+var break_hits := {}             ## hueso → [{pos (enlace), dir (mundo), s, seq}]
 func break_bone(node: String, pos_bind: Vector3, dir_world: Vector3, strength: float) -> void:
 	if not frags.has(node):
 		return
 	var det: Dictionary = broken.get(node, {})
 	broken[node] = det
+	var hits: Array = break_hits.get(node, [])
+	hits.append({"pos": pos_bind, "dir": dir_world.normalized(), "s": strength, "seq": _seq})
+	break_hits[node] = hits
 	if strength <= 0.0:
 		return
+	# esquirlas: los fragmentos chicos pegados al impacto (1, o 2 si es potente o el hueso ya recibió varios tiros)
 	var list: Array = frags[node]
 	var order := []
 	for f in list:
 		if not det.has(f.node):
 			order.append([(f.center as Vector3).distance_to(pos_bind), f])
-	order.sort_custom(func(a, b): return a[0] < b[0])
-	var n := clampi(int(round(strength * 2.0)), 1, 5)
+	order.sort_custom(func(x, y): return x[0] < y[0])
+	var n := 1 if strength < 1.5 and hits.size() < 3 else 2
 	var wound_w := bind_to_world(node, pos_bind)
-	for k in mini(n, order.size()):
-		if order[k][0] > 0.03 + strength * 0.035 and k > 0:
+	var done := 0
+	for o in order:
+		if done >= n or o[0] > 0.035:
 			break
-		var f: Dictionary = order[k][1]
+		var f: Dictionary = o[1]
+		if float(f.get("r", 1.0)) > 0.022 + 0.008 * strength:
+			continue                     # los trozos grandes no salen volando: se abren en su lugar
 		det[f.node] = true
-		_spawn_gib(f, wound_w, dir_world, strength)
+		_pending_gibs.append({"f": f, "w": wound_w, "d": dir_world, "s": strength, "seq": _seq})
+		done += 1
+	_flush_gibs()
+
+var _pending_gibs: Array = []
+## Las esquirlas salen cuando la bala pasa por ahí (en la repetición), o en seguida si no hay repetición.
+func _flush_gibs() -> void:
+	var keep := []
+	for g in _pending_gibs:
+		if int(g.seq) <= reveal_seq:
+			_spawn_gib(g.f, g.w, g.d, g.s)
+		else:
+			keep.append(g)
+	_pending_gibs = keep
+
+## Desplazamiento y apertura de cada fragmento de un hueso roto según la cercanía a los impactos ya revelados.
+func _frag_state(node: String, f: Dictionary) -> Array:
+	var k := 0.0
+	var push := Vector3.ZERO
+	for h in break_hits.get(node, []):
+		if int(h.seq) > reveal_seq:
+			continue
+		var d := (f.center as Vector3).distance_to(h.pos)
+		var rr := 0.025 + 0.025 * float(h.s)
+		var kk := clampf(1.0 - d / rr, 0.0, 1.0)
+		if kk <= 0.0:
+			continue
+		k = maxf(k, kk)
+		var out := ((f.center as Vector3) - (h.pos as Vector3)).normalized()
+		push += out * kk * 0.004 * (0.5 + float(h.s)) + dir_to_bind(node, h.dir) * kk * 0.003 * float(h.s)
+	return [k, push]
 
 ## El fragmento se vuelve un trozo suelto: se calcula su forma ACTUAL (piel por CPU con la pose del momento).
 func _spawn_gib(f: Dictionary, wound_w: Vector3, dir_world: Vector3, strength: float) -> void:
@@ -317,14 +393,14 @@ func _spawn_gib(f: Dictionary, wound_w: Vector3, dir_world: Vector3, strength: f
 	st.create_from(am, 0)
 	st.generate_normals()
 	var out := (center - wound_w).normalized() if center.distance_to(wound_w) > 0.001 else dir_world
-	var vel := dir_world.normalized() * randf_range(1.5, 3.5) * (0.6 + strength * 0.5) + out * randf_range(0.6, 2.0) + Vector3.UP * randf_range(0.2, 1.0)
+	var vel := dir_world.normalized() * randf_range(0.5, 1.4) * (0.6 + strength * 0.4) + out * randf_range(0.2, 0.7) + Vector3.UP * randf_range(0.05, 0.4)
 	vel.z = clampf(vel.z, -0.6, 1.2)
-	var spin := Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)).normalized() * randf_range(6.0, 18.0)
+	var spin := Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)).normalized() * randf_range(4.0, 10.0)
 	Gibs.instance.spawn(st.commit(), Transform3D(Basis.IDENTITY, center), vel, spin)
 
 ## Bala que quedó adentro del cuerpo, aplastada (en hongo). Se ve en los rayos X.
 func add_lodged(node: String, pos_bind: Vector3, dir_bind: Vector3) -> void:
-	lodged.append({"node": node, "pos": pos_bind, "dir": dir_bind.normalized(), "mi": null})
+	lodged.append({"node": node, "pos": pos_bind, "dir": dir_bind.normalized(), "mi": null, "seq": _seq})
 	if lodged.size() > 6:
 		var old: Dictionary = lodged.pop_front()
 		if old.mi:
@@ -401,7 +477,7 @@ func _update_material(node: String) -> void:
 	m.set_shader_parameter("ax_hi", maxf(ext[0], ext[1]))
 	var ps := PackedVector4Array()
 	var ds := PackedVector4Array()
-	var arr: Array = wounds.get(node, [])
+	var arr: Array = (wounds.get(node, []) as Array).filter(func(w): return int(w.get("seq", 0)) <= reveal_seq)
 	for w in arr:
 		ps.append(Vector4(w.pos.x, w.pos.y, w.pos.z, w.r))
 		ds.append(Vector4(w.dir.x, w.dir.y, w.dir.z, float(w.type) + clampf(float(w.depth), 0.0, 0.99)))
@@ -482,37 +558,65 @@ func _zone_world() -> PackedVector4Array:
 
 ## Qué se dibuja: todo lo que cae en las ventanas (huesos, órganos, vasos, nervios, ojos, orejas) y los músculos (en
 ## anillo alrededor del centro, como en Sniper Elite). Los huesos rotos, como sus fragmentos.
+## Qué se dibuja (sin músculos): huesos ENTEROS cerca de las ventanas (el esqueleto sigue continuo bajo la ropa), vasos,
+## ojos, órganos principales. El cerebro sólo si el cráneo o el cerebro están heridos; las partes blandas sueltas de la
+## cabeza / nervios sólo si fueron dañadas. Un hueso roto se dibuja con sus fragmentos.
 func _refresh_visible() -> void:
 	for n in meshes:
 		(meshes[n] as MeshInstance3D).visible = false
 	for n in frag_meshes:
 		(frag_meshes[n] as MeshInstance3D).visible = false
 	var zw := _zone_world()
+	var skull_hit := false
+	for n in groups:
+		if str(groups[n].label).begins_with("cráneo") and (broken.has(n) or wounds.has(n)):
+			skull_hit = true
 	for n in groups:
 		var g: Dictionary = groups[n]
-		if Settings.xray == 1 and g.system != "hueso" and not wounds.has(n):
+		var lab := str(g.label)
+		var hurt := wounds.has(n) and not (wounds[n] as Array).filter(func(w): return int(w.get("seq", 0)) <= reveal_seq).is_empty()
+		if Settings.xray == 1 and g.system != "hueso" and not hurt:
 			continue
 		if hide_muscles and g.system == "musculo":
 			continue
 		if only_system != "" and g.system != only_system:
 			continue
+		if (lab.begins_with("cerebro") or lab.begins_with("cerebelo")) and not (skull_hit or hurt):
+			continue
+		if g.system == "nervio" and not lab.begins_with("ojo") and not hurt:
+			continue
+		if lab.begins_with("órganos de") and not hurt:
+			continue
+		var reach := zone_r * (1.9 if g.system == "hueso" else 1.25)
 		var c := bind_to_world(n, g.center)
 		var near := false
 		for i in zones.size():
 			var z := Vector3(zw[i].x, zw[i].y, zw[i].z)
-			if c.distance_to(z) < zone_r + float(g.radius) * 0.6:
+			if c.distance_to(z) < reach + float(g.radius) * 0.7:
 				near = true
 		if not near:
 			continue
-		if frags.has(n):
+		var bh: Array = (break_hits.get(n, []) as Array).filter(func(h): return int(h.seq) <= reveal_seq)
+		if frags.has(n) and (not bh.is_empty() or g.mesh == null):
 			var det: Dictionary = broken.get(n, {})
 			for f in frags[n]:
-				if not det.has(f.node):
-					var fm := _frag_mesh(f)
-					fm.visible = true
-					(fm.material_override as ShaderMaterial).set_shader_parameter("crack", 0.06 if broken.has(n) else 0.0)
+				if det.has(f.node) and _gib_done(f.node):
+					continue
+				var fm := _frag_mesh(f)
+				fm.visible = true
+				var st := _frag_state(n, f)
+				var sm := fm.material_override as ShaderMaterial
+				sm.set_shader_parameter("crack", float(st[0]) * 0.09)
+				sm.set_shader_parameter("push", st[1])
+				sm.set_shader_parameter("open", float(st[0]))
 			continue
 		_mesh(n).visible = true
+
+func _gib_done(frag_node: String) -> bool:
+	for g in _pending_gibs:
+		if str(g.f.node) == frag_node:
+			return false
+	return true
 
 func _apply_skin() -> void:
 	if not _skin_saved.is_empty():
@@ -574,7 +678,7 @@ func _process(delta: float) -> void:
 			var p := bind_to_world(l.node, l.pos)
 			var d: Vector3 = (_skin_mat(groups[l.node].bone).basis * l.dir).normalized() if groups.has(l.node) else Vector3.RIGHT
 			(l.mi as MeshInstance3D).global_transform = Transform3D(Basis.looking_at(d, Vector3.UP if absf(d.y) < 0.95 else Vector3.RIGHT).scaled(Vector3.ONE * 2.2), p)
-			(l.mi as MeshInstance3D).visible = true
+			(l.mi as MeshInstance3D).visible = int(l.get("seq", 0)) <= reveal_seq
 
 # ---------------------------------------------------------------- shaders
 
@@ -622,8 +726,7 @@ void vertex() {
 }
 void fragment() {
 	float zd = zone_d(wp);
-	if (zd > zone_r) { discard; }
-	if (is_muscle > 0.5 && zd < zone_r * 0.62) { discard; }   // anillo de músculo, hueso al centro
+	if (is_muscle > 0.5 && (zd > zone_r || zd < zone_r * 0.62)) { discard; }   // (músculos: anillo; hoy no se dibujan)
 	float rim = 0.0;
 	for (int i = 0; i < 6; i++) {
 		if (i >= w_count) break;
@@ -697,7 +800,7 @@ void fragment() {
 	// luz propia de la toma (cálida, desde la cámara): no la tiñen las luces de colores del escenario
 	vec3 L = normalize(VIEW + vec3(0.35, 0.6, 0.0));
 	float nl = clamp(dot(NORMAL, L) + relief * 0.35, 0.0, 1.0);
-	float edge = smoothstep(zone_r, zone_r * 0.88, zd) * 0.6 + 0.4;   // borde oscuro del corte de la ventana
+	float edge = 1.0 - smoothstep(zone_r * 0.9, zone_r * 2.2, zd) * 0.55;   // lo que sigue bajo la ropa se oscurece de a poco
 	// brillo húmedo (carne mojada): reflejo estrecho + borde de Fresnel
 	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 3.0);
 	float spec = pow(clamp(dot(NORMAL, normalize(L + VIEW)), 0.0, 1.0), 48.0) * shine;
@@ -720,10 +823,13 @@ static func _fshader() -> Shader:
 shader_type spatial;
 render_mode cull_disabled;
 uniform vec3 center;
-uniform float crack = 0.0;
+uniform float crack = 0.0;      // cuánto se encoge el fragmento hacia su centro (abre la grieta)
+uniform vec3 push = vec3(0.0);   // cuánto se corre (espacio del hueso)
+uniform float open = 0.0;        // 0 = lejos del impacto (no se nota el corte) · 1 = al lado del impacto
 """ + _ZONE_FUNC + """
 varying vec3 wp;
 varying vec3 lp;
+varying float cutv;
 float hash(vec3 p) { return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453); }
 float vnoise(vec3 p) {
 	vec3 i = floor(p); vec3 f = fract(p); f = f * f * (3.0 - 2.0 * f);
@@ -732,20 +838,26 @@ float vnoise(vec3 p) {
 }
 void vertex() {
 	lp = CUSTOM0.xyz;
+	cutv = step(COLOR.g, 0.5);
 	VERTEX -= (CUSTOM0.xyz - center) * crack;
+	VERTEX += push;
 	wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 void fragment() {
-	if (zone_d(wp) > zone_r) { discard; }
-	float nl = clamp(dot(NORMAL, normalize(VIEW + vec3(0.35, 0.6, 0.0))), 0.0, 1.0);
-	// hueso: marfil con poros y vetas suaves; el corte (médula) rojo oscuro
-	float pores = vnoise(lp * 260.0) * 0.5 + vnoise(lp * 70.0) * 0.5;
-	vec3 bone = mix(vec3(0.80, 0.72, 0.58), vec3(0.95, 0.91, 0.82), pores);
-	vec3 col = mix(bone, COLOR.rgb * vec3(0.9, 0.5, 0.45), step(COLOR.g, 0.5));
-	// sombra suave: grietas y poros más oscuros, borde (Fresnel) claro y reflejo seco
+	vec3 L = normalize(VIEW + vec3(0.35, 0.6, 0.0));
+	float nl = clamp(dot(NORMAL, L), 0.0, 1.0);
 	float cav = 0.72 + 0.28 * vnoise(lp * 520.0);
 	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 2.5);
-	float spec = pow(clamp(dot(NORMAL, normalize(normalize(VIEW + vec3(0.35, 0.6, 0.0)) + VIEW)), 0.0, 1.0), 40.0);
+	float spec = pow(clamp(dot(NORMAL, normalize(L + VIEW)), 0.0, 1.0), 40.0);
+	// hueso: marfil con poros y vetas suaves
+	float pores = vnoise(lp * 260.0) * 0.5 + vnoise(lp * 70.0) * 0.5;
+	vec3 bone = mix(vec3(0.80, 0.72, 0.58), vec3(0.95, 0.91, 0.82), pores);
+	// corte: hueso esponjoso (trabéculas) empapado de sangre; lejos del impacto el corte no se ve (queda adentro)
+	float trab = smoothstep(0.35, 0.65, vnoise(lp * 900.0)) * 0.6 + vnoise(lp * 300.0) * 0.4;
+	vec3 sponge = mix(vec3(0.42, 0.05, 0.04), vec3(0.88, 0.7, 0.55), trab);
+	vec3 col = mix(bone, sponge, cutv * clamp(open * 1.6, 0.0, 1.0));
+	// sangre en los bordes de la fractura
+	col = mix(col, vec3(0.35, 0.02, 0.02), open * 0.35 * step(0.6, vnoise(lp * 160.0)));
 	ALBEDO = col * 0.12;
 	ROUGHNESS = 0.55;
 	SPECULAR = 0.5;

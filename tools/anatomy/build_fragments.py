@@ -21,13 +21,18 @@ for i, n in enumerate(names):
     v = V[voff[i]:voff[i + 1]]
     f = F[foff[i]:foff[i + 1]]
     c = C[foff[i]:foff[i + 1]]
-    m = trimesh.Trimesh(vertices=v, faces=f, process=False)
-    m.merge_vertices()
-    # color por VÉRTICE (no por cara: separaría los vértices y se vería facetado): médula en los vértices del corte
-    vc = np.tile(BONE, (len(m.vertices), 1))
-    cut_v = np.unique(m.faces[c == 1].reshape(-1)) if (c == 1).any() else np.array([], dtype=int)
-    vc[cut_v] = MARROW
-    m.visual = trimesh.visual.ColorVisuals(m, vertex_colors=vc)
+    # superficie del hueso (vértices compartidos: se ve liso) y caras del corte con vértices PROPIOS (color médula sin
+    # teñir la superficie: un hueso roto pero quieto no muestra líneas rojas)
+    parts = []
+    for sel, col in ((c == 0, BONE), (c == 1, MARROW)):
+        if not sel.any():
+            continue
+        mm = trimesh.Trimesh(vertices=v, faces=f[sel], process=False)
+        mm.merge_vertices()
+        mm.remove_unreferenced_vertices()
+        mm.visual = trimesh.visual.ColorVisuals(mm, vertex_colors=np.tile(col, (len(mm.vertices), 1)))
+        parts.append(mm)
+    m = trimesh.util.concatenate(parts) if len(parts) > 1 else parts[0]
     scene.add_geometry(m, node_name=n, geom_name=n)
     meta["fragments"].append({"node": n, "parent": parents[i], "tris": int(len(f)), "center": [round(float(x), 4) for x in v.mean(axis=0)]})
 scene.export(os.path.join(OUT, "anatomy_frag.glb"))

@@ -26,9 +26,12 @@ const ZONES := {
 	"libre": ["", 0.0], "ojo": ["ojo", 0.0], "cabeza": ["cráneo", 0.0], "cuello": ["arterias y venas de cuello", 0.0],
 	"corazón": ["corazón", 0.0], "estómago": ["estómago", 0.0], "testículos": ["testículos", 0.0], "rodilla": ["rótula der", 0.0],
 	"mano": ["huesos de la mano der", 0.0], "muslo": ["arterias y venas de muslo der", 0.0], "hígado": ["hígado", 0.0],
-	"costilla": ["costillas izq", 0.0], "columna": ["vértebras cervicales", 0.0], "mandíbula": ["mandíbula", 0.0],
+	"costilla": ["costillas", 0.0], "columna": ["vértebras cervicales", 0.0], "mandíbula": ["mandíbula", 0.0],
+	"clavícula": ["clavícula", 0.0], "hombro": ["húmero", 0.08], "pene": ["testículos", 0.0],
+	"espalda": ["vértebras torácicas", 0.0], "nuca": ["vértebras cervicales", 0.03],
 }
 const ARENA_W := 44.0
+const BACK_ZONES := ["espalda", "nuca"]       ## se dispara desde atrás: el maniquí se da vuelta
 
 var player: Actor
 var controller: PlayerController
@@ -274,7 +277,10 @@ func shoot_zone(zone: String) -> void:
 	player.global_position = Vector3(dummy.global_position.x - distance, 0.05, 0.0)
 	player.velocity = Vector3.ZERO
 	player.facing = 1.0
-	await _frames(6)
+	# disparos por la espalda: el maniquí mira para el otro lado
+	dummy.facing = 1.0 if zone in BACK_ZONES else -1.0
+	dummy.aim_dir = Vector2(dummy.facing, 0)
+	await _frames(30 if zone in BACK_ZONES else 6)
 	var target := _zone_point(zone)
 	if zone != "libre":
 		# la bala viaja en el plano z = 0: se corre el modelo del maniquí para que la zona elegida quede justo en ese plano
@@ -309,10 +315,17 @@ func _zone_point(zone: String) -> Vector3:
 	var chest := dummy.global_position + Vector3(0, 1.35, 0)
 	if str(spec[0]) == "" or not anat.available:
 		return chest
-	var n := anat.find_group(str(spec[0]), dummy.global_position + Vector3(-0.1 * dummy.facing * -1.0, 1.4, 0.0))
-	if n == "":
+	# entre los grupos con ese nombre (izq / der) el que queda más cerca del plano de tiro z = 0
+	var best := Vector3.INF
+	for n in anat.groups:
+		if not str(anat.groups[n].label).begins_with(str(spec[0])):
+			continue
+		var c := anat.bind_to_world(n, anat.groups[n].center)
+		if best == Vector3.INF or absf(c.z) < absf(best.z):
+			best = c
+	if best == Vector3.INF:
 		return chest
-	return anat.bind_to_world(n, anat.groups[n].center) + Vector3(0, float(spec[1]), 0)
+	return best + Vector3(0, float(spec[1]), 0)
 
 # ------------------------------------------------------------------------------------------------ interfaz
 

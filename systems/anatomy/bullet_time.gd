@@ -28,7 +28,17 @@ var _focus := Vector3.ZERO
 var _main := ""                  ## grupo anatómico de la herida que mató (la cámara la sigue mientras cae el cuerpo)
 var _main_pos := Vector3.ZERO
 var _kind := ""
-var focus_label := ""            ## (práctica) comienzo del nombre del grupo que la cámara debe enfocar
+var focus_label := ""
+var debug_u := -1.0               ## (capturas) fija el avance de la repetición 0..1
+const REPLAY_SECONDS := 2.6       ## (tiempo real) la bala atravesando el cuerpo
+var _replay: Array = []
+var _rp_t0 := 0.0
+var _rp_anat: AnatomyBody
+var _rp_bullet: MeshInstance3D
+var _rp_seen := -1
+var _rp_spin := 0.0
+var _rp_tumble := false
+var _rp_flat := false            ## (práctica) comienzo del nombre del grupo que la cámara debe enfocar
 var _dist0 := 2.0
 var _dist1 := 0.8
 var _ang1 := 0.25
@@ -164,8 +174,22 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 	anat.show_killcam(main, radius)
 	if Blood.instance:
 		Blood.instance.set_closeup(true)
-	TimeFx.slowmo(0.06, KILL_SECONDS + 0.4, "kill", 0.02)
-	_t0 = _now()
+	# repetición del proyectil por dentro (sólo balas): primero se ve la bala entrar, romper y desviarse
+	_replay = (info.get("bullet_path", []) as Array).duplicate()
+	var rp := 0.0
+	if t == "bullet" and _replay.size() >= 2:
+		rp = REPLAY_SECONDS
+		_rp_anat = anat
+		_rp_seen = -1
+		_rp_spin = 0.0
+		_rp_tumble = false
+		_rp_flat = false
+		anat.set_reveal(int(info.get("seq0", 1)) - 1)
+	else:
+		_replay = []
+	TimeFx.slowmo(0.06, KILL_SECONDS + rp + 0.4, "kill", 0.02)
+	_rp_t0 = _now()
+	_t0 = _now() + rp
 	_until = _t0 + KILL_SECONDS
 	get_tree().call_group("hud", "set_cinematic", true)
 	Sfx.play_ui("heartbeat", -2.0)
@@ -185,6 +209,9 @@ func _process(_d: float) -> void:
 			if is_instance_valid(v2) and (v2.is_dead() or (Settings.bullet_time >= 2 and not (v2.last_hit_info.get("anatomy_nodes", []) as Array).is_empty())):
 				_killcam(v2, v2.last_hit_info)
 		return
+	if not _replay.is_empty():
+		if _replay_step():
+			return
 	# toma de muerte: la cámara se acerca a la herida y gira un poco
 	if is_instance_valid(_victim):
 		var anat := AnatomyBody.for_actor(_victim)
@@ -209,6 +236,11 @@ func skip() -> void:
 
 func _end() -> void:
 	closeup_active = false
+	_replay = []
+	if _rp_bullet:
+		_rp_bullet.visible = false
+	if _rp_anat and is_instance_valid(_rp_anat):
+		_rp_anat.set_reveal(1 << 30)
 	_set_vignette(false)
 	if Blood.instance:
 		Blood.instance.set_closeup(false)
@@ -241,3 +273,88 @@ func _set_vignette(on: bool) -> void:
 		_vig.add_child(r)
 		add_child(_vig)
 	_vig.visible = on
+
+## Un paso de la repetición: la bala recorre su camino real por dentro del cuerpo (en el espacio de cada estructura, así
+## sigue al cuerpo que cae). Cada estructura que alcanza aparece dañada en ese momento (el hueso se abre, salen las
+## esquirlas y gotas finas); en hueso duro se aplasta y si se desvía empieza a dar vueltas. Devuelve false al terminar.
+func _replay_step() -> bool:
+	var anat := _rp_anat
+	if anat == null or not is_instance_valid(anat):
+		_replay = []
+		return false
+	var u := clampf((_now() - _rp_t0) / REPLAY_SECONDS, 0.0, 1.0) if debug_u < 0.0 else debug_u
+	if u >= 1.0:
+		_replay = []
+		if _rp_bullet:
+			_rp_bullet.visible = false
+		anat.set_reveal(1 << 30)
+		return false
+	var pts := PackedVector3Array()
+	for e in _replay:
+		pts.append(anat.bind_to_world(str(e.node), e.p))
+	var lens := [0.0]
+	for i in range(1, pts.size()):
+		lens.append(float(lens[-1]) + pts[i - 1].distance_to(pts[i]))
+	var total := maxf(float(lens[-1]), 0.001)
+	# más lenta adentro del cuerpo: la primera y la última parte (afuera) pasan rápido
+	var target := total * (u * u * (3.0 - 2.0 * u) * 0.35 + u * 0.65)
+	var i := 1
+	while i < pts.size() - 1 and float(lens[i]) < target:
+		i += 1
+	var a := pts[i - 1]
+	var b := pts[i]
+	var seg := maxf(float(lens[i]) - float(lens[i - 1]), 0.0001)
+	var pos := a.lerp(b, clampf((target - float(lens[i - 1])) / seg, 0.0, 1.0))
+	var fwd := (b - a).normalized() if a.distance_to(b) > 0.0001 else Vector3.RIGHT
+	# estructuras ya alcanzadas: se revelan sus heridas, sangre fina en vasos y órganos, aplastamiento y vuelco
+	for k in i:
+		if k <= _rp_seen:
+			continue
+		_rp_seen = k
+		var e: Dictionary = _replay[k]
+		if int(e.get("seq", -1)) >= 0:
+			anat.set_reveal(maxi(anat.reveal_seq, int(e.seq)))
+			if Blood.instance and str(e.get("sys", "")) in ["vaso", "organo"]:
+				Blood.instance.drops(pts[k], fwd, 0.6, 1.2, 55.0)
+			if str(e.get("sys", "")) == "hueso":
+				_rp_flat = true
+		if e.get("deflect", false):
+			_rp_tumble = true
+	if _rp_bullet == null:
+		_rp_bullet = MeshInstance3D.new()
+		_rp_bullet.top_level = true
+		if ResourceLoader.exists("res://assets/ammo/projectile.mesh"):
+			_rp_bullet.mesh = load("res://assets/ammo/projectile.mesh")
+		elif Gibs.instance:
+			_rp_bullet.mesh = Gibs.instance.bullet_mesh
+		_rp_bullet.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		# la bala se ve SIEMPRE, también dentro del hueso (como en los rayos X de Sniper Elite): cobre brillante encima de todo
+		var bm := StandardMaterial3D.new()
+		bm.albedo_color = Color(0.85, 0.55, 0.3)
+		bm.metallic = 0.9
+		bm.roughness = 0.25
+		bm.emission_enabled = true
+		bm.emission = Color(0.55, 0.32, 0.15)
+		bm.no_depth_test = true
+		bm.render_priority = 10
+		_rp_bullet.material_override = bm
+		add_child(_rp_bullet)
+	_rp_bullet.visible = true
+	var basis := Basis.looking_at(fwd, Vector3.UP if absf(fwd.y) < 0.95 else Vector3.RIGHT)
+	_rp_spin += 0.35
+	basis = basis * Basis(Vector3.BACK, _rp_spin)                       # gira sobre su eje (estrías del cañón)
+	if _rp_tumble:
+		basis = basis * Basis(Vector3.RIGHT, _rp_spin * 0.55)           # se desvió: da vueltas
+	var sc := Vector3(1.0, 1.0, 1.0) * 1.6
+	if _rp_flat:
+		sc = Vector3(1.7, 1.7, 0.6) * 1.6                                 # se aplastó contra el hueso duro
+	_rp_bullet.global_transform = Transform3D(basis.scaled(sc), pos)
+	# cámara pegada a la bala, del lado de la cámara del juego, un poco por delante
+	var side := Vector3(0, 0, 1)
+	var cam_p := pos + side * 0.34 + Vector3.UP * 0.06 - fwd * 0.10
+	camera.override_target(cam_p, pos + fwd * 0.04, 34.0)
+	camera.global_position = cam_p                                       # sin retraso: la bala va rápido
+	camera._look = pos + fwd * 0.04
+	camera.fov = 34.0
+	camera.look_at(camera._look, Vector3.UP)
+	return true

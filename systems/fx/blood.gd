@@ -64,8 +64,8 @@ func _exit_tree() -> void:
 ## Durante la toma de rayos X las gotas se achican (si no tapan la vista).
 func set_closeup(on: bool) -> void:
 	for p in _em:
-		p.scale_amount_min = 0.15 if on else 0.5
-		p.scale_amount_max = 0.5 if on else 1.8
+		p.scale_amount_min = 0.05 if on else 0.5
+		p.scale_amount_max = 0.2 if on else 1.8
 
 func _make_emitter() -> CPUParticles3D:
 	var p := CPUParticles3D.new()

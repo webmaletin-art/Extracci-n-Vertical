@@ -979,6 +979,9 @@ func take_damage(info: Dictionary) -> void:
 	info["injuries"] = res.get("texts", [])
 	info["anatomy_nodes"] = res.get("nodes", [])
 	info["anatomy_main"] = res.get("main", "")
+	info["bullet_path"] = res.get("path", [])
+	info["seq0"] = res.get("seq0", 0)
+	info["seq1"] = res.get("seq1", 0)
 	if t in ["bullet", "fragment", "knife"]:
 		amount = amount * 0.5 + float(res.get("hp", 0.0))
 	else:
