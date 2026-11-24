@@ -1,0 +1,90 @@
+{
+ "_doc": "Personajes (de Operación Nexus). Todos con esqueleto Mixamo; CharacterModel adapta las animaciones a cada uno. uso: jugador | enemigo.",
+ "default": "alfa",
+ "characters": [
+  {
+   "id": "alfa",
+   "name": "ALFA",
+   "role": "Asalto",
+   "path": "res://assets/characters/alfa/alfa.glb",
+   "tris": 19946,
+   "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
+   "material": {
+    "roughness": 0.85,
+    "metallic": 0.0
+   },
+   "desc": "Fusilero de asalto: casco balístico, chaleco con placas, uniforme azul y gris.",
+   "uso": "jugador"
+  },
+  {
+   "id": "vigia",
+   "name": "Vigía",
+   "role": "Radar",
+   "path": "res://assets/characters/vigia/vigia.glb",
+   "tris": 19242,
+   "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
+   "material": {
+    "roughness": 0.85,
+    "metallic": 0.0
+   },
+   "desc": "Especialista en reconocimiento: casco con antena, sensor de radar en el hombro. Habilidad (fuera de DM/TDM): pulso de radar.",
+   "uso": "enemigo"
+  },
+  {
+   "id": "doc",
+   "name": "Doc",
+   "role": "Médico",
+   "path": "res://assets/characters/doc/doc.glb",
+   "tris": 19890,
+   "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
+   "material": {
+    "roughness": 0.85,
+    "metallic": 0.0
+   },
+   "desc": "Médico de combate: brazaletes con cruz, bolsillos médicos. Habilidad (fuera de DM/TDM): curación.",
+   "uso": "enemigo"
+  },
+  {
+   "id": "fantasma",
+   "name": "Fantasma",
+   "role": "Francotirador",
+   "path": "res://assets/characters/fantasma/fantasma.glb",
+   "tris": 19780,
+   "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
+   "material": {
+    "roughness": 0.85,
+    "metallic": 0.0
+   },
+   "desc": "Tirador de precisión: camuflaje de bosque, sombrero y pañuelo. Habilidad (fuera de DM/TDM): pulso firme.",
+   "uso": "enemigo"
+  },
+  {
+   "id": "mortero",
+   "name": "Mortero",
+   "role": "Artillero",
+   "path": "res://assets/characters/mortero/mortero.glb",
+   "tris": 18968,
+   "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
+   "material": {
+    "roughness": 0.85,
+    "metallic": 0.0
+   },
+   "desc": "Artillero: uniforme desierto, protección auditiva. Habilidad (fuera de DM/TDM): mortero.",
+   "uso": "enemigo"
+  },
+  {
+   "id": "zapador",
+   "name": "Zapador",
+   "role": "Ingeniero (minas)",
+   "path": "res://assets/characters/zapador/zapador.glb",
+   "tris": 19466,
+   "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
+   "material": {
+    "roughness": 0.85,
+    "metallic": 0.0
+   },
+   "desc": "Ingeniero de combate: camuflaje urbano, linterna en el casco, franjas reflectivas. Habilidad (fuera de DM/TDM): mina.",
+   "uso": "enemigo"
+  }
+ ]
+}

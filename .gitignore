@@ -1,0 +1,7 @@
+.godot/
+*.tmp
+tools/anim_builder/_work/
+/android/
+export_credentials.cfg
+*.keystore
+build/

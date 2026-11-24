@@ -1,0 +1,9 @@
+{
+ "_doc": "Explosivos. radius = radio de daño (m), damage = daño en el centro (cae con la distancia), impulse = empuje a objetos, fuse = segundos de espoleta (desde que se suelta), stun = segundos de aturdimiento, smoke = segundos de humo, fire = segundos de fuego, shake = vibración de cámara, noise = radio de ruido para la IA.",
+ "frag":       {"name": "Granada de fragmentación", "radius": 5.5, "damage": 140, "impulse": 9.0, "fuse": 2.6, "shake": 0.8, "noise": 70, "fragments": 18, "bounce": 0.35},
+ "stun":       {"name": "Granada aturdidora", "radius": 6.0, "damage": 6, "impulse": 2.0, "fuse": 1.8, "stun": 4.0, "shake": 0.5, "noise": 60, "fragments": 0, "bounce": 0.4},
+ "smoke":      {"name": "Granada de humo", "radius": 0.0, "damage": 0, "impulse": 0.0, "fuse": 1.6, "smoke": 14.0, "shake": 0.0, "noise": 12, "fragments": 0, "bounce": 0.3},
+ "incendiary": {"name": "Granada incendiaria", "radius": 3.0, "damage": 30, "impulse": 1.5, "fuse": 2.0, "fire": 8.0, "fire_dps": 22, "shake": 0.3, "noise": 40, "fragments": 0, "bounce": 0.25},
+ "c4":         {"name": "Carga explosiva C4", "radius": 7.0, "damage": 220, "impulse": 14.0, "fuse": 4.0, "shake": 1.0, "noise": 90, "fragments": 26, "bounce": 0.0},
+ "barrel":     {"name": "Barril explosivo", "radius": 4.5, "damage": 120, "impulse": 10.0, "fuse": 0.0, "fire": 4.0, "fire_dps": 18, "shake": 0.7, "noise": 70, "fragments": 10, "bounce": 0.0}
+}

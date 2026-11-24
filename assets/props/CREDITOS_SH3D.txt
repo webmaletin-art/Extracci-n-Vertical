@@ -1,0 +1,47 @@
+BIBLIOTECA DE MODELOS 3D — Extraction Tactical
+===============================================
+
+724 modelos convertidos a glTF 2.0 binario (.glb), simplificados, escalados a
+metros reales y con el origen centrado en la base.
+
+Los modelos provienen de las bibliotecas libres publicadas para Sweet Home 3D
+(sweethome3d.com). Se conservan sus licencias originales. Ninguna impide el uso
+comercial; la mayoría piden acreditar a los autores — de ahí este archivo.
+
+  Contributions      (C) 2024 Space Mushrooms y colaboradores  — Free Art License 1.3
+                     http://artlibre.org/licence/lal/en/
+  LucaPresidente     (C) LucaPresidente                        — Free Art License 1.3
+  Trees              generados con Arbaro                      — Free Art License 1.3
+  BlendSwap CC-0     autores de Blend Swap                     — CC0 1.0 (dominio público, sin obligaciones)
+                     http://creativecommons.org/publicdomain/zero/1.0/
+  BlendSwap CC-BY    autores de Blend Swap                     — CC BY 3.0
+                     http://creativecommons.org/licenses/by/3.0/
+  KatorLegaz         (C) Andrew Kator & Jennifer Legaz         — CC BY 3.0 US
+                     http://creativecommons.org/licenses/by/3.0/us/
+  Reallusion         (C) Reallusion — http://www.reallusion.com — CC BY 3.0 US
+  Scopia             (C) 2024 Space Mushrooms y Scopia Visual   — CC BY 3.0
+                     Interfaces Systems — http://creativecommons.org/licenses/by/3.0/
+  Starship Equipment (C) Ken Mayes — biblioteca de utilería sci-fi para
+                     Sweet Home 3D. Sin archivo de licencia explícito incluido
+                     en el paquete original: se cita al autor por las dudas,
+                     pero conviene confirmar los términos si esto se va a usar
+                     en un contexto comercial más allá de este proyecto.
+
+El campo "lib" de cada entrada en models.json dice de qué biblioteca salió cada
+modelo, para poder acreditar con precisión.
+
+NUEVO EN ESTA VERSIÓN (129 modelos agregados a los 595 originales):
+  - 78 modelos "Starship Equipment" (prefijo id "sf_"): utilería sci-fi —
+    fáser tipo I y II, camas/mesas de enfermería, consolas, paneles,
+    transportador, escáneres, puertas de nave, etc. Pensados para una
+    ambientación de lore extraterrestre/nave espacial.
+  - 51 modelos curados de la biblioteca "Scopia" (prefijo id "sc_"): variedad
+    de vehículos (auto, pickup, van, colectivo, moto, bici, scooter),
+    mobiliario de plaza/parque (bancos, juegos, canasta de básquet, arco de
+    fútbol, hamaca), infraestructura urbana (semáforo, poste, cebra peatonal,
+    garita), árboles/arbustos de especies distintas a las que ya había, y
+    utilería práctica (cajas de cartón, caja fuerte, calefón, escalera).
+  - Se descartaron a propósito ítems redundantes con lo que ya había (la
+    biblioteca Scopia trae 500 ítems en total; solo se tomó lo que sumaba
+    variedad real) y los enchufes/interruptores genéricos (más de 30 ítems
+    casi idénticos, de escaso valor para el juego).

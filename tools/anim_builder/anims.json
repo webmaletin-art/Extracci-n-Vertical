@@ -1,0 +1,395 @@
+{
+ "_doc": "Animaciones del juego. src relativo a mixamo-respaldo. inplace quita el avance XZ de la cadera, inplace_y también el vertical; el avance quitado queda en el metadato 'drift' (metros) para que el código mueva la cápsula igual.",
+ "player": {
+  "idle": {
+   "src": "packs/Pro_Rifle_Pack/idle.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "idle_aim": {
+   "src": "packs/Pro_Rifle_Pack/idle_aiming.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "walk_f": {
+   "src": "packs/Pro_Rifle_Pack/walk_forward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "walk_b": {
+   "src": "packs/Pro_Rifle_Pack/walk_backward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "run_f": {
+   "src": "packs/Pro_Rifle_Pack/run_forward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "run_b": {
+   "src": "packs/Pro_Rifle_Pack/run_backward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "sprint_f": {
+   "src": "packs/Pro_Rifle_Pack/sprint_forward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "sprint_b": {
+   "src": "packs/Pro_Rifle_Pack/sprint_backward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "crouch_idle": {
+   "src": "packs/Pro_Rifle_Pack/idle_crouching.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "crouch_aim": {
+   "src": "packs/Pro_Rifle_Pack/idle_crouching_aiming.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "cwalk_f": {
+   "src": "packs/Pro_Rifle_Pack/walk_crouching_forward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "cwalk_b": {
+   "src": "packs/Pro_Rifle_Pack/walk_crouching_backward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "jump_up": {
+   "src": "packs/Pro_Rifle_Pack/jump_up.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "jump_loop": {
+   "src": "packs/Pro_Rifle_Pack/jump_loop.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "jump_down": {
+   "src": "packs/Pro_Rifle_Pack/jump_down.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "death_front": {
+   "src": "packs/Pro_Rifle_Pack/death_from_the_front.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "death_back": {
+   "src": "packs/Pro_Rifle_Pack/death_from_the_back.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "death_head": {
+   "src": "packs/Pro_Rifle_Pack/death_from_front_headshot.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "pistol_idle": {
+   "src": "packs/Pistol_Handgun_Locomotion_Pack/pistol_idle.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "pistol_walk_f": {
+   "src": "packs/Pistol_Handgun_Locomotion_Pack/pistol_walk_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "pistol_walk_b": {
+   "src": "packs/Pistol_Handgun_Locomotion_Pack/pistol_walk_backward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "pistol_run_f": {
+   "src": "packs/Pistol_Handgun_Locomotion_Pack/pistol_run_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "pistol_run_b": {
+   "src": "packs/Pistol_Handgun_Locomotion_Pack/pistol_run_backward_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "knife_idle": {
+   "src": "animaciones/combate_pelea/Knife_Idle.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "stab": {
+   "src": "animaciones/combate_pelea/Stabbing.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "stab_reverse": {
+   "src": "animaciones/combate_pelea/Stabbing_3.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "punch_jab": {
+   "src": "animaciones/combate_pelea/Punching.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "punch_cross": {
+   "src": "animaciones/combate_pelea/Punching_2.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "punch_hook": {
+   "src": "animaciones/combate_pelea/Punching_3.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "kick_front": {
+   "src": "animaciones/combate_pelea/Kicking_2.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "kick_side": {
+   "src": "animaciones/combate_pelea/Mma_Kick.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "hit_small": {
+   "src": "packs/Basic_Shooter_Pack/hit_reaction.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "hit_head": {
+   "src": "animaciones/combate_pelea/Head_Hit_2.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "hit_head_big": {
+   "src": "animaciones/combate_pelea/Head_Hit_4.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "hit_stomach": {
+   "src": "animaciones/combate_pelea/Stomach_Hit.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "hit_stomach_big": {
+   "src": "animaciones/combate_pelea/Big_Stomach_Hit.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "hit_uppercut": {
+   "src": "animaciones/combate_pelea/Receive_Uppercut_To_The_Face.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "hit_gut_shot": {
+   "src": "packs/Pro_Melee_Axe_Pack/standing_react_large_gut.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "knocked_down": {
+   "src": "animaciones/caidas_muertes/Knocked_Down.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "getting_up": {
+   "src": "animaciones/caidas_muertes/Getting_Up_3.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "death_fall_back": {
+   "src": "animaciones/caidas_muertes/Falling_Back_Death.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "death_fall_fwd": {
+   "src": "animaciones/caidas_muertes/Falling_Forward_Death.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "death_chest": {
+   "src": "animaciones/caidas_muertes/Dying_Backwards.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "falling": {
+   "src": "packs/Action_Adventure_Pack/falling_idle.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "hard_landing": {
+   "src": "packs/Action_Adventure_Pack/hard_landing.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "land_roll": {
+   "src": "packs/Action_Adventure_Pack/falling_to_roll.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "fall_flat": {
+   "src": "animaciones/caidas_muertes/Falling_Flat_Impact.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "ladder_climb": {
+   "src": "animaciones/saltos_parkour/Climbing_Ladder.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "ladder_start": {
+   "src": "animaciones/saltos_parkour/Start_Climbing_Ladder.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "ladder_top": {
+   "src": "animaciones/saltos_parkour/Climbing_To_Top.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "hang_catch": {
+   "src": "animaciones/saltos_parkour/Braced_Hang.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "hang_idle": {
+   "src": "animaciones/saltos_parkour/Hanging_Idle.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "hang_climb": {
+   "src": "animaciones/saltos_parkour/Braced_Hang_To_Crouch.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "hang_drop": {
+   "src": "animaciones/saltos_parkour/Braced_Hang_Drop_2.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "climb_box": {
+   "src": "animaciones/saltos_parkour/Climbing_6.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "slope_climb": {
+   "src": "animaciones/saltos_parkour/Climbing_4.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": true
+  },
+  "kneel_work": {
+   "src": "animaciones/sentado_manejar/Kneeling_Inspecting.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "rummage": {
+   "src": "animaciones/otras/Rummaging.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "button": {
+   "src": "animaciones/interaccion/Button_Pushing.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "pickup": {
+   "src": "animaciones/trabajo_acciones/Picking_Up_Object.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "throw_grenade": {
+   "src": "packs/Basic_Shooter_Pack/toss_grenade.fbx",
+   "loop": false,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "injured_idle": {
+   "src": "packs/Male_Injured_Pack/injured_idle.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "injured_walk_f": {
+   "src": "packs/Male_Injured_Pack/injured_walk_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "injured_walk_b": {
+   "src": "packs/Male_Injured_Pack/injured_walk_backwards_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  },
+  "injured_run_f": {
+   "src": "packs/Male_Injured_Pack/injured_run_inplace.fbx",
+   "loop": true,
+   "inplace": true,
+   "inplace_y": false
+  }
+ }
+}
