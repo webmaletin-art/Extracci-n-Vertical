@@ -24,6 +24,10 @@ names, systems = [str(x) for x in d["names"]], [str(x) for x in d["systems"]]
 V, F, voff, foff = d["verts"], d["faces"], d["voff"], d["foff"]
 
 BUDGET = {"hueso": 72000, "musculo": 40000, "organo": 16000, "vaso": 12000, "nervio": 7000, "oreja": 1600}
+# prueba de calidad: ANAT_BUDGET="hueso=702000,organo=120000" sube el presupuesto de triángulos por sistema
+for kv in os.environ.get("ANAT_BUDGET", "").split(","):
+    if "=" in kv:
+        BUDGET[kv.split("=")[0]] = int(kv.split("=")[1])
 MIN_TRIS = {"hueso": 24, "musculo": 24, "organo": 16, "vaso": 12, "nervio": 12, "oreja": 200}
 
 
