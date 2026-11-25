@@ -13,8 +13,9 @@ signal injury_report(victim: Actor, lines: Array)
 
 const KILL_SECONDS := 2.6
 ## Tomas de cerca: comienzo del nombre del grupo → [radio de la ventana de rayos X (m), distancia final de la cámara (m), ángulo final (rad, 0 = de costado)]
-const CLOSEUPS := {"mandíbula": [0.16, 0.5, 1.2], "vértebras": [0.14, 0.55, 0.9], "costillas": [0.17, 0.7, 0.8], "cráneo": [0.17, 0.55, 1.3], "cerebro": [0.17, 0.55, 1.3], "ojo": [0.075, 0.38, 0.95], "testículos": [0.11, 0.62, 0.55], "estómago": [0.15, 0.8, 0.45], "oreja": [0.08, 0.4, 0.8],
-	"corazón": [0.16, 0.8, 0.4], "hígado": [0.15, 0.8, 0.45]}
+const CLOSEUPS := {"cráneo": [0.17, 1.5, 0.9], "cerebro": [0.17, 1.5, 0.9], "mandíbula": [0.16, 1.5, 0.9],
+	"vértebras": [0.15, 1.6, 0.6], "costillas": [0.18, 1.7, 0.5], "ojo": [0.12, 1.4, 0.9], "testículos": [0.13, 1.5, 0.5],
+	"estómago": [0.16, 1.7, 0.4], "oreja": [0.12, 1.4, 0.7], "corazón": [0.17, 1.7, 0.4], "hígado": [0.16, 1.7, 0.4]}
 
 var camera: SideCamera
 var player: Actor
@@ -30,6 +31,10 @@ var _main_pos := Vector3.ZERO
 var _kind := ""
 var focus_label := ""            ## (práctica) comienzo del nombre del grupo que la cámara debe enfocar
 var flash_wounds := false
+## En la partida: sin cámara que sigue a la bala ni repetición de la bala por dentro (sólo sangre en los impactos y
+## rayos X + cámara lenta al morir). El modo práctica las activa para probar.
+var follow_bullet := false
+var bullet_replay := false
 var debug_u := -1.0               ## (capturas) fija el avance de la repetición 0..1
 const REPLAY_SECONDS := 4.0       ## (tiempo real) la bala atravesando el cuerpo, muy lenta
 var _replay: Array = []
@@ -66,7 +71,7 @@ func _now() -> float:
 
 ## Disparo del jugador: si la bala va a matar, la cámara la sigue en cámara lenta.
 func _on_shot(idx: int, w: Firearm) -> void:
-	if Settings.bullet_time == 0 or phase != "" or idx < 0 or Ballistics.instance == null:
+	if not follow_bullet or Settings.bullet_time == 0 or phase != "" or idx < 0 or Ballistics.instance == null:
 		return
 	var b := Ballistics.instance
 	var pred := b.predict(b.position_of(idx), b.velocity_of(idx), float(w.stats.drag), player.hitbox_rids(), 1.2)
@@ -165,8 +170,8 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 	var d: Vector3 = info.get("dir", Vector3.RIGHT)
 	_side = -signf(d.x) if absf(d.x) > 0.1 else 1.0
 	# estructuras chicas y delicadas: ventana más chica y cámara más cerca, de costado hacia el frente, para verlas en detalle
-	_dist0 = 2.0
-	_dist1 = 0.8
+	_dist0 = 2.4
+	_dist1 = 1.6
 	_ang1 = 0.25
 	var radius := 0.0
 	if _main != "":
@@ -176,7 +181,7 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 				var c: Array = CLOSEUPS[k]
 				radius = c[0]
 				_dist1 = c[1]
-				_dist0 = c[1] * 2.6
+				_dist0 = c[1] + 0.8
 				_ang1 = c[2]
 	anat.show_killcam(main, radius)
 	if Blood.instance:
@@ -184,7 +189,7 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 	# repetición del proyectil por dentro (sólo balas): primero se ve la bala entrar, romper y desviarse
 	_replay = (info.get("bullet_path", []) as Array).duplicate()
 	var rp := 0.0
-	if t == "bullet" and _replay.size() >= 2:
+	if bullet_replay and t == "bullet" and _replay.size() >= 2:
 		rp = REPLAY_SECONDS
 		_rp_anat = anat
 		_rp_seen = -1
@@ -376,17 +381,16 @@ func _replay_step() -> bool:
 		basis = basis * Basis(Vector3.RIGHT, _rp_spin * 0.55)           # se desvió: da vueltas
 	# bala de Blender (tools/ammo/make_bullets.py), a 1,5× su tamaño real para que se lea en pantalla; en hueso duro se
 	# cambia por la versión aplastada en hongo
-	var sc := Vector3.ONE * 1.5
+	var sc := Vector3.ONE * 3.0
 	var mc := _rp_bullet.mesh.get_aabb().get_center() if _rp_bullet.mesh else Vector3.ZERO
 	_rp_bullet.global_transform = Transform3D(basis.scaled(sc), pos) * Transform3D(Basis.IDENTITY, -mc)
 	# cámara pegada a la bala, del lado de la cámara del juego, un poco por delante
 	var side := Vector3(0, 0, 1)
-	var cam_p := pos + side * 0.34 + Vector3.UP * 0.06 - fwd * 0.10
-	camera.override_target(cam_p, pos + fwd * 0.04, 34.0)
-	camera.global_position = cam_p                                       # sin retraso: la bala va rápido
-	camera._look = pos + fwd * 0.04
-	camera.fov = 34.0
-	camera.look_at(camera._look, Vector3.UP)
+	# cámara de costado, a distancia (sin zoom): mira el cuerpo y sigue a la bala de forma suave
+	var center := _focus if _focus != Vector3.ZERO else pos
+	var look := center.lerp(pos, 0.5)
+	var cam_p := look + side * 1.7 + Vector3.UP * 0.15 - fwd * 0.25
+	camera.override_target(cam_p, look, 38.0)
 	return true
 
 static var _bullet_meshes := {}

@@ -110,6 +110,8 @@ func _ready() -> void:
 	bullet_time = BulletTime.new()
 	bullet_time.add_to_group("bullet_time")
 	add_child(bullet_time)
+	bullet_time.follow_bullet = true          # práctica: se ve la bala en vuelo y por dentro del cuerpo
+	bullet_time.bullet_replay = true
 	bullet_time.setup(camera, player)
 	bullet_time.injury_report.connect(func(v, lines): hud.show_injuries(v, lines))
 	_equip()
