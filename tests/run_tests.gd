@@ -107,7 +107,7 @@ func _game_tests(filt: String) -> void:
 	var p := g.player
 	p.max_health = 1000.0
 	p.health = 1000.0
-	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "anatomia", "captador"]:
+	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "cuerpo_muerto", "anatomia", "captador"]:
 		if filt != "" and not t.contains(filt):
 			continue
 		p.inp = ActorInput.new()
@@ -254,6 +254,39 @@ func g_balistica(p: Actor) -> String:
 		return "el disparo no hizo daño (4 intentos)"
 	if not e.last_hit_info.has("injuries"):
 		return "sin lesiones calculadas"
+	return ""
+
+## El cuerpo muerto sigue recibiendo disparos (heridas y huesos rotos) mientras se muestra el rayos X.
+func g_cuerpo_muerto(p: Actor) -> String:
+	var e: Actor = null
+	for c in g.tower.enemies:
+		if is_instance_valid(c) and not (c as Actor).is_dead():
+			e = c
+			break
+	if e == null:
+		return "no quedan enemigos vivos para la prueba"
+	await _place(p, Vector3(50, 0.05, 0))
+	e.global_position = Vector3(56, 0.05, 0)
+	e.velocity = Vector3.ZERO
+	await _wait_phys(6)
+	e.take_damage({"damage": 9999.0, "type": "bullet", "zone": "head", "bone": "mixamorig_Head", "point": e.global_position + Vector3(0, 1.6, 0),
+		"dir": Vector3(1, 0, 0), "shooter": p})
+	if not e.is_dead():
+		return "el enemigo no murió"
+	await _wait_phys(30)
+	var hits := [0]
+	e.damaged.connect(func(_i): hits[0] += 1)
+	for k in 5:
+		# se apunta a una zona de impacto real del cuerpo (tendido en el piso o no)
+		var hb: Area3D = e.hitboxes[mini(2, e.hitboxes.size() - 1)]
+		var tgt := hb.global_position
+		var from := Vector3(50, tgt.y, 0)
+		Ballistics.instance.fire(from, (tgt - from).normalized(), 400.0, 20.0, p, [],
+			{"penetration": 1.0, "drag": 0.0, "ricochet": 0.0, "kind": "bullet"})
+		await _wait_phys(6)
+	await _wait_phys(20)
+	if hits[0] < 3:
+		return "el cuerpo muerto dejó de recibir impactos (%d de 5)" % hits[0]
 	return ""
 
 func g_destruccion(_p: Actor) -> String:

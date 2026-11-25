@@ -45,6 +45,7 @@ func _ready() -> void:
 	for p in [["tech_line_w", line_w], ["tech_line_k", line_k], ["tech_shade", shade], ["tech_detail", detail],
 			["tech_contrast", contrast], ["tech_red", red], ["tech_xray", 0.0], ["tech_on", 0.0]]:
 		RenderingServer.global_shader_parameter_add(str(p[0]), RenderingServer.GLOBAL_VAR_TYPE_FLOAT, float(p[1]))
+	get_tree().node_added.connect(func(n: Node): if n is MeshInstance3D and mode >= 2: _dirty = true)
 	set_mode.call_deferred(4)        # estilo por defecto: D · Plano dibujado (el modo práctica permite volver al original)
 
 ## Cambia el modo (y aplica en el acto sobre lo que está en pantalla).
@@ -72,9 +73,13 @@ func set_xray(s: int) -> void:
 	xray_style = s
 	RenderingServer.global_shader_parameter_set("tech_xray", float(s))
 
+var _dirty := false         ## apareció una malla nueva: se convierte en seguida (sin cuadros con los colores originales)
 func _process(delta: float) -> void:
 	if mode == 0:
 		return
+	if _dirty:
+		_dirty = false
+		_scan_t = minf(_scan_t, 0.03)
 	_scan_t -= delta
 	if _scan_t <= 0.0:
 		_scan_t = 0.5
@@ -104,6 +109,8 @@ func _convert_tree(root: Node) -> void:
 		var mi := n as MeshInstance3D
 		if mi.mesh == null or _orig.has(mi.get_instance_id()) or mi.has_meta("tech_skip_checked"):
 			continue
+		if mi.has_meta("actor_mesh") and mi.material_override is ShaderMaterial:
+			continue                      # ventana de rayos X encendida: se convierte cuando termine (no pisar su material)
 		if _skip(mi):
 			mi.set_meta("tech_skip_checked", true)
 			continue

@@ -106,3 +106,11 @@
 * La calidad gráfica (BAJA / MEDIA / ALTA) sólo cambia anatomía y daño: rayos X y sangre / fragmentos. Resolución 720p,
   sombras, luces, MSAA, decorado, humo y explosiones quedan fijos (`Settings.LOCKED`); se quitaron sus opciones del menú.
 * Medición en el Z2356 (1600×720): original 41,4 FPS · A 24,2 · B 51,1 · C 37,1 · D 50,9.
+
+## 0.9.2 — el cuerpo muerto sigue recibiendo impactos
+
+* Al morir, las zonas de impacto del cuerpo siguen activas: los disparos que siguen (rayos X incluido) hieren, rompen
+  huesos, salpican sangre y sacuden el cuerpo. Prueba nueva `cuerpo_muerto`.
+* Cámara de muerte: si muere otro enemigo en plena toma, la toma pasa a ese cuerpo (antes no se encendía el rayos X);
+  el radio de la ventana se conserva con los impactos siguientes.
+* Estilo plano: las mallas nuevas (enemigos que aparecen) se convierten en el acto, sin cuadros con los colores originales.

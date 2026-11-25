@@ -996,6 +996,9 @@ func take_damage(info: Dictionary) -> void:
 			if Blood.instance:
 				Blood.instance.spray(bpd, dd, true, pw > 1.2, pw)
 				Blood.instance.wound(self, str(info.get("bone", "")), bpd, dd, pw)
+			velocity.x += signf(dd.x) * minf(pw * 0.9, 2.2)        # el impacto sacude el cuerpo (se desliza un poco)
+			if state == State.DEAD and is_on_floor():
+				_play_hit_jolt()
 			damaged.emit(info)
 		return
 	var zone := str(info.get("zone", "torso"))
@@ -1046,6 +1049,18 @@ func take_damage(info: Dictionary) -> void:
 		_die(info)
 		return
 	_react(info, amount)
+
+## Sacudida breve del cuerpo muerto al recibir un impacto (se aplica sobre el modelo, sin tocar la animación de muerte).
+func _play_hit_jolt() -> void:
+	if model == null:
+		return
+	var m := model as Node3D
+	if m == null:
+		return
+	var base := m.position
+	var tw := create_tween()
+	tw.tween_property(m, "position", base + Vector3(0, 0.035, 0), 0.04)
+	tw.tween_property(m, "position", base, 0.08)
 
 func _react(info: Dictionary, amount: float) -> void:
 	if state in [State.LADDER, State.HANG]:
@@ -1137,8 +1152,7 @@ func _die(info: Dictionary) -> void:
 		var pos := global_position
 		get_tree().create_timer(0.5).timeout.connect(func(): if Blood.instance: Blood.instance.pool(pos))
 	collision_layer = 0
-	for h in hitboxes:
-		h.collision_layer = 0
+	# las zonas de impacto (hitboxes) SIGUEN activas: el cuerpo muerto recibe los disparos que siguen (heridas, huesos rotos, sangre)
 	Sfx.play("body_fall", global_position, 0.0, 1.0, 12.0, self)
 	died.emit(info)
 

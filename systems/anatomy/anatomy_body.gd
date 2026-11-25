@@ -206,6 +206,8 @@ func trace(origin: Vector3, dir: Vector3, length: float, max_depth := INF) -> Ar
 		if g.tm == null:
 			g.tm = (g.mesh as Mesh).generate_triangle_mesh()
 		var tm: TriangleMesh = g.tm
+		if tm == null:
+			continue                  # sin datos de malla (renderizador sin pantalla): este grupo no se puede trazar
 		var hin: Dictionary = tm.intersect_segment(a, b)
 		if not hin.is_empty():
 			var hout: Dictionary = tm.intersect_segment(b, a)

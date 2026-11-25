@@ -107,11 +107,13 @@ func _on_proj_hit(idx: int, _info: Dictionary) -> void:
 	if phase == "bullet" and idx == _proj:
 		_until = _now() + 0.12        # el daño se aplica justo después: se decide en el próximo cuadro
 
+var _radius := 0.3
+
 func _on_damage(a: Actor, info: Dictionary) -> void:
 	# durante la toma de muerte, los disparos que siguen pegando en ese cuerpo SE VEN: la ventana de rayos X se
 	# actualiza con las heridas nuevas y la toma dura un poco más
 	if phase == "kill" and a == _victim and is_instance_valid(a):
-		AnatomyBody.for_actor(a).show_killcam(_main, 0.3)
+		AnatomyBody.for_actor(a).show_killcam(_main, _radius)
 		_until = maxf(_until, _now() + 0.7)
 		return
 	var lines: Array = info.get("injuries", [])
@@ -138,7 +140,12 @@ func _on_damage(a: Actor, info: Dictionary) -> void:
 
 func _killcam(a: Actor, info: Dictionary) -> void:
 	if phase == "kill":
-		return
+		if a == _victim:
+			return
+		# otro enemigo murió en plena toma: la toma pasa a ese cuerpo (el rayos X nunca queda sin encender)
+		if is_instance_valid(_victim):
+			AnatomyBody.for_actor(_victim).hide_all()
+		_end()
 	phase = "kill"
 	closeup_active = true
 	_set_vignette(true)
@@ -193,6 +200,7 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 				_ang1 = c[2]
 	if (bullet_replay or Settings.kill_cam == 1) and t == "bullet" and (info.get("bullet_path", []) as Array).size() >= 2:
 		anat.set_reveal(int(info.get("seq0", 1)) - 1)
+	_radius = radius
 	anat.show_killcam(main, radius)
 	if Blood.instance:
 		Blood.instance.set_closeup(true)
