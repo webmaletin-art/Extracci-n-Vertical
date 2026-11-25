@@ -357,7 +357,7 @@ func _fit(id: String, src: Dictionary, meta: Dictionary) -> void:
 					ratios.append(dl / maxf(dist - MARGIN, 0.01))
 			ratios.sort()
 			if not ratios.is_empty():
-				head_k = maxf(float(ratios[int(ratios.size() * 0.97)]), 1.0)
+				head_k = clampf(float(ratios[int(ratios.size() * 0.97)]), 1.0, 1.18)   # nunca achicar más del 15 %
 			print("  cabeza: factor ", 1.0 / head_k)
 			break
 	for g in meta.groups:
