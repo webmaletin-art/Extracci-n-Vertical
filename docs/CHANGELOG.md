@@ -141,3 +141,10 @@
 ## 0.12.0 — las 21 armas subidas
 
 * El juego tiene exactamente las 21 armas subidas (13 ya convertidas + 8 variantes: M1911 B, M1911 Táctica, M16 B, MP5 A / B, SCAR, M4A1, M4A1 B), todas livianas. Se quitan los modelos pesados de Operación Nexus (`browning`, `am4`, `mp5`, `remington`, `awm`) y se actualizan el mapa, el botín, los enemigos, el arma inicial (M1911 + M4A1), los objetos y las escenas de trailer. Sin escopeta ni .50 por ahora.
+
+## 0.13.0 — 61 armas clasificadas por tipo y poder
+
+* Se suman las 40 armas del pack *Ultimate Gun Pack* (Quaternius): 6 pistolas, 5 revólveres, 5 subfusiles, 9 fusiles / carabinas, 3 bullpup, 6 escopetas, 2 tiradores y 4 francotiradores / .50. Modelos de ≈ 700-1 900 triángulos.
+* Cada una con calibre, daño por calibre, cadencia, cargador, recarga, alcance, dispersión y retroceso simulados a partir de armas reales (`tools/weapons/gen_roster.py`); precio y nivel salen de su poder (DPS y alcance). `docs/ARMAS.md` las lista por tipo con DPS y tiros para matar.
+* Escopetas y rifle .50 BMG vuelven al juego. El modo práctica muestra las capacidades del arma elegida (calibre, daño, cadencia, DPS, alcance, cargador, recarga).
+* Todas las armas se pueden encontrar en cajas y maletines y vender (`w_<id>`); munición por calibre.

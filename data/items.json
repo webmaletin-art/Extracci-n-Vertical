@@ -12,55 +12,6 @@
   "value": 120,
   "icon": "cash_stack_small"
  },
- "ammo_556": {
-  "name": "Munición 5,56",
-  "type": "municion",
-  "value": 8,
-  "amount": 30,
-  "ammo_for": [
-   "cqbm4",
-   "m4a1",
-   "m4a1_1",
-   "g36c",
-   "m16",
-   "m16_1",
-   "m4supp",
-   "aug",
-   "scar",
-   "m4dmr",
-   "scarh",
-   "ak47"
-  ],
-  "icon": "ammo_556_common"
- },
- "ammo_9mm": {
-  "name": "Munición 9 mm",
-  "type": "municion",
-  "value": 5,
-  "amount": 26,
-  "ammo_for": [
-   "m1911",
-   "m1911_1",
-   "m1911t",
-   "deagle",
-   "mp5_1",
-   "mp5_2",
-   "mp7",
-   "p90",
-   "vector"
-  ],
-  "icon": "ammo_9mm_common"
- },
- "ammo_338": {
-  "name": "Munición .338",
-  "type": "municion",
-  "value": 20,
-  "amount": 5,
-  "ammo_for": [
-   "m4dmr"
-  ],
-  "icon": "ammo_127_ap"
- },
  "g_frag": {
   "name": "Granada de fragmentación",
   "type": "explosivo",
@@ -139,32 +90,663 @@
   "value": 0,
   "icon": "usb_drive"
  },
+ "w_m1911": {
+  "name": "Pistola M1911",
+  "type": "arma",
+  "value": 50,
+  "weapon": "m1911",
+  "icon": "pistol"
+ },
+ "w_deagle": {
+  "name": "Pistola Desert Eagle",
+  "type": "arma",
+  "value": 260,
+  "weapon": "deagle",
+  "icon": "pistol"
+ },
+ "w_mp7": {
+  "name": "Subfusil MP7",
+  "type": "arma",
+  "value": 420,
+  "weapon": "mp7",
+  "icon": "weapon_mp5"
+ },
+ "w_p90": {
+  "name": "Subfusil P90",
+  "type": "arma",
+  "value": 460,
+  "weapon": "p90",
+  "icon": "weapon_mp5"
+ },
+ "w_vector": {
+  "name": "Subfusil Vector",
+  "type": "arma",
+  "value": 550,
+  "weapon": "vector",
+  "icon": "weapon_mp5"
+ },
+ "w_cqbm4": {
+  "name": "Carabina CQB M4",
+  "type": "arma",
+  "value": 570,
+  "weapon": "cqbm4",
+  "icon": "weapon_mp5"
+ },
+ "w_g36c": {
+  "name": "Fusil G36C",
+  "type": "arma",
+  "value": 700,
+  "weapon": "g36c",
+  "icon": "weapon_mp5"
+ },
+ "w_m16": {
+  "name": "Fusil M16",
+  "type": "arma",
+  "value": 750,
+  "weapon": "m16",
+  "icon": "weapon_mp5"
+ },
+ "w_m4supp": {
+  "name": "Fusil M4 con supresor",
+  "type": "arma",
+  "value": 790,
+  "weapon": "m4supp",
+  "icon": "weapon_mp5"
+ },
+ "w_ak47": {
+  "name": "Fusil AK-47",
+  "type": "arma",
+  "value": 840,
+  "weapon": "ak47",
+  "icon": "weapon_mp5"
+ },
+ "w_aug": {
+  "name": "Fusil Steyr AUG",
+  "type": "arma",
+  "value": 920,
+  "weapon": "aug",
+  "icon": "weapon_mp5"
+ },
+ "w_scarh": {
+  "name": "Fusil SCAR-H",
+  "type": "arma",
+  "value": 1140,
+  "weapon": "scarh",
+  "icon": "weapon_mp5"
+ },
+ "w_m4dmr": {
+  "name": "Tirador M4 (DMR)",
+  "type": "arma",
+  "value": 1320,
+  "weapon": "m4dmr",
+  "icon": "weapon_awm"
+ },
+ "w_m1911_1": {
+  "name": "Pistola M1911 B",
+  "type": "arma",
+  "value": 110,
+  "weapon": "m1911_1",
+  "icon": "pistol"
+ },
+ "w_m1911t": {
+  "name": "Pistola M1911 Táctica",
+  "type": "arma",
+  "value": 160,
+  "weapon": "m1911t",
+  "icon": "pistol"
+ },
+ "w_m16_1": {
+  "name": "Fusil M16 B",
+  "type": "arma",
+  "value": 730,
+  "weapon": "m16_1",
+  "icon": "weapon_mp5"
+ },
  "w_mp5_1": {
   "name": "Subfusil MP5 A",
   "type": "arma",
-  "value": 300,
+  "value": 310,
   "weapon": "mp5_1",
+  "icon": "weapon_mp5"
+ },
+ "w_mp5_2": {
+  "name": "Subfusil MP5 B",
+  "type": "arma",
+  "value": 340,
+  "weapon": "mp5_2",
   "icon": "weapon_mp5"
  },
  "w_scar": {
   "name": "Fusil SCAR",
   "type": "arma",
-  "value": 560,
+  "value": 970,
   "weapon": "scar",
-  "icon": "weapon_awm"
+  "icon": "weapon_mp5"
  },
- "w_m4dmr": {
-  "name": "Tirador M4 (DMR)",
+ "w_m4a1": {
+  "name": "Fusil M4A1",
   "type": "arma",
-  "value": 650,
-  "weapon": "m4dmr",
-  "icon": "weapon_awm"
+  "value": 660,
+  "weapon": "m4a1",
+  "icon": "weapon_mp5"
  },
- "w_m1911": {
-  "name": "Pistola M1911",
+ "w_m4a1_1": {
+  "name": "Fusil M4A1 B",
+  "type": "arma",
+  "value": 680,
+  "weapon": "m4a1_1",
+  "icon": "weapon_mp5"
+ },
+ "w_pistol_5": {
+  "name": "Pistola subcompacta .380",
+  "type": "arma",
+  "value": 80,
+  "weapon": "pistol_5",
+  "icon": "pistol"
+ },
+ "w_pistol_1": {
+  "name": "Pistola compacta 9 mm",
+  "type": "arma",
+  "value": 110,
+  "weapon": "pistol_1",
+  "icon": "pistol"
+ },
+ "w_pistol_2": {
+  "name": "Pistola de servicio 9 mm",
+  "type": "arma",
+  "value": 110,
+  "weapon": "pistol_2",
+  "icon": "pistol"
+ },
+ "w_pistol_3": {
+  "name": "Pistola .40 S&W",
+  "type": "arma",
+  "value": 120,
+  "weapon": "pistol_3",
+  "icon": "pistol"
+ },
+ "w_pistol_4": {
+  "name": "Pistola .45 ACP de doble pila",
+  "type": "arma",
+  "value": 130,
+  "weapon": "pistol_4",
+  "icon": "pistol"
+ },
+ "w_pistol_6": {
+  "name": "Pistola de cañón largo .357",
   "type": "arma",
   "value": 150,
-  "weapon": "m1911",
+  "weapon": "pistol_6",
   "icon": "pistol"
+ },
+ "w_revolver_4": {
+  "name": "Revólver .38 Special (2\")",
+  "type": "arma",
+  "value": 60,
+  "weapon": "revolver_4",
+  "icon": "pistol"
+ },
+ "w_revolver_1": {
+  "name": "Revólver .357 Magnum (4\")",
+  "type": "arma",
+  "value": 100,
+  "weapon": "revolver_1",
+  "icon": "pistol"
+ },
+ "w_revolver_2": {
+  "name": "Revólver .357 Magnum (6\")",
+  "type": "arma",
+  "value": 110,
+  "weapon": "revolver_2",
+  "icon": "pistol"
+ },
+ "w_revolver_3": {
+  "name": "Revólver .44 Magnum",
+  "type": "arma",
+  "value": 120,
+  "weapon": "revolver_3",
+  "icon": "pistol"
+ },
+ "w_revolver_5": {
+  "name": "Revólver .454 Casull",
+  "type": "arma",
+  "value": 130,
+  "weapon": "revolver_5",
+  "icon": "pistol"
+ },
+ "w_smg_4": {
+  "name": "Pistola ametralladora 9 mm",
+  "type": "arma",
+  "value": 460,
+  "weapon": "smg_4",
+  "icon": "weapon_mp5"
+ },
+ "w_smg_1": {
+  "name": "Subfusil compacto 9 mm",
+  "type": "arma",
+  "value": 400,
+  "weapon": "smg_1",
+  "icon": "weapon_mp5"
+ },
+ "w_smg_3": {
+  "name": "Subfusil 9 mm",
+  "type": "arma",
+  "value": 350,
+  "weapon": "smg_3",
+  "icon": "weapon_mp5"
+ },
+ "w_smg_2": {
+  "name": "Subfusil .45 ACP",
+  "type": "arma",
+  "value": 470,
+  "weapon": "smg_2",
+  "icon": "weapon_mp5"
+ },
+ "w_smg_5": {
+  "name": "Subfusil largo 5,7×28 (PDW)",
+  "type": "arma",
+  "value": 420,
+  "weapon": "smg_5",
+  "icon": "weapon_mp5"
+ },
+ "w_ar_1": {
+  "name": "Carabina compacta 5,56",
+  "type": "arma",
+  "value": 480,
+  "weapon": "ar_1",
+  "icon": "weapon_mp5"
+ },
+ "w_ar2_4": {
+  "name": "Subcarabina 5,56",
+  "type": "arma",
+  "value": 470,
+  "weapon": "ar2_4",
+  "icon": "weapon_mp5"
+ },
+ "w_ar_3": {
+  "name": "Carabina 5,56",
+  "type": "arma",
+  "value": 480,
+  "weapon": "ar_3",
+  "icon": "weapon_mp5"
+ },
+ "w_ar2_3": {
+  "name": "Carabina 7,62×39",
+  "type": "arma",
+  "value": 530,
+  "weapon": "ar2_3",
+  "icon": "weapon_mp5"
+ },
+ "w_ar2_2": {
+  "name": "Fusil 5,56 ligero",
+  "type": "arma",
+  "value": 530,
+  "weapon": "ar2_2",
+  "icon": "weapon_mp5"
+ },
+ "w_ar_2": {
+  "name": "Fusil de asalto 5,56",
+  "type": "arma",
+  "value": 520,
+  "weapon": "ar_2",
+  "icon": "weapon_mp5"
+ },
+ "w_ar_5": {
+  "name": "Fusil de asalto 7,62×39",
+  "type": "arma",
+  "value": 550,
+  "weapon": "ar_5",
+  "icon": "weapon_mp5"
+ },
+ "w_ar2_1": {
+  "name": "Fusil de combate 7,62×51",
+  "type": "arma",
+  "value": 790,
+  "weapon": "ar2_1",
+  "icon": "weapon_mp5"
+ },
+ "w_ar_4": {
+  "name": "Fusil de combate pesado 7,62×51",
+  "type": "arma",
+  "value": 730,
+  "weapon": "ar_4",
+  "icon": "weapon_mp5"
+ },
+ "w_bullpup_2": {
+  "name": "Bullpup compacto 5,56",
+  "type": "arma",
+  "value": 540,
+  "weapon": "bullpup_2",
+  "icon": "weapon_mp5"
+ },
+ "w_bullpup_3": {
+  "name": "Bullpup 5,56",
+  "type": "arma",
+  "value": 550,
+  "weapon": "bullpup_3",
+  "icon": "weapon_mp5"
+ },
+ "w_bullpup_1": {
+  "name": "Bullpup largo 5,56",
+  "type": "arma",
+  "value": 530,
+  "weapon": "bullpup_1",
+  "icon": "weapon_mp5"
+ },
+ "w_shotgun_sawed": {
+  "name": "Escopeta recortada de 2 cañones",
+  "type": "arma",
+  "value": 220,
+  "weapon": "shotgun_sawed",
+  "icon": "weapon_remington"
+ },
+ "w_shotgun_short": {
+  "name": "Escopeta de corredera culata corta",
+  "type": "arma",
+  "value": 110,
+  "weapon": "shotgun_short",
+  "icon": "weapon_remington"
+ },
+ "w_shotgun_1": {
+  "name": "Escopeta de corredera 12",
+  "type": "arma",
+  "value": 120,
+  "weapon": "shotgun_1",
+  "icon": "weapon_remington"
+ },
+ "w_shotgun_2": {
+  "name": "Escopeta táctica de 8 cartuchos",
+  "type": "arma",
+  "value": 120,
+  "weapon": "shotgun_2",
+  "icon": "weapon_remington"
+ },
+ "w_shotgun_3": {
+  "name": "Escopeta semiautomática",
+  "type": "arma",
+  "value": 240,
+  "weapon": "shotgun_3",
+  "icon": "weapon_remington"
+ },
+ "w_shotgun_4": {
+  "name": "Escopeta de caza",
+  "type": "arma",
+  "value": 130,
+  "weapon": "shotgun_4",
+  "icon": "weapon_remington"
+ },
+ "w_sniper_6": {
+  "name": "Fusil de precisión semiautomático .308",
+  "type": "arma",
+  "value": 530,
+  "weapon": "sniper_6",
+  "icon": "weapon_awm"
+ },
+ "w_sniper_3": {
+  "name": "Tirador semiautomático 7,62×51",
+  "type": "arma",
+  "value": 420,
+  "weapon": "sniper_3",
+  "icon": "weapon_awm"
+ },
+ "w_sniper_1": {
+  "name": "Fusil de cerrojo .308",
+  "type": "arma",
+  "value": 310,
+  "weapon": "sniper_1",
+  "icon": "weapon_awm"
+ },
+ "w_sniper_2": {
+  "name": "Fusil de cerrojo .300 Win Mag",
+  "type": "arma",
+  "value": 410,
+  "weapon": "sniper_2",
+  "icon": "weapon_awm"
+ },
+ "w_sniper_4": {
+  "name": "Fusil de cerrojo .338 Lapua",
+  "type": "arma",
+  "value": 560,
+  "weapon": "sniper_4",
+  "icon": "weapon_awm"
+ },
+ "w_sniper_5": {
+  "name": "Fusil antimaterial .50 BMG",
+  "type": "arma",
+  "value": 1080,
+  "weapon": "sniper_5",
+  "icon": "weapon_awm"
+ },
+ "ammo_45acp": {
+  "name": "Munición .45 ACP",
+  "type": "municion",
+  "value": 5,
+  "amount": 26,
+  "ammo_for": [
+   "m1911",
+   "vector",
+   "m1911_1",
+   "m1911t",
+   "pistol_4",
+   "smg_2"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_50ae": {
+  "name": "Munición .50 AE",
+  "type": "municion",
+  "value": 10,
+  "amount": 26,
+  "ammo_for": [
+   "deagle"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_46x30mm": {
+  "name": "Munición 4,6×30 mm",
+  "type": "municion",
+  "value": 5,
+  "amount": 40,
+  "ammo_for": [
+   "mp7"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_57x28mm": {
+  "name": "Munición 5,7×28 mm",
+  "type": "municion",
+  "value": 5,
+  "amount": 40,
+  "ammo_for": [
+   "p90",
+   "smg_5"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_556x45mm": {
+  "name": "Munición 5,56×45 mm",
+  "type": "municion",
+  "value": 10,
+  "amount": 30,
+  "ammo_for": [
+   "cqbm4",
+   "g36c",
+   "m16",
+   "m4supp",
+   "aug",
+   "m16_1",
+   "scar",
+   "m4a1",
+   "m4a1_1",
+   "ar_1",
+   "ar2_4",
+   "ar_3",
+   "ar2_2",
+   "ar_2",
+   "bullpup_2",
+   "bullpup_3",
+   "bullpup_1"
+  ],
+  "icon": "ammo_556_common"
+ },
+ "ammo_762x39mm": {
+  "name": "Munición 7,62×39 mm",
+  "type": "municion",
+  "value": 11,
+  "amount": 30,
+  "ammo_for": [
+   "ak47",
+   "ar2_3",
+   "ar_5"
+  ],
+  "icon": "ammo_556_common"
+ },
+ "ammo_762x51mm": {
+  "name": "Munición 7,62×51 mm",
+  "type": "municion",
+  "value": 14,
+  "amount": 30,
+  "ammo_for": [
+   "scarh",
+   "m4dmr",
+   "ar2_1",
+   "ar_4",
+   "sniper_3"
+  ],
+  "icon": "ammo_127_ap"
+ },
+ "ammo_9x19mm": {
+  "name": "Munición 9×19 mm",
+  "type": "municion",
+  "value": 5,
+  "amount": 40,
+  "ammo_for": [
+   "mp5_1",
+   "mp5_2",
+   "pistol_1",
+   "pistol_2",
+   "smg_4",
+   "smg_1",
+   "smg_3"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_380acp": {
+  "name": "Munición .380 ACP",
+  "type": "municion",
+  "value": 4,
+  "amount": 26,
+  "ammo_for": [
+   "pistol_5"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_40s&w": {
+  "name": "Munición .40 S&W",
+  "type": "municion",
+  "value": 6,
+  "amount": 26,
+  "ammo_for": [
+   "pistol_3"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_357magnum": {
+  "name": "Munición .357 Magnum",
+  "type": "municion",
+  "value": 7,
+  "amount": 26,
+  "ammo_for": [
+   "pistol_6",
+   "revolver_1",
+   "revolver_2"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_38special": {
+  "name": "Munición .38 Special",
+  "type": "municion",
+  "value": 4,
+  "amount": 26,
+  "ammo_for": [
+   "revolver_4"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_44magnum": {
+  "name": "Munición .44 Magnum",
+  "type": "municion",
+  "value": 10,
+  "amount": 26,
+  "ammo_for": [
+   "revolver_3"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_454casull": {
+  "name": "Munición .454 Casull",
+  "type": "municion",
+  "value": 12,
+  "amount": 26,
+  "ammo_for": [
+   "revolver_5"
+  ],
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_12gapostas": {
+  "name": "Munición 12 ga postas",
+  "type": "municion",
+  "value": 11,
+  "amount": 8,
+  "ammo_for": [
+   "shotgun_sawed",
+   "shotgun_short",
+   "shotgun_1",
+   "shotgun_2",
+   "shotgun_3",
+   "shotgun_4"
+  ],
+  "icon": "ammo_shotgun_buckshot"
+ },
+ "ammo_308win": {
+  "name": "Munición .308 Win",
+  "type": "municion",
+  "value": 14,
+  "amount": 20,
+  "ammo_for": [
+   "sniper_6",
+   "sniper_1"
+  ],
+  "icon": "ammo_127_ap"
+ },
+ "ammo_300winmag": {
+  "name": "Munición .300 Win Mag",
+  "type": "municion",
+  "value": 15,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_2"
+  ],
+  "icon": "ammo_127_ap"
+ },
+ "ammo_338lapua": {
+  "name": "Munición .338 Lapua",
+  "type": "municion",
+  "value": 19,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_4"
+  ],
+  "icon": "ammo_127_ap"
+ },
+ "ammo_50bmg": {
+  "name": "Munición .50 BMG",
+  "type": "municion",
+  "value": 32,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_5"
+  ],
+  "icon": "ammo_127_ap"
  }
 }

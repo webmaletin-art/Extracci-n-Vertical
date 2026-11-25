@@ -1779,5 +1779,2945 @@
   "tris": 7899,
   "name": "Fusil M4A1 B",
   "format": "glb"
+ },
+ "pistol_5": {
+  "kind": "pistol",
+  "length": 0.17,
+  "has_mag": true,
+  "source": "Pistol_5.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0112,
+    0.0257
+   ],
+   "Support": [
+    0.0,
+    -0.0312,
+    0.0357
+   ],
+   "Muzzle": [
+    0.0,
+    0.0398,
+    -0.085
+   ],
+   "Sight": [
+    0.0,
+    0.056,
+    0.0255
+   ]
+  },
+  "materials": {
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 968,
+  "format": "glb",
+  "name": "pistol_5"
+ },
+ "pistol_1": {
+  "kind": "pistol",
+  "length": 0.2,
+  "has_mag": true,
+  "source": "Pistol_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0128,
+    0.0717
+   ],
+   "Support": [
+    0.0,
+    -0.0328,
+    0.0817
+   ],
+   "Muzzle": [
+    0.0,
+    0.0448,
+    -0.1
+   ],
+   "Sight": [
+    0.0,
+    0.0638,
+    0.03
+   ]
+  },
+  "materials": {
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black2": {
+    "color": [
+     0.014,
+     0.014,
+     0.015
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1040,
+  "format": "glb",
+  "name": "pistol_1"
+ },
+ "pistol_2": {
+  "kind": "pistol",
+  "length": 0.2,
+  "has_mag": true,
+  "source": "Pistol_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0128,
+    0.0717
+   ],
+   "Support": [
+    0.0,
+    -0.0328,
+    0.0817
+   ],
+   "Muzzle": [
+    0.0,
+    0.0448,
+    -0.1
+   ],
+   "Sight": [
+    0.0,
+    0.0638,
+    0.03
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1200,
+  "format": "glb",
+  "name": "pistol_2"
+ },
+ "pistol_3": {
+  "kind": "pistol",
+  "length": 0.21,
+  "has_mag": true,
+  "source": "Pistol_3.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0147,
+    0.0755
+   ],
+   "Support": [
+    0.0,
+    -0.0347,
+    0.0855
+   ],
+   "Muzzle": [
+    0.0,
+    0.048,
+    -0.105
+   ],
+   "Sight": [
+    0.0,
+    0.0736,
+    0.0315
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1442,
+  "format": "glb",
+  "name": "pistol_3"
+ },
+ "pistol_4": {
+  "kind": "pistol",
+  "length": 0.23,
+  "has_mag": true,
+  "source": "Pistol_4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.019,
+    0.0675
+   ],
+   "Support": [
+    0.0,
+    -0.039,
+    0.0775
+   ],
+   "Muzzle": [
+    0.0,
+    0.071,
+    -0.115
+   ],
+   "Sight": [
+    0.0,
+    0.0948,
+    0.0345
+   ]
+  },
+  "materials": {
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1320,
+  "format": "glb",
+  "name": "pistol_4"
+ },
+ "pistol_6": {
+  "kind": "pistol",
+  "length": 0.3,
+  "has_mag": true,
+  "source": "Pistol_6.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0142,
+    0.0732
+   ],
+   "Support": [
+    0.0,
+    -0.0342,
+    0.0832
+   ],
+   "Muzzle": [
+    0.0,
+    0.0503,
+    -0.15
+   ],
+   "Sight": [
+    0.0,
+    0.0712,
+    0.045
+   ]
+  },
+  "materials": {
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1878,
+  "format": "glb",
+  "name": "pistol_6"
+ },
+ "revolver_4": {
+  "kind": "pistol",
+  "length": 0.17,
+  "has_mag": true,
+  "source": "Revolver_4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0106,
+    0.041
+   ],
+   "Support": [
+    0.0,
+    -0.0306,
+    0.051
+   ],
+   "Muzzle": [
+    0.0,
+    0.0371,
+    -0.085
+   ],
+   "Sight": [
+    0.0,
+    0.0528,
+    0.0255
+   ]
+  },
+  "materials": {
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 966,
+  "format": "glb",
+  "name": "revolver_4"
+ },
+ "revolver_1": {
+  "kind": "pistol",
+  "length": 0.24,
+  "has_mag": true,
+  "source": "Revolver_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0108,
+    0.0977
+   ],
+   "Support": [
+    0.0,
+    -0.0308,
+    0.1077
+   ],
+   "Muzzle": [
+    0.0,
+    0.0406,
+    -0.12
+   ],
+   "Sight": [
+    0.0,
+    0.0539,
+    0.036
+   ]
+  },
+  "materials": {
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1046,
+  "format": "glb",
+  "name": "revolver_1"
+ },
+ "revolver_2": {
+  "kind": "pistol",
+  "length": 0.28,
+  "has_mag": true,
+  "source": "Revolver_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0133,
+    0.1115
+   ],
+   "Support": [
+    0.0,
+    -0.0333,
+    0.1215
+   ],
+   "Muzzle": [
+    0.0,
+    0.0509,
+    -0.14
+   ],
+   "Sight": [
+    0.0,
+    0.0667,
+    0.042
+   ]
+  },
+  "materials": {
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1252,
+  "format": "glb",
+  "name": "revolver_2"
+ },
+ "revolver_3": {
+  "kind": "pistol",
+  "length": 0.3,
+  "has_mag": true,
+  "source": "Revolver_3.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0148,
+    0.1195
+   ],
+   "Support": [
+    0.0,
+    -0.0348,
+    0.1295
+   ],
+   "Muzzle": [
+    0.0,
+    0.0448,
+    -0.15
+   ],
+   "Sight": [
+    0.0,
+    0.0742,
+    0.045
+   ]
+  },
+  "materials": {
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1438,
+  "format": "glb",
+  "name": "revolver_3"
+ },
+ "revolver_5": {
+  "kind": "pistol",
+  "length": 0.33,
+  "has_mag": true,
+  "source": "Revolver_5.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0167,
+    0.1322
+   ],
+   "Support": [
+    0.0,
+    -0.0367,
+    0.1422
+   ],
+   "Muzzle": [
+    0.0,
+    0.0698,
+    -0.165
+   ],
+   "Sight": [
+    0.0,
+    0.0836,
+    0.0495
+   ]
+  },
+  "materials": {
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1334,
+  "format": "glb",
+  "name": "revolver_5"
+ },
+ "smg_4": {
+  "kind": "smg",
+  "length": 0.33,
+  "has_mag": true,
+  "source": "SubmachineGun_4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0106,
+    -0.0066
+   ],
+   "Support": [
+    0.0,
+    -0.0761,
+    -0.0659
+   ],
+   "Muzzle": [
+    0.0,
+    0.0628,
+    -0.165
+   ],
+   "Sight": [
+    0.0,
+    0.106,
+    0.0495
+   ]
+  },
+  "materials": {
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1024,
+  "format": "glb",
+  "name": "smg_4"
+ },
+ "smg_1": {
+  "kind": "smg",
+  "length": 0.36,
+  "has_mag": true,
+  "source": "SubmachineGun_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0111,
+    0.0011
+   ],
+   "Support": [
+    0.0,
+    -0.0946,
+    -0.0735
+   ],
+   "Muzzle": [
+    0.0,
+    0.0672,
+    -0.18
+   ],
+   "Sight": [
+    0.0,
+    0.111,
+    0.054
+   ]
+  },
+  "materials": {
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1164,
+  "format": "glb",
+  "name": "smg_1"
+ },
+ "smg_3": {
+  "kind": "smg",
+  "length": 0.52,
+  "has_mag": true,
+  "source": "SubmachineGun_3.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0103,
+    0.0257
+   ],
+   "Support": [
+    0.0,
+    -0.087,
+    -0.1192
+   ],
+   "Muzzle": [
+    0.0,
+    0.0602,
+    -0.26
+   ],
+   "Sight": [
+    0.0,
+    0.099,
+    0.078
+   ]
+  },
+  "materials": {
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1566,
+  "format": "glb",
+  "name": "smg_3"
+ },
+ "smg_2": {
+  "kind": "smg",
+  "length": 0.55,
+  "has_mag": true,
+  "source": "SubmachineGun_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.019,
+    0.0206
+   ],
+   "Support": [
+    0.0,
+    -0.1136,
+    -0.1132
+   ],
+   "Muzzle": [
+    0.0,
+    0.0686,
+    -0.275
+   ],
+   "Sight": [
+    0.0,
+    0.1256,
+    0.0825
+   ]
+  },
+  "materials": {
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1374,
+  "format": "glb",
+  "name": "smg_2"
+ },
+ "smg_5": {
+  "kind": "smg",
+  "length": 0.65,
+  "has_mag": true,
+  "source": "SubmachineGun_5.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0112,
+    -0.011
+   ],
+   "Support": [
+    0.0,
+    0.0398,
+    -0.127
+   ],
+   "Muzzle": [
+    0.0,
+    0.0576,
+    -0.325
+   ],
+   "Sight": [
+    0.0,
+    0.1118,
+    0.0975
+   ]
+  },
+  "materials": {
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1440,
+  "format": "glb",
+  "name": "smg_5"
+ },
+ "ar_1": {
+  "kind": "rifle",
+  "length": 0.55,
+  "has_mag": true,
+  "source": "AssaultRifle_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0112,
+    0.0474
+   ],
+   "Support": [
+    0.0,
+    0.0373,
+    -0.131
+   ],
+   "Muzzle": [
+    0.0,
+    0.0671,
+    -0.275
+   ],
+   "Sight": [
+    0.0,
+    0.1116,
+    0.0825
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1256,
+  "format": "glb",
+  "name": "ar_1"
+ },
+ "ar2_4": {
+  "kind": "rifle",
+  "length": 0.56,
+  "has_mag": true,
+  "source": "AssaultRifle2_4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0065,
+    0.0649
+   ],
+   "Support": [
+    0.0,
+    -0.1352,
+    -0.1137
+   ],
+   "Muzzle": [
+    0.0,
+    0.0719,
+    -0.28
+   ],
+   "Sight": [
+    0.0,
+    0.1472,
+    0.084
+   ]
+  },
+  "materials": {
+   "Main": {
+    "color": [
+     0.02,
+     0.025,
+     0.03
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainDark": {
+    "color": [
+     0.012,
+     0.017,
+     0.025
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainLight": {
+    "color": [
+     0.028,
+     0.036,
+     0.042
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1372,
+  "format": "glb",
+  "name": "ar2_4"
+ },
+ "ar_3": {
+  "kind": "rifle",
+  "length": 0.62,
+  "has_mag": true,
+  "source": "AssaultRifle_3.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0145,
+    0.0166
+   ],
+   "Support": [
+    0.0,
+    0.0772,
+    -0.1697
+   ],
+   "Muzzle": [
+    0.0,
+    0.0993,
+    -0.31
+   ],
+   "Sight": [
+    0.0,
+    0.1447,
+    0.093
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1220,
+  "format": "glb",
+  "name": "ar_3"
+ },
+ "ar2_3": {
+  "kind": "rifle",
+  "length": 0.68,
+  "has_mag": true,
+  "source": "AssaultRifle2_3.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0132,
+    0.1881
+   ],
+   "Support": [
+    0.0,
+    0.0341,
+    -0.1151
+   ],
+   "Muzzle": [
+    0.0,
+    0.0534,
+    -0.34
+   ],
+   "Sight": [
+    0.0,
+    0.1321,
+    0.102
+   ]
+  },
+  "materials": {
+   "Main": {
+    "color": [
+     0.02,
+     0.025,
+     0.03
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainDark": {
+    "color": [
+     0.012,
+     0.017,
+     0.025
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainLight": {
+    "color": [
+     0.028,
+     0.036,
+     0.042
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1614,
+  "format": "glb",
+  "name": "ar2_3"
+ },
+ "ar2_2": {
+  "kind": "rifle",
+  "length": 0.86,
+  "has_mag": true,
+  "source": "AssaultRifle2_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.016,
+    -0.0018
+   ],
+   "Support": [
+    0.0,
+    0.0635,
+    -0.1634
+   ],
+   "Muzzle": [
+    0.0,
+    0.0822,
+    -0.43
+   ],
+   "Sight": [
+    0.0,
+    0.1595,
+    0.129
+   ]
+  },
+  "materials": {
+   "Main": {
+    "color": [
+     0.02,
+     0.025,
+     0.03
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainDark": {
+    "color": [
+     0.012,
+     0.017,
+     0.025
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainLight": {
+    "color": [
+     0.028,
+     0.036,
+     0.042
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1796,
+  "format": "glb",
+  "name": "ar2_2"
+ },
+ "ar_2": {
+  "kind": "rifle",
+  "length": 0.97,
+  "has_mag": true,
+  "source": "AssaultRifle_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0109,
+    -0.0495
+   ],
+   "Support": [
+    0.0,
+    -0.0778,
+    -0.2138
+   ],
+   "Muzzle": [
+    0.0,
+    0.0983,
+    -0.485
+   ],
+   "Sight": [
+    0.0,
+    0.1433,
+    0.1455
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1306,
+  "format": "glb",
+  "name": "ar_2"
+ },
+ "ar_5": {
+  "kind": "rifle",
+  "length": 0.97,
+  "has_mag": true,
+  "source": "AssaultRifle_5.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0109,
+    -0.0495
+   ],
+   "Support": [
+    0.0,
+    -0.0778,
+    -0.2138
+   ],
+   "Muzzle": [
+    0.0,
+    0.0983,
+    -0.485
+   ],
+   "Sight": [
+    0.0,
+    0.1433,
+    0.1455
+   ]
+  },
+  "materials": {
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1306,
+  "format": "glb",
+  "name": "ar_5"
+ },
+ "ar2_1": {
+  "kind": "rifle",
+  "length": 0.99,
+  "has_mag": true,
+  "source": "AssaultRifle2_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0171,
+    0.0316
+   ],
+   "Support": [
+    0.0,
+    0.0672,
+    -0.1963
+   ],
+   "Muzzle": [
+    0.0,
+    0.0884,
+    -0.495
+   ],
+   "Sight": [
+    0.0,
+    0.1715,
+    0.1485
+   ]
+  },
+  "materials": {
+   "Main": {
+    "color": [
+     0.02,
+     0.025,
+     0.03
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainDark": {
+    "color": [
+     0.012,
+     0.017,
+     0.025
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainLight": {
+    "color": [
+     0.028,
+     0.036,
+     0.042
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1930,
+  "format": "glb",
+  "name": "ar2_1"
+ },
+ "ar_4": {
+  "kind": "rifle",
+  "length": 1.0,
+  "has_mag": true,
+  "source": "AssaultRifle_4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0111,
+    -0.0567
+   ],
+   "Support": [
+    0.0,
+    -0.0793,
+    -0.2166
+   ],
+   "Muzzle": [
+    0.0,
+    0.1,
+    -0.5
+   ],
+   "Sight": [
+    0.0,
+    0.1457,
+    0.15
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1390,
+  "format": "glb",
+  "name": "ar_4"
+ },
+ "bullpup_2": {
+  "kind": "rifle",
+  "length": 0.62,
+  "has_mag": true,
+  "source": "Bullpup_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0125,
+    0.1281
+   ],
+   "Support": [
+    0.0,
+    -0.0403,
+    -0.1504
+   ],
+   "Muzzle": [
+    0.0,
+    0.0747,
+    -0.31
+   ],
+   "Sight": [
+    0.0,
+    0.1252,
+    0.093
+   ]
+  },
+  "materials": {
+   "MainDark": {
+    "color": [
+     0.012,
+     0.017,
+     0.025
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Main": {
+    "color": [
+     0.02,
+     0.025,
+     0.03
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainLight": {
+    "color": [
+     0.028,
+     0.036,
+     0.042
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 2536,
+  "format": "glb",
+  "name": "bullpup_2"
+ },
+ "bullpup_3": {
+  "kind": "rifle",
+  "length": 0.7,
+  "has_mag": true,
+  "source": "Bullpup_3.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0068,
+    0.0777
+   ],
+   "Support": [
+    0.0,
+    0.0325,
+    -0.1435
+   ],
+   "Muzzle": [
+    0.0,
+    0.08,
+    -0.35
+   ],
+   "Sight": [
+    0.0,
+    0.1297,
+    0.105
+   ]
+  },
+  "materials": {
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Main": {
+    "color": [
+     0.02,
+     0.025,
+     0.03
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainDark": {
+    "color": [
+     0.012,
+     0.017,
+     0.025
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainLight": {
+    "color": [
+     0.028,
+     0.036,
+     0.042
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 2390,
+  "format": "glb",
+  "name": "bullpup_3"
+ },
+ "bullpup_1": {
+  "kind": "rifle",
+  "length": 0.76,
+  "has_mag": true,
+  "source": "Bullpup_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0112,
+    0.0012
+   ],
+   "Support": [
+    0.0,
+    -0.0187,
+    -0.1514
+   ],
+   "Muzzle": [
+    0.0,
+    0.0673,
+    -0.38
+   ],
+   "Sight": [
+    0.0,
+    0.1116,
+    0.114
+   ]
+  },
+  "materials": {
+   "MainDark": {
+    "color": [
+     0.012,
+     0.017,
+     0.025
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Main": {
+    "color": [
+     0.02,
+     0.025,
+     0.03
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MainLight": {
+    "color": [
+     0.028,
+     0.036,
+     0.042
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 2782,
+  "format": "glb",
+  "name": "bullpup_1"
+ },
+ "shotgun_sawed": {
+  "kind": "rifle",
+  "length": 0.55,
+  "has_mag": true,
+  "source": "Shotgun_SawedOff.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0158,
+    0.1404
+   ],
+   "Support": [
+    0.0,
+    0.0167,
+    -0.1477
+   ],
+   "Muzzle": [
+    0.0,
+    0.052,
+    -0.275
+   ],
+   "Sight": [
+    0.0,
+    0.0761,
+    0.0825
+   ]
+  },
+  "materials": {
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 956,
+  "format": "glb",
+  "name": "shotgun_sawed"
+ },
+ "shotgun_short": {
+  "kind": "rifle",
+  "length": 0.85,
+  "has_mag": true,
+  "source": "Shotgun_ShortStock.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0221,
+    0.1871
+   ],
+   "Support": [
+    0.0,
+    0.0102,
+    -0.2166
+   ],
+   "Muzzle": [
+    0.0,
+    0.0586,
+    -0.425
+   ],
+   "Sight": [
+    0.0,
+    0.0919,
+    0.1275
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1612,
+  "format": "glb",
+  "name": "shotgun_short"
+ },
+ "shotgun_1": {
+  "kind": "rifle",
+  "length": 1.0,
+  "has_mag": true,
+  "source": "Shotgun_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.015,
+    0.1382
+   ],
+   "Support": [
+    0.0,
+    0.0033,
+    -0.2035
+   ],
+   "Muzzle": [
+    0.0,
+    0.0524,
+    -0.5
+   ],
+   "Sight": [
+    0.0,
+    0.0904,
+    0.15
+   ]
+  },
+  "materials": {
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1270,
+  "format": "glb",
+  "name": "shotgun_1"
+ },
+ "shotgun_2": {
+  "kind": "rifle",
+  "length": 1.1,
+  "has_mag": true,
+  "source": "Shotgun_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0151,
+    0.1774
+   ],
+   "Support": [
+    0.0,
+    0.007,
+    -0.1538
+   ],
+   "Muzzle": [
+    0.0,
+    0.059,
+    -0.55
+   ],
+   "Sight": [
+    0.0,
+    0.0903,
+    0.165
+   ]
+  },
+  "materials": {
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 746,
+  "format": "glb",
+  "name": "shotgun_2"
+ },
+ "shotgun_3": {
+  "kind": "rifle",
+  "length": 1.1,
+  "has_mag": true,
+  "source": "Shotgun_3.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0174,
+    0.1652
+   ],
+   "Support": [
+    0.0,
+    0.0035,
+    -0.1834
+   ],
+   "Muzzle": [
+    0.0,
+    0.0584,
+    -0.55
+   ],
+   "Sight": [
+    0.0,
+    0.0896,
+    0.165
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 978,
+  "format": "glb",
+  "name": "shotgun_3"
+ },
+ "shotgun_4": {
+  "kind": "rifle",
+  "length": 1.05,
+  "has_mag": true,
+  "source": "Shotgun_4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0155,
+    0.1476
+   ],
+   "Support": [
+    0.0,
+    0.0146,
+    -0.1783
+   ],
+   "Muzzle": [
+    0.0,
+    0.0547,
+    -0.525
+   ],
+   "Sight": [
+    0.0,
+    0.0893,
+    0.1575
+   ]
+  },
+  "materials": {
+   "Wood": {
+    "color": [
+     0.133,
+     0.09,
+     0.068
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 668,
+  "format": "glb",
+  "name": "shotgun_4"
+ },
+ "sniper_6": {
+  "kind": "rifle",
+  "length": 1.2,
+  "has_mag": true,
+  "source": "SniperRifle_6.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0137,
+    0.34
+   ],
+   "Support": [
+    0.0,
+    0.019,
+    -0.1834
+   ],
+   "Muzzle": [
+    0.0,
+    0.0494,
+    -0.6
+   ],
+   "Sight": [
+    0.0,
+    0.1264,
+    0.18
+   ]
+  },
+  "materials": {
+   "DarkWood": {
+    "color": [
+     0.102,
+     0.072,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Glass": {
+    "color": [
+     0.003,
+     0.006,
+     0.015
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1370,
+  "format": "glb",
+  "name": "sniper_6"
+ },
+ "sniper_3": {
+  "kind": "rifle",
+  "length": 1.25,
+  "has_mag": true,
+  "source": "SniperRifle_3.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0082,
+    0.2717
+   ],
+   "Support": [
+    0.0,
+    -0.0053,
+    -0.1887
+   ],
+   "Muzzle": [
+    0.0,
+    0.0321,
+    -0.625
+   ],
+   "Sight": [
+    0.0,
+    0.1036,
+    0.1875
+   ]
+  },
+  "materials": {
+   "Green": {
+    "color": [
+     0.093,
+     0.111,
+     0.082
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Glass": {
+    "color": [
+     0.003,
+     0.006,
+     0.015
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1722,
+  "format": "glb",
+  "name": "sniper_3"
+ },
+ "sniper_1": {
+  "kind": "rifle",
+  "length": 1.25,
+  "has_mag": true,
+  "source": "SniperRifle_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0144,
+    0.3393
+   ],
+   "Support": [
+    0.0,
+    0.0221,
+    -0.1964
+   ],
+   "Muzzle": [
+    0.0,
+    0.0598,
+    -0.625
+   ],
+   "Sight": [
+    0.0,
+    0.1271,
+    0.1875
+   ]
+  },
+  "materials": {
+   "Green": {
+    "color": [
+     0.093,
+     0.111,
+     0.082
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Glass": {
+    "color": [
+     0.003,
+     0.006,
+     0.015
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1382,
+  "format": "glb",
+  "name": "sniper_1"
+ },
+ "sniper_2": {
+  "kind": "rifle",
+  "length": 1.3,
+  "has_mag": true,
+  "source": "SniperRifle_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0151,
+    0.3383
+   ],
+   "Support": [
+    0.0,
+    0.0245,
+    -0.1869
+   ],
+   "Muzzle": [
+    0.0,
+    0.053,
+    -0.65
+   ],
+   "Sight": [
+    0.0,
+    0.1322,
+    0.195
+   ]
+  },
+  "materials": {
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Glass": {
+    "color": [
+     0.003,
+     0.006,
+     0.015
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1732,
+  "format": "glb",
+  "name": "sniper_2"
+ },
+ "sniper_4": {
+  "kind": "rifle",
+  "length": 1.15,
+  "has_mag": true,
+  "source": "SniperRifle_4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0267,
+    0.224
+   ],
+   "Support": [
+    0.0,
+    0.0073,
+    -0.161
+   ],
+   "Muzzle": [
+    0.0,
+    0.0447,
+    -0.575
+   ],
+   "Sight": [
+    0.0,
+    0.1224,
+    0.1725
+   ]
+  },
+  "materials": {
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Glass": {
+    "color": [
+     0.003,
+     0.006,
+     0.015
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1346,
+  "format": "glb",
+  "name": "sniper_4"
+ },
+ "sniper_5": {
+  "kind": "rifle",
+  "length": 1.4,
+  "has_mag": true,
+  "source": "SniperRifle_5.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0513,
+    0.3449
+   ],
+   "Support": [
+    0.0,
+    -0.1978,
+    -0.1843
+   ],
+   "Muzzle": [
+    0.0,
+    0.1152,
+    -0.7
+   ],
+   "Sight": [
+    0.0,
+    0.2098,
+    0.21
+   ]
+  },
+  "materials": {
+   "DarkMetal": {
+    "color": [
+     0.047,
+     0.047,
+     0.046
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "LightMetal": {
+    "color": [
+     0.114,
+     0.117,
+     0.125
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Metal": {
+    "color": [
+     0.067,
+     0.068,
+     0.067
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Black": {
+    "color": [
+     0.027,
+     0.027,
+     0.029
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Grey": {
+    "color": [
+     0.041,
+     0.042,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "Glass": {
+    "color": [
+     0.003,
+     0.006,
+     0.015
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   }
+  },
+  "tris": 1690,
+  "format": "glb",
+  "name": "sniper_5"
  }
 }
