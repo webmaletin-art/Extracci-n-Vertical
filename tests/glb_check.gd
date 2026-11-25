@@ -22,7 +22,7 @@ func _ready() -> void:
 	var xt: Array = []
 	for i in an0.get_track_count():
 		var tp := str(an0.track_get_path(i))
-		if an0.track_get_type(i) == Animation.TYPE_SCALE_3D and tp.ends_with("Anatomia"):
+		if an0.track_get_type(i) == Animation.TYPE_SCALE_3D and ("Anatomia" in tp) and not (":" in tp):
 			for k in an0.track_get_key_count(i):
 				var v: Vector3 = an0.track_get_key_value(i, k)
 				if v.x > 0.5:
