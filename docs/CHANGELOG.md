@@ -133,3 +133,7 @@
   que el cuerpo), con la profundidad de la piel según la zona; siempre visibles sobre la ropa y ocultos en la toma de rayos X.
 * Botones y joysticks táctiles: fondo oscuro, aro negro + aro de color y letra con borde (se leen sobre fondo blanco);
   botones de acción más cerca del joystick derecho.
+
+## 0.11.0 — armas livianas
+
+* `am4`, `mp5` y `browning` usan los modelos livianos subidos (M4A1, MP5_1, M1911 Táctica) en lugar de los de Operación Nexus; se borran los `.scn` y sus texturas. Mismos id y estadísticas. `tools/weapons/convert_fbx.py` acepta una lista de id para convertir sólo esas armas.

@@ -1,7 +1,7 @@
 """Convierte armas FBX (subidas por el usuario) a GLB para el juego, con Blender (bpy).
 Une las piezas, reduce las mallas muy pesadas, escala al largo REAL, orienta la boca del cañón hacia -Z (Godot) con
 el arriba en +Y, y calcula los marcadores Grip (empuñadura), Support (guardamanos), Muzzle (boca) y Sight.
-Uso: python3 tools/weapons/convert_fbx.py -- <carpeta FBX> <carpeta salida assets/weapons> <salida markers.json>"""
+Uso: python3 tools/weapons/convert_fbx.py -- <carpeta FBX> <carpeta salida assets/weapons> <salida markers.json> [id ...]"""
 import json
 import math
 import os
@@ -21,7 +21,10 @@ WEAPONS = {
     "cqbm4": ("CQBM4.fbx", 0.76, "rifle"), "m4supp": ("SuppressedM4.fbx", 0.95, "rifle"), "m16": ("M16.fbx", 1.0, "rifle"),
     "g36c": ("G36C.fbx", 0.72, "rifle"), "ak47": ("AK47.fbx", 0.88, "rifle"), "scarh": ("SCAR-H.fbx", 0.97, "rifle"),
     "aug": ("SteyrAUG_M1.fbx", 0.79, "rifle"), "m4dmr": ("M4Sniper.fbx", 1.05, "rifle"),
+    # reemplazan a los modelos pesados de Operación Nexus (mismos id y estadísticas)
+    "am4": ("M4A1.fbx", 0.84, "rifle"), "mp5": ("MP5_1.fbx", 0.68, "smg"), "browning": ("M1911Tactical.fbx", 0.22, "pistol"),
 }
+ONLY = argv[3:]          # (opcional) convertir sólo estos id
 MAX_TRIS = 16000
 
 
@@ -34,6 +37,8 @@ def find(name):
 
 markers = {}
 for wid, (fname, length, kind) in WEAPONS.items():
+    if ONLY and wid not in ONLY:
+        continue
     path = find(fname)
     if not path:
         print("falta", fname)
