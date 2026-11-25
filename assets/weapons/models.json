@@ -1,72 +1,48 @@
 {
  "am4": {
-  "kind": "rifle",
-  "length": 0.84,
   "has_mag": true,
-  "source": "M4A1.fbx",
+  "kind": "rifle",
+  "length": 0.88,
   "markers": {
    "Grip": [
     0.0,
-    -0.0158,
-    -0.0057
-   ],
-   "Support": [
     0.0,
-    -0.1385,
-    -0.1718
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0403,
+    -0.1415
    ],
    "Muzzle": [
     0.0,
-    0.0811,
-    -0.42
+    0.085,
+    -0.616
    ],
    "Sight": [
     0.0,
-    0.1578,
-    0.126
+    0.116,
+    -0.132
+   ],
+   "Support": [
+    0.0,
+    0.055,
+    -0.352
    ]
   },
   "materials": {
-   "LowPoly_Black": {
-    "color": [
-     0.024,
-     0.024,
-     0.024
-    ],
-    "metallic": 0.0,
-    "roughness": 0.8
-   },
-   "LowPoly_Yellow": {
-    "color": [
-     0.776,
-     0.443,
-     0.208
-    ],
-    "metallic": 0.0,
-    "roughness": 0.5
-   },
-   "LowPoly_Bronze": {
-    "color": [
-     0.281,
-     0.129,
-     0.014
-    ],
-    "metallic": 0.0,
-    "roughness": 0.8
-   },
-   "RedDotEmmisive": {
-    "color": [
-     0.8,
-     0.016,
-     0.003
-    ],
-    "metallic": 0.0,
-    "roughness": 0.4
+   "Material": {
+    "albedo": "tex/am4_Material_a.webp",
+    "metallic": 0.6,
+    "normal": "tex/am4_Material_n.webp",
+    "orm": "tex/am4_Material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
    }
   },
-  "tris": 9348,
-  "name": "M4A1 (AM4)",
-  "format": "glb"
+  "name": "AR-15 (AM4)",
+  "parts": {},
+  "tris": 3584
  },
  "awm": {
   "has_mag": false,
@@ -110,46 +86,49 @@
   "tris": 21200
  },
  "browning": {
-  "kind": "pistol",
-  "length": 0.22,
   "has_mag": true,
-  "source": "M1911Tactical.fbx",
+  "kind": "pistol",
+  "length": 0.2,
   "markers": {
    "Grip": [
     0.0,
-    -0.0144,
-    0.0468
-   ],
-   "Support": [
     0.0,
-    -0.0344,
-    0.0568
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0166,
+    -0.006
    ],
    "Muzzle": [
     0.0,
-    0.0511,
-    -0.11
+    0.055,
+    -0.172
    ],
    "Sight": [
     0.0,
-    0.0718,
-    0.033
+    0.076,
+    -0.022
+   ],
+   "Support": [
+    0.0,
+    -0.02,
+    -0.018
    ]
   },
   "materials": {
-   "Mat_Dark": {
-    "color": [
-     0.099,
-     0.099,
-     0.099
-    ],
-    "metallic": 0.0,
-    "roughness": 0.4
+   "Material #25": {
+    "albedo": "tex/browning_Material_25_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/browning_Material_25_n.webp",
+    "orm": "tex/browning_Material_25_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
    }
   },
-  "tris": 1536,
-  "name": "M1911 Táctica",
-  "format": "glb"
+  "name": "Browning HP",
+  "parts": {},
+  "tris": 4182
  },
  "m24": {
   "has_mag": true,
@@ -333,73 +312,56 @@
   "tris": 2006
  },
  "mp5": {
-  "kind": "smg",
-  "length": 0.68,
   "has_mag": true,
-  "source": "MP5_1.fbx",
+  "kind": "rifle",
+  "length": 0.68,
   "markers": {
    "Grip": [
     0.0,
-    0.0183,
-    0.1708
-   ],
-   "Support": [
     0.0,
-    -0.1673,
-    -0.1332
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0531,
+    -0.1762
    ],
    "Muzzle": [
     0.0,
-    0.0953,
-    -0.34
+    0.1,
+    -0.4012
    ],
    "Sight": [
     0.0,
-    0.1793,
-    0.102
+    0.155,
+    -0.0272
+   ],
+   "Support": [
+    0.0,
+    0.07,
+    -0.2312
    ]
   },
   "materials": {
-   "MP5Mat": {
-    "color": [
-     0.004,
-     0.004,
-     0.004
-    ],
-    "metallic": 0.0,
-    "roughness": 0.05
+   "Material": {
+    "albedo": "tex/mp5_Material_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/mp5_Material_n.webp",
+    "orm": "tex/mp5_Material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
    },
-   "MP5WhiteMat": {
-    "color": [
-     0.8,
-     0.8,
-     0.8
-    ],
-    "metallic": 0.0,
-    "roughness": 0.0
-   },
-   "MP5RedMat": {
-    "color": [
-     0.8,
-     0.05,
-     0.03
-    ],
-    "metallic": 0.0,
-    "roughness": 0.69
-   },
-   "MP5MagMat": {
-    "color": [
-     0.006,
-     0.006,
-     0.006
-    ],
-    "metallic": 0.0,
-    "roughness": 0.0
+   "mag": {
+    "albedo": "tex/mp5_mag_a.webp",
+    "metallic": 1.0,
+    "orm": "tex/mp5_mag_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
    }
   },
-  "tris": 6095,
   "name": "MP5",
-  "format": "glb"
+  "parts": {},
+  "tris": 8966
  },
  "remington": {
   "has_mag": false,

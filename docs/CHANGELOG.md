@@ -134,6 +134,6 @@
 * Botones y joysticks táctiles: fondo oscuro, aro negro + aro de color y letra con borde (se leen sobre fondo blanco);
   botones de acción más cerca del joystick derecho.
 
-## 0.11.0 — armas livianas
+## 0.11.1 — se recuperan las armas de Nexus
 
-* `am4`, `mp5` y `browning` usan los modelos livianos subidos (M4A1, MP5_1, M1911 Táctica) en lugar de los de Operación Nexus; se borran los `.scn` y sus texturas. Mismos id y estadísticas. `tools/weapons/convert_fbx.py` acepta una lista de id para convertir sólo esas armas.
+* Se deshace el cambio de 0.11.0: `am4`, `mp5` y `browning` vuelven a sus modelos de Operación Nexus (con texturas). Los modelos livianos (M4A1, MP5_1 y M1911 Táctica) se pueden volver a generar con `tools/weapons/convert_fbx.py -- <FBX> <salida> <markers.json> am4 mp5 browning`.

@@ -38,7 +38,7 @@
  },
  "browning": {
   "model": "browning",
-  "name": "Pistola M1911 Táctica",
+  "name": "Pistola Browning HP",
   "class": "pistol",
   "hold": "pistol",
   "mag": 13,
@@ -267,7 +267,7 @@
  },
  "am4": {
   "model": "am4",
-  "name": "Fusil de asalto AM4 (M4A1)",
+  "name": "Fusil de asalto AM4",
   "class": "rifle",
   "hold": "rifle",
   "mag": 30,

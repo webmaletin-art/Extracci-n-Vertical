@@ -1,15 +1,14 @@
 # Armas de Extracción Vertical
 
 Datos en `data/weapons.json` (se cambian ahí, sin tocar código). Ordenadas por clase y precio.
-**Actualización:** los modelos pesados de Operación Nexus de `am4`, `mp5` y `browning` se reemplazaron por los livianos subidos (M4A1, MP5_1 y M1911 Táctica, color liso, ≈ 0,9 MB en total contra 1,5 MB y sus texturas), con los mismos id y estadísticas; quedan `remington` y `awm` de Nexus hasta tener modelos livianos de una escopeta y un rifle .50.
-**Repetidas (antes):** se usó la de mejor calidad — el fusil M4 y el MP5 de Operación Nexus (con texturas PBR) quedan en lugar de los
+**Repetidas:** se usó la de mejor calidad — el fusil M4 y el MP5 de Operación Nexus (con texturas PBR) quedan en lugar de los
 M4A1 / MP5 subidos (color liso); de los M1911, M16 y SCAR se usó la versión más detallada (M1911, M16, SCAR-H). Las armas
 subidas se convierten con `tools/weapons/convert_fbx.py` (Blender): tamaño real, boca del cañón a −Z, marcadores de manos;
 Vector (114 000 triángulos) y AUG (283 000) se redujeron a ~16 000.
 
 | Arma | id | Clase | Nivel | Precio | Daño | Disparos/min | Cargador | Alcance | Dispersión | Retroceso |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Pistola M1911 Táctica | `browning` | Pistola | 0 | 0 CR | 24 | 360 | 13 | 25 m | 2.2° | 2.6° |
+| Pistola Browning HP | `browning` | Pistola | 0 | 0 CR | 24 | 360 | 13 | 25 m | 2.2° | 2.6° |
 | Pistola M1911 | `m1911` | Pistola | 1 | 450 CR | 32 | 330 | 8 | 30 m | 2.0° | 3.2° |
 | Pistola Desert Eagle | `deagle` | Pistola | 2 | 1.200 CR | 52 | 200 | 7 | 40 m | 2.4° | 5.5° |
 | Subfusil MP5 | `mp5` | Subfusil | 1 | 1.400 CR | 21 | 800 | 30 | 40 m | 2.4° | 1.0° |
@@ -18,7 +17,7 @@ Vector (114 000 triángulos) y AUG (283 000) se redujeron a ~16 000.
 | Subfusil Vector | `vector` | Subfusil | 3 | 2.500 CR | 23 | 1200 | 25 | 35 m | 2.6° | 0.6° |
 | Escopeta Remington 31 | `remington` | Escopeta | 2 | 1.600 CR | 14×8 | 70 | 6 | 15 m | 6.5° | 6.0° |
 | Carabina CQB M4 | `cqbm4` | Fusil | 2 | 2.600 CR | 28 | 800 | 30 | 60 m | 2.0° | 1.3° |
-| Fusil de asalto AM4 (M4A1) | `am4` | Fusil | 3 | 3.000 CR | 30 | 650 | 30 | 80 m | 1.6° | 1.4° |
+| Fusil de asalto AM4 | `am4` | Fusil | 3 | 3.000 CR | 30 | 650 | 30 | 80 m | 1.6° | 1.4° |
 | Fusil G36C | `g36c` | Fusil | 3 | 3.200 CR | 30 | 750 | 30 | 75 m | 1.5° | 1.2° |
 | Fusil M16 | `m16` | Fusil | 3 | 3.400 CR | 34 | 600 | 30 | 100 m | 1.0° | 1.5° |
 | Fusil M4 con supresor | `m4supp` | Fusil | 3 | 3.600 CR | 29 | 650 | 30 | 80 m | 1.5° | 1.2° |
