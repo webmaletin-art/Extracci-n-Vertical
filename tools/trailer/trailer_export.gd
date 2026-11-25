@@ -325,7 +325,9 @@ func capture(t: float) -> void:
 		locs.resize(d.n)
 		for b in d.n:
 			var pb := sk.get_bone_parent(b)
-			locs[b] = ((globs[pb] as Transform3D).affine_inverse() * (globs[b] as Transform3D)) if pb >= 0 else globs[b]
+			# el nodo Skeleton3D del juego está girado dentro del modelo (-90°) y el GLB descarta la transformación del nodo del
+			# esqueleto: se la suma a los huesos raíz para que el personaje mire hacia donde mira en el juego
+			locs[b] = ((globs[pb] as Transform3D).affine_inverse() * (globs[b] as Transform3D)) if pb >= 0 else (sk.transform * (globs[b] as Transform3D))
 		d["locs"] = locs
 		if absf(t - 3.0) < 0.02 and _actors.find(d) == 0:
 			var hi := sk.find_bone("mixamorig_RightHand")
@@ -341,6 +343,7 @@ func capture(t: float) -> void:
 				var o: Vector3 = lt0.origin if ((d.get("pos_tr", {}) as Dictionary).has(cbi) or sk.get_bone_name(cbi) == "mixamorig_Hips") else rest0.origin
 				var bs := Basis(lt0.basis.orthonormalized().get_rotation_quaternion()).scaled(lt0.basis.get_scale() if (d.scale as Dictionary).has(cbi) else Vector3.ONE)
 				acc = acc * Transform3D(bs, o)
+			print("MESH_XF ", (d.skin_mi as MeshInstance3D).transform if d.get("skin_mi") != null else "?", " sk_local=", sk.transform)
 			print("YAW_JUEGO modelo=", snappedf(rad_to_deg((a.model.global_basis as Basis).get_euler().y), 0.1), " esqueleto=", snappedf(rad_to_deg(sk.global_basis.get_euler().y), 0.1), " escala_esq=", sk.global_basis.get_scale())
 			print("RECONSTRUIDA mano_der=", sk.global_transform * acc.origin, " real=", sk.global_transform * (globs[hi] as Transform3D).origin, " cadena=", chain.size())
 		for b in d.n:
