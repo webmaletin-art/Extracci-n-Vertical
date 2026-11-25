@@ -352,21 +352,49 @@ func _escalera() -> void:
 	player.inp.move = Vector2.ZERO
 	await wait_s(0.5)
 
+## Dispara a una parte del cuerpo (hueso) de un personaje, aunque ya esté en el piso.
+func shoot_bone(target: Actor, bone: String, secs: float, on := 2, off := 12) -> void:
+	var area: Area3D = null
+	for h in target.hitboxes:
+		if str(h.get_meta("bone", "")) == "mixamorig_" + bone:
+			area = h
+	if area == null:
+		return
+	var n := 0
+	while is_instance_valid(target) and n < int(secs * FPS):
+		var pt := area.global_position
+		var from := player.global_position + Vector3(0, 1.45, 0)
+		player.inp.aim_snap = true
+		player.inp.aim = Vector2(pt.x - from.x, pt.y - from.y).normalized()
+		player.inp.fire = (n % (on + off)) < on
+		var f := player.weapon()
+		if f and f.mag <= 0 and not f.reloading:
+			player.inp.reload = true
+			press("reload", 0.6)
+		await get_tree().process_frame
+		n += 1
+	player.inp.fire = false
+
 func _escopeta() -> void:
 	arm("primary", "remington")
 	put(Vector3(10.0, 4.55, 0))
 	face(1.0)
+	title("ESCOPETA", "A quemarropa: huesos, sangre y miembros", 2.5)
 	target_cam(func(): return player.global_position + Vector3(2.0, 1.3, 0), 8.0, 58.0, 0.6)
 	var es: Array[Actor] = []
 	es.append(spawn_enemy(15.0, 4.55, "mortero", "am4", 1))
-	es.append(spawn_enemy(18.0, 4.55, "vigia", "mp5", 1))
-	es.append(spawn_enemy(21.0, 4.55, "fantasma", "browning", 1))
-	await wait_s(0.4)
-	for e in es:
-		await walk_to(e.global_position.x - 3.2, 0.7, 0.6, 5.0)
+	es.append(spawn_enemy(19.0, 4.55, "vigia", "mp5", 1))
+	es.append(spawn_enemy(23.0, 4.55, "fantasma", "browning", 1))
+	await wait_s(0.6)
+	var bones := ["LeftForeArm", "RightUpLeg", "LeftLeg"]
+	for i in es.size():
+		var e := es[i]
+		await walk_to(e.global_position.x - 2.4, 0.7, 0.5, 6.0)
 		target_cam(_mid(e), 8.5, 58.0, 0.6)
 		await fight(e, 6.0, false, false, 2, 12)
-		await wait_s(0.6)
+		await wait_s(0.8)
+		await shoot_bone(e, bones[i], 3.0)           # el cuerpo muerto sigue recibiendo: se arranca el miembro
+		await wait_s(1.4)
 	await wait_s(1.5)
 
 func _fusil() -> void:

@@ -28,6 +28,15 @@ func _ready() -> void:
 				if v.x > 0.5:
 					xt.append(snappedf(an0.track_get_key_time(i, k), 0.1))
 	print("ANATOMIA visible en t=", xt)
+	var lt: Array = []
+	for i in an0.get_track_count():
+		var tp2 := str(an0.track_get_path(i))
+		if an0.track_get_type(i) == Animation.TYPE_SCALE_3D and "Miembro_" in tp2:
+			for k in an0.track_get_key_count(i):
+				if (an0.track_get_key_value(i, k) as Vector3).x > 0.5:
+					lt.append(snappedf(an0.track_get_key_time(i, k) + 0.5, 0.1))
+					break
+	print("MIEMBROS que aparecen en t=", lt)
 	var cam := scene.find_child("Camara3D", true, false) as Camera3D
 	if cam == null:
 		cam = scene.find_children("*", "Camera3D", true, false)[0]
@@ -46,7 +55,7 @@ func _ready() -> void:
 	var an_name: String = ap.get_animation_list()[0]
 	ap.play(an_name)
 	ap.pause()
-	for t in (xt.slice(0, 4) if not xt.is_empty() else [8.0]):
+	for t in (xt.slice(0, 2) + lt.slice(0, 3) if not (xt.is_empty() and lt.is_empty()) else [8.0]):
 		ap.seek(t, true)
 		var a0 := scene.find_child("Actor_0*", true, false) as Node3D
 		print("t=", t, " camara=", cam.global_position, " actor0=", a0.global_position if a0 else "?")
