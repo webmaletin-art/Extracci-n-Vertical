@@ -99,3 +99,10 @@
 * Test de rendimiento de estilos en Modo práctica (≈1 min, con disparos y granada, informe copiable).
 * Daño por potencia: sangre y orificio de herida según el daño; escopeta rompe más huesos de cerca.
 * Impactos visibles durante la cámara de muerte; rebotes corregidos (umbrales por material).
+
+## 0.9.1 — estilo D por defecto y calidad sólo de anatomía
+
+* El estilo «D · Plano dibujado» arranca activado (Modo práctica permite volver al original).
+* La calidad gráfica (BAJA / MEDIA / ALTA) sólo cambia anatomía y daño: rayos X y sangre / fragmentos. Resolución 720p,
+  sombras, luces, MSAA, decorado, humo y explosiones quedan fijos (`Settings.LOCKED`); se quitaron sus opciones del menú.
+* Medición en el Z2356 (1600×720): original 41,4 FPS · A 24,2 · B 51,1 · C 37,1 · D 50,9.

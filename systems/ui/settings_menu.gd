@@ -91,23 +91,18 @@ func _ready() -> void:
 		pr.add_child(_btn(Settings.LEVELS[i].to_upper(), func():
 			Settings.preset(lv)
 			_refresh()))
+	var note := Label.new()
+	note.text = "La calidad sólo cambia la anatomía y el daño (rayos X, sangre y fragmentos). Resolución, sombras y luces son fijas: el estilo plano no las usa."
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note.add_theme_color_override("font_color", UiTheme.MUTED)
+	g.add_child(note)
 	_head(g, "Imagen")
-	_slider(g, "render_scale", "Resolución 3D (1.00 = 720p)", 0.5, 1.5, 0.05, false)
 	_option(g, "fps_target", "FPS objetivo", ["30", "60"], [30, 60])
-	_option(g, "msaa", "Antialiasing MSAA", ["No", "2x", "4x"])
-	_check(g, "fxaa", "Antialiasing FXAA (barato)")
-	_head(g, "Luz y escenario")
-	_option(g, "shadows", "Sombras", ["Sin sombras", "Simples (círculo)", "Reales de la luna"])
-	_option(g, "lights", "Luces reales sobre personajes", ["Ninguna (luz pintada)", "2 luces", "4 luces"])
-	_option(g, "decor", "Detalle del decorado", Settings.LEVELS)
 	_check(g, "fog_war", "Velos de sectores (niebla de exploración)")
-	_option(g, "view_floors", "Pisos vecinos visibles", ["Sólo el actual", "±1 piso", "±2 pisos"])
 	# ---- Efectos
 	var e: VBoxContainer = add_page.call("💥  Efectos")
 	_head(e, "Partículas")
 	_option(e, "particles", "Chispas, polvo y sangre", Settings.LEVELS)
-	_option(e, "smoke", "Humo", Settings.LEVELS)
-	_option(e, "explosions", "Explosiones (fuego, onda, escombros)", Settings.LEVELS)
 	_head(e, "Daño y cámara lenta")
 	_option(e, "xray", "Rayos X en cámara lenta", ["Apagado", "Sólo huesos", "Huesos, órganos y vasos"])
 	_option(e, "xray_hits", "Cuándo se ven los rayos X", ["Sólo al morir", "En cada impacto grave y al morir"])

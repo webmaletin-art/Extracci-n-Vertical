@@ -45,6 +45,7 @@ func _ready() -> void:
 	for p in [["tech_line_w", line_w], ["tech_line_k", line_k], ["tech_shade", shade], ["tech_detail", detail],
 			["tech_contrast", contrast], ["tech_red", red], ["tech_xray", 0.0], ["tech_on", 0.0]]:
 		RenderingServer.global_shader_parameter_add(str(p[0]), RenderingServer.GLOBAL_VAR_TYPE_FLOAT, float(p[1]))
+	set_mode.call_deferred(4)        # estilo por defecto: D · Plano dibujado (el modo práctica permite volver al original)
 
 ## Cambia el modo (y aplica en el acto sobre lo que está en pantalla).
 func set_mode(m: int) -> void:
@@ -177,6 +178,8 @@ var _batch := {}            ## sector (15 m) → [vértices, custom, índices]
 const BATCH := 15.0
 func _batch_add(ln: ArrayMesh, xf: Transform3D) -> void:
 	var arr := ln.surface_get_arrays(0)
+	if arr.is_empty() or arr[Mesh.ARRAY_VERTEX] == null or arr[Mesh.ARRAY_CUSTOM0] == null:
+		return                          # sin renderizador (pruebas sin pantalla): no hay datos de malla
 	var vv: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
 	var cc: PackedFloat32Array = arr[Mesh.ARRAY_CUSTOM0]
 	var ii: PackedInt32Array = arr[Mesh.ARRAY_INDEX]

@@ -64,22 +64,22 @@ var auto_fire_stick := false        ## dispara al llevar el joystick derecho al 
 var show_fps := false
 var character_id := "alfa"
 
-## Lo que cambia cada nivel de calidad (BAJA / MEDIA / ALTA).
+## Lo que cambia cada nivel de calidad (BAJA / MEDIA / ALTA): SÓLO la anatomía y el daño (rayos X y sangre / fragmentos).
+## Todo lo demás (resolución, sombras, luces, decorado…) es fijo: en el estilo «plano dibujado» no cuesta nada (ver LOCKED).
 const PRESET_VALUES := {
-	"render_scale": [0.75, 1.0, 1.25],
-	"shadows": [1, 1, 2],
-	"lights": [0, 1, 2],
-	"msaa": [0, 0, 1],
-	"fxaa": [false, true, false],
 	"particles": [0, 1, 2],
-	"smoke": [0, 1, 2],
-	"explosions": [0, 1, 2],
-	"decor": [0, 1, 2],
-	"background": [0, 1, 2],
-	"view_floors": [0, 1, 2],
-	"fps_target": [30, 30, 60],
 	"xray": [1, 2, 2],
 }
+
+## Valores fijos, iguales en todas las calidades. Sin sombras ni luces reales: el estilo es plano (TechView modo D).
+const LOCKED := {
+	"render_scale": 1.0, "shadows": 0, "lights": 0, "msaa": 0, "fxaa": true,
+	"smoke": 1, "explosions": 1, "decor": 1, "background": 1, "view_floors": 1,
+}
+
+func _lock() -> void:
+	for k in LOCKED:
+		set(k, LOCKED[k])
 
 ## Multiplicadores que usan los efectos (cantidad de partículas, vida del humo…).
 static func level_mult(level: int) -> float:
@@ -88,6 +88,7 @@ static func level_mult(level: int) -> float:
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	load_settings()
+	_lock()
 	apply()
 
 func preset(level: int) -> void:
