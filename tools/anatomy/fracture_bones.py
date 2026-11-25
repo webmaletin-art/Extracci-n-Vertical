@@ -91,7 +91,18 @@ def sub_bmesh(faces):
     return bm
 
 
-def fracture(obj, n):
+# tamaño típico de un fragmento (m): cada pieza suelta se parte según SU tamaño (una costilla en 6-7 trozos, no en 18)
+CELL_SIZE = {"cráneo": 0.022, "mandíbula": 0.02, "dedos": 0.012, "huesos de la mano": 0.015, "huesos del pie": 0.02}
+
+
+def cell_size(label):
+    for k, v in CELL_SIZE.items():
+        if label.startswith(k):
+            return v
+    return 0.035
+
+
+def fracture(obj, n, label=""):
     me = obj.data
     base = bmesh.new()
     base.from_mesh(me)
@@ -114,8 +125,15 @@ def fracture(obj, n):
         if len(faces) < 40 or sz < 0.012:
             loose.extend(faces)            # trocitos (dientes sueltos, cartílagos): van juntos en un fragmento
             continue
-        k = max(1, min(n, round(n * sz / big)))
+        k = max(1, min(n, round(sz / cell_size(label))))
         sub = sub_bmesh(faces)
+        # se cierran los agujeros de la malla original: el corte queda tapado (sin huecos ni láminas sueltas)
+        bnd = [e for e in sub.edges if e.is_boundary]
+        if bnd:
+            try:
+                bmesh.ops.holes_fill(sub, edges=bnd, sides=0)
+            except Exception:
+                pass
         out.extend(fracture_bm(sub, k, max(sz, 0.01)) if k > 1 else [whole(sub)])
         sub.free()
     if loose:
@@ -202,7 +220,7 @@ for obj in bpy.data.objects:
     n = cells_for(bones[node]["label"])
     if n < 2:
         continue
-    frags = fracture(obj, n)
+    frags = fracture(obj, n, bones[node]["label"])
     for k, (v, f, c) in enumerate(frags):
         v = np.stack([v[:, 0], v[:, 2], -v[:, 1]], axis=1)       # Blender → Godot
         names.append(f"{node}_f{k:02d}")

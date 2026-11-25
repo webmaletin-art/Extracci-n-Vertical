@@ -22,6 +22,7 @@ var _room := ""
 var _t := 0.0
 var _kills := 0
 var probe_mode := false
+var injury_stats: Array = []          ## lesiones causadas y recibidas (para estadísticas)
 var over := false
 
 func _ready() -> void:
@@ -36,6 +37,12 @@ func _ready() -> void:
 	tower.build(TorreAlfa.data())
 	tower.extracted.connect(_on_extracted)
 	_spawn_player()
+	# la anatomía de calidad máxima se prepara en segundo plano (un hilo por tipo de personaje)
+	var ids := {player.character_id: true}
+	for e in tower.enemies:
+		ids[e.character_id] = true
+	for id in ids:
+		AnatomyBody.warm(str(id))
 	camera = SideCamera.new()
 	camera.target = player
 	camera.bounds = Rect2(0, -1, float(tower.data.width), float(tower.data.floor_h) * 6.0)
@@ -60,7 +67,8 @@ func _ready() -> void:
 	bullet_time.add_to_group("bullet_time")
 	add_child(bullet_time)
 	bullet_time.setup(camera, player)
-	bullet_time.injury_report.connect(func(v, lines): hud.show_injuries(v, lines))
+	# las lesiones no se muestran en pantalla durante la partida: se guardan para las estadísticas del jugador
+	bullet_time.injury_report.connect(func(v, lines): injury_stats.append({"t": _t, "victim": str(v.name), "lines": lines}))
 	probe = PerfProbe.new()
 	probe.game = self
 	add_child(probe)

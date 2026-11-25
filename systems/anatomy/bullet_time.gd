@@ -28,9 +28,10 @@ var _focus := Vector3.ZERO
 var _main := ""                  ## grupo anatómico de la herida que mató (la cámara la sigue mientras cae el cuerpo)
 var _main_pos := Vector3.ZERO
 var _kind := ""
-var focus_label := ""
+var focus_label := ""            ## (práctica) comienzo del nombre del grupo que la cámara debe enfocar
+var flash_wounds := false
 var debug_u := -1.0               ## (capturas) fija el avance de la repetición 0..1
-const REPLAY_SECONDS := 2.6       ## (tiempo real) la bala atravesando el cuerpo
+const REPLAY_SECONDS := 4.0       ## (tiempo real) la bala atravesando el cuerpo, muy lenta
 var _replay: Array = []
 var _rp_t0 := 0.0
 var _rp_anat: AnatomyBody
@@ -38,7 +39,10 @@ var _rp_bullet: MeshInstance3D
 var _rp_seen := -1
 var _rp_spin := 0.0
 var _rp_tumble := false
-var _rp_flat := false            ## (práctica) comienzo del nombre del grupo que la cámara debe enfocar
+var _rp_flat := false
+var _drip_node := ""             ## orificio que chorrea sangre al piso durante la toma
+var _drip_p := Vector3.ZERO
+var _drip_t := 0.0
 var _dist0 := 2.0
 var _dist1 := 0.8
 var _ang1 := 0.25
@@ -114,7 +118,10 @@ func _on_damage(a: Actor, info: Dictionary) -> void:
 	if Settings.bullet_time >= 2 and phase == "":
 		_killcam(a, info)             # modo práctica: toma de cerca de cada herida
 		return
-	AnatomyBody.for_actor(a).show_flash(nodes, 0.9)
+	# en la partida los rayos X son SÓLO para la muerte: las heridas que no matan no muestran nada (quedan en las
+	# estadísticas). flash_wounds = true vuelve a mostrar el destello rápido (no se usa hoy).
+	if flash_wounds:
+		AnatomyBody.for_actor(a).show_flash(nodes, 0.9)
 
 func _killcam(a: Actor, info: Dictionary) -> void:
 	if phase == "kill":
@@ -209,6 +216,7 @@ func _process(_d: float) -> void:
 			if is_instance_valid(v2) and (v2.is_dead() or (Settings.bullet_time >= 2 and not (v2.last_hit_info.get("anatomy_nodes", []) as Array).is_empty())):
 				_killcam(v2, v2.last_hit_info)
 		return
+	_drip(_d)
 	if not _replay.is_empty():
 		if _replay_step():
 			return
@@ -230,12 +238,26 @@ func _process(_d: float) -> void:
 	if _now() > _until:
 		_end()
 
+## La sangre chorrea del orificio de entrada hacia el piso (gotas finas que caen y hacen charco).
+func _drip(_delta: float) -> void:
+	if _drip_node == "" or Blood.instance == null or not is_instance_valid(_victim):
+		return
+	if _now() < _drip_t:
+		return
+	_drip_t = _now() + 0.12
+	var anat := AnatomyBody.for_actor(_victim)
+	if not anat.groups.has(_drip_node):
+		return
+	var p := anat.bind_to_world(_drip_node, _drip_p)
+	Blood.instance.drops(p, Vector3(randf_range(-0.2, 0.2), -1.0, randf_range(-0.1, 0.1)), 0.18, 0.6, 12.0)
+
 func skip() -> void:
 	if phase != "":
 		_end()
 
 func _end() -> void:
 	closeup_active = false
+	_drip_node = ""
 	_replay = []
 	if _rp_bullet:
 		_rp_bullet.visible = false
@@ -312,6 +334,13 @@ func _replay_step() -> bool:
 			continue
 		_rp_seen = k
 		var e: Dictionary = _replay[k]
+		if Blood.instance:
+			if k == 1:
+				Blood.instance.spray(pts[k], fwd, false, true)        # orificio de entrada: salpica hacia atrás
+				_drip_node = str(e.node)
+				_drip_p = e.p
+			if e.get("exit", false):
+				Blood.instance.spray(pts[k - 1], fwd, true, true)      # orificio de salida: chorro hacia adelante
 		if int(e.get("seq", -1)) >= 0:
 			anat.set_reveal(maxi(anat.reveal_seq, int(e.seq)))
 			if Blood.instance and str(e.get("sys", "")) in ["vaso", "organo"]:
@@ -323,32 +352,31 @@ func _replay_step() -> bool:
 	if _rp_bullet == null:
 		_rp_bullet = MeshInstance3D.new()
 		_rp_bullet.top_level = true
-		if ResourceLoader.exists("res://assets/ammo/projectile.mesh"):
-			_rp_bullet.mesh = load("res://assets/ammo/projectile.mesh")
-		elif Gibs.instance:
-			_rp_bullet.mesh = Gibs.instance.bullet_mesh
 		_rp_bullet.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		# la bala se ve SIEMPRE, también dentro del hueso (como en los rayos X de Sniper Elite): cobre brillante encima de todo
-		var bm := StandardMaterial3D.new()
-		bm.albedo_color = Color(0.85, 0.55, 0.3)
-		bm.metallic = 0.9
-		bm.roughness = 0.25
-		bm.emission_enabled = true
-		bm.emission = Color(0.55, 0.32, 0.15)
-		bm.no_depth_test = true
-		bm.render_priority = 10
-		_rp_bullet.material_override = bm
 		add_child(_rp_bullet)
+	var want := bullet_mesh(_rp_flat)
+	if _rp_bullet.mesh != want:
+		_rp_bullet.mesh = want
+		# la bala se ve SIEMPRE, también dentro del hueso: materiales del modelo (cobre y plomo) dibujados encima de todo
+		for k in want.get_surface_count():
+			var src := want.surface_get_material(k)
+			var bm: StandardMaterial3D = src.duplicate() if src is StandardMaterial3D else StandardMaterial3D.new()
+			bm.no_depth_test = true
+			bm.render_priority = 10
+			bm.emission_enabled = true
+			bm.emission = bm.albedo_color * 0.45
+			bm.metallic = 0.6
+			bm.roughness = 0.3
+			_rp_bullet.set_surface_override_material(k, bm)
 	_rp_bullet.visible = true
 	var basis := Basis.looking_at(fwd, Vector3.UP if absf(fwd.y) < 0.95 else Vector3.RIGHT)
 	_rp_spin += 0.35
 	basis = basis * Basis(Vector3.BACK, _rp_spin)                       # gira sobre su eje (estrías del cañón)
 	if _rp_tumble:
 		basis = basis * Basis(Vector3.RIGHT, _rp_spin * 0.55)           # se desvió: da vueltas
-	# tamaño real (~4 cm) y centrada: el modelo de la bala trae el origen corrido
-	var sc := Vector3.ONE * 0.2
-	if _rp_flat:
-		sc = Vector3(1.7, 1.7, 0.6) * 0.2                                 # se aplastó contra el hueso duro
+	# bala de Blender (tools/ammo/make_bullets.py), a 1,5× su tamaño real para que se lea en pantalla; en hueso duro se
+	# cambia por la versión aplastada en hongo
+	var sc := Vector3.ONE * 1.5
 	var mc := _rp_bullet.mesh.get_aabb().get_center() if _rp_bullet.mesh else Vector3.ZERO
 	_rp_bullet.global_transform = Transform3D(basis.scaled(sc), pos) * Transform3D(Basis.IDENTITY, -mc)
 	# cámara pegada a la bala, del lado de la cámara del juego, un poco por delante
@@ -360,3 +388,20 @@ func _replay_step() -> bool:
 	camera.fov = 34.0
 	camera.look_at(camera._look, Vector3.UP)
 	return true
+
+static var _bullet_meshes := {}
+## Malla de la bala (entera o en hongo) sacada del GLB de Blender.
+static func bullet_mesh(flat: bool) -> Mesh:
+	var key := "res://assets/ammo/bullet_mushroom.glb" if flat else "res://assets/ammo/bullet_fmj.glb"
+	if not _bullet_meshes.has(key):
+		var m: Mesh = null
+		if ResourceLoader.exists(key):
+			var inst: Node = (load(key) as PackedScene).instantiate()
+			for c in inst.find_children("*", "MeshInstance3D", true, false):
+				m = (c as MeshInstance3D).mesh
+				break
+			inst.free()
+		if m == null and Gibs.instance:
+			m = Gibs.instance.bullet_mesh
+		_bullet_meshes[key] = m
+	return _bullet_meshes[key]

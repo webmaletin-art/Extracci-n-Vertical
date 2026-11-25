@@ -56,7 +56,7 @@ func show_menu(result := {}) -> void:
 	menu.add_child(sky)
 	# la torre en corte, a la derecha
 	var tw := MenuTower.new()
-	tw.anchor_left = 0.30
+	tw.anchor_left = 0.0
 	tw.anchor_right = 1.0
 	tw.anchor_top = 0.0
 	tw.anchor_bottom = 1.0

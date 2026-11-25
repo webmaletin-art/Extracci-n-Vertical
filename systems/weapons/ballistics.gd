@@ -57,8 +57,7 @@ func _ready() -> void:
 		add_child(mi)
 		_tracers.append(mi)
 	bullet_model = MeshInstance3D.new()
-	if ResourceLoader.exists("res://assets/ammo/projectile.mesh"):
-		bullet_model.mesh = load("res://assets/ammo/projectile.mesh")
+	bullet_model.mesh = BulletTime.bullet_mesh(false)          # bala de Blender (tools/ammo/make_bullets.py)
 	bullet_model.visible = false
 	bullet_model.top_level = true
 	add_child(bullet_model)
@@ -221,7 +220,7 @@ func _draw_tracer(i: int, prev: Vector3) -> void:
 		bullet_model.visible = true
 		# el modelo trae el origen corrido ~0,9 m: se centra en la posición real del proyectil
 		var mc := bullet_model.mesh.get_aabb().get_center() if bullet_model.mesh else Vector3.ZERO
-		bullet_model.global_transform = Transform3D(Basis.looking_at(d, up).scaled(Vector3.ONE * 0.6), _pos[i]) * Transform3D(Basis.IDENTITY, -mc)
+		bullet_model.global_transform = Transform3D(Basis.looking_at(d, up).scaled(Vector3.ONE * 4.0), _pos[i]) * Transform3D(Basis.IDENTITY, -mc)
 
 func _kill(i: int) -> void:
 	_alive[i] = false

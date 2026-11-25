@@ -56,3 +56,23 @@
 - **HUD táctil**: joystick de apuntar bien a la derecha, botones de acción entre los joysticks; **editor de controles** (mover, tamaño por botón, transparencia, modo zurdo), distancia de cámara y vibración en Configuración.
 - **Menú principal** con la Torre Alfa en corte girando (`MenuTower`) y **Configuración** rediseñada con navegación lateral (`UiTheme`).
 - Prueba de anatomía: hasta 8 intentos (la bala puede desviarse en el hueso por azar; falló una vez en CI).
+
+## 0.6.0 — Anatomía de calidad máxima, la bala por dentro, menú de la torre
+- **Rayos X sólo en la muerte**: las heridas que no matan ya no muestran destello ni textos en pantalla (quedan en
+  `Game.injury_stats`). En el modo práctica se puede ver la toma de cada herida.
+- **Anatomía de calidad máxima** en todos los personajes (huesos sin reducir: ~430 000 triángulos; órganos ~250 000;
+  vasos ~200 000; nervios/ojos/cerebro ~105 000) y **sin músculos** en los rayos X (como Sniper Elite).
+- **Huesos enteros hasta el impacto**: se guarda el hueso entero y sus fragmentos de Blender; recién al romperse se ven los
+  fragmentos, abiertos sólo cerca del impacto (hueso esponjoso con sangre). Fractura por pieza suelta (cada costilla,
+  vértebra, hueso del cráneo), con superficie irregular y sin costuras; agujeros de la malla cerrados antes del corte.
+- **Esqueleto continuo**: sin recorte esférico; la ropa desaparece en la zona y el resto del esqueleto sigue debajo.
+  El cerebro sólo se ve si se rompe el cráneo; partes blandas y nervios sólo si están dañados.
+- **La bala por dentro** (repetición de 4 s en cámara lenta): recorrido real calculado por `Injuries`, bala de Blender
+  (`tools/ammo/make_bullets.py`: 7,62 mm con camisa de cobre y base de plomo, y versión en hongo), gira sobre su eje, se
+  aplasta en hueso duro, da vueltas si se desvía; cada daño aparece cuando la bala llega; gotas finas; salpicadura en la
+  entrada, chorro en la salida y goteo al piso.
+- Lo que tapa la herida principal se vuelve transparente durante la toma; sin láser en la toma; viñeta de foco.
+- Arreglo: el modelo de la bala en vuelo tenía el origen corrido ~0,9 m.
+- **Menú**: Torre Alfa de noche bajo la lluvia (pisos B0-B4 iluminados, escaleras, portón, antena con baliza, piso mojado
+  con reflejo, valla con alambre de púas, cartel TORRE ALFA A, farol, torres con luces rojas).
+- Rendimiento: la anatomía se prepara en segundo plano al cargar la partida (`AnatomyBody.warm`).

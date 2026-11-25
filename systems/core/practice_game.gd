@@ -113,6 +113,7 @@ func _ready() -> void:
 	bullet_time.setup(camera, player)
 	bullet_time.injury_report.connect(func(v, lines): hud.show_injuries(v, lines))
 	_equip()
+	AnatomyBody.warm(dummy_char)
 	_spawn_dummy()
 	_build_ui()
 	Sfx.ambient("amb_wind", -26.0)

@@ -1668,11 +1668,11 @@
    "label": "cerebelo y tronco cerebral",
    "system": "nervio",
    "bone": "mixamorig_Head",
-   "tris": 43010,
+   "tris": 17157,
    "center": [
     -0.0,
-    1.6151,
-    -0.0386
+    1.6149,
+    -0.0382
    ],
    "parts": [
     "Tentorium cerebelli.r",
@@ -1723,11 +1723,11 @@
    "label": "cerebro",
    "system": "nervio",
    "bone": "mixamorig_Head",
-   "tris": 39616,
+   "tris": 15834,
    "center": [
     0.0,
-    1.6408,
-    -0.0076
+    1.6409,
+    -0.0075
    ],
    "parts": [
     "Falx cerebri",
@@ -1786,15 +1786,14 @@
    "label": "médula espinal",
    "system": "nervio",
    "bone": "mixamorig_Spine",
-   "tris": 12138,
+   "tris": 3331,
    "center": [
-    0.0,
-    1.209,
+    0.0001,
+    1.2042,
     -0.0468
    ],
    "parts": [
     "Cauda equina",
-    "White matter of spinal cord",
     "Spinal ganglion.r",
     "Spinal ganglion.l",
     "Posterior root of spinal nerve.r",
@@ -1808,15 +1807,17 @@
    "label": "nervios de abdomen",
    "system": "nervio",
    "bone": "mixamorig_Spine1",
-   "tris": 1340,
+   "tris": 1620,
    "center": [
     -0.0,
-    1.069,
-    -0.0151
+    0.9906,
+    -0.0144
    ],
    "parts": [
     "Iliohypogastric nerve.r",
-    "Iliohypogastric nerve.l"
+    "Iliohypogastric nerve.l",
+    "Obturator nerve.r",
+    "Obturator nerve.l"
    ]
   },
   {
@@ -1824,10 +1825,10 @@
    "label": "nervios de abdomen bajo",
    "system": "nervio",
    "bone": "mixamorig_Spine",
-   "tris": 11028,
+   "tris": 3748,
    "center": [
     -0.0,
-    0.8742,
+    0.8741,
     0.0055
    ],
    "parts": [
@@ -1835,8 +1836,6 @@
     "Ilio-inguinal nerve.l",
     "Femoral nerve.r",
     "Femoral nerve.l",
-    "Obturator nerve.r",
-    "Obturator nerve.l",
     "Femoral branch of genitofemoral nerve.r",
     "Genital branch of genitofemoral nerve.r",
     "Femoral branch of genitofemoral nerve.l",
@@ -1850,11 +1849,11 @@
    "label": "nervios de antebrazo der",
    "system": "nervio",
    "bone": "mixamorig_RightForeArm",
-   "tris": 7397,
+   "tris": 3630,
    "center": [
     -0.2011,
-    1.1089,
-    -0.0055
+    1.1087,
+    -0.0051
    ],
    "parts": [
     "Lateral antebrachial cutaneous nerve.r",
@@ -1866,6 +1865,7 @@
     "Posterior branch of medial antebrachial cutaneous nerve.r",
     "Palmar branch of ulnar nerve.r",
     "Ulnar nerve.r",
+    "Median nerve.r",
     "Anterior interosseous nerve of forearm.r"
    ]
   },
@@ -1874,11 +1874,11 @@
    "label": "nervios de antebrazo izq",
    "system": "nervio",
    "bone": "mixamorig_LeftForeArm",
-   "tris": 7398,
+   "tris": 3549,
    "center": [
     0.2011,
-    1.1089,
-    -0.0055
+    1.1087,
+    -0.0051
    ],
    "parts": [
     "Lateral antebrachial cutaneous nerve.l",
@@ -1890,6 +1890,7 @@
     "Posterior branch of medial antebrachial cutaneous nerve.l",
     "Palmar branch of ulnar nerve.l",
     "Ulnar nerve.l",
+    "Median nerve.l",
     "Anterior interosseous nerve of forearm.l"
    ]
   },
@@ -1898,17 +1899,16 @@
    "label": "nervios de brazo der",
    "system": "nervio",
    "bone": "mixamorig_RightArm",
-   "tris": 3217,
+   "tris": 819,
    "center": [
-    -0.1872,
-    1.1128,
-    -0.0066
+    -0.1827,
+    1.2355,
+    -0.0256
    ],
    "parts": [
     "Musculocutaneous nerve.r",
     "Radial nerve.r",
-    "Medial antebrachial cutaneous nerve.r",
-    "Median nerve.r"
+    "Medial antebrachial cutaneous nerve.r"
    ]
   },
   {
@@ -1916,17 +1916,16 @@
    "label": "nervios de brazo izq",
    "system": "nervio",
    "bone": "mixamorig_LeftArm",
-   "tris": 3217,
+   "tris": 819,
    "center": [
-    0.1872,
-    1.1128,
-    -0.0066
+    0.1827,
+    1.2355,
+    -0.0256
    ],
    "parts": [
     "Musculocutaneous nerve.l",
     "Radial nerve.l",
-    "Medial antebrachial cutaneous nerve.l",
-    "Median nerve.l"
+    "Medial antebrachial cutaneous nerve.l"
    ]
   },
   {
@@ -1934,10 +1933,10 @@
    "label": "nervios de cabeza",
    "system": "nervio",
    "bone": "mixamorig_Head",
-   "tris": 32283,
+   "tris": 14660,
    "center": [
     0.0,
-    1.6172,
+    1.6167,
     -0.0108
    ],
    "parts": [
@@ -2003,11 +2002,11 @@
    "label": "nervios de cuello",
    "system": "nervio",
    "bone": "mixamorig_Neck",
-   "tris": 9688,
+   "tris": 3871,
    "center": [
     -0.0,
-    1.4337,
-    -0.0393
+    1.4336,
+    -0.0394
    ],
    "parts": [
     "Glossopharyngeal nerve (IX).r",
@@ -2022,7 +2021,7 @@
    "label": "nervios de mano der",
    "system": "nervio",
    "bone": "mixamorig_RightHand",
-   "tris": 4792,
+   "tris": 1915,
    "center": [
     -0.2793,
     0.7726,
@@ -2039,7 +2038,7 @@
    "label": "nervios de mano izq",
    "system": "nervio",
    "bone": "mixamorig_LeftHand",
-   "tris": 4792,
+   "tris": 1914,
    "center": [
     0.2793,
     0.7726,
@@ -2056,9 +2055,9 @@
    "label": "nervios de muslo der",
    "system": "nervio",
    "bone": "mixamorig_RightUpLeg",
-   "tris": 4234,
+   "tris": 2964,
    "center": [
-    -0.0879,
+    -0.0945,
     0.7325,
     -0.0187
    ],
@@ -2076,7 +2075,7 @@
    "label": "nervios de muslo izq",
    "system": "nervio",
    "bone": "mixamorig_LeftUpLeg",
-   "tris": 4235,
+   "tris": 2973,
    "center": [
     0.0879,
     0.7325,
@@ -2096,11 +2095,11 @@
    "label": "nervios de pelvis",
    "system": "nervio",
    "bone": "mixamorig_Hips",
-   "tris": 2260,
+   "tris": 904,
    "center": [
     0.0,
     0.759,
-    -0.044
+    -0.0442
    ],
    "parts": [
     "Sciatic nerve.r",
@@ -2112,11 +2111,11 @@
    "label": "nervios de pierna der",
    "system": "nervio",
    "bone": "mixamorig_RightLeg",
-   "tris": 3816,
+   "tris": 1521,
    "center": [
-    -0.1006,
-    0.2767,
-    -0.0117
+    -0.1003,
+    0.2768,
+    -0.0118
    ],
    "parts": [
     "Sural nerve.r",
@@ -2130,11 +2129,11 @@
    "label": "nervios de pierna izq",
    "system": "nervio",
    "bone": "mixamorig_LeftLeg",
-   "tris": 3816,
+   "tris": 1521,
    "center": [
     0.1006,
-    0.2767,
-    -0.0117
+    0.2768,
+    -0.0118
    ],
    "parts": [
     "Sural nerve.l",
@@ -2148,11 +2147,11 @@
    "label": "nervios de rodilla der",
    "system": "nervio",
    "bone": "mixamorig_RightLeg",
-   "tris": 2037,
+   "tris": 1203,
    "center": [
     -0.077,
-    0.4801,
-    -0.0289
+    0.4705,
+    -0.0091
    ],
    "parts": [
     "Saphenous nerve.r",
@@ -2164,11 +2163,11 @@
    "label": "nervios de rodilla izq",
    "system": "nervio",
    "bone": "mixamorig_LeftLeg",
-   "tris": 2037,
+   "tris": 1203,
    "center": [
     0.077,
-    0.4801,
-    -0.0289
+    0.4705,
+    -0.0091
    ],
    "parts": [
     "Saphenous nerve.l",
@@ -2180,7 +2179,7 @@
    "label": "nervios de tórax",
    "system": "nervio",
    "bone": "mixamorig_Spine2",
-   "tris": 41597,
+   "tris": 15321,
    "center": [
     -0.0,
     1.279,
@@ -2206,7 +2205,6 @@
     "Sympathetic nerves.l",
     "Ganglia of sympathetic trunk.l",
     "Sympathetic trunk.l",
-    "Central canal",
     "Thoracodorsal nerve.r",
     "Thoracodorsal nerve.l"
    ]
@@ -2216,11 +2214,11 @@
    "label": "ojo der",
    "system": "nervio",
    "bone": "mixamorig_Head",
-   "tris": 5801,
+   "tris": 2317,
    "center": [
     -0.0306,
-    1.5907,
-    0.0633
+    1.5899,
+    0.0632
    ],
    "parts": [
     "Suspensory ligament of eyeball.r",
@@ -2235,11 +2233,11 @@
    "label": "ojo izq",
    "system": "nervio",
    "bone": "mixamorig_Head",
-   "tris": 5801,
+   "tris": 2317,
    "center": [
     0.0306,
-    1.5907,
-    0.0633
+    1.5897,
+    0.0632
    ],
    "parts": [
     "Suspensory ligament of eyeball.l",
@@ -2284,7 +2282,7 @@
    "label": "corazón",
    "system": "organo",
    "bone": "mixamorig_Spine2",
-   "tris": 74689,
+   "tris": 35364,
    "center": [
     0.0228,
     1.2908,
@@ -2315,10 +2313,10 @@
    "label": "estómago",
    "system": "organo",
    "bone": "mixamorig_Spine1",
-   "tris": 18461,
+   "tris": 7690,
    "center": [
     0.0383,
-    1.1664,
+    1.1663,
     0.0362
    ],
    "parts": [
@@ -2331,9 +2329,9 @@
    "label": "esófago",
    "system": "organo",
    "bone": "mixamorig_Spine2",
-   "tris": 6014,
+   "tris": 2506,
    "center": [
-    0.0047,
+    0.0046,
     1.3348,
     -0.0077
    ],
@@ -2346,10 +2344,10 @@
    "label": "hígado",
    "system": "organo",
    "bone": "mixamorig_Spine2",
-   "tris": 37409,
+   "tris": 22477,
    "center": [
     -0.0116,
-    1.1745,
+    1.1746,
     0.0229
    ],
    "parts": [
@@ -2369,11 +2367,11 @@
    "label": "intestinos",
    "system": "organo",
    "bone": "mixamorig_Spine1",
-   "tris": 100840,
+   "tris": 43423,
    "center": [
     -0.0003,
     1.002,
-    0.0081
+    0.0082
    ],
    "parts": [
     "Duodenum",
@@ -2397,11 +2395,11 @@
    "label": "pulmón",
    "system": "organo",
    "bone": "mixamorig_Spine2",
-   "tris": 15778,
+   "tris": 6574,
    "center": [
-    -0.0006,
-    1.3006,
-    0.0093
+    -0.0009,
+    1.3014,
+    0.0091
    ],
    "parts": [
     "Pleura"
@@ -2412,11 +2410,11 @@
    "label": "pulmón der",
    "system": "organo",
    "bone": "mixamorig_Spine2",
-   "tris": 71086,
+   "tris": 38024,
    "center": [
     -0.0624,
-    1.2997,
-    0.0096
+    1.2999,
+    0.0097
    ],
    "parts": [
     "Superior segmental bronchus of right lung (BVI)",
@@ -2444,10 +2442,10 @@
    "label": "pulmón izq",
    "system": "organo",
    "bone": "mixamorig_Spine2",
-   "tris": 53562,
+   "tris": 30618,
    "center": [
-    0.0612,
-    1.299,
+    0.0616,
+    1.2989,
     0.0094
    ],
    "parts": [
@@ -2473,11 +2471,11 @@
    "label": "páncreas",
    "system": "organo",
    "bone": "mixamorig_Spine1",
-   "tris": 19550,
+   "tris": 8142,
    "center": [
-    0.0096,
-    1.116,
-    0.0215
+    0.0098,
+    1.1161,
+    0.0216
    ],
    "parts": [
     "Pancreatic duct",
@@ -2490,10 +2488,10 @@
    "label": "riñón der",
    "system": "organo",
    "bone": "mixamorig_Spine1",
-   "tris": 7225,
+   "tris": 3932,
    "center": [
-    -0.0488,
-    1.0164,
+    -0.0489,
+    1.0165,
     -0.0065
    ],
    "parts": [
@@ -2507,11 +2505,11 @@
    "label": "riñón izq",
    "system": "organo",
    "bone": "mixamorig_Spine1",
-   "tris": 8484,
+   "tris": 4434,
    "center": [
-    0.0568,
-    1.0281,
-    -0.0086
+    0.0569,
+    1.0282,
+    -0.0085
    ],
    "parts": [
     "Kidney.l",
@@ -2524,7 +2522,7 @@
    "label": "testículos",
    "system": "organo",
    "bone": "mixamorig_Hips",
-   "tris": 14125,
+   "tris": 7619,
    "center": [
     0.0,
     0.8094,
@@ -2549,11 +2547,11 @@
    "label": "tiroides",
    "system": "organo",
    "bone": "mixamorig_Neck",
-   "tris": 2912,
+   "tris": 1510,
    "center": [
-    0.0,
+    -0.0,
     1.4717,
-    0.0162
+    0.0163
    ],
    "parts": [
     "Thyroid gland",
@@ -2568,9 +2566,9 @@
    "label": "tráquea y laringe",
    "system": "organo",
    "bone": "mixamorig_Neck",
-   "tris": 12650,
+   "tris": 5320,
    "center": [
-    0.0,
+    -0.0001,
     1.4732,
     0.0271
    ],
@@ -2587,10 +2585,10 @@
    "label": "vejiga",
    "system": "organo",
    "bone": "mixamorig_Hips",
-   "tris": 5588,
+   "tris": 2555,
    "center": [
-    0.0004,
-    0.8127,
+    0.0002,
+    0.813,
     0.0231
    ],
    "parts": [
@@ -2604,9 +2602,9 @@
    "label": "vesícula",
    "system": "organo",
    "bone": "mixamorig_Spine1",
-   "tris": 722,
+   "tris": 526,
    "center": [
-    -0.0452,
+    -0.0456,
     1.1371,
     0.0563
    ],
@@ -2619,11 +2617,11 @@
    "label": "órganos de abdomen",
    "system": "organo",
    "bone": "mixamorig_Spine1",
-   "tris": 4728,
+   "tris": 2324,
    "center": [
     0.0033,
     1.11,
-    0.0054
+    0.0053
    ],
    "parts": [
     "Bile duct",
@@ -2636,10 +2634,10 @@
    "label": "órganos de cabeza",
    "system": "organo",
    "bone": "mixamorig_Head",
-   "tris": 37651,
+   "tris": 17377,
    "center": [
     0.0,
-    1.5743,
+    1.5742,
     0.0399
    ],
    "parts": [
@@ -2666,11 +2664,11 @@
    "label": "órganos de cuello",
    "system": "organo",
    "bone": "mixamorig_Neck",
-   "tris": 11802,
+   "tris": 6340,
    "center": [
     -0.0,
     1.5249,
-    0.0567
+    0.0566
    ],
    "parts": [
     "Gingiva",
@@ -2688,7 +2686,7 @@
    "label": "órganos de pelvis",
    "system": "organo",
    "bone": "mixamorig_Hips",
-   "tris": 1728,
+   "tris": 1152,
    "center": [
     0.0,
     0.8312,
@@ -2719,10 +2717,10 @@
    "label": "aorta y grandes vasos",
    "system": "vaso",
    "bone": "mixamorig_Spine2",
-   "tris": 3386,
+   "tris": 1704,
    "center": [
-    0.0062,
-    1.1971,
+    0.0061,
+    1.1969,
     -0.0045
    ],
    "parts": [
@@ -2736,7 +2734,7 @@
    "label": "arterias y venas de abdomen",
    "system": "vaso",
    "bone": "mixamorig_Spine1",
-   "tris": 56189,
+   "tris": 22519,
    "center": [
     0.0,
     1.1782,
@@ -2768,7 +2766,7 @@
    "label": "arterias y venas de abdomen bajo",
    "system": "vaso",
    "bone": "mixamorig_Spine",
-   "tris": 49315,
+   "tris": 19713,
    "center": [
     0.0,
     0.9165,
@@ -2798,11 +2796,11 @@
    "label": "arterias y venas de antebrazo der",
    "system": "vaso",
    "bone": "mixamorig_RightForeArm",
-   "tris": 12951,
+   "tris": 5301,
    "center": [
     -0.2379,
-    0.9673,
-    0.007
+    0.9674,
+    0.0071
    ],
    "parts": [
     "Radial artery.r",
@@ -2818,11 +2816,11 @@
    "label": "arterias y venas de antebrazo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftForeArm",
-   "tris": 12951,
+   "tris": 5301,
    "center": [
     0.2379,
-    0.9673,
-    0.007
+    0.9674,
+    0.0071
    ],
    "parts": [
     "Radial artery.l",
@@ -2838,10 +2836,10 @@
    "label": "arterias y venas de brazo der",
    "system": "vaso",
    "bone": "mixamorig_RightArm",
-   "tris": 13071,
+   "tris": 5222,
    "center": [
-    -0.1959,
-    1.1109,
+    -0.1962,
+    1.1108,
     -0.0147
    ],
    "parts": [
@@ -2857,10 +2855,10 @@
    "label": "arterias y venas de brazo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftArm",
-   "tris": 13071,
+   "tris": 5222,
    "center": [
-    0.1959,
-    1.1109,
+    0.1962,
+    1.1108,
     -0.0147
    ],
    "parts": [
@@ -2876,7 +2874,7 @@
    "label": "arterias y venas de cabeza",
    "system": "vaso",
    "bone": "mixamorig_Head",
-   "tris": 27582,
+   "tris": 11029,
    "center": [
     0.0,
     1.6271,
@@ -2895,7 +2893,7 @@
    "label": "arterias y venas de cuello",
    "system": "vaso",
    "bone": "mixamorig_Neck",
-   "tris": 20164,
+   "tris": 8056,
    "center": [
     0.0,
     1.4938,
@@ -2917,11 +2915,11 @@
    "label": "arterias y venas de mano der",
    "system": "vaso",
    "bone": "mixamorig_RightHand",
-   "tris": 20861,
+   "tris": 8341,
    "center": [
-    -0.2784,
-    0.7878,
-    0.0565
+    -0.2785,
+    0.7879,
+    0.0564
    ],
    "parts": [
     "Proper palmar digital arteries.r",
@@ -2934,11 +2932,11 @@
    "label": "arterias y venas de mano izq",
    "system": "vaso",
    "bone": "mixamorig_LeftHand",
-   "tris": 20861,
+   "tris": 8341,
    "center": [
-    0.2784,
-    0.7878,
-    0.0565
+    0.2785,
+    0.7879,
+    0.0564
    ],
    "parts": [
     "Proper palmar digital arteries.l",
@@ -2951,10 +2949,10 @@
    "label": "arterias y venas de muslo der",
    "system": "vaso",
    "bone": "mixamorig_RightUpLeg",
-   "tris": 21355,
+   "tris": 8535,
    "center": [
     -0.0813,
-    0.6528,
+    0.6525,
     -0.0093
    ],
    "parts": [
@@ -2974,10 +2972,10 @@
    "label": "arterias y venas de muslo izq",
    "system": "vaso",
    "bone": "mixamorig_LeftUpLeg",
-   "tris": 21355,
+   "tris": 8535,
    "center": [
     0.0813,
-    0.6528,
+    0.6525,
     -0.0093
    ],
    "parts": [
@@ -2997,11 +2995,11 @@
    "label": "arterias y venas de pelvis",
    "system": "vaso",
    "bone": "mixamorig_Hips",
-   "tris": 9308,
+   "tris": 3722,
    "center": [
     0.0,
-    0.8035,
-    0.031
+    0.8036,
+    0.0311
    ],
    "parts": [
     "Dorsal artery of penis.r",
@@ -3013,11 +3011,11 @@
    "label": "arterias y venas de pie der",
    "system": "vaso",
    "bone": "mixamorig_RightFoot",
-   "tris": 18583,
+   "tris": 7430,
    "center": [
     -0.1037,
     0.0207,
-    0.0608
+    0.061
    ],
    "parts": [
     "Dorsal digital arteries of foot.r",
@@ -3030,11 +3028,11 @@
    "label": "arterias y venas de pie izq",
    "system": "vaso",
    "bone": "mixamorig_LeftFoot",
-   "tris": 18583,
+   "tris": 7430,
    "center": [
     0.1037,
     0.0207,
-    0.0608
+    0.061
    ],
    "parts": [
     "Dorsal digital arteries of foot.l",
@@ -3047,11 +3045,11 @@
    "label": "arterias y venas de pierna der",
    "system": "vaso",
    "bone": "mixamorig_RightLeg",
-   "tris": 20651,
+   "tris": 8254,
    "center": [
     -0.0818,
     0.2618,
-    -0.0561
+    -0.0562
    ],
    "parts": [
     "Anterior tibial artery.r",
@@ -3068,11 +3066,11 @@
    "label": "arterias y venas de pierna izq",
    "system": "vaso",
    "bone": "mixamorig_LeftLeg",
-   "tris": 20651,
+   "tris": 8254,
    "center": [
     0.0818,
     0.2618,
-    -0.0561
+    -0.0562
    ],
    "parts": [
     "Anterior tibial artery.l",
@@ -3089,10 +3087,10 @@
    "label": "arterias y venas de rodilla der",
    "system": "vaso",
    "bone": "mixamorig_RightLeg",
-   "tris": 14491,
+   "tris": 5791,
    "center": [
     -0.0702,
-    0.4567,
+    0.4566,
     -0.0063
    ],
    "parts": [
@@ -3107,10 +3105,10 @@
    "label": "arterias y venas de rodilla izq",
    "system": "vaso",
    "bone": "mixamorig_LeftLeg",
-   "tris": 14491,
+   "tris": 5791,
    "center": [
     0.0702,
-    0.4567,
+    0.4566,
     -0.0063
    ],
    "parts": [
@@ -3125,10 +3123,10 @@
    "label": "arterias y venas de tórax",
    "system": "vaso",
    "bone": "mixamorig_Spine2",
-   "tris": 88183,
+   "tris": 35319,
    "center": [
-    0.0,
-    1.2521,
+    -0.0,
+    1.2522,
     -0.0033
    ],
    "parts": [

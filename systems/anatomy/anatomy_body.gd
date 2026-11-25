@@ -64,6 +64,81 @@ static func for_actor(a: Actor) -> AnatomyBody:
 	x._setup()
 	return x
 
+## Arma los datos de CPU (triángulos para el trazado de balas, fragmentos) de un personaje. Es pesado con la anatomía
+## de calidad máxima: Game lo adelanta en un hilo al empezar la partida (warm), así el primer disparo no congela el juego.
+static func _build_cpu(id: String) -> void:
+	var path := FIT_DIR + id + ".scn"
+	if not ResourceLoader.exists(path):
+		return
+	var ps: PackedScene = load(path)
+	_cpu_lock.lock()
+	_scenes[id] = ps
+	_cpu_lock.unlock()
+	var inst: Node = ps.instantiate()
+	var data := {}
+	var fr := {}
+	var placeholders := {}
+	for mi in inst.get_children():
+		if not mi is MeshInstance3D:
+			# hueso guardado sólo como fragmentos: sus datos se arman con la unión de los fragmentos
+			placeholders[str(mi.name)] = {"label": str(mi.get_meta("label")), "system": str(mi.get_meta("system")), "bone": str(mi.get_meta("bone"))}
+			continue
+		var m := mi as MeshInstance3D
+		var arr := m.mesh.surface_get_arrays(0)
+		if m.has_meta("parent"):
+			var list: Array = fr.get(str(m.get_meta("parent")), [])
+			list.append({"node": str(m.name), "mesh": m.mesh, "v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX],
+				"b": arr[Mesh.ARRAY_BONES], "w": arr[Mesh.ARRAY_WEIGHTS], "center": m.get_meta("center_bind"),
+				"r": m.mesh.get_aabb().size.length() * 0.5})
+			fr[str(m.get_meta("parent"))] = list
+			continue
+		data[str(m.name)] = {"v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX], "aabb": m.mesh.get_aabb(),
+			"label": str(m.get_meta("label")), "system": str(m.get_meta("system")), "bone": str(m.get_meta("bone")),
+			"center": m.get_meta("center_bind"), "radius": float(m.get_meta("radius", 0.1)), "mesh": m.mesh,
+			"chunks": _make_chunks(arr[Mesh.ARRAY_VERTEX], arr[Mesh.ARRAY_INDEX])}
+	inst.free()
+	for n in placeholders:
+		var list: Array = fr.get(n, [])
+		if list.is_empty():
+			continue
+		var vv := PackedVector3Array()
+		var ii := PackedInt32Array()
+		var aabb := AABB()
+		var c := Vector3.ZERO
+		for k in list.size():
+			var f: Dictionary = list[k]
+			var off := vv.size()
+			vv.append_array(f.v)
+			for x in (f.i as PackedInt32Array):
+				ii.append(x + off)
+			var fa: AABB = (f.mesh as Mesh).get_aabb()
+			aabb = fa if k == 0 else aabb.merge(fa)
+			c += (f.center as Vector3)
+		var ph: Dictionary = placeholders[n]
+		var chunks := []
+		var istart := 0
+		for f in list:
+			var cnt := (f.i as PackedInt32Array).size()
+			chunks.append({"aabb": (f.mesh as Mesh).get_aabb(), "a": istart, "b": istart + cnt})
+			istart += cnt
+		data[n] = {"v": vv, "i": ii, "aabb": aabb, "label": ph.label, "system": ph.system, "bone": ph.bone,
+			"center": c / list.size(), "radius": aabb.size.length() * 0.5, "mesh": null, "chunks": chunks}
+	_cpu_lock.lock()
+	_cpu[id] = data
+	_cpu_frags[id] = fr
+	_cpu_lock.unlock()
+
+static var _cpu_lock := Mutex.new()
+static var _warming := {}
+## Empieza a preparar en segundo plano la anatomía de un personaje (se llama al cargar la partida).
+static func warm(id: String) -> void:
+	_cpu_lock.lock()
+	var has := _cpu.has(id)
+	_cpu_lock.unlock()
+	if has or _warming.has(id):
+		return
+	_warming[id] = WorkerThreadPool.add_task(func(): _build_cpu(id))
+
 func _setup() -> void:
 	skel = actor.skel
 	for c in skel.get_children():
@@ -83,60 +158,15 @@ func _setup() -> void:
 	if not ResourceLoader.exists(path):
 		push_warning("Sin anatomía ajustada para " + id + " (correr tools/anatomy/fit_anatomy.gd)")
 		return
-	if not _scenes.has(id):
-		_scenes[id] = load(path)
-	if not _cpu.has(id):
-		var inst: Node = (_scenes[id] as PackedScene).instantiate()
-		var data := {}
-		var fr := {}
-		var placeholders := {}
-		for mi in inst.get_children():
-			if not mi is MeshInstance3D:
-				# hueso guardado sólo como fragmentos: sus datos se arman con la unión de los fragmentos
-				placeholders[str(mi.name)] = {"label": str(mi.get_meta("label")), "system": str(mi.get_meta("system")), "bone": str(mi.get_meta("bone"))}
-				continue
-			var m := mi as MeshInstance3D
-			var arr := m.mesh.surface_get_arrays(0)
-			if m.has_meta("parent"):
-				var list: Array = fr.get(str(m.get_meta("parent")), [])
-				list.append({"node": str(m.name), "mesh": m.mesh, "v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX],
-					"b": arr[Mesh.ARRAY_BONES], "w": arr[Mesh.ARRAY_WEIGHTS], "center": m.get_meta("center_bind"),
-					"r": m.mesh.get_aabb().size.length() * 0.5})
-				fr[str(m.get_meta("parent"))] = list
-				continue
-			data[str(m.name)] = {"v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX], "aabb": m.mesh.get_aabb(),
-				"label": str(m.get_meta("label")), "system": str(m.get_meta("system")), "bone": str(m.get_meta("bone")),
-				"center": m.get_meta("center_bind"), "radius": float(m.get_meta("radius", 0.1)), "mesh": m.mesh,
-				"chunks": _make_chunks(arr[Mesh.ARRAY_VERTEX], arr[Mesh.ARRAY_INDEX])}
-		inst.free()
-		for n in placeholders:
-			var list: Array = fr.get(n, [])
-			if list.is_empty():
-				continue
-			var vv := PackedVector3Array()
-			var ii := PackedInt32Array()
-			var aabb := AABB()
-			var c := Vector3.ZERO
-			for k in list.size():
-				var f: Dictionary = list[k]
-				var off := vv.size()
-				vv.append_array(f.v)
-				for x in (f.i as PackedInt32Array):
-					ii.append(x + off)
-				var fa: AABB = (f.mesh as Mesh).get_aabb()
-				aabb = fa if k == 0 else aabb.merge(fa)
-				c += (f.center as Vector3)
-			var ph: Dictionary = placeholders[n]
-			var chunks := []
-			var istart := 0
-			for f in list:
-				var cnt := (f.i as PackedInt32Array).size()
-				chunks.append({"aabb": (f.mesh as Mesh).get_aabb(), "a": istart, "b": istart + cnt})
-				istart += cnt
-			data[n] = {"v": vv, "i": ii, "aabb": aabb, "label": ph.label, "system": ph.system, "bone": ph.bone,
-				"center": c / list.size(), "radius": aabb.size.length() * 0.5, "mesh": null, "chunks": chunks}
-		_cpu[id] = data
-		_cpu_frags[id] = fr
+	_cpu_lock.lock()
+	var ready := _cpu.has(id)
+	_cpu_lock.unlock()
+	if not ready:
+		if _warming.has(id):
+			WorkerThreadPool.wait_for_task_completion(_warming[id])
+			_warming.erase(id)
+		else:
+			_build_cpu(id)
 	groups = _cpu[id]
 	frags = _cpu_frags[id]
 	available = true
@@ -344,7 +374,7 @@ func _frag_state(node: String, f: Dictionary) -> Array:
 			continue
 		k = maxf(k, kk)
 		var out := ((f.center as Vector3) - (h.pos as Vector3)).normalized()
-		push += out * kk * 0.004 * (0.5 + float(h.s)) + dir_to_bind(node, h.dir) * kk * 0.003 * float(h.s)
+		push += out * kk * 0.0025 * (0.5 + float(h.s)) + dir_to_bind(node, h.dir) * kk * 0.002 * float(h.s)
 	return [k, push]
 
 ## El fragmento se vuelve un trozo suelto: se calcula su forma ACTUAL (piel por CPU con la pose del momento).
@@ -606,7 +636,7 @@ func _refresh_visible() -> void:
 				fm.visible = true
 				var st := _frag_state(n, f)
 				var sm := fm.material_override as ShaderMaterial
-				sm.set_shader_parameter("crack", float(st[0]) * 0.09)
+				sm.set_shader_parameter("crack", float(st[0]) * 0.035)
 				sm.set_shader_parameter("push", st[1])
 				sm.set_shader_parameter("open", float(st[0]))
 			continue
@@ -653,6 +683,11 @@ func _process(delta: float) -> void:
 		var cam := get_viewport().get_camera_3d()
 		if cam:
 			zm.set_shader_parameter("cam_pos", cam.global_position)
+	# lo que queda ENTRE la cámara y la herida principal se vuelve transparente (no tapa el daño)
+	var cam3 := get_viewport().get_camera_3d()
+	var cp := cam3.global_position if cam3 else Vector3(0, 0, 100)
+	var main_node := str(zones[0].node) if not zones.is_empty() else ""
+	var fp := Vector3(zw[0].x, zw[0].y, zw[0].z) if not zones.is_empty() else Vector3.ZERO
 	for coll in [meshes, frag_meshes]:
 		for n in coll:
 			var mi: MeshInstance3D = coll[n]
@@ -661,15 +696,22 @@ func _process(delta: float) -> void:
 				sm.set_shader_parameter("zone_c", zw)
 				sm.set_shader_parameter("zone_n", zones.size())
 				sm.set_shader_parameter("zone_r", r)
+				sm.set_shader_parameter("cam_pos", cp)
+				sm.set_shader_parameter("focus_p", fp)
+				sm.set_shader_parameter("is_focus", 1.0 if (str(n) == main_node or str(n).begins_with(main_node + "_f")) else 0.0)
 	# balas alojadas
 	for l in lodged:
 		if l.mi == null and Gibs.instance:
 			var mi := MeshInstance3D.new()
-			mi.mesh = Gibs.instance.bullet_mesh
+			mi.mesh = BulletTime.bullet_mesh(true)                  # bala de Blender aplastada en hongo
 			var mat := StandardMaterial3D.new()
-			mat.vertex_color_use_as_albedo = true
-			mat.metallic = 0.8
+			mat.albedo_color = Color(0.85, 0.48, 0.25)
+			mat.metallic = 0.6
 			mat.roughness = 0.3
+			mat.emission_enabled = true
+			mat.emission = Color(0.35, 0.18, 0.08)
+			mat.no_depth_test = true                                   # se ve dentro del hueso / órgano
+			mat.render_priority = 9
 			mi.material_override = mat
 			mi.top_level = true
 			add_child(mi)
@@ -677,12 +719,27 @@ func _process(delta: float) -> void:
 		if l.mi:
 			var p := bind_to_world(l.node, l.pos)
 			var d: Vector3 = (_skin_mat(groups[l.node].bone).basis * l.dir).normalized() if groups.has(l.node) else Vector3.RIGHT
-			(l.mi as MeshInstance3D).global_transform = Transform3D(Basis.looking_at(d, Vector3.UP if absf(d.y) < 0.95 else Vector3.RIGHT).scaled(Vector3.ONE * 2.2), p)
+			var lmc := (l.mi as MeshInstance3D).mesh.get_aabb().get_center()
+			(l.mi as MeshInstance3D).global_transform = Transform3D(Basis.looking_at(d, Vector3.UP if absf(d.y) < 0.95 else Vector3.RIGHT).scaled(Vector3.ONE * 1.3), p) * Transform3D(Basis.IDENTITY, -lmc)
 			(l.mi as MeshInstance3D).visible = int(l.get("seq", 0)) <= reveal_seq
 
 # ---------------------------------------------------------------- shaders
 
 const _ZONE_FUNC := """
+uniform vec3 cam_pos = vec3(0.0, 0.0, 100.0);
+uniform vec3 focus_p = vec3(0.0);
+uniform float is_focus = 0.0;
+// ¿este punto tapa la herida principal? (entre la cámara y la herida, cerca de la línea de visión)
+float occluder(vec3 p) {
+	if (is_focus > 0.5) return 0.0;
+	vec3 v = focus_p - cam_pos;
+	float len = length(v);
+	vec3 d = v / max(len, 0.0001);
+	float t = dot(p - cam_pos, d);
+	if (t <= 0.0 || t > len - 0.015) return 0.0;
+	float r = length(cross(p - cam_pos, d));
+	return 1.0 - smoothstep(0.035, 0.07, r);
+}
 uniform vec4 zone_c[4];
 uniform int zone_n = 0;
 uniform float zone_r = 0.2;
@@ -806,6 +863,7 @@ void fragment() {
 	float spec = pow(clamp(dot(NORMAL, normalize(L + VIEW)), 0.0, 1.0), 48.0) * shine;
 	// órganos como cristal rojizo: se ven los huesos que están detrás
 	ALPHA = (kind > 0.5 && kind < 1.5) ? 0.38 : 1.0;
+	ALPHA = mix(ALPHA, min(ALPHA, 0.18), occluder(wp));
 	ALBEDO = col * 0.12;
 	ROUGHNESS = 0.3;
 	SPECULAR = 0.5;
@@ -821,7 +879,7 @@ static func _fshader() -> Shader:
 		_frag_shader = Shader.new()
 		_frag_shader.code = """
 shader_type spatial;
-render_mode cull_disabled;
+render_mode cull_disabled, depth_draw_always;
 uniform vec3 center;
 uniform float crack = 0.0;      // cuánto se encoge el fragmento hacia su centro (abre la grieta)
 uniform vec3 push = vec3(0.0);   // cuánto se corre (espacio del hueso)
@@ -862,6 +920,7 @@ void fragment() {
 	ROUGHNESS = 0.55;
 	SPECULAR = 0.5;
 	EMISSION = col * (0.12 + 1.0 * nl * nl) * cav + vec3(1.0, 0.95, 0.85) * (fres * 0.22 + spec * 0.2);
+	ALPHA = 1.0 - 0.82 * occluder(wp);
 }
 """
 	return _frag_shader
