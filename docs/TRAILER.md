@@ -20,7 +20,27 @@ en Blender.
 El HUD táctil (palancas y botones) se ve y se mueve como si alguien jugara. Si en el video hace falta otra cosa, se pide
 la escena y se agrega en `trailer_game.gd` (una función `_nombre()` más una línea en `_run()`).
 
-## Cómo grabar
+## Escenas GLB para Blender (lo principal)
+```
+tools/trailer/export_scenes.sh            # todas las escenas + la completa
+tools/trailer/export_scenes.sh awm fusil  # sólo algunas
+```
+Cada escena queda en `/tmp/escenas/<escena>/` (`OUT=carpeta` para cambiarla):
+* `escena_<escena>.glb` — la escena con su **animación «escena»** (30 cuadros por segundo): el mapa (mallas, materiales
+  estándar y texturas), cada personaje (`Actor_N_…`, con esqueleto y la pose de cada hueso en el tiempo), las armas
+  (`Arma_N_…`, con cuándo están a la vista), los miembros arrancados (`Miembro_N`, aparecen cuando se desprenden y caen) y
+  la cámara del juego (`Camara`). En Blender: importar el GLB, abrir el Action Editor / Timeline y reproducir.
+* `escena_<escena>_disparos.json` — cada impacto con su segundo, posición, normal, zona del cuerpo, daño y quién disparó
+  (para poner chispas, sangre, humo o destellos en Blender).
+* `sonidos.csv` — cada sonido con su segundo exacto, archivo, posición en el mapa, volumen y tono. `audio/` — esos sonidos
+  en WAV. `mezcla_audio.wav` — la mezcla completa alineada con la animación (la animación y el audio empiezan juntos en 0 s).
+* `trailer_sonidos.json` — el mismo registro en bruto.
+
+Notas para Blender: los materiales son estándar (el estilo «plano dibujado» del juego usa shaders que un GLB no puede llevar;
+se aplica de nuevo en Blender con el contorno que se quiera); los efectos de partículas del juego (sangre, humo, chispas) no
+viajan en el GLB, por eso están los disparos con posición y el registro de sonidos.
+
+## Video directo (opcional)
 ```
 tools/trailer/render_trailer.sh            # trailer completo (≈ 3 min de video)
 tools/trailer/render_trailer.sh pistolas   # una escena
