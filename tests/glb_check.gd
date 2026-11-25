@@ -41,6 +41,12 @@ func _ready() -> void:
 					lt.append(snappedf(an0.track_get_key_time(i, k) + 0.5, 0.1))
 					break
 	print("MIEMBROS que aparecen en t=", lt)
+	var cnt := 0
+	for i in an0.get_track_count():
+		var tq2 := str(an0.track_get_path(i))
+		if tq2.begins_with("Actor_0") and ("RightArm" in tq2 or "RightHand" in tq2 or "RightForeArm" in tq2 or "RightShoulder" in tq2) and cnt < 10:
+			cnt += 1
+			print("  PISTA ", tq2, " tipo=", an0.track_get_type(i), " claves=", an0.track_get_key_count(i))
 	var cam := scene.find_child("Camara3D", true, false) as Camera3D
 	if cam == null:
 		cam = scene.find_children("*", "Camera3D", true, false)[0]
