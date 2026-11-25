@@ -89,6 +89,13 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 				point.y = clampf(point.y, mid.y - 0.06, mid.y + 0.08)
 			else:
 				point.z = eye_z
+		elif zone == "pelvis" and t == "bullet" and absf(dir.x) > 0.6:
+			# igual que el ojo: los genitales están adelante de la pelvis, fuera del plano del hueso
+			var gn := anat.find_group("testículos")
+			if gn != "":
+				var gc := anat.bind_to_world(gn, anat.groups[gn].center)
+				if absf(gc.y - point.y) < 0.05 and (gc.x - actor.global_position.x) * dir.x < 0.0:
+					point.z = gc.z
 	match t:
 		"bullet", "fragment", "knife":
 			var max_depth := INF

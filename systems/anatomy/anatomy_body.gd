@@ -70,74 +70,42 @@ static func _build_cpu(id: String) -> void:
 	var path := FIT_DIR + id + ".scn"
 	if not ResourceLoader.exists(path):
 		return
-	var ps: PackedScene = load(path)
-	_cpu_lock.lock()
+	var ps: PackedScene = null
+	if _warming.has(id):
+		ps = ResourceLoader.load_threaded_get(path)      # ya se cargó en segundo plano (o espera a que termine)
+		_warming.erase(id)
+	if ps == null:
+		ps = load(path)
 	_scenes[id] = ps
-	_cpu_lock.unlock()
 	var inst: Node = ps.instantiate()
 	var data := {}
 	var fr := {}
-	var placeholders := {}
 	for mi in inst.get_children():
 		if not mi is MeshInstance3D:
-			# hueso guardado sólo como fragmentos: sus datos se arman con la unión de los fragmentos
-			placeholders[str(mi.name)] = {"label": str(mi.get_meta("label")), "system": str(mi.get_meta("system")), "bone": str(mi.get_meta("bone"))}
 			continue
 		var m := mi as MeshInstance3D
-		var arr := m.mesh.surface_get_arrays(0)
 		if m.has_meta("parent"):
 			var list: Array = fr.get(str(m.get_meta("parent")), [])
-			list.append({"node": str(m.name), "mesh": m.mesh, "v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX],
-				"b": arr[Mesh.ARRAY_BONES], "w": arr[Mesh.ARRAY_WEIGHTS], "center": m.get_meta("center_bind"),
+			list.append({"node": str(m.name), "mesh": m.mesh, "center": m.get_meta("center_bind"),
 				"r": m.mesh.get_aabb().size.length() * 0.5})
 			fr[str(m.get_meta("parent"))] = list
 			continue
-		data[str(m.name)] = {"v": arr[Mesh.ARRAY_VERTEX], "i": arr[Mesh.ARRAY_INDEX], "aabb": m.mesh.get_aabb(),
-			"label": str(m.get_meta("label")), "system": str(m.get_meta("system")), "bone": str(m.get_meta("bone")),
-			"center": m.get_meta("center_bind"), "radius": float(m.get_meta("radius", 0.1)), "mesh": m.mesh,
-			"chunks": _make_chunks(arr[Mesh.ARRAY_VERTEX], arr[Mesh.ARRAY_INDEX])}
+		# el trazado de la bala usa un TriangleMesh nativo (con BVH) que se arma recién la primera vez que hace falta
+		data[str(m.name)] = {"aabb": m.mesh.get_aabb(), "label": str(m.get_meta("label")), "system": str(m.get_meta("system")),
+			"bone": str(m.get_meta("bone")), "center": m.get_meta("center_bind"), "radius": float(m.get_meta("radius", 0.1)),
+			"mesh": m.mesh, "tm": null}
 	inst.free()
-	for n in placeholders:
-		var list: Array = fr.get(n, [])
-		if list.is_empty():
-			continue
-		var vv := PackedVector3Array()
-		var ii := PackedInt32Array()
-		var aabb := AABB()
-		var c := Vector3.ZERO
-		for k in list.size():
-			var f: Dictionary = list[k]
-			var off := vv.size()
-			vv.append_array(f.v)
-			for x in (f.i as PackedInt32Array):
-				ii.append(x + off)
-			var fa: AABB = (f.mesh as Mesh).get_aabb()
-			aabb = fa if k == 0 else aabb.merge(fa)
-			c += (f.center as Vector3)
-		var ph: Dictionary = placeholders[n]
-		var chunks := []
-		var istart := 0
-		for f in list:
-			var cnt := (f.i as PackedInt32Array).size()
-			chunks.append({"aabb": (f.mesh as Mesh).get_aabb(), "a": istart, "b": istart + cnt})
-			istart += cnt
-		data[n] = {"v": vv, "i": ii, "aabb": aabb, "label": ph.label, "system": ph.system, "bone": ph.bone,
-			"center": c / list.size(), "radius": aabb.size.length() * 0.5, "mesh": null, "chunks": chunks}
-	_cpu_lock.lock()
 	_cpu[id] = data
 	_cpu_frags[id] = fr
-	_cpu_lock.unlock()
 
-static var _cpu_lock := Mutex.new()
 static var _warming := {}
-## Empieza a preparar en segundo plano la anatomía de un personaje (se llama al cargar la partida).
+## Empieza a cargar en segundo plano la anatomía de un personaje (se llama al cargar la partida).
 static func warm(id: String) -> void:
-	_cpu_lock.lock()
-	var has := _cpu.has(id)
-	_cpu_lock.unlock()
-	if has or _warming.has(id):
+	if _cpu.has(id) or _warming.has(id):
 		return
-	_warming[id] = WorkerThreadPool.add_task(func(): _build_cpu(id))
+	var path := FIT_DIR + id + ".scn"
+	if ResourceLoader.exists(path) and ResourceLoader.load_threaded_request(path) == OK:
+		_warming[id] = true
 
 func _setup() -> void:
 	skel = actor.skel
@@ -158,15 +126,8 @@ func _setup() -> void:
 	if not ResourceLoader.exists(path):
 		push_warning("Sin anatomía ajustada para " + id + " (correr tools/anatomy/fit_anatomy.gd)")
 		return
-	_cpu_lock.lock()
-	var ready := _cpu.has(id)
-	_cpu_lock.unlock()
-	if not ready:
-		if _warming.has(id):
-			WorkerThreadPool.wait_for_task_completion(_warming[id])
-			_warming.erase(id)
-		else:
-			_build_cpu(id)
+	if not _cpu.has(id):
+		_build_cpu(id)
 	groups = _cpu[id]
 	frags = _cpu_frags[id]
 	available = true
@@ -237,24 +198,19 @@ func trace(origin: Vector3, dir: Vector3, length: float, max_depth := INF) -> Ar
 		var aabb: AABB = (g.aabb as AABB).grow(0.01)
 		if not aabb.intersects_segment(a, b) and not aabb.has_point(a):
 			continue
-		var v: PackedVector3Array = g.v
-		var idx: PackedInt32Array = g.i
 		var tmin := INF
 		var tmax := -INF
 		var seg := b - a
 		var sl := seg.length()
-		# por trozos (fragmentos): sólo se prueban los triángulos de los trozos que cruza el segmento
-		var chunks: Array = g.get("chunks", [{"aabb": g.aabb, "a": 0, "b": idx.size()}])
-		for ch in chunks:
-			var ca: AABB = (ch.aabb as AABB).grow(0.004)
-			if not ca.intersects_segment(a, b) and not ca.has_point(a):
-				continue
-			for k in range(int(ch.a), int(ch.b), 3):
-				var hit = Geometry3D.segment_intersects_triangle(a, b, v[idx[k]], v[idx[k + 1]], v[idx[k + 2]])
-				if hit != null:
-					var t := a.distance_to(hit) / maxf(sl, 1e-6) * length
-					tmin = minf(tmin, t)
-					tmax = maxf(tmax, t)
+		# búsqueda nativa (BVH): primera superficie desde la entrada y desde la salida = dónde entra y dónde sale
+		if g.tm == null:
+			g.tm = (g.mesh as Mesh).generate_triangle_mesh()
+		var tm: TriangleMesh = g.tm
+		var hin: Dictionary = tm.intersect_segment(a, b)
+		if not hin.is_empty():
+			var hout: Dictionary = tm.intersect_segment(b, a)
+			tmin = a.distance_to(hin.position) / maxf(sl, 1e-6) * length
+			tmax = a.distance_to(hout.position) / maxf(sl, 1e-6) * length if not hout.is_empty() else tmin
 		if tmin == INF:
 			continue
 		if tmax - tmin < 0.004:
@@ -381,9 +337,10 @@ func _frag_state(node: String, f: Dictionary) -> Array:
 func _spawn_gib(f: Dictionary, wound_w: Vector3, dir_world: Vector3, strength: float) -> void:
 	if Gibs.instance == null:
 		return
-	var v: PackedVector3Array = f.v
-	var b: PackedInt32Array = f.b
-	var w: PackedFloat32Array = f.w
+	var farr := (f.mesh as Mesh).surface_get_arrays(0)
+	var v: PackedVector3Array = farr[Mesh.ARRAY_VERTEX]
+	var b: PackedInt32Array = farr[Mesh.ARRAY_BONES]
+	var w: PackedFloat32Array = farr[Mesh.ARRAY_WEIGHTS]
 	var mats := {}
 	var pts := PackedVector3Array()
 	pts.resize(v.size())
@@ -935,7 +892,6 @@ render_mode cull_disabled;
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
 uniform vec4 albedo_color : source_color = vec4(1.0);
 """ + _ZONE_FUNC + """
-uniform vec3 cam_pos = vec3(0.0);
 varying vec3 wp;
 void vertex() { wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz; }
 // la ropa también desaparece en el «túnel» entre la cámara y la herida: nada tapa la vista

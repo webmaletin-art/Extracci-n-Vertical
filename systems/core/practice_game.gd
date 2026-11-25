@@ -233,7 +233,11 @@ func _spawn_dummy() -> void:
 	dummy.inp.crouch = crouched
 	for a in dummy.hitboxes:
 		if str(a.get_meta("zone", "")) == "head":
-			((a.get_child(0) as CollisionShape3D).shape as SphereShape3D).radius = 0.15     # práctica: la cabeza se acierta con holgura (los ojos quedan adentro)
+			((a.get_child(0) as CollisionShape3D).shape as SphereShape3D).radius = 0.17     # práctica: la cabeza se acierta con holgura (los ojos quedan adentro)
+		elif str(a.get_meta("zone", "")) == "pelvis":
+			var cap := (a.get_child(0) as CollisionShape3D).shape as CapsuleShape3D
+			if cap:
+				cap.radius = 0.2                       # práctica: la ingle (testículos) entra en la pelvis
 	bullet_time.watch(dummy)
 	dummy.died.connect(func(_i):
 		if auto_respawn:
