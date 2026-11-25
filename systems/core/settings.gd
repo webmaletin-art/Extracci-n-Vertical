@@ -42,7 +42,7 @@ var ctl_pos := {}                   ## nombre del control → posición en fracc
 var ctl_scale := {}                 ## nombre del control → escala propia (1.0 = normal)
 var ctl_opacity := 0.9              ## transparencia de los controles táctiles
 var ctl_mirror := false             ## modo zurdo: espeja todo el HUD táctil
-var camera_distance := 9.0          ## distancia de la cámara lateral (m): menos = más cerca
+var camera_distance := 10.5         ## distancia de la cámara lateral (m): menos = más cerca (10,5 = la de siempre, jugable)
 var haptics := true                 ## vibración al recibir daño (teléfonos)
 var auto_fire_stick := false        ## dispara al llevar el joystick derecho al borde (además del botón)
 var show_fps := false
@@ -160,3 +160,6 @@ func load_settings() -> void:
 	for k in KEYS:
 		if cf.has_section_key("ajustes", k):
 			set(k, cf.get_value("ajustes", k))
+	# la cámara cercana (9 m) no gustó: quien la tenía guardada vuelve a la lejana
+	if is_equal_approx(camera_distance, 9.0):
+		camera_distance = 10.5
