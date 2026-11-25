@@ -126,3 +126,10 @@
 * El miembro suelto (`Limb`, cuerpo rígido en el plano) sale despedido, gira, cae y sangra; mientras se ve la ventana
   de rayos X de ese cuerpo se muestra su versión de huesos y vasos; después, la normal.
 * Pendiente: cortes a mitad de hueso (hoy sólo en articulaciones).
+
+## 0.10.1 — orificios pegados al cuerpo y controles visibles
+
+* Los orificios de bala se meten hacia el hueso (el punto de impacto está en el borde de la zona de impacto, más grande
+  que el cuerpo), con la profundidad de la piel según la zona; siempre visibles sobre la ropa y ocultos en la toma de rayos X.
+* Botones y joysticks táctiles: fondo oscuro, aro negro + aro de color y letra con borde (se leen sobre fondo blanco);
+  botones de acción más cerca del joystick derecho.

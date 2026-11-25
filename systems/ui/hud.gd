@@ -85,8 +85,8 @@ func _build() -> void:
 ## van entre los dos joysticks, al alcance de los pulgares sin tapar el apuntado.
 const DEFAULT_POS := {
 	"stick_l": Vector2(0.15, 0.76), "stick_r": Vector2(0.87, 0.74),
-	"fire": Vector2(0.67, 0.80), "jump": Vector2(0.56, 0.89), "melee": Vector2(0.55, 0.70), "grenade": Vector2(0.67, 0.60),
-	"crouch": Vector2(0.47, 0.84), "use": Vector2(0.58, 0.47), "reload": Vector2(0.73, 0.11), "swap": Vector2(0.79, 0.11),
+	"fire": Vector2(0.73, 0.86), "jump": Vector2(0.65, 0.90), "melee": Vector2(0.65, 0.73), "grenade": Vector2(0.73, 0.62),
+	"crouch": Vector2(0.57, 0.84), "use": Vector2(0.62, 0.47), "reload": Vector2(0.73, 0.11), "swap": Vector2(0.79, 0.11),
 	"pause": Vector2(0.03, 0.07), "inventory": Vector2(0.09, 0.07), "heal": Vector2(0.27, 0.92)}
 
 func ctl_pos(n: String) -> Vector2:
@@ -395,9 +395,14 @@ class TouchButton extends Control:
 	func _draw() -> void:
 		var c := size * 0.5
 		var r := radius * scale_k
-		draw_circle(c, r, Color(tint.r, tint.g, tint.b, 0.45 if pressed else 0.18))
-		draw_arc(c, r, 0, TAU, 40, Color(tint.r, tint.g, tint.b, 0.8), 2.0, true)
+		# fondo oscuro + doble aro (negro por fuera, color por dentro) + letra con borde: se lee sobre fondo blanco o negro
+		draw_circle(c, r, Color(0.05, 0.05, 0.07, 0.62 if pressed else 0.42))
+		draw_circle(c, r, Color(tint.r, tint.g, tint.b, 0.38 if pressed else 0.14))
+		draw_arc(c, r + 1.5, 0, TAU, 40, Color(0, 0, 0, 0.9), 4.0, true)
+		draw_arc(c, r, 0, TAU, 40, Color(tint.r, tint.g, tint.b, 1.0), 2.6, true)
 		var f := get_theme_default_font()
 		var fs := int(r * (0.55 if label.length() <= 2 else 0.38))
 		var ts := f.get_string_size(label, HORIZONTAL_ALIGNMENT_CENTER, -1, fs)
-		draw_string(f, c - Vector2(ts.x * 0.5, -fs * 0.35), label, HORIZONTAL_ALIGNMENT_CENTER, -1, fs, Color(1, 1, 1, 0.95))
+		var tp := c - Vector2(ts.x * 0.5, -fs * 0.35)
+		draw_string_outline(f, tp, label, HORIZONTAL_ALIGNMENT_CENTER, -1, fs, 6, Color(0, 0, 0, 0.95))
+		draw_string(f, tp, label, HORIZONTAL_ALIGNMENT_CENTER, -1, fs, Color(1, 1, 1, 1))

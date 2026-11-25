@@ -66,6 +66,9 @@ func _exit_tree() -> void:
 
 ## Durante la toma de rayos X las gotas se achican (si no tapan la vista).
 func set_closeup(on: bool) -> void:
+	for h in _holes_all:
+		if is_instance_valid(h):
+			(h as Node3D).visible = not on
 	for p in _em:
 		p.scale_amount_min = 0.04 if on else 0.6
 		p.scale_amount_max = 0.14 if on else 2.0
@@ -163,6 +166,7 @@ func clear() -> void:
 
 ## Orificio en el cuerpo (entrada y, si atravesó, salida más grande): una mancha oscura con borde rojo pegada al hueso
 ## que recibió el disparo, así se mueve con el cuerpo. Tamaño según la potencia del arma.
+var _holes_all: Array = []
 var _wound_mat: StandardMaterial3D
 func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, through := false) -> void:
 	if a == null or a.skel == null or bone == "" or a.skel.find_bone(bone) < 0:
@@ -173,12 +177,14 @@ func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, t
 		_wound_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		_wound_mat.albedo_texture = _wound_tex()
 		_wound_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-		_wound_mat.no_depth_test = false
+		_wound_mat.no_depth_test = true            # siempre visible sobre la ropa (se oculta durante los rayos X)
 		_wound_mat.render_priority = 4
 	var att := BoneAttachment3D.new()
 	att.bone_name = bone
 	att.set_meta("no_tech", true)
 	a.skel.add_child(att)
+	_holes_all.append(att)
+	_holes_all = _holes_all.filter(func(x): return is_instance_valid(x))
 	var holes := a.get_meta("wound_holes", []) as Array
 	holes.append(att)
 	if holes.size() > 10:
@@ -198,10 +204,41 @@ func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, t
 		att.add_child(mi)
 		# en la superficie del cuerpo, de cara a la bala (entrada) o al otro lado (salida), siempre hacia la cámara
 		var face := dir.normalized() * float(side[0])
-		var p := point + face * 0.02 + Vector3(0, 0, 0.12)
+		var zd := _skin_depth(bone)
+		# el punto del disparo está en el borde de la zona de impacto (más grande que el cuerpo): se mete hacia el hueso
+		# para que el orificio quede sobre la piel y no flotando afuera
+		var inset := _inset(bone)
+		var p := point + dir.normalized() * inset + Vector3(0, 0, zd)
 		if side[0] > 0.0:
-			p = point + dir.normalized() * 0.22 + Vector3(0, 0, 0.12)
+			p = point + dir.normalized() * (inset * 1.9 + 0.03) + Vector3(0, 0, zd)
 		mi.global_transform = Transform3D(Basis.looking_at(Vector3(0, 0, -1), Vector3.UP).rotated(Vector3.BACK, randf() * TAU), p)
+
+## Distancia de la piel al plano del juego (z = 0) según el hueso: el orificio se pega a la superficie del cuerpo y no flota.
+static func _inset(bone: String) -> float:
+	var b := bone.trim_prefix("mixamorig_")
+	if b.begins_with("Spine") or b.begins_with("Hips"):
+		return 0.1
+	if b.begins_with("Head"):
+		return 0.07
+	if b.begins_with("Neck"):
+		return 0.035
+	if "UpLeg" in b:
+		return 0.06
+	if "Leg" in b or "Foot" in b:
+		return 0.04
+	return 0.032
+
+static func _skin_depth(bone: String) -> float:
+	var b := bone.trim_prefix("mixamorig_")
+	if b.begins_with("Spine") or b.begins_with("Hips"):
+		return 0.095
+	if b.begins_with("Head") or b.begins_with("Neck"):
+		return 0.08
+	if "UpLeg" in b:
+		return 0.075
+	if "Leg" in b or "Foot" in b:
+		return 0.055
+	return 0.045
 
 static func _wound_tex() -> Texture2D:
 	var n := 64

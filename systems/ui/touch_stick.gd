@@ -72,10 +72,12 @@ func _update(local: Vector2) -> void:
 func _draw() -> void:
 	var r := radius()
 	var c := _center if active else _rest
-	draw_circle(c, r, Color(0.05, 0.08, 0.1, 0.35))
-	draw_arc(c, r, 0, TAU, 48, Color(tint.r, tint.g, tint.b, 0.55), 2.0, true)
-	draw_arc(c, r * 0.5, 0, TAU, 32, Color(tint.r, tint.g, tint.b, 0.18), 1.0, true)
+	draw_circle(c, r, Color(0.05, 0.06, 0.08, 0.42))
+	draw_arc(c, r + 1.5, 0, TAU, 48, Color(0, 0, 0, 0.9), 4.0, true)
+	draw_arc(c, r, 0, TAU, 48, Color(tint.r, tint.g, tint.b, 1.0), 2.6, true)
+	draw_arc(c, r * 0.5, 0, TAU, 32, Color(tint.r, tint.g, tint.b, 0.4), 1.5, true)
 	var k := c + (_knob if active else (value * r * 0.6 if persist else Vector2.ZERO))
-	draw_circle(k, r * 0.36, Color(tint.r, tint.g, tint.b, 0.85 if active else 0.45))
+	draw_circle(k, r * 0.38, Color(0, 0, 0, 0.8))
+	draw_circle(k, r * 0.34, Color(tint.r, tint.g, tint.b, 0.95 if active else 0.65))
 	if persist and value.length() > 0.1:
 		draw_line(c, c + value.normalized() * r * 1.15, Color(tint.r, tint.g, tint.b, 0.6), 3.0, true)
