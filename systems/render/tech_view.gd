@@ -46,7 +46,8 @@ func _ready() -> void:
 			["tech_contrast", contrast], ["tech_red", red], ["tech_xray", 0.0], ["tech_on", 0.0]]:
 		RenderingServer.global_shader_parameter_add(str(p[0]), RenderingServer.GLOBAL_VAR_TYPE_FLOAT, float(p[1]))
 	get_tree().node_added.connect(func(n: Node): if n is MeshInstance3D and mode >= 2: _dirty = true)
-	set_mode.call_deferred(4)        # estilo por defecto: D · Plano dibujado (el modo práctica permite volver al original)
+	if DisplayServer.get_name() != "headless":          # sin pantalla (pruebas) no hay datos de malla para las aristas
+		set_mode.call_deferred(4)        # estilo por defecto: D · Plano dibujado (el modo práctica permite volver al original)
 
 ## Cambia el modo (y aplica en el acto sobre lo que está en pantalla).
 func set_mode(m: int) -> void:
