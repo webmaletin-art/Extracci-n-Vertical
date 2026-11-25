@@ -36,6 +36,7 @@ var flash_wounds := false
 var follow_bullet := false
 var bullet_replay := false
 var debug_u := -1.0               ## (capturas) fija el avance de la repetición 0..1
+const HOLD_SECONDS := 1.6         ## después de atravesar el cuerpo, la toma queda quieta y termina
 const REPLAY_SECONDS := 4.0       ## (tiempo real) la bala atravesando el cuerpo, muy lenta
 var _replay: Array = []
 var _rp_t0 := 0.0
@@ -71,7 +72,7 @@ func _now() -> float:
 
 ## Disparo del jugador: si la bala va a matar, la cámara la sigue en cámara lenta.
 func _on_shot(idx: int, w: Firearm) -> void:
-	if not follow_bullet or Settings.bullet_time == 0 or phase != "" or idx < 0 or Ballistics.instance == null:
+	if not (follow_bullet or Settings.kill_cam == 1) or Settings.bullet_time == 0 or phase != "" or idx < 0 or Ballistics.instance == null:
 		return
 	var b := Ballistics.instance
 	var pred := b.predict(b.position_of(idx), b.velocity_of(idx), float(w.stats.drag), player.hitbox_rids(), 1.2)
@@ -93,6 +94,9 @@ func _on_shot(idx: int, w: Firearm) -> void:
 	_proj = idx
 	_victim = victim
 	b.tracked = idx
+	# la bala visible sale de la boca del arma y entra al cuerpo a la profundidad del hueso que va a pegar
+	var tz := (col as Area3D).global_position.z
+	b.visual_z = [w.muzzle_world().x, w.muzzle_world().z, (pred.point as Vector3).x, tz]
 	TimeFx.slowmo(0.03, 6.0, "bullet_time", 0.05)
 	_until = _now() + 4.0
 	if not _connected:
@@ -125,7 +129,7 @@ func _on_damage(a: Actor, info: Dictionary) -> void:
 		return
 	# en la partida los rayos X son SÓLO para la muerte: las heridas que no matan no muestran nada (quedan en las
 	# estadísticas). flash_wounds = true vuelve a mostrar el destello rápido (no se usa hoy).
-	if flash_wounds:
+	if flash_wounds or Settings.xray_hits == 1:
 		AnatomyBody.for_actor(a).show_flash(nodes, 0.9)
 
 func _killcam(a: Actor, info: Dictionary) -> void:
@@ -183,13 +187,15 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 				_dist1 = c[1]
 				_dist0 = c[1] + 0.8
 				_ang1 = c[2]
+	if (bullet_replay or Settings.kill_cam == 1) and t == "bullet" and (info.get("bullet_path", []) as Array).size() >= 2:
+		anat.set_reveal(int(info.get("seq0", 1)) - 1)
 	anat.show_killcam(main, radius)
 	if Blood.instance:
 		Blood.instance.set_closeup(true)
 	# repetición del proyectil por dentro (sólo balas): primero se ve la bala entrar, romper y desviarse
 	_replay = (info.get("bullet_path", []) as Array).duplicate()
 	var rp := 0.0
-	if bullet_replay and t == "bullet" and _replay.size() >= 2:
+	if (bullet_replay or Settings.kill_cam == 1) and t == "bullet" and _replay.size() >= 2:
 		rp = REPLAY_SECONDS
 		_rp_anat = anat
 		_rp_seen = -1
@@ -213,6 +219,8 @@ func _process(_d: float) -> void:
 		var b := Ballistics.instance
 		if b and b.is_alive(_proj):
 			var p := b.position_of(_proj)
+			if b.visual_z.size() == 4:
+				p.z = lerpf(float(b.visual_z[1]), float(b.visual_z[3]), clampf(inverse_lerp(float(b.visual_z[0]), float(b.visual_z[2]), p.x), 0.0, 1.0))
 			var v := b.velocity_of(_proj).normalized()
 			camera.override_target(p - v * 1.1 + Vector3(0, 0.25, 0.9), p + v * 2.0, 34.0)
 		if _now() > _until:
@@ -279,6 +287,8 @@ func _end() -> void:
 		Ballistics.instance.tracked = -1
 		Ballistics.instance.bullet_model.visible = false
 	TimeFx.end_slowmo()
+	if Ballistics.instance:
+		Ballistics.instance.visual_z = []
 	if camera:
 		camera.release_override()
 	get_tree().call_group("hud", "set_cinematic", false)
@@ -311,11 +321,14 @@ func _replay_step() -> bool:
 		return false
 	var u := clampf((_now() - _rp_t0) / REPLAY_SECONDS, 0.0, 1.0) if debug_u < 0.0 else debug_u
 	if u >= 1.0:
+		anat.set_reveal(1 << 30)
+		if _now() < _rp_t0 + REPLAY_SECONDS + HOLD_SECONDS and debug_u < 0.0:
+			return true                  # se queda quieta en el último cuadro de la toma (rayos X)
 		_replay = []
 		if _rp_bullet:
 			_rp_bullet.visible = false
-		anat.set_reveal(1 << 30)
-		return false
+		_end()
+		return true
 	var pts := PackedVector3Array()
 	for e in _replay:
 		pts.append(anat.bind_to_world(str(e.node), e.p))

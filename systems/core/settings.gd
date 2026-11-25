@@ -43,7 +43,9 @@ var ctl_scale := {}                 ## nombre del control → escala propia (1.0
 var ctl_opacity := 0.9              ## transparencia de los controles táctiles
 var ctl_mirror := false             ## modo zurdo: espeja todo el HUD táctil
 var camera_distance := 9.0          ## distancia de la cámara lateral (m): menos = más cerca
-var haptics := true                 ## vibración al recibir daño (teléfonos)
+var haptics := true
+var xray_hits := 0                  ## rayos X: 0 sólo en la muerte · 1 también un destello en cada impacto grave
+var kill_cam := 0                   ## cámara de muerte: 0 normal · 1 cinematográfica (bala en vuelo, bala por dentro, cámara lenta)                 ## vibración al recibir daño (teléfonos)
 var auto_fire_stick := false        ## dispara al llevar el joystick derecho al borde (además del botón)
 var show_fps := false
 var character_id := "alfa"
@@ -141,7 +143,7 @@ func _apply_audio() -> void:
 
 const KEYS := ["quality_preset", "render_scale", "shadows", "lights", "msaa", "fxaa", "particles", "smoke", "explosions",
 	"decor", "background", "fog_war", "view_floors", "fps_target", "xray", "bullet_time", "camera_shake", "blood", "laser", "laser_enemies", "vol_master",
-	"vol_sfx", "vol_ambient", "joystick_size", "ctl_pos", "ctl_scale", "ctl_opacity", "ctl_mirror", "camera_distance", "haptics", "aim_sensitivity", "auto_fire_stick", "show_fps", "character_id"]
+	"vol_sfx", "vol_ambient", "joystick_size", "ctl_pos", "ctl_scale", "ctl_opacity", "ctl_mirror", "camera_distance", "haptics", "xray_hits", "kill_cam", "aim_sensitivity", "auto_fire_stick", "show_fps", "character_id"]
 
 func save_settings() -> void:
 	var cf := ConfigFile.new()

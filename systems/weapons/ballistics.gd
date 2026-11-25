@@ -30,6 +30,7 @@ var _kind: Array[String] = []
 var _tracers: Array[MeshInstance3D] = []
 var _next := 0
 var tracked := -1                 ## índice seguido por la cámara de bala (BulletTime)
+var visual_z: Array = []           ## (cámara de bala) desplazamiento visual en z de la bala seguida
 var bullet_model: MeshInstance3D  ## bala 3D (munición de Nexus) que se muestra sólo en cámara lenta
 var stats := {"fired": 0, "hits": 0}
 
@@ -220,7 +221,13 @@ func _draw_tracer(i: int, prev: Vector3) -> void:
 		bullet_model.visible = true
 		# el modelo trae el origen corrido ~0,9 m: se centra en la posición real del proyectil
 		var mc := bullet_model.mesh.get_aabb().get_center() if bullet_model.mesh else Vector3.ZERO
-		bullet_model.global_transform = Transform3D(Basis.looking_at(d, up).scaled(Vector3.ONE * 4.0), _pos[i]) * Transform3D(Basis.IDENTITY, -mc)
+		# la bala física viaja en el plano z = 0; la que se VE sale de la boca del cañón y llega a la profundidad del
+		# cuerpo al que va a pegar (visual_z = [x inicio, z inicio, x impacto, z impacto])
+		var vp := _pos[i]
+		if visual_z.size() == 4:
+			var u := clampf(inverse_lerp(float(visual_z[0]), float(visual_z[2]), vp.x), 0.0, 1.0)
+			vp.z = lerpf(float(visual_z[1]), float(visual_z[3]), u)
+		bullet_model.global_transform = Transform3D(Basis.looking_at(d, up).scaled(Vector3.ONE * 4.0), vp) * Transform3D(Basis.IDENTITY, -mc)
 
 func _kill(i: int) -> void:
 	_alive[i] = false

@@ -110,6 +110,8 @@ func _ready() -> void:
 	_option(e, "explosions", "Explosiones (fuego, onda, escombros)", Settings.LEVELS)
 	_head(e, "Daño y cámara lenta")
 	_option(e, "xray", "Rayos X en cámara lenta", ["Apagado", "Sólo huesos", "Huesos, órganos y vasos"])
+	_option(e, "xray_hits", "Cuándo se ven los rayos X", ["Sólo al morir", "En cada impacto grave y al morir"])
+	_option(e, "kill_cam", "Cámara de muerte", ["Normal", "Cinematográfica (bala en vuelo y por dentro)"])
 	_option(e, "bullet_time", "Cámara lenta (bullet time)", ["Nunca", "Tiros decisivos", "Siempre que hiere"])
 	_slider(e, "camera_shake", "Vibración de cámara", 0.0, 1.0, 0.1, true)
 	_head(e, "Láser")

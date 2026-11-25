@@ -154,7 +154,7 @@ func _place(n: String, p: Vector2) -> void:
 # ---------------------------------------------------------------- toques (multitáctil)
 
 func _input(event: InputEvent) -> void:
-	if not visible:
+	if not visible or get_tree().get_node_count_in_group("editing_controls") > 0:
 		return
 	if event is InputEventScreenTouch:
 		var e := event as InputEventScreenTouch

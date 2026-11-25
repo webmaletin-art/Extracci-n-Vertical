@@ -331,6 +331,35 @@ func _fit(id: String, src: Dictionary, meta: Dictionary) -> void:
 	out_root.name = "Anatomia_" + id
 	var stats := {"verts": 0, "pulled": 0, "post_out": 0, "max_out": 0.0}
 	var group_data := []
+	# CABEZA: en vez de meter cada vértice del cráneo por separado (lo aplastaba contra la cara / el casco), se achica
+	# toda la cabeza de forma pareja (cráneo, mandíbula, dientes, ojos, cerebro, orejas: mismo centro y factor) hasta que el
+	# 97 % de los puntos del cráneo quede adentro; después el ajuste fino sólo toca los pocos que asoman.
+	var head_c := Vector3.ZERO
+	var head_k := 1.0
+	for g in meta.groups:
+		if str(g.label) == "cráneo" and src.has(str(g.node)) and not g.has("parent"):
+			var hv: PackedVector3Array = src[str(g.node)].v
+			var hreg := region_of_bone(str(g.bone))
+			var hpts := PackedVector3Array()
+			for q in hv:
+				hpts.append(_map_point(q, str(g.bone), hreg, body, marks.get("Right", {}), kj, vm, "Right"))
+			for q in hpts:
+				head_c += q
+			head_c /= maxf(hpts.size(), 1.0)
+			var ratios := []
+			for i in range(0, hpts.size(), 3):
+				var dv := hpts[i] - head_c
+				var dl := dv.length()
+				if dl < 0.001:
+					continue
+				var dist := _skin_dist(head_c, dv / dl)
+				if dist < INF:
+					ratios.append(dl / maxf(dist - MARGIN, 0.01))
+			ratios.sort()
+			if not ratios.is_empty():
+				head_k = maxf(float(ratios[int(ratios.size() * 0.97)]), 1.0)
+			print("  cabeza: factor ", 1.0 / head_k)
+			break
 	for g in meta.groups:
 		var node := str(g.node)
 		if not src.has(node):
@@ -343,6 +372,9 @@ func _fit(id: String, src: Dictionary, meta: Dictionary) -> void:
 		pv.resize(v.size())
 		for i in v.size():
 			pv[i] = _map_point(v[i], str(g.bone), region, body, mk, kj, vm, side)
+		if head_k > 1.0 and (str(g.bone).ends_with("Head") or str(g.label).begins_with("mandíbula") or str(g.label).begins_with("dientes")):
+			for i in pv.size():
+				pv[i] = head_c + (pv[i] - head_c) / head_k
 		# el cerebro se encoge un poco hacia su centro: que quede DENTRO del cráneo y no lo atraviese
 		if str(g.label).begins_with("cerebro") or str(g.label).begins_with("cerebelo"):
 			var cen := Vector3.ZERO

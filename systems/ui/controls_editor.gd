@@ -25,6 +25,8 @@ func _ready() -> void:
 	theme = UiTheme.make()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	process_mode = Node.PROCESS_MODE_ALWAYS          # también con el juego en pausa
+	add_to_group("editing_controls")
 	var bar := PanelContainer.new()
 	bar.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	bar.position = Vector2(0, 8)
@@ -137,7 +139,42 @@ func _pick(p: Vector2) -> String:
 			bd = d
 	return best
 
+## Dedo (teléfono): se procesa antes que todo, así el HUD del juego no se queda con el toque.
+func _input(e: InputEvent) -> void:
+	if not visible:
+		return
+	if e is InputEventScreenTouch:
+		var t := e as InputEventScreenTouch
+		if t.pressed:
+			# los controles de arriba (tamaño, transparencia, botones) siguen funcionando
+			for c in find_children("*", "Control", true, false):
+				if (c is Slider or c is BaseButton) and (c as Control).get_global_rect().has_point(t.position):
+					return
+			var n := _pick(t.position - global_position)
+			if n != "":
+				_select(n)
+				_drag = true
+				_touch = t.index
+				get_viewport().set_input_as_handled()
+		elif t.index == _touch:
+			_drag = false
+			_touch = -1
+			get_viewport().set_input_as_handled()
+	elif e is InputEventScreenDrag and _drag and (e as InputEventScreenDrag).index == _touch:
+		_move_to((e as InputEventScreenDrag).position - global_position)
+		get_viewport().set_input_as_handled()
+
+var _touch := -1
+
+func _move_to(p: Vector2) -> void:
+	var f: Vector2 = p / size
+	f = Vector2(clampf(f.x, 0.03, 0.97), clampf(f.y, 0.06, 0.96))
+	Settings.ctl_pos[_sel] = Vector2(1.0 - f.x, f.y) if Settings.ctl_mirror else f
+	queue_redraw()
+
 func _gui_input(e: InputEvent) -> void:
+	if _touch >= 0:
+		return                       # ya lo maneja el dedo (evita doble movimiento con el mouse emulado)
 	if e is InputEventMouseButton and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
 		if e.pressed:
 			var n := _pick(e.position)
@@ -147,7 +184,4 @@ func _gui_input(e: InputEvent) -> void:
 		else:
 			_drag = false
 	elif e is InputEventMouseMotion and _drag:
-		var f: Vector2 = (e.position as Vector2) / size
-		f = Vector2(clampf(f.x, 0.03, 0.97), clampf(f.y, 0.06, 0.96))
-		Settings.ctl_pos[_sel] = Vector2(1.0 - f.x, f.y) if Settings.ctl_mirror else f
-		queue_redraw()
+		_move_to(e.position)
