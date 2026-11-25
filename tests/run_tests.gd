@@ -242,13 +242,16 @@ func g_balistica(p: Actor) -> String:
 	p.aim_dir = Vector2(tgt.x - chest.x, tgt.y - chest.y).normalized()
 	Settings.bullet_time = 0
 	await _wait_phys(10)
-	p.inp.fire = true
-	await _wait_phys(3)
-	p.inp.fire = false
-	await _wait_phys(30)
+	for _try in 4:                      # la dispersión del arma puede hacer fallar un disparo suelto: hasta 4 intentos
+		p.inp.fire = true
+		await _wait_phys(3)
+		p.inp.fire = false
+		await _wait_phys(30)
+		if e.health < h0:
+			break
 	Settings.bullet_time = 1
 	if e.health >= h0:
-		return "el disparo no hizo daño"
+		return "el disparo no hizo daño (4 intentos)"
 	if not e.last_hit_info.has("injuries"):
 		return "sin lesiones calculadas"
 	return ""
