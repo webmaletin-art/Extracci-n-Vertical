@@ -28,6 +28,16 @@ run_one() {
 	D="$OUT/$S"
 	mkdir -p "$D"
 	G="$D/escena_$S.glb"
+	if [[ "$S" =~ ^duelo([1-5])$ ]]; then
+		# duelos IA contra IA en el campo de prácticas: un GLB por arma (1 pistola · 2 escopeta · 3 subfusil · 4 fusil · 5 rifle .50)
+		timeout 3000 xvfb-run -a godot --path . --rendering-driver opengl3 --fixed-fps 30 tools/trailer/duel.tscn -- "--glb=$G" "--solo=$((${BASH_REMATCH[1]} - 1))" > "$D/log.txt" 2>&1
+		grep -E "TRAILER_LISTO|EXPORT glb|SCRIPT ERROR" "$D/log.txt" | head -4
+		if [ -f "$D/escena_${S}_sonidos.json" ]; then
+			cp "$D/escena_${S}_sonidos.json" "$D/trailer_sonidos.json"
+			python3 tools/trailer/audio_pack.py "$D" || true
+		fi
+		return
+	fi
 	local ARGS=("--glb=$G")
 	[ -n "${MAPA_APARTE:-}" ] && ARGS+=("--nomap")
 	[ "$S" != "completa" ] && ARGS+=("--only=$S")

@@ -20,6 +20,7 @@ var fa: Actor
 var fb: Actor
 var rondas := 2
 var armas := 5
+var solo := -1                      ## >= 0: sólo el arma con ese índice (para exportar un GLB por arma)
 var _fin := false
 
 func _ready() -> void:
@@ -30,6 +31,8 @@ func _ready() -> void:
 			no_map = true
 		if a.begins_with("--rondas="):
 			rondas = int(a.substr(9))
+		if a.begins_with("--solo="):
+			solo = int(a.substr(7))
 		if a.begins_with("--armas="):
 			armas = int(a.substr(8))
 	super._ready()
@@ -88,7 +91,9 @@ func _run() -> void:
 	if no_map:
 		pass
 	await _wait(0.5)
-	for wi in mini(armas, DUELS.size()):
+	for wi in (range(DUELS.size()) if solo < 0 else [solo]):
+		if solo < 0 and wi >= armas:
+			break
 		for r in rondas:
 			await _round(DUELS[wi], r)
 	await _wait(0.5)
@@ -126,21 +131,9 @@ func _round(w: Array, r: int) -> void:
 	fb.add_child(bb)
 	var t0 := vt
 	var dbg := 0
-	var foto_hecha := false
 	while not (fa.is_dead() or fb.is_dead()) and vt - t0 < 20.0:
 		await get_tree().process_frame
 		dbg += 1
-		if "--foto" in OS.get_cmdline_user_args() and not foto_hecha and vt - t0 > 3.0:
-			foto_hecha = true
-			camera.override_active = true
-			camera.override_fov = 28.0
-			camera.override_pos = fa.global_position + Vector3(0, 1.3, 3.2)
-			camera.global_position = camera.override_pos
-			camera.override_look = fa.global_position + Vector3(0, 1.3, 0)
-			for i in 6:
-				await get_tree().process_frame
-			get_viewport().get_texture().get_image().save_png("/tmp/du/game.png")
-			camera.override_active = false
 		if dbg % 15 == 0:
 			print("DUELO t=%.1f vidaA=%.0f vidaB=%.0f dist=%.1f fase=%s" % [vt - t0, fa.health, fb.health, absf(fa.global_position.x - fb.global_position.x), bullet_time.phase])
 	if not (fa.is_dead() or fb.is_dead()):
