@@ -13,7 +13,7 @@ extends Node3D
 
 signal match_over(result: Dictionary)
 
-const WEAPONS := ["am4", "mp5", "browning", "remington", "awm"]
+var WEAPONS: Array = []          ## todas las armas de data/weapons.json, ordenadas por clase y precio
 const AMMO := {
 	"fmj": {"name": "Camisa completa (estándar)", "dmg": 1.0, "pen": 1.0, "ric": 1.0, "speed": 1.0},
 	"jhp": {"name": "Punta hueca (se deforma, daña más)", "dmg": 1.3, "pen": 0.45, "ric": 0.5, "speed": 1.0},
@@ -46,7 +46,7 @@ var ui: CanvasLayer
 
 var weapon_id := "am4"
 var ammo_id := "fmj"
-var distance := 9.0
+var distance := 6.0
 var dummy_char := "vigia"
 var crouched := false
 var immortal := false
@@ -70,6 +70,7 @@ var _plates: Array[Node3D] = []
 
 func _ready() -> void:
 	PlayerController.setup_input_map()
+	WEAPONS = Firearm.all_stats().keys()
 	_saved_bt = Settings.bullet_time
 	Settings.bullet_time = 2           # toma de cerca de cada herida
 	Fx.attach(self)
@@ -110,8 +111,7 @@ func _ready() -> void:
 	bullet_time = BulletTime.new()
 	bullet_time.add_to_group("bullet_time")
 	add_child(bullet_time)
-	bullet_time.follow_bullet = true          # práctica: se ve la bala en vuelo y por dentro del cuerpo
-	bullet_time.bullet_replay = true
+	# práctica usa EXACTAMENTE la misma cámara de muerte que la partida (plan maestro §17-18)
 	bullet_time.setup(camera, player)
 	bullet_time.injury_report.connect(func(v, lines): hud.show_injuries(v, lines))
 	_equip()
@@ -247,8 +247,9 @@ func _spawn_dummy() -> void:
 	_respawn_t = -1.0
 
 func _process(delta: float) -> void:
-	camera.look_offset_x = distance * 0.5 - 1.0
-	camera.distance = maxf(9.0, distance * 0.75 + 4.0)
+	# misma cámara que la partida (distancia, altura, suavizado… de Configuración); sólo se corre el encuadre para ver
+	# también al maniquí
+	camera.look_offset_x = clampf(distance * 0.5 - 1.0, 0.0, 4.0)
 	if not _busy and (Input.is_action_pressed("fire") or hud.hold.fire):
 		bullet_time.focus_label = ""            # disparo libre: la cámara vuelve a enfocar la herida más grave
 	if _respawn_t > 0.0:
@@ -442,7 +443,7 @@ func _build_ui() -> void:
 	_check(v, "Toma de cerca de cada herida", func(on): Settings.bullet_time = 2 if on else 1, true)
 	var row := HBoxContainer.new()
 	v.add_child(row)
-	for d in [["NUEVO", func(): _spawn_dummy()], ["GRABAR ●", null], ["SALIR", func(): _exit()]]:
+	for d in [["NUEVO", func(): _spawn_dummy()], ["GRABAR ●", null], ["VOLVER A LA LOBBY", func(): _exit()]]:
 		var b := Button.new()
 		b.text = d[0]
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -459,6 +460,22 @@ func _build_ui() -> void:
 		else:
 			b.pressed.connect(d[1])
 		row.add_child(b)
+	# configuración REAL del juego (la misma que usa la partida): se aplica en vivo y se guarda
+	var row2 := HBoxContainer.new()
+	v.add_child(row2)
+	for d in [["CÁMARA Y CONTROLES", func(): _open_settings()], ["GUARDAR", func():
+			Settings.save_settings()
+			hud.toast("Configuración guardada: se usa también en la partida")],
+			["RESTABLECER", func():
+			Settings.reset_camera_aim()
+			hud.toast("Cámara y apuntado restablecidos")]]:
+		var b2 := Button.new()
+		b2.text = d[0]
+		b2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b2.custom_minimum_size = Vector2(0, 46)
+		b2.add_theme_font_size_override("font_size", 15)
+		b2.pressed.connect(d[1])
+		row2.add_child(b2)
 	for c in panel.find_children("*", "Label", true, false):
 		(c as Label).add_theme_font_size_override("font_size", 18)
 
@@ -492,6 +509,12 @@ func _check(parent: Control, text: String, cb: Callable, on := false) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
 		_exit()
+
+func _open_settings() -> void:
+	var sm := SettingsMenu.new()
+	sm.probe_available = false
+	ui.add_child(sm)
+	sm.closed.connect(sm.queue_free)
 
 func _exit() -> void:
 	Engine.time_scale = 1.0

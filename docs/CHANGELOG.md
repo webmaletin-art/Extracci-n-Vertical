@@ -76,3 +76,13 @@
 - **Menú**: Torre Alfa de noche bajo la lluvia (pisos B0-B4 iluminados, escaleras, portón, antena con baliza, piso mojado
   con reflejo, valla con alambre de púas, cartel TORRE ALFA A, farol, torres con luces rojas).
 - Rendimiento: la anatomía se prepara en segundo plano al cargar la partida (`AnatomyBody.warm`).
+
+## 0.7.0 — Fase 2 del plan maestro, armas nuevas y sangre
+- 13 armas nuevas (Blender, tamaño real, marcadores de manos) → 18 en total, clasificadas con precio, alcance, nivel y
+  mejoras (`docs/ARMAS.md`); daño que baja pasado el alcance; supresor más silencioso.
+- Cámara de muerte breve (sin cámara lenta extrema); práctica usa la misma cámara que la partida.
+- Apuntado rehecho (sensibilidad H/V, zona muerta, curva, freno de precisión, suavizado) y arreglo de la deriva.
+- Cámara configurable y compartida entre práctica y partida; panel de práctica con GUARDAR / RESTABLECER / VOLVER.
+- Fusil a la espalda / pistola en la funda en escaleras, colgado y trepando.
+- Sangre visible: gotas y manchas más grandes y sin depender de la luz, más manchas por impacto, charco más rápido.
+- Auditoría y plan por fases: `docs/PLAN_MAESTRO.md`; atlas de mapas: `docs/ATLAS_MAPAS.md`.

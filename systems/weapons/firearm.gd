@@ -45,7 +45,10 @@ static func create(weapon_id: String) -> Firearm:
 	f.id = weapon_id
 	f.name = weapon_id
 	f.stats = all_stats()[weapon_id]
-	f.model = (load("res://assets/weapons/%s.scn" % f.stats.model) as PackedScene).instantiate()
+	var mpath := "res://assets/weapons/%s.scn" % f.stats.model
+	if not ResourceLoader.exists(mpath):
+		mpath = "res://assets/weapons/%s.glb" % f.stats.model        # armas nuevas (tools/weapons/convert_fbx.py)
+	f.model = (load(mpath) as PackedScene).instantiate()
 	WeaponMaterials.apply(str(f.stats.model), f.model)
 	f.add_child(f.model)
 	_set_shadow(f.model)

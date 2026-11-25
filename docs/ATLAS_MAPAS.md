@@ -1,0 +1,103 @@
+# Atlas de mapas (v2, del diseñador)
+
+Texto extraído de Extraccion_Vertical_Atlas_Mapas_v2.docx. Mapa activo: **Abismo Vertical**; los demás quedan pendientes.
+
+- EXTRACCIÓN VERTICAL
+- Atlas de mapas · Versión 2
+- Mapa activo: ABISMO VERTICAL · Multijugador objetivo: 10–20 participantes
+- 1. Regla arquitectónica del proyecto
+- EXTRACCIÓN VERTICAL es un shooter de extracción con perspectiva lateral, no un plataformas. Cada mapa debe sentirse como un mapa completo de shooter convencional: habitaciones, oficinas, depósitos, laboratorios, talleres, pasillos, puertas, escaleras, ascensores, túneles, zonas abiertas, escondites y rutas alternativas. La diferencia es que el mundo se presenta en corte lateral.
+- Arquitectura 2.5D: personajes 3D y geometría 3D para habitaciones, puertas, plataformas, coberturas, escaleras, ascensores y objetos interactivos.
+- Mapas grandes, no lineales y diseñados desde el principio para 10–20 participantes.
+- Cada sector debe ofrecer razones para explorarlo: botín, llaves, herramientas, recursos, atajos o mecanismos.
+- Las rutas rápidas requieren preparación, recurso o riesgo; las alternativas siempre deben permitir continuar.
+- Los estados de puertas, ascensores, energía, llaves, botín y extracción deben sincronizarse en multijugador.
+- 2. Mapas futuros (pendientes)
+- POZO NEGRO
+- Complejo minero subterráneo: galerías, pozos, vagones, maquinaria y derrumbes.
+- DISTRITO CERO
+- Ciudad abandonada: edificios conectados, interiores, azoteas, calles y alcantarillas.
+- MAR DE HIERRO
+- Plataforma petrolera offshore: módulos, perforación, grúas, pasarelas y tormentas.
+- SECTOR OMEGA
+- Base militar subterránea: búnkeres, laboratorios, servidores y puertas blindadas.
+- MUELLE 09
+- Astillero portuario: barcos explorables, contenedores, grúas, almacenes y talleres.
+- 3. Mapa activo: ABISMO VERTICAL
+- El jugador comienza en las profundidades, en Piso -7, y debe ascender hasta Piso 0, donde está la extracción principal. Es la inversión deliberada de Torre Alfa.
+- PISO -7 · NÚCLEO / INICIO
+- Cavernas técnicas, bombeo, túneles de servicio y depósitos inferiores.
+- PISO -6 · MINA ACTIVA
+- Galerías de excavación, maquinaria minera, vagones y cámara vertical.
+- PISO -5 · DEPÓSITO CENTRAL
+- Almacenes, estanterías, suministros, lockers y logística.
+- PISO -4 · TALLERES
+- Reparación, repuestos, bobinas, cables, herramientas y maquinaria.
+- PISO -3 · PROCESAMIENTO
+- Planta industrial, tanques, tuberías y pasarelas.
+- PISO -2 · LABORATORIOS
+- Laboratorios, muestras, archivos y cámaras técnicas.
+- PISO -1 · ADMINISTRACIÓN
+- Oficinas, seguridad, vigilancia, archivo, caja fuerte y sala de control.
+- PISO 0 · SUPERFICIE / EXTRACCIÓN
+- Patio exterior, acceso de carga y zona principal de extracción.
+- 4. Mecanismos que generan decisiones
+- Ascensor principal averiado
+- El ascensor comienza averiado y solo permite un tramo limitado o permanece detenido.
+- Para repararlo hace falta un componente industrial (cable de potencia, fusible o módulo de control) que aparece en una selección aleatoria de cajas técnicas/lockers del mapa.
+- Alternativamente, se puede ir a Administración (Piso -1), acceder a la sala de control y restablecer el sistema mediante tarjeta/llave o activación de energía.
+- La reparación/activación requiere tiempo, animación, sonido y deja al jugador expuesto. Al completarse, el ascensor permite viajar entre los niveles habilitados.
+- El ascensor nunca es obligatorio: escaleras, pozos secundarios, conductos, plataformas y parkour permiten ascender por rutas alternativas.
+- Estado sincronizado: averiado, en reparación, activo, ocupado, bloqueado o saboteado. Todos los jugadores ven el mismo estado.
+- Caja fuerte de Administración
+- En Piso -1 hay una caja fuerte visible dentro de una oficina de administración.
+- La llave/tarjeta aparece dentro de una caja o locker de botín en otra zona; su ubicación se elige al iniciar cada partida entre varios puntos posibles.
+- Pistas ambientales, etiquetas o documentos orientan la búsqueda sin revelar un marcador exacto.
+- La caja fuerte entrega botín de alto valor/recursos raros. Abrirla requiere tiempo y produce sonido audible en las cercanías.
+- La llave es un objeto disputable: se recoge, transporta y puede cambiar de dueño según las reglas de inventario.
+- Quien no consiga la llave debe poder progresar por otras rutas y encontrar recompensas alternativas.
+- Red eléctrica y control
+- Paneles, fusibles e interruptores controlan ascensor, iluminación, puertas y accesos.
+- Activar un sistema puede apagar otro: restaurar el ascensor puede dejar una puerta sin energía, o encender luces puede revelar posiciones.
+- Estados legibles: sin energía, bloqueado, listo, activado o saboteado. Pistas visuales y sonoras explican cada mecanismo.
+- Rutas y diseño de decisiones
+- Cada transición importante ofrece al menos dos opciones: ruta rápida condicionada por un mecanismo y ruta alternativa más larga, peligrosa o silenciosa.
+- Alternativas: escaleras, conductos, pasarelas, pozos secundarios, puertas forzables, plataformas de mantenimiento y parkour.
+- Ningún mecanismo puede bloquear permanentemente el avance del mapa.
+- Los mecanismos crean cooperación, disputas y oportunidades de emboscada, pero no permiten que un solo jugador cierre todo el progreso.
+- 5. Exploración, loot y sensación de mapa completo
+- Cada piso contiene varias habitaciones pequeñas, medianas y grandes conectadas por pasillos, vestíbulos y puertas; evitar una sola galería vacía.
+- Puertas abiertas, cerradas, bloqueadas por llave, sin energía, trabadas o dañadas; comunicar visualmente el motivo.
+- Cajas, lockers, armarios, escritorios, estanterías, contenedores y escondites con contenidos variables entre partidas.
+- Botín común en rutas principales, botín valioso en áreas disputadas y recompensas especiales en habitaciones opcionales.
+- Audio ambiental, señalización, iluminación por sector y puntos de referencia para orientarse sin depender siempre de un minimapa.
+- 6. Multijugador 10–20
+- Múltiples puntos de aparición separados en los sectores profundos.
+- Distribución de zonas de interés para evitar que todos deban cruzar un único embudo.
+- Servidor autoritativo para puertas, llaves, caja fuerte, paneles, energía, ascensor, botín y extracción.
+- Evitar duplicación de objetos únicos y definir qué ocurre con llaves/componentes cuando un jugador muere o abandona.
+- Probar progresivamente 2, 4, 8, 10, 15 y 20 participantes.
+- 7. Optimización sin perder calidad
+- Construcción modular: paredes, esquinas, puertas, marcos, suelos, techos, escaleras, tuberías, lámparas y mobiliario reutilizables; variar decals, suciedad y accesorios.
+- Compartir materiales y usar atlas de texturas/mapas ORM cuando convenga para reducir draw calls y cambios de material.
+- Hornear iluminación en arquitectura estática; reservar luces dinámicas y sombras para elementos importantes y cercanos.
+- Oclusión y visibilidad por cámara/sector: no renderizar habitaciones ocultas ni sectores lejanos sin necesidad.
+- LOD para maquinaria y mobiliario distante; detalle completo en el área jugable inmediata.
+- Fondos prerenderizados o impostores solo para decoración distante no interactiva; nunca para puertas, coberturas o geometría jugable.
+- Activación/carga progresiva de sectores por proximidad.
+- Colisiones simples para arquitectura; físicas detalladas solo en objetos interactivos cercanos.
+- Pooling para partículas, casquillos, impactos y fragmentos; limitar efectos simultáneos.
+- Destrucción selectiva mediante variantes preparadas de cajas, cristales y paneles; no fracturar toda la arquitectura en tiempo real.
+- Texturas comprimidas, mipmaps y resoluciones acordes a Android/PC. Perfilar en el dispositivo objetivo desde temprano.
+- Concentrar el detalle donde el jugador lo ve o lo usa; mapa rico, no derrochador.
+- 8. Entregables del primer prototipo
+- Greybox completo de Piso -7 a Piso 0 con habitaciones, pasillos, puertas y rutas alternativas.
+- Ascensor averiado, reparación por componente y activación alternativa desde control.
+- Administración con caja fuerte y llave en una ubicación variable entre varios contenedores.
+- Red eléctrica funcional y paneles con estados visibles.
+- Puertas bloqueadas por llave/energía y rutas alternativas transitables.
+- Loot distribuido, cajas/lockers interactivos y extracción en Piso 0.
+- Prueba de red inicial y herramientas de simulación hasta 20 participantes.
+- Perfil de rendimiento y pruebas en calidad baja, media y alta.
+- 9. Alcance
+- Desarrollar únicamente ABISMO VERTICAL ahora. POZO NEGRO, DISTRITO CERO, MAR DE HIERRO, SECTOR OMEGA y MUELLE 09 quedan registrados como mapas futuros y no deben entrar en el prototipo actual.

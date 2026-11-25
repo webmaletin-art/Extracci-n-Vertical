@@ -32,10 +32,10 @@ func _ready() -> void:
 
 func _desired() -> Vector3:
 	var p := target.global_position
-	var aim := Vector3(target.aim_dir.x, target.aim_dir.y, 0) * 1.6
+	var aim := Vector3(target.aim_dir.x, target.aim_dir.y, 0) * Settings.cam_aim_lead
 	var vel_look := Vector3(clampf(target.velocity.x * 0.25, -1.2, 1.2), 0, 0)
-	var x := clampf(p.x + aim.x + vel_look.x + look_offset_x, bounds.position.x + 6.0, bounds.end.x - 6.0)
-	var y := clampf(p.y + height + aim.y * 0.6, bounds.position.y + 2.0, bounds.end.y)
+	var x := clampf(p.x + aim.x + vel_look.x + look_offset_x + Settings.cam_offset_x, bounds.position.x + 6.0, bounds.end.x - 6.0)
+	var y := clampf(p.y + Settings.cam_height + Settings.cam_offset_y + aim.y * 0.6, bounds.position.y + 2.0, bounds.end.y)
 	return Vector3(x, y, distance)
 
 func _process(delta: float) -> void:
@@ -50,10 +50,13 @@ func _process(delta: float) -> void:
 		return
 	if target == null or not is_instance_valid(target):
 		return
+	# configuración del jugador (la misma en práctica y en partida), aplicada en vivo
+	distance = Settings.camera_distance
+	base_fov = Settings.cam_fov
 	var want := _desired()
-	var k := clampf(rd * 5.0, 0.0, 1.0)
+	var k := clampf(rd * Settings.cam_follow, 0.0, 1.0)
 	_pos.x = lerpf(_pos.x, want.x, k)
-	_pos.y = lerpf(_pos.y, want.y, clampf(rd * 3.5, 0.0, 1.0))
+	_pos.y = lerpf(_pos.y, want.y, clampf(rd * Settings.cam_follow * 0.7, 0.0, 1.0))
 	_pos.z = distance
 	fov = lerpf(fov, base_fov, clampf(rd * 3.0, 0.0, 1.0))
 	var off := Vector3.ZERO

@@ -10,7 +10,7 @@ extends Node3D
 ## Límites: 14 emisores de gotas reutilizables, 90 manchas (las más viejas se reciclan).
 
 const EMITTERS := 14
-const MAX_STAINS := 90
+const MAX_STAINS := 160
 
 static var instance: Blood
 
@@ -30,18 +30,21 @@ func _ready() -> void:
 	_drop_mat.roughness = 0.12
 	_drop_mat.metallic_specular = 0.9
 	_drop_mat.emission_enabled = true
-	_drop_mat.emission = Color(0.12, 0.0, 0.0)
+	_drop_mat.emission = Color(0.35, 0.0, 0.01)
 	_dark_mat = _drop_mat.duplicate()
 	_dark_mat.albedo_color = Color(0.3, 0.0, 0.02)
 	_stain_mat = StandardMaterial3D.new()
 	_stain_mat.albedo_texture = _stain_tex()
 	_stain_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	# sin sombreado: el escenario tiene la luz «pintada» y una mancha iluminada quedaba casi negra (no se veía)
+	_stain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_stain_mat.albedo_color = Color(0.62, 0.05, 0.04)
 	_stain_mat.roughness = 0.18
 	_stain_mat.metallic_specular = 0.8
 	_stain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	_stain_mat.render_priority = 3
 	_pool_mat = _stain_mat.duplicate()
-	_pool_mat.albedo_color = Color(0.75, 0.7, 0.7)
+	_pool_mat.albedo_color = Color(0.42, 0.02, 0.02)
 	for i in EMITTERS:
 		var p := _make_emitter()
 		add_child(p)
@@ -64,14 +67,14 @@ func _exit_tree() -> void:
 ## Durante la toma de rayos X las gotas se achican (si no tapan la vista).
 func set_closeup(on: bool) -> void:
 	for p in _em:
-		p.scale_amount_min = 0.05 if on else 0.5
-		p.scale_amount_max = 0.2 if on else 1.8
+		p.scale_amount_min = 0.04 if on else 0.6
+		p.scale_amount_max = 0.14 if on else 2.0
 
 func _make_emitter() -> CPUParticles3D:
 	var p := CPUParticles3D.new()
 	var sm := SphereMesh.new()
-	sm.radius = 0.011
-	sm.height = 0.022
+	sm.radius = 0.016
+	sm.height = 0.032
 	sm.radial_segments = 6
 	sm.rings = 3
 	p.mesh = sm
@@ -134,16 +137,16 @@ func drops(point: Vector3, dir: Vector3, amount: float, speed: float, spread := 
 	p.emitting = true
 	# dónde caen: unas pocas trayectorias balísticas contra el mundo → manchas
 	var space := get_world_3d().direct_space_state
-	for i in (3 if amount > 0.4 else 1):
+	for i in (6 if amount > 0.4 else 3):
 		var v := (dir.normalized() * randf_range(speed * 0.4, speed)).rotated(Vector3.BACK, deg_to_rad(randf_range(-spread, spread)))
 		var pos := point
-		for s in 14:
+		for s in 18:
 			var nxt := pos + v * 0.06
 			v.y -= 9.8 * 0.06
 			var q := PhysicsRayQueryParameters3D.create(pos, nxt, 1 | 8)
 			var h := space.intersect_ray(q)
 			if not h.is_empty():
-				stain(h.position, h.normal, randf_range(0.12, 0.32) * (0.6 + amount), true)
+				stain(h.position, h.normal, randf_range(0.16, 0.42) * (0.7 + amount), true)
 				break
 			pos = nxt
 
@@ -178,10 +181,13 @@ func pool(pos: Vector3) -> void:
 	var h := get_world_3d().direct_space_state.intersect_ray(q)
 	if h.is_empty():
 		return
-	var mi := stain(h.position, h.normal, randf_range(1.4, 1.9), false, _pool_mat)
+	var mi := stain(h.position, h.normal, randf_range(1.6, 2.2), false, _pool_mat)
 	var full := mi.scale
-	mi.scale = full * Vector3(0.08, 0.08, 1.0)
-	mi.create_tween().tween_property(mi, "scale", full, 8.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	mi.scale = full * Vector3(0.1, 0.1, 1.0)
+	mi.create_tween().tween_property(mi, "scale", full, 5.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	# salpicaduras alrededor del charco
+	for k in 4:
+		stain(h.position + Vector3(randf_range(-0.9, 0.9), 0, randf_range(-0.3, 0.3)), h.normal, randf_range(0.2, 0.45), true)
 
 
 ## Hemorragia pegada a una herida (sigue al hueso). arterial = chorro pulsátil; si no, mana y gotea.

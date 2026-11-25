@@ -44,6 +44,20 @@ var ctl_opacity := 0.9              ## transparencia de los controles táctiles
 var ctl_mirror := false             ## modo zurdo: espeja todo el HUD táctil
 var camera_distance := 9.0          ## distancia de la cámara lateral (m): menos = más cerca
 var haptics := true
+## ---------- apuntado (joystick derecho) ----------
+var aim_sens_h := 0.7               ## sensibilidad horizontal (1 = velocidad máxima de giro completa)
+var aim_sens_v := 0.55              ## sensibilidad vertical (un poco menor: subir / bajar con control)
+var aim_deadzone := 0.2             ## zona muerta del joystick (0..0.5)
+var aim_curve := 1.8                ## curva de respuesta: 1 = lineal · >1 = más fino cerca del centro (apuntado lejano)
+var aim_max_speed := 170.0          ## velocidad máxima de giro (grados por segundo)
+var aim_smooth := 0.25              ## suavizado (0 = directo · 0.8 = muy suave)
+## ---------- cámara del juego (la misma en práctica y en partida) ----------
+var cam_height := 2.0               ## altura sobre el personaje (m)
+var cam_offset_x := 0.0             ## desplazamiento horizontal (m)
+var cam_offset_y := 0.0             ## desplazamiento vertical extra (m)
+var cam_follow := 5.0               ## velocidad de seguimiento (más = sigue más pegada)
+var cam_fov := 40.0                 ## campo visual (grados): menos = más zoom
+var cam_aim_lead := 1.6             ## cuánto se adelanta hacia donde apunta (m)
 var xray_hits := 0                  ## rayos X: 0 sólo en la muerte · 1 también un destello en cada impacto grave
 var kill_cam := 0                   ## cámara de muerte: 0 normal · 1 cinematográfica (bala en vuelo, bala por dentro, cámara lenta)                 ## vibración al recibir daño (teléfonos)
 var auto_fire_stick := false        ## dispara al llevar el joystick derecho al borde (además del botón)
@@ -143,7 +157,18 @@ func _apply_audio() -> void:
 
 const KEYS := ["quality_preset", "render_scale", "shadows", "lights", "msaa", "fxaa", "particles", "smoke", "explosions",
 	"decor", "background", "fog_war", "view_floors", "fps_target", "xray", "bullet_time", "camera_shake", "blood", "laser", "laser_enemies", "vol_master",
-	"vol_sfx", "vol_ambient", "joystick_size", "ctl_pos", "ctl_scale", "ctl_opacity", "ctl_mirror", "camera_distance", "haptics", "xray_hits", "kill_cam", "aim_sensitivity", "auto_fire_stick", "show_fps", "character_id"]
+	"vol_sfx", "vol_ambient", "joystick_size", "ctl_pos", "ctl_scale", "ctl_opacity", "ctl_mirror", "camera_distance", "haptics", "xray_hits", "kill_cam", "aim_sens_h", "aim_sens_v", "aim_deadzone", "aim_curve", "aim_max_speed", "aim_smooth", "cam_height", "cam_offset_x", "cam_offset_y", "cam_follow", "cam_fov", "cam_aim_lead", "aim_sensitivity", "auto_fire_stick", "show_fps", "character_id"]
+
+## Valores de fábrica de cámara y apuntado (botón RESTABLECER).
+const CAM_AIM_DEFAULTS := {"camera_distance": 9.0, "cam_height": 2.0, "cam_offset_x": 0.0, "cam_offset_y": 0.0, "cam_follow": 5.0,
+	"cam_fov": 40.0, "cam_aim_lead": 1.6, "aim_sens_h": 0.7, "aim_sens_v": 0.55, "aim_deadzone": 0.2, "aim_curve": 1.8,
+	"aim_max_speed": 170.0, "aim_smooth": 0.25}
+
+func reset_camera_aim() -> void:
+	for k in CAM_AIM_DEFAULTS:
+		set(k, CAM_AIM_DEFAULTS[k])
+	save_settings()
+	changed.emit()
 
 func save_settings() -> void:
 	var cf := ConfigFile.new()
@@ -162,6 +187,7 @@ func load_settings() -> void:
 	for k in KEYS:
 		if cf.has_section_key("ajustes", k):
 			set(k, cf.get_value("ajustes", k))
+	kill_cam = 0                     # la cámara cinematográfica larga se eliminó (plan maestro §18)
 	# (v42 la había pasado a 10,5 m por error: vuelve a 9 m)
 	if is_equal_approx(camera_distance, 10.5):
 		camera_distance = 9.0

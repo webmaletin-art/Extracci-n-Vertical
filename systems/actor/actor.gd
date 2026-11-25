@@ -427,18 +427,35 @@ func _process(delta: float) -> void:
 ## Velocidad máxima de giro del apuntado con joystick (grados por segundo, con sensibilidad 1,0). El joystick sólo dice
 ## HACIA DÓNDE: el arma gira hacia ahí a esta velocidad (más lento cuanto menos se estira el joystick), así no salta.
 const AIM_RATE := 170.0
+var _aim_step_prev := 0.0
 
 func _update_aim(delta := 1.0 / 60.0) -> void:
-	if inp.aim.length() > 0.2 and stunned <= 0.0:
+	# Joystick: zona muerta → curva de respuesta → velocidad de giro por eje → freno de precisión cerca del objetivo →
+	# suavizado. Con el joystick en el centro la dirección NO cambia (sin deriva). Mouse: directo.
+	var mag := inp.aim.length()
+	var dz := Settings.aim_deadzone if is_player else 0.2
+	if mag > dz and stunned <= 0.0:
 		var tgt := inp.aim.normalized()
 		if inp.aim_snap:
 			aim_dir = tgt
 		else:
 			var a := aim_dir.angle()
 			var diff := angle_difference(a, tgt.angle())
-			var tilt := clampf((inp.aim.length() - 0.2) / 0.8, 0.0, 1.0)
-			var rate := deg_to_rad(AIM_RATE) * (0.3 + 0.7 * tilt) * Settings.aim_sensitivity
-			aim_dir = Vector2.from_angle(a + clampf(diff, -rate * delta, rate * delta))
+			var t := clampf((mag - dz) / maxf(1.0 - dz, 0.05), 0.0, 1.0)
+			t = pow(t, Settings.aim_curve if is_player else 1.0)
+			var vert := absf(sin(tgt.angle()))          # 0 = horizontal · 1 = vertical
+			var sens := lerpf(Settings.aim_sens_h, Settings.aim_sens_v, vert) if is_player else Settings.aim_sensitivity
+			var max_speed := Settings.aim_max_speed if is_player else AIM_RATE
+			var rate := deg_to_rad(max_speed) * (0.15 + 0.85 * t) * sens
+			# freno de precisión: a menos de 12° del objetivo gira más despacio (no se pasa de largo)
+			rate *= clampf(0.3 + 0.7 * absf(diff) / deg_to_rad(12.0), 0.3, 1.0)
+			var step := clampf(diff, -rate * delta, rate * delta)
+			var sm := Settings.aim_smooth if is_player else 0.0
+			step = lerpf(step, _aim_step_prev, sm)
+			_aim_step_prev = step
+			aim_dir = Vector2.from_angle(a + step)
+	else:
+		_aim_step_prev = 0.0
 	var armed := weapon() != null
 	if not armed:
 		# sin arma de fuego el cuerpo mira hacia donde camina (cuerpo a cuerpo); el apuntado queda guardado igual
@@ -849,12 +866,12 @@ func _shoot(w: Firearm) -> void:
 		var d := fire_dir().rotated(Vector3.BACK, randf_range(-spread, spread) * 0.5)
 		if Ballistics.instance:
 			var idx := Ballistics.instance.fire(from, d, float(st.speed), float(st.damage), self, exclude,
-				{"penetration": st.penetration, "drag": st.drag, "ricochet": st.ricochet})
+				{"penetration": st.penetration, "drag": st.drag, "ricochet": st.ricochet, "range": float(st.get("range", 0.0))})
 			if first < 0:
 				first = idx
 	recoil_angle = minf(recoil_angle + deg_to_rad(float(st.recoil)) * (0.6 if crouching else 1.0), deg_to_rad(14.0))
 	Fx.muzzle(w.muzzle_world(), fire_dir())
-	Sfx.play(str(st.sound), from, 0.0, 1.0, float(st.noise), self)
+	Sfx.play(str(st.sound), from, -14.0 if st.get("suppressed", false) else 0.0, 1.25 if st.get("suppressed", false) else 1.0, float(st.noise), self)
 	if Fx.has_method("emit"):
 		pass
 	shot_fired.emit(first, w)
@@ -1100,7 +1117,7 @@ func _die(info: Dictionary) -> void:
 	injuries.on_death()
 	if Blood.instance and (injuries.bleeding > 0.0 or str(info.get("type", "")) in ["bullet", "fragment", "knife", "blast"]):
 		var pos := global_position
-		get_tree().create_timer(1.2).timeout.connect(func(): if Blood.instance: Blood.instance.pool(pos))
+		get_tree().create_timer(0.5).timeout.connect(func(): if Blood.instance: Blood.instance.pool(pos))
 	collision_layer = 0
 	for h in hitboxes:
 		h.collision_layer = 0
@@ -1263,6 +1280,30 @@ func _update_visual(delta: float) -> void:
 		ik.spine_pitch = 0.0
 		ik.head_pitch = 0.0
 	ik.enabled_arms = w != null and state not in [State.LADDER, State.HANG, State.CLIMB, State.DEAD]
+	# escalera / colgado / trepando: el arma NO queda flotando: fusil cruzado en la espalda, pistola en la funda
+	if w and not ik.enabled_arms and state != State.DEAD:
+		_stow_weapon(w, mb)
+
+## Arma guardada: fusil en diagonal sobre la espalda (sigue a la columna), pistola en la funda de la cadera derecha.
+func _stow_weapon(w: Firearm, _mb: Basis) -> void:
+	# frente y derecha REALES del cuerpo (por los hombros): algunas animaciones (escalera) vienen giradas
+	var gt := skel.global_transform
+	var rs := gt * skel.get_bone_global_pose(skel.find_bone(P + "RightArm")).origin
+	var ls := gt * skel.get_bone_global_pose(skel.find_bone(P + "LeftArm")).origin
+	var right := (rs - ls).normalized()
+	var fwd := Vector3.UP.cross(right).normalized()
+	var mid := (w.muzzle + w.butt) * 0.5
+	if w.is_pistol:
+		var hips := skel.global_transform * skel.get_bone_global_pose(skel.find_bone(P + "Hips"))
+		var at := hips.origin + right * 0.17 - fwd * 0.02 + Vector3.DOWN * 0.08
+		var bp := Basis.looking_at(Vector3.DOWN, fwd)
+		slot.global_transform = Transform3D(bp, at - bp * w.grip)
+		return
+	var sp := skel.global_transform * skel.get_bone_global_pose(skel.find_bone(P + "Spine2"))
+	var dir := (sp.basis.y.normalized() * 0.85 + right * 0.5).normalized()      # boca arriba, cruzado
+	var b := Basis.looking_at(dir, fwd.cross(dir).normalized())     # de plano contra la espalda (el costado hacia afuera)
+	var center := sp.origin - fwd * 0.15 + Vector3.DOWN * 0.05
+	slot.global_transform = Transform3D(b, center - b * mid)
 
 ## Transform (mundo) del arma apuntando en aim_dir: culata en el hombro derecho (fusiles) o brazos estirados (pistola).
 func _weapon_target(w: Firearm) -> Transform3D:

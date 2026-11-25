@@ -50,8 +50,10 @@ func _physics_process(_delta: float) -> void:
 	# --- táctil
 	if hud.touch_mode:
 		mv = Vector2(hud.left_stick.value.x, -hud.left_stick.value.y)
-		if hud.right_stick.value.length() > 0.25:
-			aim = Vector2(hud.right_stick.value.x, -hud.right_stick.value.y) * Settings.aim_sensitivity
+		# vector crudo del joystick: la zona muerta, la curva y la sensibilidad las aplica el Actor (Settings)
+		# sólo mientras el dedo está apoyado: al soltar, el joystick conserva su dibujo pero la mira NO se mueve más
+		if hud.right_stick.active:
+			aim = Vector2(hud.right_stick.value.x, -hud.right_stick.value.y)
 	# --- teclado
 	var kx := Input.get_axis("move_left", "move_right")
 	if absf(kx) > 0.01:

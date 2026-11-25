@@ -1,935 +1,1603 @@
 {
-  "am4": {
-    "has_mag": true,
-    "kind": "rifle",
-    "length": 0.88,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.0403,
-        -0.1415
-      ],
-      "Muzzle": [
-        0.0,
-        0.085,
-        -0.616
-      ],
-      "Sight": [
-        0.0,
-        0.116,
-        -0.132
-      ],
-      "Support": [
-        0.0,
-        0.055,
-        -0.352
-      ]
-    },
-    "materials": {
-      "Material": {
-        "albedo": "tex/am4_Material_a.webp",
-        "metallic": 0.6,
-        "normal": "tex/am4_Material_n.webp",
-        "orm": "tex/am4_Material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "AR-15 (AM4)",
-    "parts": {},
-    "tris": 3584
+ "am4": {
+  "has_mag": true,
+  "kind": "rifle",
+  "length": 0.88,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0403,
+    -0.1415
+   ],
+   "Muzzle": [
+    0.0,
+    0.085,
+    -0.616
+   ],
+   "Sight": [
+    0.0,
+    0.116,
+    -0.132
+   ],
+   "Support": [
+    0.0,
+    0.055,
+    -0.352
+   ]
   },
-  "awm": {
-    "has_mag": false,
-    "kind": "rifle",
-    "length": 1.2,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        -0.01,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.07,
-        -0.8124
-      ],
-      "Sight": [
-        0.0,
-        0.115,
-        0.0276
-      ],
-      "Support": [
-        0.0,
-        0.02,
-        -0.3564
-      ]
-    },
-    "materials": {
-      "default": {
-        "metallic": 0.0,
-        "roughness": 0.7
-      }
-    },
-    "name": "AWM",
-    "parts": {},
-    "tris": 21200
+  "materials": {
+   "Material": {
+    "albedo": "tex/am4_Material_a.webp",
+    "metallic": 0.6,
+    "normal": "tex/am4_Material_n.webp",
+    "orm": "tex/am4_Material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
   },
-  "browning": {
-    "has_mag": true,
-    "kind": "pistol",
-    "length": 0.2,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.0166,
-        -0.006
-      ],
-      "Muzzle": [
-        0.0,
-        0.055,
-        -0.172
-      ],
-      "Sight": [
-        0.0,
-        0.076,
-        -0.022
-      ],
-      "Support": [
-        0.0,
-        -0.02,
-        -0.018
-      ]
-    },
-    "materials": {
-      "Material #25": {
-        "albedo": "tex/browning_Material_25_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/browning_Material_25_n.webp",
-        "orm": "tex/browning_Material_25_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "Browning HP",
-    "parts": {},
-    "tris": 4182
+  "name": "AR-15 (AM4)",
+  "parts": {},
+  "tris": 3584
+ },
+ "awm": {
+  "has_mag": false,
+  "kind": "rifle",
+  "length": 1.2,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    -0.01,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.07,
+    -0.8124
+   ],
+   "Sight": [
+    0.0,
+    0.115,
+    0.0276
+   ],
+   "Support": [
+    0.0,
+    0.02,
+    -0.3564
+   ]
   },
-  "m24": {
-    "has_mag": true,
-    "kind": "rifle",
-    "length": 1.09,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.004,
-        -0.1494
-      ],
-      "Muzzle": [
-        0.0,
-        0.048,
-        -0.8284
-      ],
-      "Sight": [
-        0.0,
-        0.072,
-        -0.1526
-      ],
-      "Support": [
-        0.0,
-        0.018,
-        -0.4905
-      ]
-    },
-    "materials": {
-      "Material": {
-        "albedo": "tex/m24_Material_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/m24_Material_n.webp",
-        "orm": "tex/m24_Material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "Material.001": {
-        "albedo": "tex/m24_Material_001_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/m24_Material_001_n.webp",
-        "orm": "tex/m24_Material_001_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      }
-    },
-    "name": "M24",
-    "parts": {
-      "Bolt": {
-        "angle": 0.0,
-        "axis": [
-          0.0,
-          0.0,
-          1.0
-        ],
-        "pivot": [
-          0.0179,
-          0.0355,
-          -0.1249
-        ],
-        "travel": 0.075
-      }
-    },
-    "tris": 14612
+  "materials": {
+   "default": {
+    "metallic": 0.0,
+    "roughness": 0.7
+   }
   },
-  "m79": {
-    "has_mag": false,
-    "kind": "rifle",
-    "length": 0.73,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        -0.02,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.06,
-        -0.4869
-      ],
-      "Sight": [
-        0.0,
-        0.1,
-        -0.173
-      ],
-      "Support": [
-        0.0,
-        0.02,
-        -0.2752
-      ]
-    },
-    "materials": {
-      "M79_barrel": {
-        "albedo": "tex/m79_M79_barrel_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/m79_M79_barrel_n.webp",
-        "orm": "tex/m79_M79_barrel_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "M79_rear_part": {
-        "albedo": "tex/m79_M79_rear_part_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/m79_M79_rear_part_n.webp",
-        "orm": "tex/m79_M79_rear_part_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "M79",
-    "parts": {
-      "Barrel": {
-        "angle": -0.42,
-        "axis": [
-          1.0,
-          0.0,
-          0.0
-        ],
-        "pivot": [
-          0.0,
-          -0.019,
-          -0.1062
-        ],
-        "travel": 0.05
-      }
-    },
-    "tris": 17172
+  "name": "AWM",
+  "parts": {},
+  "tris": 21200
+ },
+ "browning": {
+  "has_mag": true,
+  "kind": "pistol",
+  "length": 0.2,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0166,
+    -0.006
+   ],
+   "Muzzle": [
+    0.0,
+    0.055,
+    -0.172
+   ],
+   "Sight": [
+    0.0,
+    0.076,
+    -0.022
+   ],
+   "Support": [
+    0.0,
+    -0.02,
+    -0.018
+   ]
   },
-  "mac10": {
-    "has_mag": true,
-    "kind": "rifle",
-    "length": 0.3,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.0529,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.059,
-        -0.138
-      ],
-      "Sight": [
-        0.0,
-        0.081,
-        0.027
-      ],
-      "Support": [
-        0.0,
-        0.03,
-        -0.066
-      ]
-    },
-    "materials": {
-      "Arma": {
-        "albedo": "tex/mac10_Arma_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/mac10_Arma_n.webp",
-        "orm": "tex/mac10_Arma_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "MAC-10",
-    "parts": {},
-    "tris": 2006
+  "materials": {
+   "Material #25": {
+    "albedo": "tex/browning_Material_25_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/browning_Material_25_n.webp",
+    "orm": "tex/browning_Material_25_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
   },
-  "mp5": {
-    "has_mag": true,
-    "kind": "rifle",
-    "length": 0.68,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.0531,
-        -0.1762
-      ],
-      "Muzzle": [
-        0.0,
-        0.1,
-        -0.4012
-      ],
-      "Sight": [
-        0.0,
-        0.155,
-        -0.0272
-      ],
-      "Support": [
-        0.0,
-        0.07,
-        -0.2312
-      ]
-    },
-    "materials": {
-      "Material": {
-        "albedo": "tex/mp5_Material_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/mp5_Material_n.webp",
-        "orm": "tex/mp5_Material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "mag": {
-        "albedo": "tex/mp5_mag_a.webp",
-        "metallic": 1.0,
-        "orm": "tex/mp5_mag_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "MP5",
-    "parts": {},
-    "tris": 8966
+  "name": "Browning HP",
+  "parts": {},
+  "tris": 4182
+ },
+ "m24": {
+  "has_mag": true,
+  "kind": "rifle",
+  "length": 1.09,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.004,
+    -0.1494
+   ],
+   "Muzzle": [
+    0.0,
+    0.048,
+    -0.8284
+   ],
+   "Sight": [
+    0.0,
+    0.072,
+    -0.1526
+   ],
+   "Support": [
+    0.0,
+    0.018,
+    -0.4905
+   ]
   },
-  "remington": {
-    "has_mag": false,
-    "kind": "rifle",
-    "length": 1.2,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        -0.03,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.05,
-        -0.864
-      ],
-      "Sight": [
-        0.0,
-        0.068,
-        -0.204
-      ],
-      "Support": [
-        0.0,
-        0.02,
-        -0.492
-      ]
-    },
-    "materials": {
-      "remington_02_mat": {
-        "albedo": "tex/remington_remington_02_mat_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/remington_remington_02_mat_n.webp",
-        "orm": "tex/remington_remington_02_mat_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "Remington 31",
-    "parts": {},
-    "tris": 6160
+  "materials": {
+   "Material": {
+    "albedo": "tex/m24_Material_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/m24_Material_n.webp",
+    "orm": "tex/m24_Material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "Material.001": {
+    "albedo": "tex/m24_Material_001_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/m24_Material_001_n.webp",
+    "orm": "tex/m24_Material_001_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   }
   },
-  "service": {
-    "has_mag": false,
-    "kind": "rifle",
-    "length": 1.13,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.08,
-        -0.8306
-      ],
-      "Sight": [
-        0.0,
-        0.137,
-        -0.0169
-      ],
-      "Support": [
-        0.0,
-        0.03,
-        -0.4011
-      ]
-    },
-    "materials": {
-      "Rifle": {
-        "albedo": "tex/service_Rifle_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/service_Rifle_n.webp",
-        "orm": "tex/service_Rifle_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "Fusil de servicio",
-    "parts": {},
-    "tris": 16755
+  "name": "M24",
+  "parts": {
+   "Bolt": {
+    "angle": 0.0,
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "pivot": [
+     0.0179,
+     0.0355,
+     -0.1249
+    ],
+    "travel": 0.075
+   }
   },
-  "stevens": {
-    "has_mag": false,
-    "kind": "rifle",
-    "length": 1.0,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        -0.042,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.038,
-        -0.74
-      ],
-      "Sight": [
-        0.0,
-        0.056,
-        -0.19
-      ],
-      "Support": [
-        0.0,
-        0.008,
-        -0.27
-      ]
-    },
-    "materials": {
-      "Stevens_107": {
-        "albedo": "tex/stevens_Stevens_107_a.webp",
-        "metallic": 0.4,
-        "normal": "tex/stevens_Stevens_107_n.webp",
-        "roughness": 0.5
-      }
-    },
-    "name": "Stevens 107",
-    "parts": {
-      "Barrel": {
-        "angle": 0.5,
-        "axis": [
-          1.0,
-          0.0,
-          0.0
-        ],
-        "pivot": [
-          0.0,
-          0.0053,
-          -0.0785
-        ],
-        "travel": 0.05
-      }
-    },
-    "tris": 812
+  "tris": 14612
+ },
+ "m79": {
+  "has_mag": false,
+  "kind": "rifle",
+  "length": 0.73,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    -0.02,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.06,
+    -0.4869
+   ],
+   "Sight": [
+    0.0,
+    0.1,
+    -0.173
+   ],
+   "Support": [
+    0.0,
+    0.02,
+    -0.2752
+   ]
   },
-  "subfusil": {
-    "has_mag": true,
-    "kind": "rifle",
-    "length": 0.52,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.0493,
-        -0.1327
-      ],
-      "Muzzle": [
-        0.0,
-        0.078,
-        -0.3276
-      ],
-      "Sight": [
-        0.0,
-        0.105,
-        -0.0416
-      ],
-      "Support": [
-        0.0,
-        0.05,
-        -0.1872
-      ]
-    },
-    "materials": {
-      "Textura": {
-        "albedo": "tex/subfusil_Textura_a.webp",
-        "metallic": 0.0,
-        "normal": "tex/subfusil_Textura_n.webp",
-        "orm": "tex/subfusil_Textura_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "Subfusil",
-    "parts": {},
-    "tris": 4308
+  "materials": {
+   "M79_barrel": {
+    "albedo": "tex/m79_M79_barrel_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/m79_M79_barrel_n.webp",
+    "orm": "tex/m79_M79_barrel_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "M79_rear_part": {
+    "albedo": "tex/m79_M79_rear_part_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/m79_M79_rear_part_n.webp",
+    "orm": "tex/m79_M79_rear_part_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
   },
-  "tambor": {
-    "has_mag": true,
-    "kind": "rifle",
-    "length": 0.9,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.1269,
-        -0.1794
-      ],
-      "Muzzle": [
-        0.0,
-        0.105,
-        -0.558
-      ],
-      "Sight": [
-        0.0,
-        0.143,
-        -0.063
-      ],
-      "Support": [
-        0.0,
-        0.04,
-        -0.369
-      ]
-    },
-    "materials": {
-      "Material.001": {
-        "albedo": "tex/tambor_Material_001_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/tambor_Material_001_n.webp",
-        "orm": "tex/tambor_Material_001_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "Escopeta de tambor",
-    "parts": {},
-    "tris": 2974
+  "name": "M79",
+  "parts": {
+   "Barrel": {
+    "angle": -0.42,
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "pivot": [
+     0.0,
+     -0.019,
+     -0.1062
+    ],
+    "travel": 0.05
+   }
   },
-  "z15": {
-    "has_mag": false,
-    "kind": "rifle",
-    "length": 1.1,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        0.005,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.085,
-        -0.7062
-      ],
-      "Sight": [
-        0.0,
-        0.148,
-        -0.0627
-      ],
-      "Support": [
-        0.0,
-        0.02,
-        -0.4686
-      ]
-    },
-    "materials": {
-      "Material.002": {
-        "albedo": "tex/z15_Material_002_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_Material_002_n.webp",
-        "orm": "tex/z15_Material_002_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "Material.008": {
-        "albedo": "tex/z15_Material_008_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_Material_008_n.webp",
-        "orm": "tex/z15_Material_008_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "Material.009": {
-        "color": [
-          0.12,
-          0.12,
-          0.13
-        ],
-        "metallic": 0.8,
-        "normal": "tex/z15_Material_009_n.webp",
-        "roughness": 0.4
-      },
-      "Material.019": {
-        "albedo": "tex/z15_Material_019_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_Material_019_n.webp",
-        "orm": "tex/z15_Material_019_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "baseN": {
-        "albedo": "tex/z15_baseN_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_baseN_n.webp",
-        "orm": "tex/z15_baseN_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "baseV": {
-        "albedo": "tex/z15_baseV_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_baseV_n.webp",
-        "orm": "tex/z15_baseV_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "dulo": {
-        "albedo": "tex/z15_dulo_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_dulo_n.webp",
-        "orm": "tex/z15_dulo_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "kurok": {
-        "color": [
-          0.12,
-          0.12,
-          0.13
-        ],
-        "metallic": 0.8,
-        "normal": "tex/z15_kurok_n.webp",
-        "roughness": 0.4
-      },
-      "planka": {
-        "albedo": "tex/z15_planka_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_planka_n.webp",
-        "orm": "tex/z15_planka_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "prikl": {
-        "albedo": "tex/z15_prikl_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_prikl_n.webp",
-        "orm": "tex/z15_prikl_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "rog": {
-        "albedo": "tex/z15_rog_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_rog_n.webp",
-        "orm": "tex/z15_rog_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "rokoyat": {
-        "albedo": "tex/z15_rokoyat_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_rokoyat_n.webp",
-        "orm": "tex/z15_rokoyat_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "ruk": {
-        "albedo": "tex/z15_ruk_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_ruk_n.webp",
-        "orm": "tex/z15_ruk_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "scope": {
-        "albedo": "tex/z15_scope_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_scope_n.webp",
-        "orm": "tex/z15_scope_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      },
-      "zatw": {
-        "albedo": "tex/z15_zatw_a.webp",
-        "metallic": 1.0,
-        "normal": "tex/z15_zatw_n.webp",
-        "orm": "tex/z15_zatw_orm.webp",
-        "roughness": 1.0,
-        "use_ao": true
-      }
-    },
-    "name": "Zbroyar Z-15",
-    "parts": {},
-    "tris": 15680
+  "tris": 17172
+ },
+ "mac10": {
+  "has_mag": true,
+  "kind": "rifle",
+  "length": 0.3,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0529,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.059,
+    -0.138
+   ],
+   "Sight": [
+    0.0,
+    0.081,
+    0.027
+   ],
+   "Support": [
+    0.0,
+    0.03,
+    -0.066
+   ]
   },
-  "sr14": {
-    "has_mag": false,
-    "kind": "rifle",
-    "length": 1.12,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        -0.01,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.07,
-        -0.8736
-      ],
-      "Sight": [
-        0.0,
-        0.145,
-        -0.14
-      ],
-      "Support": [
-        0.0,
-        0.03,
-        -0.3584
-      ]
-    },
-    "materials": {
-      "tripo_part_10_material": {
-        "albedo": "tex/sr14_tripo_part_10_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14_tripo_part_10_material_n.webp",
-        "orm": "tex/sr14_tripo_part_10_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_11_material": {
-        "albedo": "tex/sr14_tripo_part_11_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14_tripo_part_11_material_n.webp",
-        "orm": "tex/sr14_tripo_part_11_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_13_material": {
-        "albedo": "tex/sr14_tripo_part_13_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14_tripo_part_13_material_n.webp",
-        "orm": "tex/sr14_tripo_part_13_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_18_material": {
-        "albedo": "tex/sr14_tripo_part_18_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14_tripo_part_18_material_n.webp",
-        "orm": "tex/sr14_tripo_part_18_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_2_material": {
-        "albedo": "tex/sr14_tripo_part_2_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14_tripo_part_2_material_n.webp",
-        "orm": "tex/sr14_tripo_part_2_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_7_material": {
-        "albedo": "tex/sr14_tripo_part_7_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14_tripo_part_7_material_n.webp",
-        "orm": "tex/sr14_tripo_part_7_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "SR-14 «Víbora» táctica",
-    "parts": {},
-    "tris": 12824
+  "materials": {
+   "Arma": {
+    "albedo": "tex/mac10_Arma_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/mac10_Arma_n.webp",
+    "orm": "tex/mac10_Arma_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
   },
-  "sr14c": {
-    "has_mag": false,
-    "kind": "rifle",
-    "length": 1.12,
-    "markers": {
-      "Grip": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "MagPos": [
-        0.0,
-        -0.01,
-        0.0
-      ],
-      "Muzzle": [
-        0.0,
-        0.07,
-        -0.7728
-      ],
-      "Sight": [
-        0.0,
-        0.145,
-        -0.1008
-      ],
-      "Support": [
-        0.0,
-        0.03,
-        -0.4032
-      ]
-    },
-    "materials": {
-      "tripo_part_16_material": {
-        "albedo": "tex/sr14c_tripo_part_16_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14c_tripo_part_16_material_n.webp",
-        "orm": "tex/sr14c_tripo_part_16_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_19_material": {
-        "albedo": "tex/sr14c_tripo_part_19_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14c_tripo_part_19_material_n.webp",
-        "orm": "tex/sr14c_tripo_part_19_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_1_material": {
-        "albedo": "tex/sr14c_tripo_part_1_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14c_tripo_part_1_material_n.webp",
-        "orm": "tex/sr14c_tripo_part_1_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_3_material": {
-        "albedo": "tex/sr14c_tripo_part_3_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14c_tripo_part_3_material_n.webp",
-        "orm": "tex/sr14c_tripo_part_3_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_4_material": {
-        "albedo": "tex/sr14c_tripo_part_4_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14c_tripo_part_4_material_n.webp",
-        "orm": "tex/sr14c_tripo_part_4_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      },
-      "tripo_part_9_material": {
-        "albedo": "tex/sr14c_tripo_part_9_material_a.webp",
-        "metallic": 0.5,
-        "normal": "tex/sr14c_tripo_part_9_material_n.webp",
-        "orm": "tex/sr14c_tripo_part_9_material_orm.webp",
-        "roughness": 1.0,
-        "use_ao": false
-      }
-    },
-    "name": "SR-14 «Víbora» camuflada",
-    "parts": {},
-    "tris": 15209
-  }
+  "name": "MAC-10",
+  "parts": {},
+  "tris": 2006
+ },
+ "mp5": {
+  "has_mag": true,
+  "kind": "rifle",
+  "length": 0.68,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0531,
+    -0.1762
+   ],
+   "Muzzle": [
+    0.0,
+    0.1,
+    -0.4012
+   ],
+   "Sight": [
+    0.0,
+    0.155,
+    -0.0272
+   ],
+   "Support": [
+    0.0,
+    0.07,
+    -0.2312
+   ]
+  },
+  "materials": {
+   "Material": {
+    "albedo": "tex/mp5_Material_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/mp5_Material_n.webp",
+    "orm": "tex/mp5_Material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "mag": {
+    "albedo": "tex/mp5_mag_a.webp",
+    "metallic": 1.0,
+    "orm": "tex/mp5_mag_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
+  },
+  "name": "MP5",
+  "parts": {},
+  "tris": 8966
+ },
+ "remington": {
+  "has_mag": false,
+  "kind": "rifle",
+  "length": 1.2,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    -0.03,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.05,
+    -0.864
+   ],
+   "Sight": [
+    0.0,
+    0.068,
+    -0.204
+   ],
+   "Support": [
+    0.0,
+    0.02,
+    -0.492
+   ]
+  },
+  "materials": {
+   "remington_02_mat": {
+    "albedo": "tex/remington_remington_02_mat_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/remington_remington_02_mat_n.webp",
+    "orm": "tex/remington_remington_02_mat_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
+  },
+  "name": "Remington 31",
+  "parts": {},
+  "tris": 6160
+ },
+ "service": {
+  "has_mag": false,
+  "kind": "rifle",
+  "length": 1.13,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.08,
+    -0.8306
+   ],
+   "Sight": [
+    0.0,
+    0.137,
+    -0.0169
+   ],
+   "Support": [
+    0.0,
+    0.03,
+    -0.4011
+   ]
+  },
+  "materials": {
+   "Rifle": {
+    "albedo": "tex/service_Rifle_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/service_Rifle_n.webp",
+    "orm": "tex/service_Rifle_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
+  },
+  "name": "Fusil de servicio",
+  "parts": {},
+  "tris": 16755
+ },
+ "stevens": {
+  "has_mag": false,
+  "kind": "rifle",
+  "length": 1.0,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    -0.042,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.038,
+    -0.74
+   ],
+   "Sight": [
+    0.0,
+    0.056,
+    -0.19
+   ],
+   "Support": [
+    0.0,
+    0.008,
+    -0.27
+   ]
+  },
+  "materials": {
+   "Stevens_107": {
+    "albedo": "tex/stevens_Stevens_107_a.webp",
+    "metallic": 0.4,
+    "normal": "tex/stevens_Stevens_107_n.webp",
+    "roughness": 0.5
+   }
+  },
+  "name": "Stevens 107",
+  "parts": {
+   "Barrel": {
+    "angle": 0.5,
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "pivot": [
+     0.0,
+     0.0053,
+     -0.0785
+    ],
+    "travel": 0.05
+   }
+  },
+  "tris": 812
+ },
+ "subfusil": {
+  "has_mag": true,
+  "kind": "rifle",
+  "length": 0.52,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.0493,
+    -0.1327
+   ],
+   "Muzzle": [
+    0.0,
+    0.078,
+    -0.3276
+   ],
+   "Sight": [
+    0.0,
+    0.105,
+    -0.0416
+   ],
+   "Support": [
+    0.0,
+    0.05,
+    -0.1872
+   ]
+  },
+  "materials": {
+   "Textura": {
+    "albedo": "tex/subfusil_Textura_a.webp",
+    "metallic": 0.0,
+    "normal": "tex/subfusil_Textura_n.webp",
+    "orm": "tex/subfusil_Textura_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
+  },
+  "name": "Subfusil",
+  "parts": {},
+  "tris": 4308
+ },
+ "tambor": {
+  "has_mag": true,
+  "kind": "rifle",
+  "length": 0.9,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.1269,
+    -0.1794
+   ],
+   "Muzzle": [
+    0.0,
+    0.105,
+    -0.558
+   ],
+   "Sight": [
+    0.0,
+    0.143,
+    -0.063
+   ],
+   "Support": [
+    0.0,
+    0.04,
+    -0.369
+   ]
+  },
+  "materials": {
+   "Material.001": {
+    "albedo": "tex/tambor_Material_001_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/tambor_Material_001_n.webp",
+    "orm": "tex/tambor_Material_001_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
+  },
+  "name": "Escopeta de tambor",
+  "parts": {},
+  "tris": 2974
+ },
+ "z15": {
+  "has_mag": false,
+  "kind": "rifle",
+  "length": 1.1,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    0.005,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.085,
+    -0.7062
+   ],
+   "Sight": [
+    0.0,
+    0.148,
+    -0.0627
+   ],
+   "Support": [
+    0.0,
+    0.02,
+    -0.4686
+   ]
+  },
+  "materials": {
+   "Material.002": {
+    "albedo": "tex/z15_Material_002_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_Material_002_n.webp",
+    "orm": "tex/z15_Material_002_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "Material.008": {
+    "albedo": "tex/z15_Material_008_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_Material_008_n.webp",
+    "orm": "tex/z15_Material_008_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "Material.009": {
+    "color": [
+     0.12,
+     0.12,
+     0.13
+    ],
+    "metallic": 0.8,
+    "normal": "tex/z15_Material_009_n.webp",
+    "roughness": 0.4
+   },
+   "Material.019": {
+    "albedo": "tex/z15_Material_019_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_Material_019_n.webp",
+    "orm": "tex/z15_Material_019_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "baseN": {
+    "albedo": "tex/z15_baseN_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_baseN_n.webp",
+    "orm": "tex/z15_baseN_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "baseV": {
+    "albedo": "tex/z15_baseV_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_baseV_n.webp",
+    "orm": "tex/z15_baseV_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "dulo": {
+    "albedo": "tex/z15_dulo_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_dulo_n.webp",
+    "orm": "tex/z15_dulo_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "kurok": {
+    "color": [
+     0.12,
+     0.12,
+     0.13
+    ],
+    "metallic": 0.8,
+    "normal": "tex/z15_kurok_n.webp",
+    "roughness": 0.4
+   },
+   "planka": {
+    "albedo": "tex/z15_planka_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_planka_n.webp",
+    "orm": "tex/z15_planka_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "prikl": {
+    "albedo": "tex/z15_prikl_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_prikl_n.webp",
+    "orm": "tex/z15_prikl_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "rog": {
+    "albedo": "tex/z15_rog_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_rog_n.webp",
+    "orm": "tex/z15_rog_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "rokoyat": {
+    "albedo": "tex/z15_rokoyat_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_rokoyat_n.webp",
+    "orm": "tex/z15_rokoyat_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "ruk": {
+    "albedo": "tex/z15_ruk_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_ruk_n.webp",
+    "orm": "tex/z15_ruk_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "scope": {
+    "albedo": "tex/z15_scope_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_scope_n.webp",
+    "orm": "tex/z15_scope_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   },
+   "zatw": {
+    "albedo": "tex/z15_zatw_a.webp",
+    "metallic": 1.0,
+    "normal": "tex/z15_zatw_n.webp",
+    "orm": "tex/z15_zatw_orm.webp",
+    "roughness": 1.0,
+    "use_ao": true
+   }
+  },
+  "name": "Zbroyar Z-15",
+  "parts": {},
+  "tris": 15680
+ },
+ "sr14": {
+  "has_mag": false,
+  "kind": "rifle",
+  "length": 1.12,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    -0.01,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.07,
+    -0.8736
+   ],
+   "Sight": [
+    0.0,
+    0.145,
+    -0.14
+   ],
+   "Support": [
+    0.0,
+    0.03,
+    -0.3584
+   ]
+  },
+  "materials": {
+   "tripo_part_10_material": {
+    "albedo": "tex/sr14_tripo_part_10_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14_tripo_part_10_material_n.webp",
+    "orm": "tex/sr14_tripo_part_10_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_11_material": {
+    "albedo": "tex/sr14_tripo_part_11_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14_tripo_part_11_material_n.webp",
+    "orm": "tex/sr14_tripo_part_11_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_13_material": {
+    "albedo": "tex/sr14_tripo_part_13_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14_tripo_part_13_material_n.webp",
+    "orm": "tex/sr14_tripo_part_13_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_18_material": {
+    "albedo": "tex/sr14_tripo_part_18_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14_tripo_part_18_material_n.webp",
+    "orm": "tex/sr14_tripo_part_18_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_2_material": {
+    "albedo": "tex/sr14_tripo_part_2_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14_tripo_part_2_material_n.webp",
+    "orm": "tex/sr14_tripo_part_2_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_7_material": {
+    "albedo": "tex/sr14_tripo_part_7_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14_tripo_part_7_material_n.webp",
+    "orm": "tex/sr14_tripo_part_7_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
+  },
+  "name": "SR-14 «Víbora» táctica",
+  "parts": {},
+  "tris": 12824
+ },
+ "sr14c": {
+  "has_mag": false,
+  "kind": "rifle",
+  "length": 1.12,
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "MagPos": [
+    0.0,
+    -0.01,
+    0.0
+   ],
+   "Muzzle": [
+    0.0,
+    0.07,
+    -0.7728
+   ],
+   "Sight": [
+    0.0,
+    0.145,
+    -0.1008
+   ],
+   "Support": [
+    0.0,
+    0.03,
+    -0.4032
+   ]
+  },
+  "materials": {
+   "tripo_part_16_material": {
+    "albedo": "tex/sr14c_tripo_part_16_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14c_tripo_part_16_material_n.webp",
+    "orm": "tex/sr14c_tripo_part_16_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_19_material": {
+    "albedo": "tex/sr14c_tripo_part_19_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14c_tripo_part_19_material_n.webp",
+    "orm": "tex/sr14c_tripo_part_19_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_1_material": {
+    "albedo": "tex/sr14c_tripo_part_1_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14c_tripo_part_1_material_n.webp",
+    "orm": "tex/sr14c_tripo_part_1_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_3_material": {
+    "albedo": "tex/sr14c_tripo_part_3_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14c_tripo_part_3_material_n.webp",
+    "orm": "tex/sr14c_tripo_part_3_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_4_material": {
+    "albedo": "tex/sr14c_tripo_part_4_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14c_tripo_part_4_material_n.webp",
+    "orm": "tex/sr14c_tripo_part_4_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   },
+   "tripo_part_9_material": {
+    "albedo": "tex/sr14c_tripo_part_9_material_a.webp",
+    "metallic": 0.5,
+    "normal": "tex/sr14c_tripo_part_9_material_n.webp",
+    "orm": "tex/sr14c_tripo_part_9_material_orm.webp",
+    "roughness": 1.0,
+    "use_ao": false
+   }
+  },
+  "name": "SR-14 «Víbora» camuflada",
+  "parts": {},
+  "tris": 15209
+ },
+ "m1911": {
+  "kind": "pistol",
+  "length": 0.216,
+  "has_mag": true,
+  "source": "M1911.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0137,
+    0.0378
+   ],
+   "Support": [
+    0.0,
+    -0.0337,
+    0.0478
+   ],
+   "Muzzle": [
+    0.0,
+    0.0475,
+    -0.108
+   ],
+   "Sight": [
+    0.0,
+    0.0685,
+    0.0324
+   ]
+  },
+  "materials": {
+   "M1911BodyMat": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "M1911InsideMat": {
+    "color": [
+     0.111,
+     0.111,
+     0.111
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "M1911HandleMat": {
+    "color": [
+     0.163,
+     0.119,
+     0.077
+    ],
+    "metallic": 0.15,
+    "roughness": 0.75
+   }
+  },
+  "tris": 5102,
+  "format": "glb"
+ },
+ "deagle": {
+  "kind": "pistol",
+  "length": 0.27,
+  "has_mag": true,
+  "source": "DesertEagle.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0157,
+    0.088
+   ],
+   "Support": [
+    0.0,
+    -0.0357,
+    0.098
+   ],
+   "Muzzle": [
+    0.0,
+    0.0599,
+    -0.135
+   ],
+   "Sight": [
+    0.0,
+    0.0784,
+    0.0405
+   ]
+  },
+  "materials": {
+   "Deagle": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 2888,
+  "format": "glb"
+ },
+ "mp7": {
+  "kind": "smg",
+  "length": 0.64,
+  "has_mag": true,
+  "source": "MP7.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0217,
+    0.0533
+   ],
+   "Support": [
+    0.0,
+    0.0559,
+    -0.1382
+   ],
+   "Muzzle": [
+    0.0,
+    0.1205,
+    -0.32
+   ],
+   "Sight": [
+    0.0,
+    0.2167,
+    0.096
+   ]
+  },
+  "materials": {
+   "Mat_Dark": {
+    "color": [
+     0.099,
+     0.099,
+     0.099
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 2484,
+  "format": "glb"
+ },
+ "vector": {
+  "kind": "smg",
+  "length": 0.62,
+  "has_mag": true,
+  "source": "VectorSMG.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.011,
+    -0.0302
+   ],
+   "Support": [
+    0.0,
+    -0.1226,
+    -0.1182
+   ],
+   "Muzzle": [
+    0.0,
+    0.0639,
+    -0.31
+   ],
+   "Sight": [
+    0.0,
+    0.1543,
+    0.093
+   ]
+  },
+  "materials": {
+   "VectorBodyMatBlack": {
+    "color": [
+     0.058,
+     0.058,
+     0.058
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 15998,
+  "format": "glb"
+ },
+ "p90": {
+  "kind": "smg",
+  "length": 0.5,
+  "has_mag": true,
+  "source": "P90.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0089,
+    0.0327
+   ],
+   "Support": [
+    0.0,
+    -0.0802,
+    -0.1077
+   ],
+   "Muzzle": [
+    0.0,
+    0.0092,
+    -0.25
+   ],
+   "Sight": [
+    0.0,
+    0.0922,
+    0.075
+   ]
+  },
+  "materials": {
+   "90BodyMat": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 4526,
+  "format": "glb"
+ },
+ "cqbm4": {
+  "kind": "rifle",
+  "length": 0.76,
+  "has_mag": true,
+  "source": "CQBM4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0066,
+    0.0972
+   ],
+   "Support": [
+    0.0,
+    -0.1622,
+    -0.1687
+   ],
+   "Muzzle": [
+    0.0,
+    0.0993,
+    -0.38
+   ],
+   "Sight": [
+    0.0,
+    0.1898,
+    0.114
+   ]
+  },
+  "materials": {
+   "LowPoly_Black": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "LowPoly_Bronze": {
+    "color": [
+     0.281,
+     0.129,
+     0.055
+    ],
+    "metallic": 0.15,
+    "roughness": 0.75
+   },
+   "RedDotEmmisive": {
+    "color": [
+     0.8,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.3
+   }
+  },
+  "tris": 7869,
+  "format": "glb"
+ },
+ "m4supp": {
+  "kind": "rifle",
+  "length": 0.95,
+  "has_mag": true,
+  "source": "SuppressedM4.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0146,
+    0.1284
+   ],
+   "Support": [
+    0.0,
+    0.0637,
+    -0.1901
+   ],
+   "Muzzle": [
+    0.0,
+    0.0835,
+    -0.475
+   ],
+   "Sight": [
+    0.0,
+    0.1461,
+    0.1425
+   ]
+  },
+  "materials": {
+   "LowPoly_Black": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "LowPoly_Bronze": {
+    "color": [
+     0.281,
+     0.129,
+     0.055
+    ],
+    "metallic": 0.15,
+    "roughness": 0.75
+   }
+  },
+  "tris": 10888,
+  "format": "glb"
+ },
+ "m16": {
+  "kind": "rifle",
+  "length": 1.0,
+  "has_mag": true,
+  "source": "M16.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0133,
+    0.0666
+   ],
+   "Support": [
+    0.0,
+    0.0284,
+    -0.1971
+   ],
+   "Muzzle": [
+    0.0,
+    0.059,
+    -0.5
+   ],
+   "Sight": [
+    0.0,
+    0.1331,
+    0.15
+   ]
+  },
+  "materials": {
+   "M16BodyMat": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "M16MagMat": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 12224,
+  "format": "glb"
+ },
+ "g36c": {
+  "kind": "rifle",
+  "length": 0.72,
+  "has_mag": true,
+  "source": "G36C.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0136,
+    0.0758
+   ],
+   "Support": [
+    0.0,
+    -0.1102,
+    -0.1769
+   ],
+   "Muzzle": [
+    0.0,
+    0.0606,
+    -0.36
+   ],
+   "Sight": [
+    0.0,
+    0.136,
+    0.108
+   ]
+  },
+  "materials": {
+   "G36CBodyMat": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "G36MagMat": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 8948,
+  "format": "glb"
+ },
+ "ak47": {
+  "kind": "rifle",
+  "length": 0.88,
+  "has_mag": true,
+  "source": "AK47.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0123,
+    -0.0534
+   ],
+   "Support": [
+    0.0,
+    -0.0718,
+    -0.1344
+   ],
+   "Muzzle": [
+    0.0,
+    0.0777,
+    -0.44
+   ],
+   "Sight": [
+    0.0,
+    0.1227,
+    0.132
+   ]
+  },
+  "materials": {
+   "AKBodyMetalMat": {
+    "color": [
+     0.19,
+     0.19,
+     0.19
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "AKBodyWoodMat": {
+    "color": [
+     0.22,
+     0.131,
+     0.068
+    ],
+    "metallic": 0.15,
+    "roughness": 0.75
+   },
+   "AKMagMat": {
+    "color": [
+     0.208,
+     0.208,
+     0.208
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 5542,
+  "format": "glb"
+ },
+ "scarh": {
+  "kind": "rifle",
+  "length": 0.97,
+  "has_mag": true,
+  "source": "SCAR-H.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0151,
+    0.0612
+   ],
+   "Support": [
+    0.0,
+    0.0184,
+    -0.2124
+   ],
+   "Muzzle": [
+    0.0,
+    0.0401,
+    -0.485
+   ],
+   "Sight": [
+    0.0,
+    0.1508,
+    0.1455
+   ]
+  },
+  "materials": {
+   "ScarBodyMat": {
+    "color": [
+     0.591,
+     0.407,
+     0.262
+    ],
+    "metallic": 0.15,
+    "roughness": 0.75
+   },
+   "ScarBodyMatBlack": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "ScarMagMat": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 11482,
+  "format": "glb"
+ },
+ "aug": {
+  "kind": "rifle",
+  "length": 0.79,
+  "has_mag": true,
+  "source": "SteyrAUG_M1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0158,
+    0.1591
+   ],
+   "Support": [
+    0.0,
+    -0.071,
+    -0.1706
+   ],
+   "Muzzle": [
+    0.0,
+    0.0679,
+    -0.395
+   ],
+   "Sight": [
+    0.0,
+    0.1581,
+    0.1185
+   ]
+  },
+  "materials": {
+   "AUGBodySmoothYellowMat": {
+    "color": [
+     0.078,
+     0.152,
+     0.075
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "AUGBodyBlackMat": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   }
+  },
+  "tris": 15999,
+  "format": "glb"
+ },
+ "m4dmr": {
+  "kind": "rifle",
+  "length": 1.05,
+  "has_mag": true,
+  "source": "M4Sniper.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0144,
+    0.0526
+   ],
+   "Support": [
+    0.0,
+    -0.1247,
+    -0.1905
+   ],
+   "Muzzle": [
+    0.0,
+    0.065,
+    -0.525
+   ],
+   "Sight": [
+    0.0,
+    0.144,
+    0.1575
+   ]
+  },
+  "materials": {
+   "LowPoly_Black": {
+    "color": [
+     0.055,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.55,
+    "roughness": 0.45
+   },
+   "LowPoly_Yellow": {
+    "color": [
+     0.56,
+     0.321,
+     0.152
+    ],
+    "metallic": 0.15,
+    "roughness": 0.75
+   },
+   "LowPoly_Bronze": {
+    "color": [
+     0.281,
+     0.129,
+     0.055
+    ],
+    "metallic": 0.15,
+    "roughness": 0.75
+   },
+   "RedDotEmmisive": {
+    "color": [
+     0.8,
+     0.055,
+     0.055
+    ],
+    "metallic": 0.0,
+    "roughness": 0.3
+   }
+  },
+  "tris": 11589,
+  "format": "glb"
+ }
 }

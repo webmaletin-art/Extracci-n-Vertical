@@ -11,11 +11,9 @@ extends Node
 
 signal injury_report(victim: Actor, lines: Array)
 
-const KILL_SECONDS := 2.6
+const KILL_SECONDS := 1.6        ## toma de muerte BREVE (plan maestro §18): informativa y compatible con el ritmo online
 ## Tomas de cerca: comienzo del nombre del grupo → [radio de la ventana de rayos X (m), distancia final de la cámara (m), ángulo final (rad, 0 = de costado)]
-const CLOSEUPS := {"cráneo": [0.17, 1.5, 0.9], "cerebro": [0.17, 1.5, 0.9], "mandíbula": [0.16, 1.5, 0.9],
-	"vértebras": [0.15, 1.6, 0.6], "costillas": [0.18, 1.7, 0.5], "ojo": [0.12, 1.4, 0.9], "testículos": [0.13, 1.5, 0.5],
-	"estómago": [0.16, 1.7, 0.4], "oreja": [0.12, 1.4, 0.7], "corazón": [0.17, 1.7, 0.4], "hígado": [0.16, 1.7, 0.4]}
+const CLOSEUPS := {}               ## (sin acercamientos extremos: todas las muertes usan el mismo encuadre moderado)
 
 var camera: SideCamera
 var player: Actor
@@ -33,7 +31,7 @@ var focus_label := ""            ## (práctica) comienzo del nombre del grupo qu
 var flash_wounds := false
 ## En la partida: sin cámara que sigue a la bala ni repetición de la bala por dentro (sólo sangre en los impactos y
 ## rayos X + cámara lenta al morir). El modo práctica las activa para probar.
-var follow_bullet := false
+var follow_bullet := false        ## (desarrollo) cámara que sigue a la bala: apagada (plan maestro §18)
 var bullet_replay := false
 var debug_u := -1.0               ## (capturas) fija el avance de la repetición 0..1
 const HOLD_SECONDS := 1.6         ## después de atravesar el cuerpo, la toma queda quieta y termina
@@ -174,10 +172,10 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 	var d: Vector3 = info.get("dir", Vector3.RIGHT)
 	_side = -signf(d.x) if absf(d.x) > 0.1 else 1.0
 	# estructuras chicas y delicadas: ventana más chica y cámara más cerca, de costado hacia el frente, para verlas en detalle
-	_dist0 = 2.4
-	_dist1 = 1.6
-	_ang1 = 0.25
-	var radius := 0.0
+	_dist0 = 4.2
+	_dist1 = 2.8
+	_ang1 = 0.3
+	var radius := 0.3                # ventana de rayos X grande: se lee a la distancia moderada
 	if _main != "":
 		var lab := str(anat.groups[_main].label)
 		for k in CLOSEUPS:
@@ -205,7 +203,8 @@ func _killcam(a: Actor, info: Dictionary) -> void:
 		anat.set_reveal(int(info.get("seq0", 1)) - 1)
 	else:
 		_replay = []
-	TimeFx.slowmo(0.06, KILL_SECONDS + rp + 0.4, "kill", 0.02)
+	# cámara lenta SUAVE (35 %) y corta; la repetición cinematográfica sólo existe como herramienta de desarrollo
+	TimeFx.slowmo(0.35 if rp == 0.0 else 0.06, KILL_SECONDS + rp + 0.2, "kill", 0.05)
 	_rp_t0 = _now()
 	_t0 = _now() + rp
 	_until = _t0 + KILL_SECONDS
@@ -247,7 +246,7 @@ func _process(_d: float) -> void:
 	var dist := lerpf(_dist0, _dist1, e)
 	var ang := lerpf(-0.45, _ang1, e) * _side
 	var off := Vector3(sin(ang) * _side, 0.12, cos(ang)).normalized() * dist
-	camera.override_target(_focus + off, _focus, lerpf(36.0, 30.0, e))
+	camera.override_target(_focus + off, _focus, lerpf(40.0, 36.0, e))
 	if _now() > _until:
 		_end()
 

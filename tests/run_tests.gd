@@ -107,7 +107,7 @@ func _game_tests(filt: String) -> void:
 	var p := g.player
 	p.max_health = 1000.0
 	p.health = 1000.0
-	for t in ["apuntado", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "anatomia", "captador"]:
+	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "anatomia", "captador"]:
 		if filt != "" and not t.contains(filt):
 			continue
 		p.inp = ActorInput.new()
@@ -132,6 +132,52 @@ func _place(p: Actor, pos: Vector3) -> void:
 	p.global_position = pos
 	p.velocity = Vector3.ZERO
 	await _wait_phys(6)
+
+## Plan maestro §16: joystick (no mouse) — llega a cada dirección sin pasarse, mantiene el apuntado corriendo al revés,
+## al soltar NO deriva, y cambiar de arma no lo pierde.
+func g_apuntado_fino(p: Actor) -> String:
+	await _place(p, Vector3(5, 0.05, 0))
+	p.inp.aim_snap = false
+	var checks := [["horizontal", Vector2(1, 0)], ["arriba", Vector2(0.2, 1)], ["abajo", Vector2(0.3, -1)], ["diagonal", Vector2(1, 1)],
+		["atrás", Vector2(-1, 0.1)]]
+	for c in checks:
+		var tgt: Vector2 = (c[1] as Vector2).normalized()
+		for i in 240:
+			p.inp.aim = tgt
+			p.inp.aim_snap = false
+			await get_tree().physics_frame
+		var err := rad_to_deg(absf(angle_difference(p.aim_dir.angle(), tgt.angle())))
+		if err > 2.0:
+			return "no llega a apuntar %s (queda a %.1f°)" % [c[0], err]
+	# corriendo hacia la derecha mientras apunta a la izquierda
+	var keep := p.aim_dir
+	for i in 60:
+		p.inp.aim = Vector2.ZERO
+		p.inp.move = Vector2(1, 0)
+		await get_tree().physics_frame
+	p.inp.move = Vector2.ZERO
+	if rad_to_deg(absf(angle_difference(p.aim_dir.angle(), keep.angle()))) > 0.5:
+		return "el movimiento cambió el apuntado"
+	# soltar el joystick: 2 s sin tocar y la dirección queda igual (sin deriva)
+	for i in 120:
+		p.inp.aim = Vector2.ZERO
+		await get_tree().physics_frame
+	if rad_to_deg(absf(angle_difference(p.aim_dir.angle(), keep.angle()))) > 0.1:
+		return "el apuntado deriva solo al soltar"
+	p.inp.switch_to = "next"
+	await _wait_phys(40)
+	if rad_to_deg(absf(angle_difference(p.aim_dir.angle(), keep.angle()))) > 0.1:
+		return "cambiar de arma perdió el apuntado"
+	# toque chico (apuntado lejano): mueve poco
+	var a0 := p.aim_dir.angle()
+	for i in 6:
+		p.inp.aim = Vector2.from_angle(a0 + 1.2) * 0.35
+		await get_tree().physics_frame
+	p.inp.aim = Vector2.ZERO
+	var moved := rad_to_deg(absf(angle_difference(p.aim_dir.angle(), a0)))
+	if moved > 3.0:
+		return "un toque suave mueve demasiado la mira (%.1f°)" % moved
+	return ""
 
 func g_apuntado(p: Actor) -> String:
 	await _place(p, Vector3(5, 0.05, 0))

@@ -19,6 +19,8 @@ static var instance: Ballistics
 var _pos := PackedVector3Array()
 var _vel := PackedVector3Array()
 var _dmg := PackedFloat32Array()
+var _from := PackedVector3Array()      ## de dónde salió (alcance efectivo)
+var _range := PackedFloat32Array()     ## alcance efectivo del arma (m)
 var _pen := PackedFloat32Array()
 var _drag := PackedFloat32Array()
 var _life := PackedFloat32Array()
@@ -36,7 +38,7 @@ var stats := {"fired": 0, "hits": 0}
 
 func _ready() -> void:
 	instance = self
-	_pos.resize(MAX); _vel.resize(MAX); _dmg.resize(MAX); _pen.resize(MAX); _drag.resize(MAX); _life.resize(MAX); _ric.resize(MAX)
+	_pos.resize(MAX); _vel.resize(MAX); _dmg.resize(MAX); _from.resize(MAX); _range.resize(MAX); _pen.resize(MAX); _drag.resize(MAX); _life.resize(MAX); _ric.resize(MAX)
 	var tracer_mat := StandardMaterial3D.new()
 	tracer_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	tracer_mat.albedo_color = Color(1.0, 0.82, 0.45, 0.85)
@@ -77,6 +79,8 @@ func fire(from: Vector3, dir: Vector3, speed: float, damage: float, shooter: Nod
 	_pos[i] = from
 	_vel[i] = dir * speed
 	_dmg[i] = damage
+	_from[i] = from
+	_range[i] = float(opts.get("range", 0.0))
 	_pen[i] = float(opts.get("penetration", 2.0))
 	_drag[i] = float(opts.get("drag", 0.05))
 	_ric[i] = float(opts.get("ricochet", 0.2))
@@ -131,6 +135,12 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 		var point: Vector3 = hit.position
 		var normal: Vector3 = hit.normal
 		var dir := _vel[i].normalized()
+		# alcance efectivo del arma: pasado el alcance el daño baja hasta la mitad a 2× el alcance
+		if _range[i] > 0.0:
+			var dd := point.distance_to(_from[i])
+			if dd > _range[i]:
+				_dmg[i] *= lerpf(1.0, 0.5, clampf((dd - _range[i]) / _range[i], 0.0, 1.0))
+				_range[i] = 0.0
 		var info := {"point": point, "normal": normal, "dir": dir, "damage": _dmg[i], "shooter": _owner[i], "kind": _kind[i],
 			"speed": _vel[i].length(), "index": i}
 		stats.hits += 1
