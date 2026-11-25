@@ -18,6 +18,7 @@ var segments: Array[String] = []
 var only := ""                         ## (pruebas) sólo esta escena
 var max_seconds := 300.0
 var _quit_called := false
+var no_map := false                     ## (GLB) la escena no lleva el mapa: se exporta aparte con --only=mapa
 var export_glb := ""                   ## si no está vacío: exporta la escena como GLB con animaciones (ver TrailerExport)
 const Exporter := preload("res://tools/trailer/trailer_export.gd")   # (tools/ no registra class_name)
 var rec
@@ -32,6 +33,8 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--only="):
 			only = a.substr(7)
+		if a == "--nomap":
+			no_map = true
 		if a.begins_with("--glb="):
 			export_glb = a.substr(6)
 	controller.set_process(false)
@@ -236,6 +239,8 @@ func _run() -> void:
 				acts.append(e)
 		rec = Exporter.new()
 		rec.begin(self, acts)
+	if only == "mapa":
+		await wait_s(1.0)
 	if _on("intro"):
 		await _intro()
 	if _on("pistolas"):
@@ -266,7 +271,7 @@ func _finish() -> void:
 		var hf := FileAccess.open(base.get_basename() + "_disparos.json", FileAccess.WRITE)
 		hf.store_string(JSON.stringify(rec.hits, "\t"))
 		hf.close()
-	var f := FileAccess.open("user://trailer_sonidos.json", FileAccess.WRITE)
+	var f := FileAccess.open((export_glb.get_basename() + "_sonidos.json") if export_glb != "" else "user://trailer_sonidos.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify({"fps": FPS, "seconds": vt, "events": Sfx.event_log}, "\t"))
 	f.close()
 	print("TRAILER_LISTO ", vt, " s · sonidos ", Sfx.event_log.size())

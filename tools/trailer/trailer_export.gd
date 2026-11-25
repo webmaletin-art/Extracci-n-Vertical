@@ -28,7 +28,8 @@ func begin(g, actors: Array) -> void:
 	g.add_child(root)
 	anim.length = 0.0
 	anim.loop_mode = Animation.LOOP_NONE
-	_build_map()
+	if not game.no_map:
+		_build_map()
 	for a in actors:
 		_add_actor(a)
 	_cam = Node3D.new()
@@ -50,7 +51,23 @@ func begin(g, actors: Array) -> void:
 
 # ------------------------------------------------------------------------------------------------ construcción
 
-static func _std_mat(m: Material) -> Material:
+static var _whites := {}
+## Estilo del juego: todo en blanco / gris claro, sin texturas ni colores (las líneas se agregan en Blender). tono = brillo.
+static func _white(tone: float) -> StandardMaterial3D:
+	var k := int(tone * 100.0)
+	if not _whites.has(k):
+		var sm := StandardMaterial3D.new()
+		sm.albedo_color = Color(tone, tone, tone * 0.985)
+		sm.roughness = 1.0
+		sm.metallic = 0.0
+		sm.metallic_specular = 0.2
+		_whites[k] = sm
+	return _whites[k]
+
+static func _std_mat(m: Material, tone := 0.92) -> Material:
+	return _white(tone)
+
+static func _std_mat_old(m: Material) -> Material:
 	if m == null or m is BaseMaterial3D:
 		return m
 	var sm := StandardMaterial3D.new()
@@ -64,7 +81,7 @@ static func _std_mat(m: Material) -> Material:
 				sm.albedo_color = v
 	return sm
 
-static func _copy_mesh_instance(src: MeshInstance3D) -> MeshInstance3D:
+static func _copy_mesh_instance(src: MeshInstance3D, tone := 0.92) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.mesh = src.mesh
 	for s in src.mesh.get_surface_count():
@@ -73,7 +90,7 @@ static func _copy_mesh_instance(src: MeshInstance3D) -> MeshInstance3D:
 			m = src.material_override
 		if m == null:
 			m = src.mesh.surface_get_material(s)
-		mi.set_surface_override_material(s, _std_mat(m))
+		mi.set_surface_override_material(s, _std_mat(m, tone))
 	return mi
 
 func _build_map() -> void:
@@ -165,7 +182,7 @@ func _track_weapons(a: Actor, t: float) -> void:
 		ww.name = "Arma_%d_%s" % [_weapons.size(), f.id]
 		root.add_child(ww)
 		for mi in f.model.find_children("*", "MeshInstance3D", true, false):
-			var c := _copy_mesh_instance(mi as MeshInstance3D)
+			var c := _copy_mesh_instance(mi as MeshInstance3D, 0.16)
 			ww.add_child(c)
 			c.global_transform = f.model.global_transform.affine_inverse() * (mi as MeshInstance3D).global_transform
 		var wd := {"f": f, "w": ww, "pt": _pos_track(ww.name), "rt": _rot_track(ww.name), "st": _scale_track(ww.name), "gone": false}
@@ -230,7 +247,7 @@ func capture(t: float) -> void:
 				var cm := MeshInstance3D.new()
 				cm.mesh = (n as Limb).suit.mesh
 				for s in cm.mesh.get_surface_count():
-					cm.set_surface_override_material(s, _std_mat(cm.mesh.surface_get_material(s)))
+					cm.set_surface_override_material(s, cm.mesh.surface_get_material(s) if s == cm.mesh.get_surface_count() - 1 else _white(0.92))
 				lw.add_child(cm)
 				var ld := {"n": n, "pt": _pos_track(lw.name), "rt": _rot_track(lw.name), "st": _scale_track(lw.name)}
 				anim.scale_track_insert_key(ld.st, 0.0, Vector3.ONE * 0.0001)
