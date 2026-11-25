@@ -91,8 +91,8 @@ func _spawn_player() -> void:
 	player.max_health = 100.0
 	add_child(player)
 	player.global_position = tower.data.start
-	player.give_weapon("primary", "am4")
-	player.give_weapon("secondary", "browning")
+	player.give_weapon("primary", "m4a1")
+	player.give_weapon("secondary", "m1911")
 	player.equip("primary")
 	player.add_to_group("perf_personajes_jugador")
 	player.died.connect(_on_player_died)

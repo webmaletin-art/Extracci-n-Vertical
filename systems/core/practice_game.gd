@@ -44,7 +44,7 @@ var dummy: Actor
 var panel: PanelContainer
 var ui: CanvasLayer
 
-var weapon_id := "am4"
+var weapon_id := "m4a1"
 var ammo_id := "fmj"
 var distance := 6.0
 var dummy_char := "vigia"

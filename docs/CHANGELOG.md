@@ -137,3 +137,7 @@
 ## 0.11.1 — se recuperan las armas de Nexus
 
 * Se deshace el cambio de 0.11.0: `am4`, `mp5` y `browning` vuelven a sus modelos de Operación Nexus (con texturas). Los modelos livianos (M4A1, MP5_1 y M1911 Táctica) se pueden volver a generar con `tools/weapons/convert_fbx.py -- <FBX> <salida> <markers.json> am4 mp5 browning`.
+
+## 0.12.0 — las 21 armas subidas
+
+* El juego tiene exactamente las 21 armas subidas (13 ya convertidas + 8 variantes: M1911 B, M1911 Táctica, M16 B, MP5 A / B, SCAR, M4A1, M4A1 B), todas livianas. Se quitan los modelos pesados de Operación Nexus (`browning`, `am4`, `mp5`, `remington`, `awm`) y se actualizan el mapa, el botín, los enemigos, el arma inicial (M1911 + M4A1), los objetos y las escenas de trailer. Sin escopeta ni .50 por ahora.

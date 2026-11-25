@@ -1,135 +1,4 @@
 {
- "am4": {
-  "has_mag": true,
-  "kind": "rifle",
-  "length": 0.88,
-  "markers": {
-   "Grip": [
-    0.0,
-    0.0,
-    0.0
-   ],
-   "MagPos": [
-    0.0,
-    0.0403,
-    -0.1415
-   ],
-   "Muzzle": [
-    0.0,
-    0.085,
-    -0.616
-   ],
-   "Sight": [
-    0.0,
-    0.116,
-    -0.132
-   ],
-   "Support": [
-    0.0,
-    0.055,
-    -0.352
-   ]
-  },
-  "materials": {
-   "Material": {
-    "albedo": "tex/am4_Material_a.webp",
-    "metallic": 0.6,
-    "normal": "tex/am4_Material_n.webp",
-    "orm": "tex/am4_Material_orm.webp",
-    "roughness": 1.0,
-    "use_ao": false
-   }
-  },
-  "name": "AR-15 (AM4)",
-  "parts": {},
-  "tris": 3584
- },
- "awm": {
-  "has_mag": false,
-  "kind": "rifle",
-  "length": 1.2,
-  "markers": {
-   "Grip": [
-    0.0,
-    0.0,
-    0.0
-   ],
-   "MagPos": [
-    0.0,
-    -0.01,
-    0.0
-   ],
-   "Muzzle": [
-    0.0,
-    0.07,
-    -0.8124
-   ],
-   "Sight": [
-    0.0,
-    0.115,
-    0.0276
-   ],
-   "Support": [
-    0.0,
-    0.02,
-    -0.3564
-   ]
-  },
-  "materials": {
-   "default": {
-    "metallic": 0.0,
-    "roughness": 0.7
-   }
-  },
-  "name": "AWM",
-  "parts": {},
-  "tris": 21200
- },
- "browning": {
-  "has_mag": true,
-  "kind": "pistol",
-  "length": 0.2,
-  "markers": {
-   "Grip": [
-    0.0,
-    0.0,
-    0.0
-   ],
-   "MagPos": [
-    0.0,
-    0.0166,
-    -0.006
-   ],
-   "Muzzle": [
-    0.0,
-    0.055,
-    -0.172
-   ],
-   "Sight": [
-    0.0,
-    0.076,
-    -0.022
-   ],
-   "Support": [
-    0.0,
-    -0.02,
-    -0.018
-   ]
-  },
-  "materials": {
-   "Material #25": {
-    "albedo": "tex/browning_Material_25_a.webp",
-    "metallic": 1.0,
-    "normal": "tex/browning_Material_25_n.webp",
-    "orm": "tex/browning_Material_25_orm.webp",
-    "roughness": 1.0,
-    "use_ao": false
-   }
-  },
-  "name": "Browning HP",
-  "parts": {},
-  "tris": 4182
- },
  "m24": {
   "has_mag": true,
   "kind": "rifle",
@@ -310,103 +179,6 @@
   "name": "MAC-10",
   "parts": {},
   "tris": 2006
- },
- "mp5": {
-  "has_mag": true,
-  "kind": "rifle",
-  "length": 0.68,
-  "markers": {
-   "Grip": [
-    0.0,
-    0.0,
-    0.0
-   ],
-   "MagPos": [
-    0.0,
-    0.0531,
-    -0.1762
-   ],
-   "Muzzle": [
-    0.0,
-    0.1,
-    -0.4012
-   ],
-   "Sight": [
-    0.0,
-    0.155,
-    -0.0272
-   ],
-   "Support": [
-    0.0,
-    0.07,
-    -0.2312
-   ]
-  },
-  "materials": {
-   "Material": {
-    "albedo": "tex/mp5_Material_a.webp",
-    "metallic": 1.0,
-    "normal": "tex/mp5_Material_n.webp",
-    "orm": "tex/mp5_Material_orm.webp",
-    "roughness": 1.0,
-    "use_ao": false
-   },
-   "mag": {
-    "albedo": "tex/mp5_mag_a.webp",
-    "metallic": 1.0,
-    "orm": "tex/mp5_mag_orm.webp",
-    "roughness": 1.0,
-    "use_ao": false
-   }
-  },
-  "name": "MP5",
-  "parts": {},
-  "tris": 8966
- },
- "remington": {
-  "has_mag": false,
-  "kind": "rifle",
-  "length": 1.2,
-  "markers": {
-   "Grip": [
-    0.0,
-    0.0,
-    0.0
-   ],
-   "MagPos": [
-    0.0,
-    -0.03,
-    0.0
-   ],
-   "Muzzle": [
-    0.0,
-    0.05,
-    -0.864
-   ],
-   "Sight": [
-    0.0,
-    0.068,
-    -0.204
-   ],
-   "Support": [
-    0.0,
-    0.02,
-    -0.492
-   ]
-  },
-  "materials": {
-   "remington_02_mat": {
-    "albedo": "tex/remington_remington_02_mat_a.webp",
-    "metallic": 1.0,
-    "normal": "tex/remington_remington_02_mat_n.webp",
-    "orm": "tex/remington_remington_02_mat_orm.webp",
-    "roughness": 1.0,
-    "use_ao": false
-   }
-  },
-  "name": "Remington 31",
-  "parts": {},
-  "tris": 6160
  },
  "service": {
   "has_mag": false,
@@ -1598,6 +1370,414 @@
    }
   },
   "tris": 11589,
+  "format": "glb"
+ },
+ "m1911_1": {
+  "kind": "pistol",
+  "length": 0.216,
+  "has_mag": true,
+  "source": "M1911_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.014,
+    0.0459
+   ],
+   "Support": [
+    0.0,
+    -0.034,
+    0.0559
+   ],
+   "Muzzle": [
+    0.0,
+    0.0509,
+    -0.108
+   ],
+   "Sight": [
+    0.0,
+    0.0698,
+    0.0324
+   ]
+  },
+  "materials": {
+   "Mat_Dark": {
+    "color": [
+     0.099,
+     0.099,
+     0.099
+    ],
+    "metallic": 0.0,
+    "roughness": 0.4
+   },
+   "Mat_Wood": {
+    "color": [
+     0.227,
+     0.147,
+     0.143
+    ],
+    "metallic": 0.0,
+    "roughness": 0.5
+   }
+  },
+  "tris": 1420,
+  "name": "Pistola M1911 B",
+  "format": "glb"
+ },
+ "m1911t": {
+  "kind": "pistol",
+  "length": 0.22,
+  "has_mag": true,
+  "source": "M1911Tactical.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0144,
+    0.0468
+   ],
+   "Support": [
+    0.0,
+    -0.0344,
+    0.0568
+   ],
+   "Muzzle": [
+    0.0,
+    0.0511,
+    -0.11
+   ],
+   "Sight": [
+    0.0,
+    0.0718,
+    0.033
+   ]
+  },
+  "materials": {
+   "Mat_Dark": {
+    "color": [
+     0.099,
+     0.099,
+     0.099
+    ],
+    "metallic": 0.0,
+    "roughness": 0.4
+   }
+  },
+  "tris": 1536,
+  "name": "Pistola M1911 Táctica",
+  "format": "glb"
+ },
+ "m16_1": {
+  "kind": "rifle",
+  "length": 1.0,
+  "has_mag": true,
+  "source": "M16_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0114,
+    0.2131
+   ],
+   "Support": [
+    0.0,
+    0.022,
+    -0.3043
+   ],
+   "Muzzle": [
+    0.0,
+    0.0417,
+    -0.5
+   ],
+   "Sight": [
+    0.0,
+    0.1145,
+    0.15
+   ]
+  },
+  "materials": {
+   "Mat_Dark": {
+    "color": [
+     0.099,
+     0.099,
+     0.099
+    ],
+    "metallic": 0.0,
+    "roughness": 0.4
+   }
+  },
+  "tris": 1750,
+  "name": "Fusil M16 B",
+  "format": "glb"
+ },
+ "mp5_1": {
+  "kind": "smg",
+  "length": 0.68,
+  "has_mag": true,
+  "source": "MP5_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0183,
+    0.1708
+   ],
+   "Support": [
+    0.0,
+    -0.1673,
+    -0.1332
+   ],
+   "Muzzle": [
+    0.0,
+    0.0953,
+    -0.34
+   ],
+   "Sight": [
+    0.0,
+    0.1793,
+    0.102
+   ]
+  },
+  "materials": {
+   "MP5Mat": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 0.05
+   },
+   "MP5WhiteMat": {
+    "color": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "metallic": 0.0,
+    "roughness": 0.0
+   },
+   "MP5RedMat": {
+    "color": [
+     0.8,
+     0.05,
+     0.03
+    ],
+    "metallic": 0.0,
+    "roughness": 0.69
+   },
+   "MP5MagMat": {
+    "color": [
+     0.006,
+     0.006,
+     0.006
+    ],
+    "metallic": 0.0,
+    "roughness": 0.0
+   }
+  },
+  "tris": 6095,
+  "name": "Subfusil MP5 A",
+  "format": "glb"
+ },
+ "mp5_2": {
+  "kind": "smg",
+  "length": 0.68,
+  "has_mag": true,
+  "source": "MP5_2.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0162,
+    -0.0208
+   ],
+   "Support": [
+    0.0,
+    0.1119,
+    -0.1819
+   ],
+   "Muzzle": [
+    0.0,
+    0.082,
+    -0.34
+   ],
+   "Sight": [
+    0.0,
+    0.1617,
+    0.102
+   ]
+  },
+  "materials": {
+   "Mat_Dark": {
+    "color": [
+     0.099,
+     0.099,
+     0.099
+    ],
+    "metallic": 0.0,
+    "roughness": 0.4
+   }
+  },
+  "tris": 1934,
+  "name": "Subfusil MP5 B",
+  "format": "glb"
+ },
+ "scar": {
+  "kind": "rifle",
+  "length": 0.9,
+  "has_mag": true,
+  "source": "SCAR.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0124,
+    0.0963
+   ],
+   "Support": [
+    0.0,
+    0.0159,
+    -0.1409
+   ],
+   "Muzzle": [
+    0.0,
+    0.0337,
+    -0.45
+   ],
+   "Sight": [
+    0.0,
+    0.1238,
+    0.135
+   ]
+  },
+  "materials": {
+   "Mat_Caqui": {
+    "color": [
+     0.888,
+     0.77,
+     0.588
+    ],
+    "metallic": 0.0,
+    "roughness": 0.4
+   },
+   "Mat_Dark": {
+    "color": [
+     0.099,
+     0.099,
+     0.099
+    ],
+    "metallic": 0.0,
+    "roughness": 0.4
+   }
+  },
+  "tris": 3920,
+  "name": "Fusil SCAR",
+  "format": "glb"
+ },
+ "m4a1": {
+  "kind": "rifle",
+  "length": 0.84,
+  "has_mag": true,
+  "source": "M4A1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0158,
+    -0.0057
+   ],
+   "Support": [
+    0.0,
+    -0.1385,
+    -0.1718
+   ],
+   "Muzzle": [
+    0.0,
+    0.0811,
+    -0.42
+   ],
+   "Sight": [
+    0.0,
+    0.1578,
+    0.126
+   ]
+  },
+  "materials": {
+   "LowPoly_Black": {
+    "color": [
+     0.024,
+     0.024,
+     0.024
+    ],
+    "metallic": 0.0,
+    "roughness": 0.8
+   },
+   "LowPoly_Yellow": {
+    "color": [
+     0.776,
+     0.443,
+     0.208
+    ],
+    "metallic": 0.0,
+    "roughness": 0.5
+   },
+   "LowPoly_Bronze": {
+    "color": [
+     0.281,
+     0.129,
+     0.014
+    ],
+    "metallic": 0.0,
+    "roughness": 0.8
+   },
+   "RedDotEmmisive": {
+    "color": [
+     0.8,
+     0.016,
+     0.003
+    ],
+    "metallic": 0.0,
+    "roughness": 0.4
+   }
+  },
+  "tris": 9348,
+  "name": "Fusil M4A1",
+  "format": "glb"
+ },
+ "m4a1_1": {
+  "kind": "rifle",
+  "length": 0.84,
+  "has_mag": true,
+  "source": "M4A1_1.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0159,
+    -0.0077
+   ],
+   "Support": [
+    0.0,
+    -0.1395,
+    -0.1678
+   ],
+   "Muzzle": [
+    0.0,
+    0.079,
+    -0.42
+   ],
+   "Sight": [
+    0.0,
+    0.1589,
+    0.126
+   ]
+  },
+  "materials": {
+   "Mat_Dark": {
+    "color": [
+     0.099,
+     0.099,
+     0.099
+    ],
+    "metallic": 0.0,
+    "roughness": 0.4
+   }
+  },
+  "tris": 7899,
+  "name": "Fusil M4A1 B",
   "format": "glb"
  }
 }

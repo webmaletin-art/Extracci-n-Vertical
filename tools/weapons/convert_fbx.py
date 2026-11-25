@@ -21,8 +21,10 @@ WEAPONS = {
     "cqbm4": ("CQBM4.fbx", 0.76, "rifle"), "m4supp": ("SuppressedM4.fbx", 0.95, "rifle"), "m16": ("M16.fbx", 1.0, "rifle"),
     "g36c": ("G36C.fbx", 0.72, "rifle"), "ak47": ("AK47.fbx", 0.88, "rifle"), "scarh": ("SCAR-H.fbx", 0.97, "rifle"),
     "aug": ("SteyrAUG_M1.fbx", 0.79, "rifle"), "m4dmr": ("M4Sniper.fbx", 1.05, "rifle"),
-    # reemplazan a los modelos pesados de Operación Nexus (mismos id y estadísticas)
-    "am4": ("M4A1.fbx", 0.84, "rifle"), "mp5": ("MP5_1.fbx", 0.68, "smg"), "browning": ("M1911Tactical.fbx", 0.22, "pistol"),
+    # variantes (las 21 armas subidas)
+    "m1911_1": ("M1911_1.fbx", 0.216, "pistol"), "m1911t": ("M1911Tactical.fbx", 0.22, "pistol"), "m16_1": ("M16_1.fbx", 1.0, "rifle"),
+    "mp5_1": ("MP5_1.fbx", 0.68, "smg"), "mp5_2": ("MP5_2.fbx", 0.68, "smg"), "scar": ("SCAR.fbx", 0.9, "rifle"),
+    "m4a1": ("M4A1.fbx", 0.84, "rifle"), "m4a1_1": ("M4A1_1.fbx", 0.84, "rifle"),
 }
 ONLY = argv[3:]          # (opcional) convertir sólo estos id
 MAX_TRIS = 16000
@@ -37,6 +39,8 @@ def find(name):
 
 markers = {}
 for wid, (fname, length, kind) in WEAPONS.items():
+    if ONLY and wid not in ONLY:
+        continue
     if ONLY and wid not in ONLY:
         continue
     path = find(fname)

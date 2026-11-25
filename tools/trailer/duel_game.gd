@@ -8,8 +8,8 @@ extends PracticeGame
 const Exporter := preload("res://tools/trailer/trailer_export.gd")
 const FPS := 30.0
 ## [id del arma, nombre, distancia inicial entre los dos (m)]
-const DUELS := [["m1911", "Pistola M1911", 14.0], ["remington", "Escopeta Remington", 8.0], ["mp5", "Subfusil MP5", 12.0],
-	["am4", "Fusil AM4", 16.0], ["awm", "Rifle de precisión .50 AWM", 22.0]]
+const DUELS := [["m1911", "Pistola M1911", 14.0], ["mp5_1", "Subfusil MP5 A", 12.0], ["m16_1", "Fusil M16 B", 14.0],
+	["m4a1", "Fusil M4A1", 16.0], ["m4dmr", "Tirador M4 DMR", 22.0]]
 
 var vt := 0.0
 var rec

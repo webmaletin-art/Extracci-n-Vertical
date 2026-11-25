@@ -252,7 +252,7 @@ func _run() -> void:
 		await _escopeta()
 	if _on("fusil"):
 		await _fusil()
-	if _on("awm"):
+	if _on("m4dmr"):
 		await _awm()
 	if _on("extraccion"):
 		await _extraccion()
@@ -301,7 +301,7 @@ func _intro() -> void:
 	hud.visible = true
 
 func _pistolas() -> void:
-	arm("secondary", "browning")
+	arm("secondary", "m1911")
 	player.weapons.erase("primary")
 	player.equip("secondary")
 	put(Vector3(4.0, 0.05, 0))
@@ -309,8 +309,8 @@ func _pistolas() -> void:
 	target_cam(func(): return player.global_position + Vector3(2.5, 1.3, 0), 8.5, 58.0, 0.6)
 	title("PISTOLAS", "Empezás con lo justo", 2.5)
 	await wait_s(1.0)
-	var e1 := spawn_enemy(11.5, 0.05, "vigia", "browning", 0)
-	var e2 := spawn_enemy(14.5, 0.05, "zapador", "browning", 0)
+	var e1 := spawn_enemy(11.5, 0.05, "vigia", "m1911", 0)
+	var e2 := spawn_enemy(14.5, 0.05, "zapador", "m1911", 0)
 	await walk_to(6.5, 0.7)
 	target_cam(_mid(e1), 9.5, 58.0, 0.6)
 	await fight(e1, 6.0, true, false, 3, 10)
@@ -335,7 +335,7 @@ func _caja() -> void:
 			(d as Destructible).apply_damage(999.0, (d as Node3D).global_position, Vector3.RIGHT, "melee", player)
 			break
 	await wait_s(0.6)
-	arm("primary", "remington")
+	arm("primary", "m16_1")
 	hud.toast("ESCOPETA REMINGTON encontrada")
 	title("¡ESCOPETA!", "Remington · 12 perdigones", 2.5)
 	await wait_s(2.5)
@@ -377,15 +377,15 @@ func shoot_bone(target: Actor, bone: String, secs: float, on := 2, off := 12) ->
 	player.inp.fire = false
 
 func _escopeta() -> void:
-	arm("primary", "remington")
+	arm("primary", "m16_1")
 	put(Vector3(10.0, 4.55, 0))
 	face(1.0)
 	title("ESCOPETA", "A quemarropa: huesos, sangre y miembros", 2.5)
 	target_cam(func(): return player.global_position + Vector3(2.0, 1.3, 0), 8.0, 58.0, 0.6)
 	var es: Array[Actor] = []
-	es.append(spawn_enemy(15.0, 4.55, "mortero", "am4", 1))
-	es.append(spawn_enemy(19.0, 4.55, "vigia", "mp5", 1))
-	es.append(spawn_enemy(23.0, 4.55, "fantasma", "browning", 1))
+	es.append(spawn_enemy(15.0, 4.55, "mortero", "m4a1", 1))
+	es.append(spawn_enemy(19.0, 4.55, "vigia", "mp5_1", 1))
+	es.append(spawn_enemy(23.0, 4.55, "fantasma", "m1911", 1))
 	await wait_s(0.6)
 	var bones := ["LeftForeArm", "RightUpLeg", "LeftLeg"]
 	for i in es.size():
@@ -399,14 +399,14 @@ func _escopeta() -> void:
 	await wait_s(1.5)
 
 func _fusil() -> void:
-	arm("primary", "am4")
+	arm("primary", "m4a1")
 	put(Vector3(8.0, 9.05, 0))
 	face(1.0)
 	title("FUSILES", "Ráfagas, cobertura y sangre", 2.5)
 	target_cam(func(): return player.global_position + Vector3(3.0, 1.3, 0), 10.0, 58.0, 0.7)
 	var es: Array[Actor] = []
 	for x in [16.0, 19.0, 23.0, 26.0]:
-		es.append(spawn_enemy(x, 9.05, ["zapador", "mortero", "doc", "vigia"][es.size()], ["mp5", "am4", "browning", "am4"][es.size()], 2))
+		es.append(spawn_enemy(x, 9.05, ["zapador", "mortero", "doc", "vigia"][es.size()], ["mp5_1", "m4a1", "m1911", "m4a1"][es.size()], 2))
 	await wait_s(0.4)
 	for e in es:
 		target_cam(_mid(e), 10.0, 58.0, 0.7)
@@ -415,14 +415,14 @@ func _fusil() -> void:
 	await wait_s(1.5)
 
 func _awm() -> void:
-	arm("primary", "awm")
+	arm("primary", "m4dmr")
 	put(Vector3(8.0, 13.55, 0))
 	face(1.0)
 	title("CALIBRE .50", "Atraviesa y arranca", 2.5)
 	target_cam(func(): return player.global_position + Vector3(4.0, 1.3, 0), 11.0, 58.0, 0.7)
 	var es: Array[Actor] = []
 	for x in [17.0, 22.0, 27.0]:
-		es.append(spawn_enemy(x, 13.55, ["vigia", "doc", "fantasma"][es.size()], "am4", 3))
+		es.append(spawn_enemy(x, 13.55, ["vigia", "doc", "fantasma"][es.size()], "m4a1", 3))
 	await wait_s(0.4)
 	for e in es:
 		target_cam(_mid(e), 11.5, 58.0, 0.7)
@@ -431,7 +431,7 @@ func _awm() -> void:
 	await wait_s(1.5)
 
 func _extraccion() -> void:
-	arm("primary", "awm")
+	arm("primary", "m4dmr")
 	var roof_y: float = tower.data.roof.y
 	var hx: float = float(tower.data.roof.extraction[0])
 	put(Vector3(hx - 14.0, roof_y + 0.05, 0))
