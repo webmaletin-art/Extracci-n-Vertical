@@ -517,11 +517,179 @@
   "weapon": "sniper_5",
   "icon": "weapon_awm"
  },
- "ammo_45acp": {
-  "name": "Munición .45 ACP",
+ "ammo_380_std": {
+  "name": "Munición .380 ACP · Estándar (FMJ)",
   "type": "municion",
-  "value": 5,
-  "amount": 26,
+  "value": 11,
+  "amount": 24,
+  "ammo_for": [
+   "pistol_5"
+  ],
+  "caliber": "380",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_380_hp": {
+  "name": "Munición .380 ACP · Punta hueca",
+  "type": "municion",
+  "value": 25,
+  "amount": 24,
+  "ammo_for": [
+   "pistol_5"
+  ],
+  "caliber": "380",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_380_tr": {
+  "name": "Munición .380 ACP · Trazante",
+  "type": "municion",
+  "value": 17,
+  "amount": 24,
+  "ammo_for": [
+   "pistol_5"
+  ],
+  "caliber": "380",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_380_ap": {
+  "name": "Munición .380 ACP · Perforante",
+  "type": "municion",
+  "value": 33,
+  "amount": 24,
+  "ammo_for": [
+   "pistol_5"
+  ],
+  "caliber": "380",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_9x19_std": {
+  "name": "Munición 9×19 mm · Estándar (FMJ)",
+  "type": "municion",
+  "value": 20,
+  "amount": 30,
+  "ammo_for": [
+   "mp5_1",
+   "mp5_2",
+   "pistol_1",
+   "pistol_2",
+   "smg_4",
+   "smg_1",
+   "smg_3"
+  ],
+  "caliber": "9x19",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_9x19_hp": {
+  "name": "Munición 9×19 mm · Punta hueca",
+  "type": "municion",
+  "value": 43,
+  "amount": 30,
+  "ammo_for": [
+   "mp5_1",
+   "mp5_2",
+   "pistol_1",
+   "pistol_2",
+   "smg_4",
+   "smg_1",
+   "smg_3"
+  ],
+  "caliber": "9x19",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_9x19_tr": {
+  "name": "Munición 9×19 mm · Trazante",
+  "type": "municion",
+  "value": 30,
+  "amount": 30,
+  "ammo_for": [
+   "mp5_1",
+   "mp5_2",
+   "pistol_1",
+   "pistol_2",
+   "smg_4",
+   "smg_1",
+   "smg_3"
+  ],
+  "caliber": "9x19",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_9x19_ap": {
+  "name": "Munición 9×19 mm · Perforante",
+  "type": "municion",
+  "value": 58,
+  "amount": 30,
+  "ammo_for": [
+   "mp5_1",
+   "mp5_2",
+   "pistol_1",
+   "pistol_2",
+   "smg_4",
+   "smg_1",
+   "smg_3"
+  ],
+  "caliber": "9x19",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_40sw_std": {
+  "name": "Munición .40 S&W · Estándar (FMJ)",
+  "type": "municion",
+  "value": 18,
+  "amount": 24,
+  "ammo_for": [
+   "pistol_3"
+  ],
+  "caliber": "40sw",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_40sw_hp": {
+  "name": "Munición .40 S&W · Punta hueca",
+  "type": "municion",
+  "value": 41,
+  "amount": 24,
+  "ammo_for": [
+   "pistol_3"
+  ],
+  "caliber": "40sw",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_40sw_tr": {
+  "name": "Munición .40 S&W · Trazante",
+  "type": "municion",
+  "value": 27,
+  "amount": 24,
+  "ammo_for": [
+   "pistol_3"
+  ],
+  "caliber": "40sw",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_40sw_ap": {
+  "name": "Munición .40 S&W · Perforante",
+  "type": "municion",
+  "value": 55,
+  "amount": 24,
+  "ammo_for": [
+   "pistol_3"
+  ],
+  "caliber": "40sw",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_45acp_std": {
+  "name": "Munición .45 ACP · Estándar (FMJ)",
+  "type": "municion",
+  "value": 16,
+  "amount": 24,
   "ammo_for": [
    "m1911",
    "vector",
@@ -530,43 +698,413 @@
    "pistol_4",
    "smg_2"
   ],
+  "caliber": "45acp",
+  "ammo_type": "std",
   "icon": "ammo_9mm_common"
  },
- "ammo_50ae": {
-  "name": "Munición .50 AE",
+ "ammo_45acp_hp": {
+  "name": "Munición .45 ACP · Punta hueca",
+  "type": "municion",
+  "value": 35,
+  "amount": 24,
+  "ammo_for": [
+   "m1911",
+   "vector",
+   "m1911_1",
+   "m1911t",
+   "pistol_4",
+   "smg_2"
+  ],
+  "caliber": "45acp",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_45acp_tr": {
+  "name": "Munición .45 ACP · Trazante",
+  "type": "municion",
+  "value": 23,
+  "amount": 24,
+  "ammo_for": [
+   "m1911",
+   "vector",
+   "m1911_1",
+   "m1911t",
+   "pistol_4",
+   "smg_2"
+  ],
+  "caliber": "45acp",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_45acp_ap": {
+  "name": "Munición .45 ACP · Perforante",
+  "type": "municion",
+  "value": 48,
+  "amount": 24,
+  "ammo_for": [
+   "m1911",
+   "vector",
+   "m1911_1",
+   "m1911t",
+   "pistol_4",
+   "smg_2"
+  ],
+  "caliber": "45acp",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_38sp_std": {
+  "name": "Munición .38 Special · Estándar (FMJ)",
+  "type": "municion",
+  "value": 6,
+  "amount": 12,
+  "ammo_for": [
+   "revolver_4"
+  ],
+  "caliber": "38sp",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_38sp_hp": {
+  "name": "Munición .38 Special · Punta hueca",
+  "type": "municion",
+  "value": 13,
+  "amount": 12,
+  "ammo_for": [
+   "revolver_4"
+  ],
+  "caliber": "38sp",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_38sp_tr": {
+  "name": "Munición .38 Special · Trazante",
   "type": "municion",
   "value": 10,
-  "amount": 26,
+  "amount": 12,
+  "ammo_for": [
+   "revolver_4"
+  ],
+  "caliber": "38sp",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_38sp_ap": {
+  "name": "Munición .38 Special · Perforante",
+  "type": "municion",
+  "value": 18,
+  "amount": 12,
+  "ammo_for": [
+   "revolver_4"
+  ],
+  "caliber": "38sp",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_357_std": {
+  "name": "Munición .357 Magnum · Estándar (FMJ)",
+  "type": "municion",
+  "value": 10,
+  "amount": 12,
+  "ammo_for": [
+   "pistol_6",
+   "revolver_1",
+   "revolver_2"
+  ],
+  "caliber": "357",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_357_hp": {
+  "name": "Munición .357 Magnum · Punta hueca",
+  "type": "municion",
+  "value": 23,
+  "amount": 12,
+  "ammo_for": [
+   "pistol_6",
+   "revolver_1",
+   "revolver_2"
+  ],
+  "caliber": "357",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_357_tr": {
+  "name": "Munición .357 Magnum · Trazante",
+  "type": "municion",
+  "value": 16,
+  "amount": 12,
+  "ammo_for": [
+   "pistol_6",
+   "revolver_1",
+   "revolver_2"
+  ],
+  "caliber": "357",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_357_ap": {
+  "name": "Munición .357 Magnum · Perforante",
+  "type": "municion",
+  "value": 31,
+  "amount": 12,
+  "ammo_for": [
+   "pistol_6",
+   "revolver_1",
+   "revolver_2"
+  ],
+  "caliber": "357",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_44mag_std": {
+  "name": "Munición .44 Magnum · Estándar (FMJ)",
+  "type": "municion",
+  "value": 16,
+  "amount": 12,
+  "ammo_for": [
+   "revolver_3"
+  ],
+  "caliber": "44mag",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_44mag_hp": {
+  "name": "Munición .44 Magnum · Punta hueca",
+  "type": "municion",
+  "value": 35,
+  "amount": 12,
+  "ammo_for": [
+   "revolver_3"
+  ],
+  "caliber": "44mag",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_44mag_tr": {
+  "name": "Munición .44 Magnum · Trazante",
+  "type": "municion",
+  "value": 23,
+  "amount": 12,
+  "ammo_for": [
+   "revolver_3"
+  ],
+  "caliber": "44mag",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_44mag_ap": {
+  "name": "Munición .44 Magnum · Perforante",
+  "type": "municion",
+  "value": 48,
+  "amount": 12,
+  "ammo_for": [
+   "revolver_3"
+  ],
+  "caliber": "44mag",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_454_std": {
+  "name": "Munición .454 Casull · Estándar (FMJ)",
+  "type": "municion",
+  "value": 18,
+  "amount": 10,
+  "ammo_for": [
+   "revolver_5"
+  ],
+  "caliber": "454",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_454_hp": {
+  "name": "Munición .454 Casull · Punta hueca",
+  "type": "municion",
+  "value": 40,
+  "amount": 10,
+  "ammo_for": [
+   "revolver_5"
+  ],
+  "caliber": "454",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_454_tr": {
+  "name": "Munición .454 Casull · Trazante",
+  "type": "municion",
+  "value": 27,
+  "amount": 10,
+  "ammo_for": [
+   "revolver_5"
+  ],
+  "caliber": "454",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_454_ap": {
+  "name": "Munición .454 Casull · Perforante",
+  "type": "municion",
+  "value": 55,
+  "amount": 10,
+  "ammo_for": [
+   "revolver_5"
+  ],
+  "caliber": "454",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_50ae_std": {
+  "name": "Munición .50 AE · Estándar (FMJ)",
+  "type": "municion",
+  "value": 15,
+  "amount": 10,
   "ammo_for": [
    "deagle"
   ],
+  "caliber": "50ae",
+  "ammo_type": "std",
   "icon": "ammo_9mm_common"
  },
- "ammo_46x30mm": {
-  "name": "Munición 4,6×30 mm",
+ "ammo_50ae_hp": {
+  "name": "Munición .50 AE · Punta hueca",
   "type": "municion",
-  "value": 5,
+  "value": 32,
+  "amount": 10,
+  "ammo_for": [
+   "deagle"
+  ],
+  "caliber": "50ae",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_50ae_tr": {
+  "name": "Munición .50 AE · Trazante",
+  "type": "municion",
+  "value": 22,
+  "amount": 10,
+  "ammo_for": [
+   "deagle"
+  ],
+  "caliber": "50ae",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_50ae_ap": {
+  "name": "Munición .50 AE · Perforante",
+  "type": "municion",
+  "value": 45,
+  "amount": 10,
+  "ammo_for": [
+   "deagle"
+  ],
+  "caliber": "50ae",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_46x30_std": {
+  "name": "Munición 4,6×30 mm · Estándar (FMJ)",
+  "type": "municion",
+  "value": 25,
   "amount": 40,
   "ammo_for": [
    "mp7"
   ],
+  "caliber": "46x30",
+  "ammo_type": "std",
   "icon": "ammo_9mm_common"
  },
- "ammo_57x28mm": {
-  "name": "Munición 5,7×28 mm",
+ "ammo_46x30_hp": {
+  "name": "Munición 4,6×30 mm · Punta hueca",
   "type": "municion",
-  "value": 5,
+  "value": 53,
   "amount": 40,
+  "ammo_for": [
+   "mp7"
+  ],
+  "caliber": "46x30",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_46x30_tr": {
+  "name": "Munición 4,6×30 mm · Trazante",
+  "type": "municion",
+  "value": 36,
+  "amount": 40,
+  "ammo_for": [
+   "mp7"
+  ],
+  "caliber": "46x30",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_46x30_ap": {
+  "name": "Munición 4,6×30 mm · Perforante",
+  "type": "municion",
+  "value": 73,
+  "amount": 40,
+  "ammo_for": [
+   "mp7"
+  ],
+  "caliber": "46x30",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_57x28_std": {
+  "name": "Munición 5,7×28 mm · Estándar (FMJ)",
+  "type": "municion",
+  "value": 32,
+  "amount": 50,
   "ammo_for": [
    "p90",
    "smg_5"
   ],
+  "caliber": "57x28",
+  "ammo_type": "std",
   "icon": "ammo_9mm_common"
  },
- "ammo_556x45mm": {
-  "name": "Munición 5,56×45 mm",
+ "ammo_57x28_hp": {
+  "name": "Munición 5,7×28 mm · Punta hueca",
   "type": "municion",
-  "value": 10,
+  "value": 72,
+  "amount": 50,
+  "ammo_for": [
+   "p90",
+   "smg_5"
+  ],
+  "caliber": "57x28",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_57x28_tr": {
+  "name": "Munición 5,7×28 mm · Trazante",
+  "type": "municion",
+  "value": 48,
+  "amount": 50,
+  "ammo_for": [
+   "p90",
+   "smg_5"
+  ],
+  "caliber": "57x28",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_57x28_ap": {
+  "name": "Munición 5,7×28 mm · Perforante",
+  "type": "municion",
+  "value": 98,
+  "amount": 50,
+  "ammo_for": [
+   "p90",
+   "smg_5"
+  ],
+  "caliber": "57x28",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_556_std": {
+  "name": "Munición 5,56×45 mm · Estándar (FMJ)",
+  "type": "municion",
+  "value": 42,
   "amount": 30,
   "ammo_for": [
    "cqbm4",
@@ -587,25 +1125,155 @@
    "bullpup_3",
    "bullpup_1"
   ],
-  "icon": "ammo_556_common"
+  "caliber": "556",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
  },
- "ammo_762x39mm": {
-  "name": "Munición 7,62×39 mm",
+ "ammo_556_hp": {
+  "name": "Munición 5,56×45 mm · Punta hueca",
   "type": "municion",
-  "value": 11,
+  "value": 92,
+  "amount": 30,
+  "ammo_for": [
+   "cqbm4",
+   "g36c",
+   "m16",
+   "m4supp",
+   "aug",
+   "m16_1",
+   "scar",
+   "m4a1",
+   "m4a1_1",
+   "ar_1",
+   "ar2_4",
+   "ar_3",
+   "ar2_2",
+   "ar_2",
+   "bullpup_2",
+   "bullpup_3",
+   "bullpup_1"
+  ],
+  "caliber": "556",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_556_tr": {
+  "name": "Munición 5,56×45 mm · Trazante",
+  "type": "municion",
+  "value": 62,
+  "amount": 30,
+  "ammo_for": [
+   "cqbm4",
+   "g36c",
+   "m16",
+   "m4supp",
+   "aug",
+   "m16_1",
+   "scar",
+   "m4a1",
+   "m4a1_1",
+   "ar_1",
+   "ar2_4",
+   "ar_3",
+   "ar2_2",
+   "ar_2",
+   "bullpup_2",
+   "bullpup_3",
+   "bullpup_1"
+  ],
+  "caliber": "556",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_556_ap": {
+  "name": "Munición 5,56×45 mm · Perforante",
+  "type": "municion",
+  "value": 126,
+  "amount": 30,
+  "ammo_for": [
+   "cqbm4",
+   "g36c",
+   "m16",
+   "m4supp",
+   "aug",
+   "m16_1",
+   "scar",
+   "m4a1",
+   "m4a1_1",
+   "ar_1",
+   "ar2_4",
+   "ar_3",
+   "ar2_2",
+   "ar_2",
+   "bullpup_2",
+   "bullpup_3",
+   "bullpup_1"
+  ],
+  "caliber": "556",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_762x39_std": {
+  "name": "Munición 7,62×39 mm · Estándar (FMJ)",
+  "type": "municion",
+  "value": 46,
   "amount": 30,
   "ammo_for": [
    "ak47",
    "ar2_3",
    "ar_5"
   ],
-  "icon": "ammo_556_common"
+  "caliber": "762x39",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
  },
- "ammo_762x51mm": {
-  "name": "Munición 7,62×51 mm",
+ "ammo_762x39_hp": {
+  "name": "Munición 7,62×39 mm · Punta hueca",
   "type": "municion",
-  "value": 14,
+  "value": 102,
   "amount": 30,
+  "ammo_for": [
+   "ak47",
+   "ar2_3",
+   "ar_5"
+  ],
+  "caliber": "762x39",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_762x39_tr": {
+  "name": "Munición 7,62×39 mm · Trazante",
+  "type": "municion",
+  "value": 70,
+  "amount": 30,
+  "ammo_for": [
+   "ak47",
+   "ar2_3",
+   "ar_5"
+  ],
+  "caliber": "762x39",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_762x39_ap": {
+  "name": "Munición 7,62×39 mm · Perforante",
+  "type": "municion",
+  "value": 138,
+  "amount": 30,
+  "ammo_for": [
+   "ak47",
+   "ar2_3",
+   "ar_5"
+  ],
+  "caliber": "762x39",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_762x51_std": {
+  "name": "Munición 7,62×51 mm · Estándar (FMJ)",
+  "type": "municion",
+  "value": 42,
+  "amount": 20,
   "ammo_for": [
    "scarh",
    "m4dmr",
@@ -613,91 +1281,259 @@
    "ar_4",
    "sniper_3"
   ],
-  "icon": "ammo_127_ap"
- },
- "ammo_9x19mm": {
-  "name": "Munición 9×19 mm",
-  "type": "municion",
-  "value": 5,
-  "amount": 40,
-  "ammo_for": [
-   "mp5_1",
-   "mp5_2",
-   "pistol_1",
-   "pistol_2",
-   "smg_4",
-   "smg_1",
-   "smg_3"
-  ],
+  "caliber": "762x51",
+  "ammo_type": "std",
   "icon": "ammo_9mm_common"
  },
- "ammo_380acp": {
-  "name": "Munición .380 ACP",
+ "ammo_762x51_hp": {
+  "name": "Munición 7,62×51 mm · Punta hueca",
   "type": "municion",
-  "value": 4,
-  "amount": 26,
+  "value": 95,
+  "amount": 20,
   "ammo_for": [
-   "pistol_5"
+   "scarh",
+   "m4dmr",
+   "ar2_1",
+   "ar_4",
+   "sniper_3"
   ],
+  "caliber": "762x51",
+  "ammo_type": "hp",
   "icon": "ammo_9mm_common"
  },
- "ammo_40s&w": {
-  "name": "Munición .40 S&W",
+ "ammo_762x51_tr": {
+  "name": "Munición 7,62×51 mm · Trazante",
   "type": "municion",
-  "value": 6,
-  "amount": 26,
+  "value": 65,
+  "amount": 20,
   "ammo_for": [
-   "pistol_3"
+   "scarh",
+   "m4dmr",
+   "ar2_1",
+   "ar_4",
+   "sniper_3"
   ],
+  "caliber": "762x51",
+  "ammo_type": "tr",
   "icon": "ammo_9mm_common"
  },
- "ammo_357magnum": {
-  "name": "Munición .357 Magnum",
+ "ammo_762x51_ap": {
+  "name": "Munición 7,62×51 mm · Perforante",
   "type": "municion",
-  "value": 7,
-  "amount": 26,
+  "value": 128,
+  "amount": 20,
   "ammo_for": [
-   "pistol_6",
-   "revolver_1",
-   "revolver_2"
+   "scarh",
+   "m4dmr",
+   "ar2_1",
+   "ar_4",
+   "sniper_3"
   ],
+  "caliber": "762x51",
+  "ammo_type": "ap",
   "icon": "ammo_9mm_common"
  },
- "ammo_38special": {
-  "name": "Munición .38 Special",
+ "ammo_308_std": {
+  "name": "Munición .308 Win · Estándar (FMJ)",
   "type": "municion",
-  "value": 4,
-  "amount": 26,
+  "value": 42,
+  "amount": 20,
   "ammo_for": [
-   "revolver_4"
+   "sniper_6",
+   "sniper_1"
   ],
+  "caliber": "308",
+  "ammo_type": "std",
   "icon": "ammo_9mm_common"
  },
- "ammo_44magnum": {
-  "name": "Munición .44 Magnum",
+ "ammo_308_hp": {
+  "name": "Munición .308 Win · Punta hueca",
   "type": "municion",
-  "value": 10,
-  "amount": 26,
+  "value": 95,
+  "amount": 20,
   "ammo_for": [
-   "revolver_3"
+   "sniper_6",
+   "sniper_1"
   ],
+  "caliber": "308",
+  "ammo_type": "hp",
   "icon": "ammo_9mm_common"
  },
- "ammo_454casull": {
-  "name": "Munición .454 Casull",
+ "ammo_308_tr": {
+  "name": "Munición .308 Win · Trazante",
   "type": "municion",
-  "value": 12,
-  "amount": 26,
+  "value": 65,
+  "amount": 20,
   "ammo_for": [
-   "revolver_5"
+   "sniper_6",
+   "sniper_1"
   ],
+  "caliber": "308",
+  "ammo_type": "tr",
   "icon": "ammo_9mm_common"
  },
- "ammo_12gapostas": {
-  "name": "Munición 12 ga postas",
+ "ammo_308_ap": {
+  "name": "Munición .308 Win · Perforante",
   "type": "municion",
-  "value": 11,
-  "amount": 8,
+  "value": 128,
+  "amount": 20,
+  "ammo_for": [
+   "sniper_6",
+   "sniper_1"
+  ],
+  "caliber": "308",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_300wm_std": {
+  "name": "Munición .300 Win Mag · Estándar (FMJ)",
+  "type": "municion",
+  "value": 23,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_2"
+  ],
+  "caliber": "300wm",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_300wm_hp": {
+  "name": "Munición .300 Win Mag · Punta hueca",
+  "type": "municion",
+  "value": 52,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_2"
+  ],
+  "caliber": "300wm",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_300wm_tr": {
+  "name": "Munición .300 Win Mag · Trazante",
+  "type": "municion",
+  "value": 36,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_2"
+  ],
+  "caliber": "300wm",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_300wm_ap": {
+  "name": "Munición .300 Win Mag · Perforante",
+  "type": "municion",
+  "value": 71,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_2"
+  ],
+  "caliber": "300wm",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_338_std": {
+  "name": "Munición .338 Lapua · Estándar (FMJ)",
+  "type": "municion",
+  "value": 30,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_4"
+  ],
+  "caliber": "338",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_338_hp": {
+  "name": "Munición .338 Lapua · Punta hueca",
+  "type": "municion",
+  "value": 67,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_4"
+  ],
+  "caliber": "338",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_338_tr": {
+  "name": "Munición .338 Lapua · Trazante",
+  "type": "municion",
+  "value": 46,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_4"
+  ],
+  "caliber": "338",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_338_ap": {
+  "name": "Munición .338 Lapua · Perforante",
+  "type": "municion",
+  "value": 91,
+  "amount": 10,
+  "ammo_for": [
+   "sniper_4"
+  ],
+  "caliber": "338",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_50bmg_std": {
+  "name": "Munición .50 BMG · Estándar (FMJ)",
+  "type": "municion",
+  "value": 28,
+  "amount": 5,
+  "ammo_for": [
+   "sniper_5"
+  ],
+  "caliber": "50bmg",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_50bmg_hp": {
+  "name": "Munición .50 BMG · Punta hueca",
+  "type": "municion",
+  "value": 63,
+  "amount": 5,
+  "ammo_for": [
+   "sniper_5"
+  ],
+  "caliber": "50bmg",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_50bmg_tr": {
+  "name": "Munición .50 BMG · Trazante",
+  "type": "municion",
+  "value": 43,
+  "amount": 5,
+  "ammo_for": [
+   "sniper_5"
+  ],
+  "caliber": "50bmg",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_50bmg_ap": {
+  "name": "Munición .50 BMG · Perforante",
+  "type": "municion",
+  "value": 87,
+  "amount": 5,
+  "ammo_for": [
+   "sniper_5"
+  ],
+  "caliber": "50bmg",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
+ },
+ "ammo_12ga_std": {
+  "name": "Munición 12 ga · Postas",
+  "type": "municion",
+  "value": 15,
+  "amount": 10,
   "ammo_for": [
    "shotgun_sawed",
    "shotgun_short",
@@ -706,47 +1542,59 @@
    "shotgun_3",
    "shotgun_4"
   ],
-  "icon": "ammo_shotgun_buckshot"
+  "caliber": "12ga",
+  "ammo_type": "std",
+  "icon": "ammo_9mm_common"
  },
- "ammo_308win": {
-  "name": "Munición .308 Win",
+ "ammo_12ga_hp": {
+  "name": "Munición 12 ga · Balón (slug)",
   "type": "municion",
-  "value": 14,
-  "amount": 20,
-  "ammo_for": [
-   "sniper_6",
-   "sniper_1"
-  ],
-  "icon": "ammo_127_ap"
- },
- "ammo_300winmag": {
-  "name": "Munición .300 Win Mag",
-  "type": "municion",
-  "value": 15,
+  "value": 33,
   "amount": 10,
   "ammo_for": [
-   "sniper_2"
+   "shotgun_sawed",
+   "shotgun_short",
+   "shotgun_1",
+   "shotgun_2",
+   "shotgun_3",
+   "shotgun_4"
   ],
-  "icon": "ammo_127_ap"
+  "caliber": "12ga",
+  "ammo_type": "hp",
+  "icon": "ammo_9mm_common"
  },
- "ammo_338lapua": {
-  "name": "Munición .338 Lapua",
+ "ammo_12ga_tr": {
+  "name": "Munición 12 ga · Incendiaria",
   "type": "municion",
-  "value": 19,
+  "value": 27,
   "amount": 10,
   "ammo_for": [
-   "sniper_4"
+   "shotgun_sawed",
+   "shotgun_short",
+   "shotgun_1",
+   "shotgun_2",
+   "shotgun_3",
+   "shotgun_4"
   ],
-  "icon": "ammo_127_ap"
+  "caliber": "12ga",
+  "ammo_type": "tr",
+  "icon": "ammo_9mm_common"
  },
- "ammo_50bmg": {
-  "name": "Munición .50 BMG",
+ "ammo_12ga_ap": {
+  "name": "Munición 12 ga · Balón perforante",
   "type": "municion",
-  "value": 32,
+  "value": 46,
   "amount": 10,
   "ammo_for": [
-   "sniper_5"
+   "shotgun_sawed",
+   "shotgun_short",
+   "shotgun_1",
+   "shotgun_2",
+   "shotgun_3",
+   "shotgun_4"
   ],
-  "icon": "ammo_127_ap"
+  "caliber": "12ga",
+  "ammo_type": "ap",
+  "icon": "ammo_9mm_common"
  }
 }

@@ -1,0 +1,1373 @@
+{
+ "_doc": "Municiones. calibres: dimensiones reales en mm; tipos: multiplicadores contra la munición estándar; items: <calibre>_<tipo> con precio por caja. Generado por tools/ammo/gen_ammo.py",
+ "types": {
+  "std": {
+   "name": "Estándar (FMJ)",
+   "dmg": 1.0,
+   "pen": 1.0,
+   "ric": 1.0,
+   "speed": 1.0,
+   "spread": 1.0,
+   "noise": 0,
+   "price": 1.0,
+   "text": "Camisa completa: equilibrada y barata."
+  },
+  "hp": {
+   "name": "Punta hueca",
+   "dmg": 1.3,
+   "pen": 0.45,
+   "ric": 0.5,
+   "speed": 0.97,
+   "spread": 1.0,
+   "noise": 0,
+   "price": 2.2,
+   "text": "Se abre al impactar: más daño y más sangre, atraviesa poco."
+  },
+  "tr": {
+   "name": "Trazante",
+   "dmg": 1.0,
+   "pen": 1.0,
+   "ric": 1.2,
+   "speed": 1.0,
+   "spread": 0.95,
+   "noise": 2,
+   "price": 1.5,
+   "text": "Deja una estela luminosa: se ve adónde van los tiros."
+  },
+  "ap": {
+   "name": "Perforante",
+   "dmg": 1.12,
+   "pen": 2.6,
+   "ric": 0.6,
+   "speed": 1.06,
+   "spread": 0.9,
+   "noise": 2,
+   "price": 3.0,
+   "text": "Núcleo de acero: atraviesa paredes y coberturas."
+  }
+ },
+ "shotgun_types": {
+  "std": {
+   "name": "Postas",
+   "dmg": 1.0,
+   "pen": 1.0,
+   "ric": 1.0,
+   "speed": 1.0,
+   "spread": 1.0,
+   "noise": 0,
+   "price": 1.0,
+   "text": "8-9 perdigones: devastadora de cerca."
+  },
+  "hp": {
+   "name": "Balón (slug)",
+   "dmg": 5.0,
+   "pen": 1.4,
+   "ric": 0.6,
+   "speed": 1.2,
+   "spread": 0.25,
+   "noise": 0,
+   "price": 2.2,
+   "text": "Un solo proyectil pesado: mucho daño y más alcance."
+  },
+  "tr": {
+   "name": "Incendiaria",
+   "dmg": 0.85,
+   "pen": 0.8,
+   "ric": 0.8,
+   "speed": 0.95,
+   "spread": 1.1,
+   "noise": 4,
+   "price": 1.8,
+   "text": "Perdigones incandescentes: se ven y encienden."
+  },
+  "ap": {
+   "name": "Balón perforante",
+   "dmg": 4.5,
+   "pen": 3.5,
+   "ric": 0.5,
+   "speed": 1.3,
+   "spread": 0.22,
+   "noise": 2,
+   "price": 3.0,
+   "text": "Dardo de acero: atraviesa casi todo."
+  }
+ },
+ "calibers": {
+  "380": {
+   "name": ".380 ACP",
+   "energy": 300,
+   "case_len": 17.3,
+   "d_base": 9.5,
+   "d_neck": 9.3,
+   "oal": 24.4,
+   "d_bullet": 9.0,
+   "shape": "straight",
+   "rimmed": false,
+   "box": 24,
+   "round_price": 1.91,
+   "weapons": [
+    "pistol_5"
+   ]
+  },
+  "9x19": {
+   "name": "9×19 mm",
+   "energy": 500,
+   "case_len": 19.2,
+   "d_base": 9.9,
+   "d_neck": 9.7,
+   "oal": 29.7,
+   "d_bullet": 9.0,
+   "shape": "straight",
+   "rimmed": false,
+   "box": 30,
+   "round_price": 2.62,
+   "weapons": [
+    "mp5_1",
+    "mp5_2",
+    "pistol_1",
+    "pistol_2",
+    "smg_4",
+    "smg_1",
+    "smg_3"
+   ]
+  },
+  "40sw": {
+   "name": ".40 S&W",
+   "energy": 650,
+   "case_len": 21.6,
+   "d_base": 10.8,
+   "d_neck": 10.6,
+   "oal": 28.8,
+   "d_bullet": 10.2,
+   "shape": "straight",
+   "rimmed": false,
+   "box": 24,
+   "round_price": 3.08,
+   "weapons": [
+    "pistol_3"
+   ]
+  },
+  "45acp": {
+   "name": ".45 ACP",
+   "energy": 520,
+   "case_len": 22.8,
+   "d_base": 12.1,
+   "d_neck": 11.9,
+   "oal": 32.4,
+   "d_bullet": 11.5,
+   "shape": "straight",
+   "rimmed": false,
+   "box": 24,
+   "round_price": 2.68,
+   "weapons": [
+    "m1911",
+    "vector",
+    "m1911_1",
+    "m1911t",
+    "pistol_4",
+    "smg_2"
+   ]
+  },
+  "38sp": {
+   "name": ".38 Special",
+   "energy": 350,
+   "case_len": 29.3,
+   "d_base": 9.6,
+   "d_neck": 9.6,
+   "oal": 38.9,
+   "d_bullet": 9.0,
+   "shape": "straight",
+   "rimmed": true,
+   "box": 12,
+   "round_price": 2.1,
+   "weapons": [
+    "revolver_4"
+   ]
+  },
+  "357": {
+   "name": ".357 Magnum",
+   "energy": 800,
+   "case_len": 33.0,
+   "d_base": 9.6,
+   "d_neck": 9.6,
+   "oal": 40.6,
+   "d_bullet": 9.1,
+   "shape": "straight",
+   "rimmed": true,
+   "box": 12,
+   "round_price": 3.5,
+   "weapons": [
+    "pistol_6",
+    "revolver_1",
+    "revolver_2"
+   ]
+  },
+  "44mag": {
+   "name": ".44 Magnum",
+   "energy": 1600,
+   "case_len": 32.6,
+   "d_base": 11.7,
+   "d_neck": 11.7,
+   "oal": 41.0,
+   "d_bullet": 10.9,
+   "shape": "straight",
+   "rimmed": true,
+   "box": 12,
+   "round_price": 5.39,
+   "weapons": [
+    "revolver_3"
+   ]
+  },
+  "454": {
+   "name": ".454 Casull",
+   "energy": 2600,
+   "case_len": 35.6,
+   "d_base": 12.0,
+   "d_neck": 12.0,
+   "oal": 43.2,
+   "d_bullet": 11.5,
+   "shape": "straight",
+   "rimmed": true,
+   "box": 10,
+   "round_price": 7.28,
+   "weapons": [
+    "revolver_5"
+   ]
+  },
+  "50ae": {
+   "name": ".50 AE",
+   "energy": 1900,
+   "case_len": 32.6,
+   "d_base": 14.0,
+   "d_neck": 13.5,
+   "oal": 40.6,
+   "d_bullet": 12.7,
+   "shape": "straight",
+   "rimmed": false,
+   "box": 10,
+   "round_price": 5.99,
+   "weapons": [
+    "deagle"
+   ]
+  },
+  "46x30": {
+   "name": "4,6×30 mm",
+   "energy": 450,
+   "case_len": 30.0,
+   "d_base": 7.9,
+   "d_neck": 6.2,
+   "oal": 38.0,
+   "d_bullet": 4.65,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 40,
+   "round_price": 2.45,
+   "weapons": [
+    "mp7"
+   ]
+  },
+  "57x28": {
+   "name": "5,7×28 mm",
+   "energy": 500,
+   "case_len": 28.9,
+   "d_base": 7.9,
+   "d_neck": 6.4,
+   "oal": 40.5,
+   "d_bullet": 5.7,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 50,
+   "round_price": 2.62,
+   "weapons": [
+    "p90",
+    "smg_5"
+   ]
+  },
+  "556": {
+   "name": "5,56×45 mm",
+   "energy": 1700,
+   "case_len": 44.5,
+   "d_base": 9.6,
+   "d_neck": 6.4,
+   "oal": 57.4,
+   "d_bullet": 5.7,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 30,
+   "round_price": 5.59,
+   "weapons": [
+    "cqbm4",
+    "g36c",
+    "m16",
+    "m4supp",
+    "aug",
+    "m16_1",
+    "scar",
+    "m4a1",
+    "m4a1_1",
+    "ar_1",
+    "ar2_4",
+    "ar_3",
+    "ar2_2",
+    "ar_2",
+    "bullpup_2",
+    "bullpup_3",
+    "bullpup_1"
+   ]
+  },
+  "762x39": {
+   "name": "7,62×39 mm",
+   "energy": 2000,
+   "case_len": 38.7,
+   "d_base": 11.3,
+   "d_neck": 8.6,
+   "oal": 56.0,
+   "d_bullet": 7.9,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 30,
+   "round_price": 6.19,
+   "weapons": [
+    "ak47",
+    "ar2_3",
+    "ar_5"
+   ]
+  },
+  "762x51": {
+   "name": "7,62×51 mm",
+   "energy": 3400,
+   "case_len": 51.2,
+   "d_base": 11.9,
+   "d_neck": 8.6,
+   "oal": 69.9,
+   "d_bullet": 7.8,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 20,
+   "round_price": 8.59,
+   "weapons": [
+    "scarh",
+    "m4dmr",
+    "ar2_1",
+    "ar_4",
+    "sniper_3"
+   ]
+  },
+  "308": {
+   "name": ".308 Win",
+   "energy": 3400,
+   "case_len": 51.2,
+   "d_base": 11.9,
+   "d_neck": 8.6,
+   "oal": 69.9,
+   "d_bullet": 7.8,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 20,
+   "round_price": 8.59,
+   "weapons": [
+    "sniper_6",
+    "sniper_1"
+   ]
+  },
+  "300wm": {
+   "name": ".300 Win Mag",
+   "energy": 4000,
+   "case_len": 66.8,
+   "d_base": 13.0,
+   "d_neck": 8.9,
+   "oal": 84.8,
+   "d_bullet": 7.8,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 10,
+   "round_price": 9.51,
+   "weapons": [
+    "sniper_2"
+   ]
+  },
+  "338": {
+   "name": ".338 Lapua",
+   "energy": 6000,
+   "case_len": 69.2,
+   "d_base": 14.9,
+   "d_neck": 9.4,
+   "oal": 93.5,
+   "d_bullet": 8.6,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 10,
+   "round_price": 12.22,
+   "weapons": [
+    "sniper_4"
+   ]
+  },
+  "50bmg": {
+   "name": ".50 BMG",
+   "energy": 17000,
+   "case_len": 99.1,
+   "d_base": 20.4,
+   "d_neck": 14.2,
+   "oal": 138.8,
+   "d_bullet": 12.95,
+   "shape": "bottle",
+   "rimmed": false,
+   "box": 5,
+   "round_price": 23.31,
+   "weapons": [
+    "sniper_5"
+   ]
+  },
+  "12ga": {
+   "name": "12 ga",
+   "energy": 2000,
+   "case_len": 70.0,
+   "d_base": 21.3,
+   "d_neck": 21.3,
+   "oal": 76.0,
+   "d_bullet": 18.5,
+   "shape": "shell",
+   "rimmed": false,
+   "box": 10,
+   "round_price": 6.19,
+   "weapons": [
+    "shotgun_sawed",
+    "shotgun_short",
+    "shotgun_1",
+    "shotgun_2",
+    "shotgun_3",
+    "shotgun_4"
+   ]
+  }
+ },
+ "items": {
+  "380_std": {
+   "caliber": "380",
+   "type": "std",
+   "name": ".380 ACP · Estándar (FMJ)",
+   "box": 24,
+   "price": 45,
+   "weapons": [
+    "pistol_5"
+   ]
+  },
+  "380_hp": {
+   "caliber": "380",
+   "type": "hp",
+   "name": ".380 ACP · Punta hueca",
+   "box": 24,
+   "price": 100,
+   "weapons": [
+    "pistol_5"
+   ]
+  },
+  "380_tr": {
+   "caliber": "380",
+   "type": "tr",
+   "name": ".380 ACP · Trazante",
+   "box": 24,
+   "price": 70,
+   "weapons": [
+    "pistol_5"
+   ]
+  },
+  "380_ap": {
+   "caliber": "380",
+   "type": "ap",
+   "name": ".380 ACP · Perforante",
+   "box": 24,
+   "price": 135,
+   "weapons": [
+    "pistol_5"
+   ]
+  },
+  "9x19_std": {
+   "caliber": "9x19",
+   "type": "std",
+   "name": "9×19 mm · Estándar (FMJ)",
+   "box": 30,
+   "price": 80,
+   "weapons": [
+    "mp5_1",
+    "mp5_2",
+    "pistol_1",
+    "pistol_2",
+    "smg_4",
+    "smg_1",
+    "smg_3"
+   ]
+  },
+  "9x19_hp": {
+   "caliber": "9x19",
+   "type": "hp",
+   "name": "9×19 mm · Punta hueca",
+   "box": 30,
+   "price": 175,
+   "weapons": [
+    "mp5_1",
+    "mp5_2",
+    "pistol_1",
+    "pistol_2",
+    "smg_4",
+    "smg_1",
+    "smg_3"
+   ]
+  },
+  "9x19_tr": {
+   "caliber": "9x19",
+   "type": "tr",
+   "name": "9×19 mm · Trazante",
+   "box": 30,
+   "price": 120,
+   "weapons": [
+    "mp5_1",
+    "mp5_2",
+    "pistol_1",
+    "pistol_2",
+    "smg_4",
+    "smg_1",
+    "smg_3"
+   ]
+  },
+  "9x19_ap": {
+   "caliber": "9x19",
+   "type": "ap",
+   "name": "9×19 mm · Perforante",
+   "box": 30,
+   "price": 235,
+   "weapons": [
+    "mp5_1",
+    "mp5_2",
+    "pistol_1",
+    "pistol_2",
+    "smg_4",
+    "smg_1",
+    "smg_3"
+   ]
+  },
+  "40sw_std": {
+   "caliber": "40sw",
+   "type": "std",
+   "name": ".40 S&W · Estándar (FMJ)",
+   "box": 24,
+   "price": 75,
+   "weapons": [
+    "pistol_3"
+   ]
+  },
+  "40sw_hp": {
+   "caliber": "40sw",
+   "type": "hp",
+   "name": ".40 S&W · Punta hueca",
+   "box": 24,
+   "price": 165,
+   "weapons": [
+    "pistol_3"
+   ]
+  },
+  "40sw_tr": {
+   "caliber": "40sw",
+   "type": "tr",
+   "name": ".40 S&W · Trazante",
+   "box": 24,
+   "price": 110,
+   "weapons": [
+    "pistol_3"
+   ]
+  },
+  "40sw_ap": {
+   "caliber": "40sw",
+   "type": "ap",
+   "name": ".40 S&W · Perforante",
+   "box": 24,
+   "price": 220,
+   "weapons": [
+    "pistol_3"
+   ]
+  },
+  "45acp_std": {
+   "caliber": "45acp",
+   "type": "std",
+   "name": ".45 ACP · Estándar (FMJ)",
+   "box": 24,
+   "price": 65,
+   "weapons": [
+    "m1911",
+    "vector",
+    "m1911_1",
+    "m1911t",
+    "pistol_4",
+    "smg_2"
+   ]
+  },
+  "45acp_hp": {
+   "caliber": "45acp",
+   "type": "hp",
+   "name": ".45 ACP · Punta hueca",
+   "box": 24,
+   "price": 140,
+   "weapons": [
+    "m1911",
+    "vector",
+    "m1911_1",
+    "m1911t",
+    "pistol_4",
+    "smg_2"
+   ]
+  },
+  "45acp_tr": {
+   "caliber": "45acp",
+   "type": "tr",
+   "name": ".45 ACP · Trazante",
+   "box": 24,
+   "price": 95,
+   "weapons": [
+    "m1911",
+    "vector",
+    "m1911_1",
+    "m1911t",
+    "pistol_4",
+    "smg_2"
+   ]
+  },
+  "45acp_ap": {
+   "caliber": "45acp",
+   "type": "ap",
+   "name": ".45 ACP · Perforante",
+   "box": 24,
+   "price": 195,
+   "weapons": [
+    "m1911",
+    "vector",
+    "m1911_1",
+    "m1911t",
+    "pistol_4",
+    "smg_2"
+   ]
+  },
+  "38sp_std": {
+   "caliber": "38sp",
+   "type": "std",
+   "name": ".38 Special · Estándar (FMJ)",
+   "box": 12,
+   "price": 25,
+   "weapons": [
+    "revolver_4"
+   ]
+  },
+  "38sp_hp": {
+   "caliber": "38sp",
+   "type": "hp",
+   "name": ".38 Special · Punta hueca",
+   "box": 12,
+   "price": 55,
+   "weapons": [
+    "revolver_4"
+   ]
+  },
+  "38sp_tr": {
+   "caliber": "38sp",
+   "type": "tr",
+   "name": ".38 Special · Trazante",
+   "box": 12,
+   "price": 40,
+   "weapons": [
+    "revolver_4"
+   ]
+  },
+  "38sp_ap": {
+   "caliber": "38sp",
+   "type": "ap",
+   "name": ".38 Special · Perforante",
+   "box": 12,
+   "price": 75,
+   "weapons": [
+    "revolver_4"
+   ]
+  },
+  "357_std": {
+   "caliber": "357",
+   "type": "std",
+   "name": ".357 Magnum · Estándar (FMJ)",
+   "box": 12,
+   "price": 40,
+   "weapons": [
+    "pistol_6",
+    "revolver_1",
+    "revolver_2"
+   ]
+  },
+  "357_hp": {
+   "caliber": "357",
+   "type": "hp",
+   "name": ".357 Magnum · Punta hueca",
+   "box": 12,
+   "price": 95,
+   "weapons": [
+    "pistol_6",
+    "revolver_1",
+    "revolver_2"
+   ]
+  },
+  "357_tr": {
+   "caliber": "357",
+   "type": "tr",
+   "name": ".357 Magnum · Trazante",
+   "box": 12,
+   "price": 65,
+   "weapons": [
+    "pistol_6",
+    "revolver_1",
+    "revolver_2"
+   ]
+  },
+  "357_ap": {
+   "caliber": "357",
+   "type": "ap",
+   "name": ".357 Magnum · Perforante",
+   "box": 12,
+   "price": 125,
+   "weapons": [
+    "pistol_6",
+    "revolver_1",
+    "revolver_2"
+   ]
+  },
+  "44mag_std": {
+   "caliber": "44mag",
+   "type": "std",
+   "name": ".44 Magnum · Estándar (FMJ)",
+   "box": 12,
+   "price": 65,
+   "weapons": [
+    "revolver_3"
+   ]
+  },
+  "44mag_hp": {
+   "caliber": "44mag",
+   "type": "hp",
+   "name": ".44 Magnum · Punta hueca",
+   "box": 12,
+   "price": 140,
+   "weapons": [
+    "revolver_3"
+   ]
+  },
+  "44mag_tr": {
+   "caliber": "44mag",
+   "type": "tr",
+   "name": ".44 Magnum · Trazante",
+   "box": 12,
+   "price": 95,
+   "weapons": [
+    "revolver_3"
+   ]
+  },
+  "44mag_ap": {
+   "caliber": "44mag",
+   "type": "ap",
+   "name": ".44 Magnum · Perforante",
+   "box": 12,
+   "price": 195,
+   "weapons": [
+    "revolver_3"
+   ]
+  },
+  "454_std": {
+   "caliber": "454",
+   "type": "std",
+   "name": ".454 Casull · Estándar (FMJ)",
+   "box": 10,
+   "price": 75,
+   "weapons": [
+    "revolver_5"
+   ]
+  },
+  "454_hp": {
+   "caliber": "454",
+   "type": "hp",
+   "name": ".454 Casull · Punta hueca",
+   "box": 10,
+   "price": 160,
+   "weapons": [
+    "revolver_5"
+   ]
+  },
+  "454_tr": {
+   "caliber": "454",
+   "type": "tr",
+   "name": ".454 Casull · Trazante",
+   "box": 10,
+   "price": 110,
+   "weapons": [
+    "revolver_5"
+   ]
+  },
+  "454_ap": {
+   "caliber": "454",
+   "type": "ap",
+   "name": ".454 Casull · Perforante",
+   "box": 10,
+   "price": 220,
+   "weapons": [
+    "revolver_5"
+   ]
+  },
+  "50ae_std": {
+   "caliber": "50ae",
+   "type": "std",
+   "name": ".50 AE · Estándar (FMJ)",
+   "box": 10,
+   "price": 60,
+   "weapons": [
+    "deagle"
+   ]
+  },
+  "50ae_hp": {
+   "caliber": "50ae",
+   "type": "hp",
+   "name": ".50 AE · Punta hueca",
+   "box": 10,
+   "price": 130,
+   "weapons": [
+    "deagle"
+   ]
+  },
+  "50ae_tr": {
+   "caliber": "50ae",
+   "type": "tr",
+   "name": ".50 AE · Trazante",
+   "box": 10,
+   "price": 90,
+   "weapons": [
+    "deagle"
+   ]
+  },
+  "50ae_ap": {
+   "caliber": "50ae",
+   "type": "ap",
+   "name": ".50 AE · Perforante",
+   "box": 10,
+   "price": 180,
+   "weapons": [
+    "deagle"
+   ]
+  },
+  "46x30_std": {
+   "caliber": "46x30",
+   "type": "std",
+   "name": "4,6×30 mm · Estándar (FMJ)",
+   "box": 40,
+   "price": 100,
+   "weapons": [
+    "mp7"
+   ]
+  },
+  "46x30_hp": {
+   "caliber": "46x30",
+   "type": "hp",
+   "name": "4,6×30 mm · Punta hueca",
+   "box": 40,
+   "price": 215,
+   "weapons": [
+    "mp7"
+   ]
+  },
+  "46x30_tr": {
+   "caliber": "46x30",
+   "type": "tr",
+   "name": "4,6×30 mm · Trazante",
+   "box": 40,
+   "price": 145,
+   "weapons": [
+    "mp7"
+   ]
+  },
+  "46x30_ap": {
+   "caliber": "46x30",
+   "type": "ap",
+   "name": "4,6×30 mm · Perforante",
+   "box": 40,
+   "price": 295,
+   "weapons": [
+    "mp7"
+   ]
+  },
+  "57x28_std": {
+   "caliber": "57x28",
+   "type": "std",
+   "name": "5,7×28 mm · Estándar (FMJ)",
+   "box": 50,
+   "price": 130,
+   "weapons": [
+    "p90",
+    "smg_5"
+   ]
+  },
+  "57x28_hp": {
+   "caliber": "57x28",
+   "type": "hp",
+   "name": "5,7×28 mm · Punta hueca",
+   "box": 50,
+   "price": 290,
+   "weapons": [
+    "p90",
+    "smg_5"
+   ]
+  },
+  "57x28_tr": {
+   "caliber": "57x28",
+   "type": "tr",
+   "name": "5,7×28 mm · Trazante",
+   "box": 50,
+   "price": 195,
+   "weapons": [
+    "p90",
+    "smg_5"
+   ]
+  },
+  "57x28_ap": {
+   "caliber": "57x28",
+   "type": "ap",
+   "name": "5,7×28 mm · Perforante",
+   "box": 50,
+   "price": 395,
+   "weapons": [
+    "p90",
+    "smg_5"
+   ]
+  },
+  "556_std": {
+   "caliber": "556",
+   "type": "std",
+   "name": "5,56×45 mm · Estándar (FMJ)",
+   "box": 30,
+   "price": 170,
+   "weapons": [
+    "cqbm4",
+    "g36c",
+    "m16",
+    "m4supp",
+    "aug",
+    "m16_1",
+    "scar",
+    "m4a1",
+    "m4a1_1",
+    "ar_1",
+    "ar2_4",
+    "ar_3",
+    "ar2_2",
+    "ar_2",
+    "bullpup_2",
+    "bullpup_3",
+    "bullpup_1"
+   ]
+  },
+  "556_hp": {
+   "caliber": "556",
+   "type": "hp",
+   "name": "5,56×45 mm · Punta hueca",
+   "box": 30,
+   "price": 370,
+   "weapons": [
+    "cqbm4",
+    "g36c",
+    "m16",
+    "m4supp",
+    "aug",
+    "m16_1",
+    "scar",
+    "m4a1",
+    "m4a1_1",
+    "ar_1",
+    "ar2_4",
+    "ar_3",
+    "ar2_2",
+    "ar_2",
+    "bullpup_2",
+    "bullpup_3",
+    "bullpup_1"
+   ]
+  },
+  "556_tr": {
+   "caliber": "556",
+   "type": "tr",
+   "name": "5,56×45 mm · Trazante",
+   "box": 30,
+   "price": 250,
+   "weapons": [
+    "cqbm4",
+    "g36c",
+    "m16",
+    "m4supp",
+    "aug",
+    "m16_1",
+    "scar",
+    "m4a1",
+    "m4a1_1",
+    "ar_1",
+    "ar2_4",
+    "ar_3",
+    "ar2_2",
+    "ar_2",
+    "bullpup_2",
+    "bullpup_3",
+    "bullpup_1"
+   ]
+  },
+  "556_ap": {
+   "caliber": "556",
+   "type": "ap",
+   "name": "5,56×45 mm · Perforante",
+   "box": 30,
+   "price": 505,
+   "weapons": [
+    "cqbm4",
+    "g36c",
+    "m16",
+    "m4supp",
+    "aug",
+    "m16_1",
+    "scar",
+    "m4a1",
+    "m4a1_1",
+    "ar_1",
+    "ar2_4",
+    "ar_3",
+    "ar2_2",
+    "ar_2",
+    "bullpup_2",
+    "bullpup_3",
+    "bullpup_1"
+   ]
+  },
+  "762x39_std": {
+   "caliber": "762x39",
+   "type": "std",
+   "name": "7,62×39 mm · Estándar (FMJ)",
+   "box": 30,
+   "price": 185,
+   "weapons": [
+    "ak47",
+    "ar2_3",
+    "ar_5"
+   ]
+  },
+  "762x39_hp": {
+   "caliber": "762x39",
+   "type": "hp",
+   "name": "7,62×39 mm · Punta hueca",
+   "box": 30,
+   "price": 410,
+   "weapons": [
+    "ak47",
+    "ar2_3",
+    "ar_5"
+   ]
+  },
+  "762x39_tr": {
+   "caliber": "762x39",
+   "type": "tr",
+   "name": "7,62×39 mm · Trazante",
+   "box": 30,
+   "price": 280,
+   "weapons": [
+    "ak47",
+    "ar2_3",
+    "ar_5"
+   ]
+  },
+  "762x39_ap": {
+   "caliber": "762x39",
+   "type": "ap",
+   "name": "7,62×39 mm · Perforante",
+   "box": 30,
+   "price": 555,
+   "weapons": [
+    "ak47",
+    "ar2_3",
+    "ar_5"
+   ]
+  },
+  "762x51_std": {
+   "caliber": "762x51",
+   "type": "std",
+   "name": "7,62×51 mm · Estándar (FMJ)",
+   "box": 20,
+   "price": 170,
+   "weapons": [
+    "scarh",
+    "m4dmr",
+    "ar2_1",
+    "ar_4",
+    "sniper_3"
+   ]
+  },
+  "762x51_hp": {
+   "caliber": "762x51",
+   "type": "hp",
+   "name": "7,62×51 mm · Punta hueca",
+   "box": 20,
+   "price": 380,
+   "weapons": [
+    "scarh",
+    "m4dmr",
+    "ar2_1",
+    "ar_4",
+    "sniper_3"
+   ]
+  },
+  "762x51_tr": {
+   "caliber": "762x51",
+   "type": "tr",
+   "name": "7,62×51 mm · Trazante",
+   "box": 20,
+   "price": 260,
+   "weapons": [
+    "scarh",
+    "m4dmr",
+    "ar2_1",
+    "ar_4",
+    "sniper_3"
+   ]
+  },
+  "762x51_ap": {
+   "caliber": "762x51",
+   "type": "ap",
+   "name": "7,62×51 mm · Perforante",
+   "box": 20,
+   "price": 515,
+   "weapons": [
+    "scarh",
+    "m4dmr",
+    "ar2_1",
+    "ar_4",
+    "sniper_3"
+   ]
+  },
+  "308_std": {
+   "caliber": "308",
+   "type": "std",
+   "name": ".308 Win · Estándar (FMJ)",
+   "box": 20,
+   "price": 170,
+   "weapons": [
+    "sniper_6",
+    "sniper_1"
+   ]
+  },
+  "308_hp": {
+   "caliber": "308",
+   "type": "hp",
+   "name": ".308 Win · Punta hueca",
+   "box": 20,
+   "price": 380,
+   "weapons": [
+    "sniper_6",
+    "sniper_1"
+   ]
+  },
+  "308_tr": {
+   "caliber": "308",
+   "type": "tr",
+   "name": ".308 Win · Trazante",
+   "box": 20,
+   "price": 260,
+   "weapons": [
+    "sniper_6",
+    "sniper_1"
+   ]
+  },
+  "308_ap": {
+   "caliber": "308",
+   "type": "ap",
+   "name": ".308 Win · Perforante",
+   "box": 20,
+   "price": 515,
+   "weapons": [
+    "sniper_6",
+    "sniper_1"
+   ]
+  },
+  "300wm_std": {
+   "caliber": "300wm",
+   "type": "std",
+   "name": ".300 Win Mag · Estándar (FMJ)",
+   "box": 10,
+   "price": 95,
+   "weapons": [
+    "sniper_2"
+   ]
+  },
+  "300wm_hp": {
+   "caliber": "300wm",
+   "type": "hp",
+   "name": ".300 Win Mag · Punta hueca",
+   "box": 10,
+   "price": 210,
+   "weapons": [
+    "sniper_2"
+   ]
+  },
+  "300wm_tr": {
+   "caliber": "300wm",
+   "type": "tr",
+   "name": ".300 Win Mag · Trazante",
+   "box": 10,
+   "price": 145,
+   "weapons": [
+    "sniper_2"
+   ]
+  },
+  "300wm_ap": {
+   "caliber": "300wm",
+   "type": "ap",
+   "name": ".300 Win Mag · Perforante",
+   "box": 10,
+   "price": 285,
+   "weapons": [
+    "sniper_2"
+   ]
+  },
+  "338_std": {
+   "caliber": "338",
+   "type": "std",
+   "name": ".338 Lapua · Estándar (FMJ)",
+   "box": 10,
+   "price": 120,
+   "weapons": [
+    "sniper_4"
+   ]
+  },
+  "338_hp": {
+   "caliber": "338",
+   "type": "hp",
+   "name": ".338 Lapua · Punta hueca",
+   "box": 10,
+   "price": 270,
+   "weapons": [
+    "sniper_4"
+   ]
+  },
+  "338_tr": {
+   "caliber": "338",
+   "type": "tr",
+   "name": ".338 Lapua · Trazante",
+   "box": 10,
+   "price": 185,
+   "weapons": [
+    "sniper_4"
+   ]
+  },
+  "338_ap": {
+   "caliber": "338",
+   "type": "ap",
+   "name": ".338 Lapua · Perforante",
+   "box": 10,
+   "price": 365,
+   "weapons": [
+    "sniper_4"
+   ]
+  },
+  "50bmg_std": {
+   "caliber": "50bmg",
+   "type": "std",
+   "name": ".50 BMG · Estándar (FMJ)",
+   "box": 5,
+   "price": 115,
+   "weapons": [
+    "sniper_5"
+   ]
+  },
+  "50bmg_hp": {
+   "caliber": "50bmg",
+   "type": "hp",
+   "name": ".50 BMG · Punta hueca",
+   "box": 5,
+   "price": 255,
+   "weapons": [
+    "sniper_5"
+   ]
+  },
+  "50bmg_tr": {
+   "caliber": "50bmg",
+   "type": "tr",
+   "name": ".50 BMG · Trazante",
+   "box": 5,
+   "price": 175,
+   "weapons": [
+    "sniper_5"
+   ]
+  },
+  "50bmg_ap": {
+   "caliber": "50bmg",
+   "type": "ap",
+   "name": ".50 BMG · Perforante",
+   "box": 5,
+   "price": 350,
+   "weapons": [
+    "sniper_5"
+   ]
+  },
+  "12ga_std": {
+   "caliber": "12ga",
+   "type": "std",
+   "name": "12 ga · Postas",
+   "box": 10,
+   "price": 60,
+   "weapons": [
+    "shotgun_sawed",
+    "shotgun_short",
+    "shotgun_1",
+    "shotgun_2",
+    "shotgun_3",
+    "shotgun_4"
+   ]
+  },
+  "12ga_hp": {
+   "caliber": "12ga",
+   "type": "hp",
+   "name": "12 ga · Balón (slug)",
+   "box": 10,
+   "price": 135,
+   "weapons": [
+    "shotgun_sawed",
+    "shotgun_short",
+    "shotgun_1",
+    "shotgun_2",
+    "shotgun_3",
+    "shotgun_4"
+   ]
+  },
+  "12ga_tr": {
+   "caliber": "12ga",
+   "type": "tr",
+   "name": "12 ga · Incendiaria",
+   "box": 10,
+   "price": 110,
+   "weapons": [
+    "shotgun_sawed",
+    "shotgun_short",
+    "shotgun_1",
+    "shotgun_2",
+    "shotgun_3",
+    "shotgun_4"
+   ]
+  },
+  "12ga_ap": {
+   "caliber": "12ga",
+   "type": "ap",
+   "name": "12 ga · Balón perforante",
+   "box": 10,
+   "price": 185,
+   "weapons": [
+    "shotgun_sawed",
+    "shotgun_short",
+    "shotgun_1",
+    "shotgun_2",
+    "shotgun_3",
+    "shotgun_4"
+   ]
+  }
+ }
+}
