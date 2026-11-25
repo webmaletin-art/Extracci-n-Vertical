@@ -68,6 +68,13 @@ func _ready() -> void:
 		get_viewport().get_texture().get_image().save_png(out + "/chk_%d.png" % int(t * 10))
 		var a0c := scene.find_child("Actor_0*", true, false) as Node3D
 		if a0c:
+			var sk0 := a0c.find_child("Skeleton3D", true, false) as Skeleton3D
+			if sk0:
+				sk0.force_update_all_bone_transforms()
+				var rh := sk0.global_transform * sk0.get_bone_global_pose(sk0.find_bone("mixamorig_RightHand")).origin
+				var lh := sk0.global_transform * sk0.get_bone_global_pose(sk0.find_bone("mixamorig_LeftHand")).origin
+				for w in scene.find_children("Arma_*", "Node3D", true, false):
+					print("t=", t, " mano_der=", rh, " mano_izq=", lh, " arma=", (w as Node3D).global_position, " dist_der=", snappedf(rh.distance_to((w as Node3D).global_position), 0.01))
 			var cc := Camera3D.new()
 			add_child(cc)
 			cc.fov = 28.0
