@@ -331,7 +331,7 @@ func capture(t: float) -> void:
 			anim.rotation_track_insert_key(d.rot[b], t, lt.basis.orthonormalized().get_rotation_quaternion())
 			var sc: Vector3 = lt.basis.get_scale()
 			if not (d.scale as Dictionary).has(b):
-				if sc.x < 0.5:
+				if (sc - Vector3.ONE).length() > 0.02:             # la IK estira los brazos para llegar al arma: la escala también se exporta
 					var tr := _scale_track("%s:%s" % [d.base, sk.get_bone_name(b)])
 					d.scale[b] = tr
 					anim.scale_track_insert_key(tr, 0.0, Vector3.ONE)
@@ -355,6 +355,17 @@ func capture(t: float) -> void:
 			for b in d.n:
 				anim.rotation_track_insert_key(d.rot2[b], t, (d.locs[b] as Transform3D).basis.orthonormalized().get_rotation_quaternion())
 			anim.position_track_insert_key(d.hips2, t, (d.locs[sk.find_bone("mixamorig_Hips")] as Transform3D).origin)
+			if not d.has("scale2"):
+				d["scale2"] = {}
+			for b in d.n:
+				var sc2: Vector3 = (d.locs[b] as Transform3D).basis.get_scale()
+				if (d.scale2 as Dictionary).has(b):
+					anim.scale_track_insert_key(d.scale2[b], t, sc2)
+				elif (sc2 - Vector3.ONE).length() > 0.02:
+					var tr2 := _scale_track("%s/Anatomia/Skeleton3D:%s" % [(d.wrapper as Node3D).name, sk.get_bone_name(b)])
+					d.scale2[b] = tr2
+					anim.scale_track_insert_key(tr2, 0.0, Vector3.ONE)
+					anim.scale_track_insert_key(tr2, t, sc2)
 			var on: bool = is_instance_valid(d.anat) and d.anat._showing
 			if on != d.xon:
 				print("RAYOSX ", d.wrapper.name, " t=", snappedf(t, 0.01), " visible=", on)
