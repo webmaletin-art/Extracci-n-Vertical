@@ -44,7 +44,7 @@ func begin(g, actors: Array) -> void:
 	_cam.add_child(cam)
 	root.add_child(_cam)
 	_cam_tracks = [_pos_track("Camara"), _rot_track("Camara")]
-	RenderingServer.frame_post_draw.connect(func(): if is_instance_valid(game): capture(game.vt))
+	RenderingServer.frame_pre_draw.connect(func(): if is_instance_valid(game): capture(game.vt))
 	g.ballistics.projectile_hit.connect(func(_i, info: Dictionary):
 		var sh = info.get("shooter")
 		hits.append({"t": _t, "x": (info.point as Vector3).x, "y": (info.point as Vector3).y, "z": (info.point as Vector3).z,
