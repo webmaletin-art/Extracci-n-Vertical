@@ -18,6 +18,8 @@ var _limbs := {}                 ## instance_id → {node, wrapper, t_track...}
 var _cam: Node3D
 var _cam_tracks := [0, 0]
 var hits: Array = []
+var _blood: Array = []            ## [{t, p, dir, n, life}] chorros de sangre (se arman al exportar)
+var _anat_mats := {}
 var shots: Array = []
 var _t := 0.0
 
@@ -47,7 +49,10 @@ func begin(g, actors: Array) -> void:
 		hits.append({"t": _t, "x": (info.point as Vector3).x, "y": (info.point as Vector3).y, "z": (info.point as Vector3).z,
 			"nx": (info.normal as Vector3).x, "ny": (info.normal as Vector3).y, "nz": (info.normal as Vector3).z,
 			"zona": str(info.get("zone", "")), "daño": snappedf(float(info.get("damage", 0.0)), 0.1),
-			"quien": str(sh.name) if sh is Node else "", "tipo": str(info.get("type", "mundo"))}))
+			"quien": str(sh.name) if sh is Node else "", "tipo": str(info.get("type", "mundo"))})
+		if str(info.get("zone", "")) != "":
+			var dmg := float(info.get("damage", 20.0))
+			_blood.append({"t": _t, "p": info.point, "dir": info.dir, "n": int(clampf(10.0 + dmg * 0.5, 12.0, 40.0)), "life": 1.1, "pw": clampf(dmg / 30.0, 0.6, 2.5)}))
 
 # ------------------------------------------------------------------------------------------------ construcción
 
@@ -164,6 +169,70 @@ func _add_actor(a: Actor, t_spawn := 0.0) -> void:
 	_actors.append(d)
 	if t_spawn > 0.0:
 		_appear(w.name, t_spawn)
+		_add_anatomy(d, a, sk)
+	a.dismembered.connect(func(_j, info: Dictionary):
+		var c: Vector3 = (info.point as Vector3) if info.has("point") else a.global_position + Vector3(0, 1.2, 0)
+		for k in 4:
+			_blood.append({"t": _t + 0.28 * k, "p": c, "dir": info.get("dir", Vector3.RIGHT), "n": 46 - k * 8, "life": 1.4, "pw": 2.4 - k * 0.4}))
+
+## Anatomía del personaje (huesos, órganos y vasos) en un segundo esqueleto con los mismos movimientos. Aparece (y el traje
+## desaparece) mientras el juego muestra los rayos X de ese cuerpo.
+func _add_anatomy(d: Dictionary, a: Actor, sk_dup: Skeleton3D) -> void:
+	var anat := AnatomyBody.for_actor(a)
+	if not anat.available or anat.skin == null:
+		return
+	var aw := Node3D.new()
+	aw.name = "Anatomia"
+	(d.wrapper as Node3D).add_child(aw)
+	var sk2 := Skeleton3D.new()
+	sk2.name = "Skeleton3D"
+	aw.add_child(sk2)
+	for b in sk_dup.get_bone_count():
+		sk2.add_bone(sk_dup.get_bone_name(b))
+	for b in sk_dup.get_bone_count():
+		sk2.set_bone_parent(b, sk_dup.get_bone_parent(b))
+		sk2.set_bone_rest(b, sk_dup.get_bone_rest(b))
+	sk2.reset_bone_poses()
+	var n := 0
+	for g in anat.groups.values():
+		var sysn := str(g.system)
+		if sysn != "hueso" and sysn != "organo" and sysn != "vaso":
+			continue
+		var mi := MeshInstance3D.new()
+		mi.mesh = g.mesh
+		mi.skin = anat.skin
+		mi.transform = anat.mesh_xf
+		mi.set_surface_override_material(0, _anat_mat(sysn, str(g.label)))
+		sk2.add_child(mi)
+		mi.skeleton = NodePath("..")
+		n += 1
+	var base2 := "%s/Anatomia/Skeleton3D" % (d.wrapper as Node3D).name
+	d["rot2"] = []
+	for b in sk2.get_bone_count():
+		d.rot2.append(_rot_track("%s:%s" % [base2, sk2.get_bone_name(b)]))
+	d["hips2"] = _pos_track("%s:%s" % [base2, "mixamorig_Hips"])
+	d["an_scale"] = _scale_track("%s/Anatomia" % (d.wrapper as Node3D).name)
+	d["suit_scale"] = _scale_track("%s/Modelo" % (d.wrapper as Node3D).name)
+	d["xon"] = false
+	anim.scale_track_insert_key(d.an_scale, 0.0, Vector3.ONE * 0.0001)
+	anim.scale_track_insert_key(d.suit_scale, 0.0, Vector3.ONE)
+	d["anat"] = anat
+	print("EXPORT anatomía: ", n, " estructuras para ", a.name)
+
+func _anat_mat(sysn: String, label: String) -> StandardMaterial3D:
+	var key := sysn + ("" if sysn != "organo" else label.get_slice(" ", 0))
+	if not _anat_mats.has(key):
+		var m := StandardMaterial3D.new()
+		var c: Color = AnatomyBody.SYS_COLOR.get(sysn, Color(0.9, 0.85, 0.7))
+		if sysn == "organo":
+			for k in AnatomyBody.ORGAN_COLOR:
+				if label.begins_with(k):
+					c = AnatomyBody.ORGAN_COLOR[k]
+		m.albedo_color = c
+		m.roughness = 0.55
+		m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_anat_mats[key] = m
+	return _anat_mats[key]
 
 ## El nodo está escondido (escala casi cero) hasta el momento en que aparece en la escena.
 func _appear(node_name: String, t: float) -> void:
@@ -216,6 +285,18 @@ func capture(t: float) -> void:
 			else:
 				anim.scale_track_insert_key(d.scale[b], t, sc)
 		anim.position_track_insert_key(d.hips_t, t, sk.get_bone_pose_position(sk.find_bone("mixamorig_Hips")))
+		if d.has("rot2"):
+			for b in d.n:
+				anim.rotation_track_insert_key(d.rot2[b], t, sk.get_bone_pose_rotation(b))
+			anim.position_track_insert_key(d.hips2, t, sk.get_bone_pose_position(sk.find_bone("mixamorig_Hips")))
+			var on: bool = is_instance_valid(d.anat) and d.anat._showing
+			if on != d.xon:
+				d.xon = on
+				var t0 := maxf(t - 1.0 / FPS, 0.0)
+				anim.scale_track_insert_key(d.an_scale, t0, Vector3.ONE * (0.0001 if on else 1.0))
+				anim.scale_track_insert_key(d.an_scale, t, Vector3.ONE * (1.0 if on else 0.0001))
+				anim.scale_track_insert_key(d.suit_scale, t0, Vector3.ONE * (1.0 if on else 0.0001))
+				anim.scale_track_insert_key(d.suit_scale, t, Vector3.ONE * (0.0001 if on else 1.0))
 	for d in _actors:
 		if is_instance_valid(d.actor):
 			_track_weapons(d.actor, t)
@@ -261,7 +342,78 @@ func capture(t: float) -> void:
 			anim.position_track_insert_key(ld.pt, t, ln.global_position)
 			anim.rotation_track_insert_key(ld.rt, t, ln.global_basis.orthonormalized().get_rotation_quaternion())
 
+## Sangre: gotas con caída real (balística simple) que salen de cada impacto / miembro arrancado, y manchas donde caen.
+func _build_blood() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 77
+	var sm := SphereMesh.new()
+	sm.radius = 0.013
+	sm.height = 0.026
+	sm.radial_segments = 6
+	sm.rings = 3
+	var dm := CylinderMesh.new()
+	dm.top_radius = 0.06
+	dm.bottom_radius = 0.06
+	dm.height = 0.004
+	dm.radial_segments = 10
+	var red := StandardMaterial3D.new()
+	red.albedo_color = Color(0.55, 0.02, 0.03)
+	red.roughness = 0.2
+	sm.material = red
+	dm.material = red
+	var droplet := 0
+	for ev in _blood:
+		var p0: Vector3 = ev.p
+		var dir: Vector3 = (ev.dir as Vector3).normalized()
+		var floor_y: float = floor(p0.y / 4.5) * 4.5 + 0.03
+		for k in int(ev.n):
+			var v := dir * rng.randf_range(1.5, 5.5) * float(ev.pw) + Vector3(rng.randf_range(-1, 1), rng.randf_range(0.5, 3.5), rng.randf_range(-0.6, 0.6))
+			if k % 3 == 0:
+				v = -dir * rng.randf_range(0.8, 2.5) + Vector3(rng.randf_range(-1, 1), rng.randf_range(0.2, 2.0), rng.randf_range(-0.4, 0.4))
+			var n := MeshInstance3D.new()
+			n.name = "Sangre_%d" % droplet
+			droplet += 1
+			n.mesh = sm
+			root.add_child(n)
+			var pt := _pos_track(n.name)
+			var st := _scale_track(n.name)
+			var t0: float = ev.t
+			anim.scale_track_insert_key(st, 0.0, Vector3.ONE * 0.0001)
+			anim.scale_track_insert_key(st, maxf(t0 - 1.0 / FPS, 0.0), Vector3.ONE * 0.0001)
+			anim.scale_track_insert_key(st, t0, Vector3.ONE * rng.randf_range(0.6, 1.6))
+			var land := -1.0
+			var tau := 0.0
+			while tau <= float(ev.life) + 0.001:
+				var p := p0 + v * tau + Vector3(0, -4.9 * tau * tau, 0)
+				if p.y <= floor_y:
+					p.y = floor_y
+					if land < 0.0:
+						land = tau
+				anim.position_track_insert_key(pt, t0 + tau, p)
+				if land >= 0.0:
+					break
+				tau += 1.0 / 15.0
+			if land >= 0.0:
+				var lp := p0 + v * land + Vector3(0, -4.9 * land * land, 0)
+				anim.scale_track_insert_key(st, t0 + land, Vector3.ONE * 0.0001)
+				if k % 2 == 0:
+					var sp := MeshInstance3D.new()
+					sp.name = "Mancha_%d" % droplet
+					sp.mesh = dm
+					root.add_child(sp)
+					sp.position = Vector3(lp.x, floor_y, lp.z)
+					var ss := _scale_track(sp.name)
+					var sz := rng.randf_range(0.5, 1.8)
+					anim.scale_track_insert_key(ss, 0.0, Vector3.ONE * 0.0001)
+					anim.scale_track_insert_key(ss, maxf(t0 + land - 1.0 / FPS, 0.0), Vector3.ONE * 0.0001)
+					anim.scale_track_insert_key(ss, t0 + land, Vector3(sz, 1, sz))
+					# (nodo estático con escala animada: su posición se guarda con una pista fija)
+					var ps := _pos_track(sp.name)
+					anim.position_track_insert_key(ps, 0.0, sp.position)
+	print("EXPORT sangre: ", droplet, " gotas")
+
 func export_to(path: String) -> bool:
+	_build_blood()
 	anim.optimize(0.01, 0.02, 3)
 	var ap := AnimationPlayer.new()
 	ap.name = "Animaciones"

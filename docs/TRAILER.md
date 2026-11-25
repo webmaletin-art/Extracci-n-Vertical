@@ -1,61 +1,32 @@
-# Trailer vertical (video de promoción)
+# Escenas del juego como animación GLB (para renderizar en Blender)
 
-Herramienta aparte del juego (carpeta `tools/trailer/`): corre la Torre Alfa real con un piloto automático, graba video
-**vertical** (540×960 por defecto, 720×1280 opcional) a 30 cuadros por segundo con audio, y deja los datos para rehacerlo
-en Blender.
+Herramienta aparte del juego (carpeta `tools/trailer/`). Un piloto automático juega la Torre Alfa (movimiento, disparos,
+muertes, rayos X, miembros arrancados) y `trailer_export.gd` guarda lo que pasa como **un GLB con una animación**: no es un
+video, es la escena animada para abrir en Blender y renderizar con mejor calidad que una grabación de pantalla.
 
-## Escenas (en orden)
-| Escena | Qué muestra |
-|---|---|
-| `intro` | azotea con el helicóptero, título |
-| `pistolas` | arranca con la Browning, mata a 2 (uno de cabeza) |
-| `caja` | rompe una caja y encuentra la escopeta Remington |
-| `escalera` | sube la escalera al piso siguiente |
-| `escopeta` | 3 enemigos de cerca: miembros arrancados |
-| `fusil` | AM4 en ráfaga contra 4 enemigos |
-| `awm` | calibre .50: tiros a la cabeza y miembros arrancados |
-| `extraccion` | corre al helicóptero de la azotea |
-| `final` | tarjeta final |
+## Escenas
+`intro` · `pistolas` · `caja` · `escalera` · `escopeta` · `fusil` · `awm` (calibre .50) · `extraccion` · `final` · `completa` (todas seguidas).
+Se agregan o se cambian en `trailer_game.gd` (una función `_nombre()` y una línea en `_run()`).
 
-El HUD táctil (palancas y botones) se ve y se mueve como si alguien jugara. Si en el video hace falta otra cosa, se pide
-la escena y se agrega en `trailer_game.gd` (una función `_nombre()` más una línea en `_run()`).
-
-## Escenas GLB para Blender (lo principal)
+## Cómo exportar
 ```
-tools/trailer/export_scenes.sh            # todas las escenas + la completa
-tools/trailer/export_scenes.sh awm fusil  # sólo algunas
+tools/trailer/export_scenes.sh pistolas        # una escena (por defecto: todas)
+OUT=carpeta JOBS=3 tools/trailer/export_scenes.sh
 ```
-Cada escena queda en `/tmp/escenas/<escena>/` (`OUT=carpeta` para cambiarla):
-* `escena_<escena>.glb` — la escena con su **animación «escena»** (30 cuadros por segundo): el mapa (mallas, materiales
-  estándar y texturas), cada personaje (`Actor_N_…`, con esqueleto y la pose de cada hueso en el tiempo), las armas
-  (`Arma_N_…`, con cuándo están a la vista), los miembros arrancados (`Miembro_N`, aparecen cuando se desprenden y caen) y
-  la cámara del juego (`Camara`). En Blender: importar el GLB, abrir el Action Editor / Timeline y reproducir.
-* `escena_<escena>_disparos.json` — cada impacto con su segundo, posición, normal, zona del cuerpo, daño y quién disparó
-  (para poner chispas, sangre, humo o destellos en Blender).
-* `sonidos.csv` — cada sonido con su segundo exacto, archivo, posición en el mapa, volumen y tono. `audio/` — esos sonidos
-  en WAV. `mezcla_audio.wav` — la mezcla completa alineada con la animación (la animación y el audio empiezan juntos en 0 s).
-* `trailer_sonidos.json` — el mismo registro en bruto.
+Cada escena sale en `$OUT/<escena>/` (por defecto `/tmp/escenas`):
+* `escena_<escena>.glb` — **un solo GLB** con el mapa, los personajes (esqueleto + pose de cada hueso en el tiempo), las armas, los
+  miembros arrancados, la **sangre** (gotas con caída y manchas), la **anatomía** (huesos, órganos y vasos, que aparece mientras el
+  juego muestra los rayos X de la muerte y esconde el traje) y la **cámara del gameplay**. Animación «escena», 30 cuadros por
+  segundo. Todo en blanco / gris, sin texturas: las líneas se agregan en Blender (Freestyle o contorno de Workbench).
+* `escena_<escena>_disparos.json` — cada impacto con su segundo, posición, zona, daño y quién disparó.
+* `sonidos.csv`, `audio/` y `mezcla_audio.wav` — cada sonido con su segundo exacto, los WAV usados y la mezcla completa alineada
+  con la animación (empieza en el segundo 0 junto con ella).
 
-Notas para Blender: los materiales son estándar (el estilo «plano dibujado» del juego usa shaders que un GLB no puede llevar;
-se aplica de nuevo en Blender con el contorno que se quiera); los efectos de partículas del juego (sangre, humo, chispas) no
-viajan en el GLB, por eso están los disparos con posición y el registro de sonidos.
-
-## Video directo (opcional)
-```
-tools/trailer/render_trailer.sh            # trailer completo (≈ 3 min de video)
-tools/trailer/render_trailer.sh pistolas   # una escena
-tools/trailer/render_trailer.sh "" 720 1280
-```
-Salida en `/tmp/trailer` (`OUT=carpeta` para cambiarla):
-* `trailer_vertical.mp4` — video H.264 con el audio del juego.
-* `trailer_sonidos.json` / `sonidos.csv` — cada sonido con su segundo exacto, archivo, posición, volumen y tono.
-* `audio/` — los sonidos usados, en WAV. `mezcla_audio.wav` — la mezcla completa, alineada con el video.
-
-El render usa el renderizador por software del servidor: tarda varias veces la duración del video.
+`--nomap` (argumento de la escena) deja el mapa afuera; `--only=mapa` exporta sólo el mapa.
 
 ## Notas
-* El piloto automático no puede morir (la salud no baja de 60) y las colisiones, la balística, la sangre, los rayos X y el
-  desmembramiento son los del juego.
-* El helicóptero (`assets/props/military_helicopter.glb`) es parte del mapa: los mapas con IA pueden reutilizarlo como
-  punto de extracción (`TowerBuilder._helicopter`).
-* Sólo para grabar: nada de esto entra en las partidas.
+* Se necesita un renderizador real (el script usa `xvfb-run` con OpenGL por software): con el modo sin pantalla de Godot no hay
+  datos de mallas para exportar.
+* Los enemigos de la escena usan dos tipos de personaje para compartir la anatomía dentro del GLB (peso ≈ 100 MB por escena).
+* `tests/glb_check.tscn` abre un GLB exportado, lista sus animaciones y guarda capturas en los momentos en que aparece la anatomía.
+* El helicóptero (`assets/props/military_helicopter.glb`) es parte del mapa (`TowerBuilder._helicopter`), reutilizable en mapas con IA.

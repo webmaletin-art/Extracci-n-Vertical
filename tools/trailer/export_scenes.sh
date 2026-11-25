@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Exporta el MAPA y las ESCENAS del trailer como GLB (blanco, como el juego) + disparos y sonidos:
-#   tools/trailer/export_scenes.sh [escena ...]      (sin argumentos: el mapa y todas las escenas)
+# Exporta las ESCENAS del trailer como GLB con animación (blanco, como el juego, con mapa incluido) + disparos y sonidos:
+#   tools/trailer/export_scenes.sh [escena ...]      (sin argumentos: todas las escenas)
+#   MAPA_APARTE=1: las escenas salen sin mapa y se exporta aparte mapa_torre_alfa.glb
 #   Escenas: intro pistolas caja escalera escopeta fusil awm extraccion final completa
 # Salida ($OUT, por defecto /tmp/escenas):
 #   mapa_torre_alfa.glb                   el mapa (una sola vez; todas las escenas usan las mismas coordenadas del mundo)
@@ -27,7 +28,8 @@ run_one() {
 	D="$OUT/$S"
 	mkdir -p "$D"
 	G="$D/escena_$S.glb"
-	local ARGS=("--glb=$G" "--nomap")
+	local ARGS=("--glb=$G")
+	[ -n "${MAPA_APARTE:-}" ] && ARGS+=("--nomap")
 	[ "$S" != "completa" ] && ARGS+=("--only=$S")
 	timeout 3000 xvfb-run -a godot --path . --rendering-driver opengl3 --fixed-fps 30 tools/trailer/trailer.tscn -- "${ARGS[@]}" > "$D/log.txt" 2>&1
 	grep -E "TRAILER_LISTO|EXPORT glb|SCRIPT ERROR" "$D/log.txt" | head -4
@@ -37,7 +39,8 @@ run_one() {
 	fi
 }
 export -f run_one
-export OUT
-# el mapa va en el mismo grupo que las escenas (cada una corre aparte)
-printf '%s\n' mapa "${SCENES[@]}" | xargs -P "$JOBS" -I{} bash -c 'run_one {}'
+export OUT MAPA_APARTE
+LIST=("${SCENES[@]}")
+[ -n "${MAPA_APARTE:-}" ] && LIST=(mapa "${SCENES[@]}")
+printf '%s\n' "${LIST[@]}" | xargs -P "$JOBS" -I{} bash -c 'run_one {}'
 echo "Listo: $OUT"

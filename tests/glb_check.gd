@@ -18,6 +18,16 @@ func _ready() -> void:
 	for n in ap.get_animation_list():
 		var an := ap.get_animation(n)
 		print("anim ", n, " · duración ", an.length, " s · pistas ", an.get_track_count())
+	var an0 := ap.get_animation(ap.get_animation_list()[0])
+	var xt: Array = []
+	for i in an0.get_track_count():
+		var tp := str(an0.track_get_path(i))
+		if an0.track_get_type(i) == Animation.TYPE_SCALE_3D and tp.ends_with("Anatomia"):
+			for k in an0.track_get_key_count(i):
+				var v: Vector3 = an0.track_get_key_value(i, k)
+				if v.x > 0.5:
+					xt.append(snappedf(an0.track_get_key_time(i, k), 0.1))
+	print("ANATOMIA visible en t=", xt)
 	var cam := scene.find_child("Camara3D", true, false) as Camera3D
 	if cam == null:
 		cam = scene.find_children("*", "Camera3D", true, false)[0]
@@ -36,11 +46,11 @@ func _ready() -> void:
 	var an_name: String = ap.get_animation_list()[0]
 	ap.play(an_name)
 	ap.pause()
-	for t in [1.0, 5.0, 9.0, 13.0]:
+	for t in (xt.slice(0, 4) if not xt.is_empty() else [8.0]):
 		ap.seek(t, true)
 		var a0 := scene.find_child("Actor_0*", true, false) as Node3D
 		print("t=", t, " camara=", cam.global_position, " actor0=", a0.global_position if a0 else "?")
 		for i in 4:
 			await get_tree().process_frame
-		get_viewport().get_texture().get_image().save_png(out + "/chk_%d.png" % int(t))
+		get_viewport().get_texture().get_image().save_png(out + "/chk_%d.png" % int(t * 10))
 	get_tree().quit()

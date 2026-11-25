@@ -1,10 +1,9 @@
 class_name TrailerGame
 extends Game
-## ESCENA DE TRAILER (sólo para grabar videos de promoción, no es parte del juego). Usa la partida real en la Torre Alfa con un
-## «piloto automático» que hace el recorrido: pistolas → caja con escopeta → escalera → escopeta → fusil → .50 → helicóptero.
-## Formato horizontal como el juego en el teléfono (1600×720), 30 cuadros por segundo, hasta 5 minutos, con los controles táctiles a la vista.
-## Se graba con el Movie Maker de Godot (video + audio) y deja el registro de sonidos para armar la mezcla / la escena de Blender.
-## Uso: tools/trailer/render_trailer.sh  (ver docs/TRAILER.md)
+## ESCENAS DE TRAILER (sólo para armar animaciones para Blender; no es parte del juego). Un piloto automático hace el recorrido
+## en la Torre Alfa con el gameplay real (pistolas → caja con escopeta → escalera → escopeta → fusil → .50 → helicóptero) y
+## TrailerExport lo guarda como un GLB con animación (mapa, personajes, armas, miembros, sangre, anatomía, cámara) más los
+## sonidos con su segundo. Uso: tools/trailer/export_scenes.sh (ver docs/TRAILER.md).
 
 const FPS := 30.0
 var vt := 0.0                         ## segundos de video
@@ -14,9 +13,7 @@ var cap_title: Label
 var cap_sub: Label
 var fade: ColorRect
 var heli: Node3D
-var segments: Array[String] = []
 var only := ""                         ## (pruebas) sólo esta escena
-var max_seconds := 300.0
 var _quit_called := false
 var no_map := false                     ## (GLB) la escena no lleva el mapa: se exporta aparte con --only=mapa
 var export_glb := ""                   ## si no está vacío: exporta la escena como GLB con animaciones (ver TrailerExport)
@@ -101,7 +98,6 @@ func _process(delta: float) -> void:
 	if rec != null:
 		rec.capture(vt)
 
-var hud_hold := false
 var _press := {}                       ## botón → segundos que sigue iluminado (pulsaciones de un cuadro: recargar, usar, cambiar arma)
 
 ## Ilumina un botón táctil un momento: se ve que el piloto «toca» los controles de verdad.
@@ -189,6 +185,7 @@ func fight(target: Actor, secs: float, head := false, auto := false, on := 3, of
 	player.inp.fire = false
 
 func spawn_enemy(x: float, y: float, char_id: String, weapon_id: String, floor_i: int) -> Actor:
+	char_id = "vigia" if int(x) % 2 == 0 else "zapador"      # dos tipos de enemigo: la anatomía del GLB se comparte
 	tower._enemy(tower.floors_nodes[floor_i], Vector3(x, y, 0), char_id, weapon_id, floor_i)
 	var e: Actor = tower.enemies.back()
 	for c in e.get_children():
@@ -199,6 +196,7 @@ func spawn_enemy(x: float, y: float, char_id: String, weapon_id: String, floor_i
 	e.died.connect(func(info):
 		if info.get("shooter") == player:
 			_kills += 1)
+	bullet_time.watch(e)                       # sus muertes disparan la toma de rayos X como en la partida
 	if rec != null:
 		rec.add_actor(e, vt)
 	return e
