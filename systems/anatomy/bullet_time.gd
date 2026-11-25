@@ -369,6 +369,7 @@ func _replay_step() -> bool:
 	if _rp_bullet == null:
 		_rp_bullet = MeshInstance3D.new()
 		_rp_bullet.top_level = true
+		_rp_bullet.set_meta("no_tech", true)
 		_rp_bullet.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(_rp_bullet)
 	var want := bullet_mesh(_rp_flat)

@@ -746,6 +746,7 @@ func _build_covers() -> void:
 		mi.add_to_group("perf_cubiertas")
 		add_child(mi)
 		covers[r.id] = mi
+		mi.set_meta("no_tech", true)          # velos de sectores: su material se anima (TechView no lo toca)
 		if int(r.floor) >= data.floors.size():
 			mi.visible = false     # la azotea es exterior
 

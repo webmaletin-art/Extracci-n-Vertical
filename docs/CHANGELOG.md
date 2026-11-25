@@ -86,3 +86,8 @@
 - Fusil a la espalda / pistola en la funda en escaleras, colgado y trepando.
 - Sangre visible: gotas y manchas más grandes y sin depender de la luz, más manchas por impacto, charco más rápido.
 - Auditoría y plan por fases: `docs/PLAN_MAESTRO.md`; atlas de mapas: `docs/ATLAS_MAPAS.md`.
+
+## 0.8.0 — Experimento: visualización técnica 3D
+- Autoload `TechView` (reversible, no guarda nada): A filtro de pantalla, B materiales técnicos + contorno, C híbrido;
+  rayos X realista / técnico gris / técnico con colores; parámetros en vivo. Se activa en Modo práctica y sigue
+  activo al ir a la Torre en la misma sesión. Informe y mediciones: `docs/VISUAL_TECNICO.md`.

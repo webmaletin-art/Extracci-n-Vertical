@@ -1338,8 +1338,10 @@ func _update_laser(w: Firearm, on: bool) -> void:
 		laser.material_override = m
 		laser.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		laser.top_level = true
+		laser.set_meta("no_tech", true)
 		add_child(laser)
 		laser_dot = MeshInstance3D.new()
+		laser_dot.set_meta("no_tech", true)
 		var sm := SphereMesh.new()
 		sm.radius = 0.035
 		sm.height = 0.07

@@ -374,9 +374,14 @@ func _build_ui() -> void:
 	toggle.pressed.connect(func():
 		panel.visible = not panel.visible
 		toggle.text = "PRÁCTICA ▾" if panel.visible else "PRÁCTICA ▸")
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(360, 600)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	panel.add_child(scroll)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
-	panel.add_child(v)
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(v)
 	_option(v, "Arma", WEAPONS.map(func(k): return Firearm.all_stats()[k].name), WEAPONS.find(weapon_id), func(i):
 		weapon_id = WEAPONS[i]
 		_equip())
@@ -460,6 +465,16 @@ func _build_ui() -> void:
 		else:
 			b.pressed.connect(d[1])
 		row.add_child(b)
+	# VISUALIZACIÓN TÉCNICA 3D (experimento): cambia el aspecto del juego real en vivo; nada se guarda
+	var tl := Label.new()
+	tl.text = "VISUALIZACIÓN TÉCNICA 3D (experimento)"
+	tl.add_theme_color_override("font_color", Color(1.0, 0.6, 0.2))
+	v.add_child(tl)
+	_option(v, "Estilo", TechView.MODES, TechView.mode, func(i): TechView.set_mode(i))
+	_option(v, "Rayos X", TechView.XRAY, TechView.xray_style, func(i): TechView.set_xray(i))
+	for d in [["Grosor de líneas", "line_w", 0.5, 4.0], ["Intensidad de líneas", "line_k", 0.0, 1.0], ["Sombreado", "shade", 0.0, 1.0],
+			["Detalle original", "detail", 0.0, 1.0], ["Contraste", "contrast", 0.5, 1.5], ["Rojo (sangre)", "red", 0.0, 1.0]]:
+		_slider_row(v, d[0], d[2], d[3], float(TechView.get(d[1])), func(x): TechView.set_param(d[1], x))
 	# configuración REAL del juego (la misma que usa la partida): se aplica en vivo y se guarda
 	var row2 := HBoxContainer.new()
 	v.add_child(row2)
@@ -497,6 +512,24 @@ func _option(parent: Control, title: String, items: Array, selected: int, cb: Ca
 	ob.item_selected.connect(cb)
 	hb.add_child(ob)
 	return ob
+
+func _slider_row(parent: Control, title: String, mn: float, mx: float, val: float, cb: Callable) -> void:
+	var hb := HBoxContainer.new()
+	parent.add_child(hb)
+	var l := Label.new()
+	l.text = title
+	l.custom_minimum_size = Vector2(120, 0)
+	l.add_theme_font_size_override("font_size", 15)
+	hb.add_child(l)
+	var sl := HSlider.new()
+	sl.min_value = mn
+	sl.max_value = mx
+	sl.step = (mx - mn) / 40.0
+	sl.value = val
+	sl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sl.custom_minimum_size = Vector2(150, 30)
+	sl.value_changed.connect(cb)
+	hb.add_child(sl)
 
 func _check(parent: Control, text: String, cb: Callable, on := false) -> void:
 	var c := CheckBox.new()

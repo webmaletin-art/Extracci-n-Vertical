@@ -421,6 +421,7 @@ func _skinned(mesh: Mesh) -> MeshInstance3D:
 	mi.transform = mesh_xf
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.visible = false
+	mi.set_meta("no_tech", true)
 	skel.add_child(mi)
 	mi.skeleton = mi.get_path_to(skel)
 	return mi
@@ -718,6 +719,7 @@ uniform vec3 axis = vec3(0.0, 1.0, 0.0);
 uniform vec4 base_color : source_color = vec4(0.9, 0.9, 0.8, 1.0);
 uniform float is_muscle = 0.0;
 uniform float kind = 0.0;      // 0 hueso · 1 órgano · 2 vaso · 3 nervio / ojo
+global uniform float tech_xray;
 uniform vec3 eye_c = vec3(0.0);
 uniform float eye_r = 0.012;
 uniform float ax_lo = 0.0;
@@ -825,6 +827,20 @@ void fragment() {
 	ROUGHNESS = 0.3;
 	SPECULAR = 0.5;
 	EMISSION = (col * (0.22 + 0.9 * nl) * vec3(1.0, 0.96, 0.9) + vec3(0.6, 0.02, 0.0) * rim * 0.5 + vec3(1.0, 0.85, 0.8) * (spec * 0.55 + fres * shine * 0.12)) * edge;
+	// --- estilo técnico (TechView): 1 = gris con acentos rojos · 2 = con sus colores; ambos dibujados con líneas
+	if (tech_xray > 0.5) {
+		vec3 Lt = normalize(vec3(-0.45, 0.75, 0.6));
+		float dt = dot(NORMAL, normalize(VIEW + vec3(-0.3, 0.5, 0.0)));
+		float lv = dt > 0.75 ? 1.0 : (dt > 0.45 ? 0.86 : (dt > 0.2 ? 0.74 : 0.62));
+		float lum = dot(col, vec3(0.3, 0.59, 0.11));
+		vec3 flat_c = tech_xray < 1.5 ? mix(vec3(0.97, 0.965, 0.95), vec3(0.8, 0.1, 0.08), clamp(rim * 1.4 + (kind > 1.5 && kind < 2.5 ? 1.0 : 0.0), 0.0, 1.0)) * lv
+			: mix(col * 1.15 + vec3(0.05), vec3(0.85, 0.08, 0.06), clamp(rim * 1.4 + (kind > 1.5 && kind < 2.5 ? 1.0 : 0.0), 0.0, 1.0) * 0.6) * lv;
+		float edge_t = smoothstep(0.62, 0.86, 1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0));
+		vec3 fin = mix(flat_c, vec3(0.12, 0.11, 0.11), edge_t * 0.9);
+		ALBEDO = vec3(0.0);
+		EMISSION = fin;
+	}
+
 }
 """
 	return _wound_shader
@@ -841,6 +857,7 @@ uniform vec3 center;
 uniform float crack = 0.0;      // cuánto se encoge el fragmento hacia su centro (abre la grieta)
 uniform vec3 push = vec3(0.0);   // cuánto se corre (espacio del hueso)
 uniform float open = 0.0;        // 0 = lejos del impacto (no se nota el corte) · 1 = al lado del impacto
+global uniform float tech_xray;
 """ + _ZONE_FUNC + """
 varying vec3 wp;
 varying vec3 lp;
@@ -878,6 +895,19 @@ void fragment() {
 	SPECULAR = 0.5;
 	EMISSION = col * (0.12 + 1.0 * nl * nl) * cav + vec3(1.0, 0.95, 0.85) * (fres * 0.22 + spec * 0.2);
 	ALPHA = 1.0 - 0.82 * occluder(wp);
+	// --- estilo técnico (TechView): 1 = gris con acentos rojos · 2 = con sus colores; ambos dibujados con líneas
+	if (tech_xray > 0.5) {
+		vec3 Lt = normalize(vec3(-0.45, 0.75, 0.6));
+		float dt = dot(NORMAL, normalize(VIEW + vec3(-0.3, 0.5, 0.0)));
+		float lv = dt > 0.75 ? 1.0 : (dt > 0.45 ? 0.86 : (dt > 0.2 ? 0.74 : 0.62));
+		float lum = dot(col, vec3(0.3, 0.59, 0.11));
+		vec3 flat_c = tech_xray < 1.5 ? mix(vec3(0.97, 0.965, 0.95), vec3(0.8, 0.1, 0.08), cutv * clamp(open * 1.6, 0.0, 1.0)) * lv
+			: mix(col * 1.15 + vec3(0.05), vec3(0.85, 0.08, 0.06), cutv * clamp(open * 1.6, 0.0, 1.0) * 0.6) * lv;
+		float edge_t = smoothstep(0.62, 0.86, 1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0));
+		vec3 fin = mix(flat_c, vec3(0.12, 0.11, 0.11), edge_t * 0.9);
+		ALBEDO = vec3(0.0);
+		EMISSION = fin;
+	}
 }
 """
 	return _frag_shader
@@ -891,6 +921,7 @@ shader_type spatial;
 render_mode cull_disabled;
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
 uniform vec4 albedo_color : source_color = vec4(1.0);
+global uniform float tech_on;
 """ + _ZONE_FUNC + """
 varying vec3 wp;
 void vertex() { wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz; }
@@ -918,6 +949,14 @@ void fragment() {
 		float edge = 1.0 - smoothstep(zone_r, zone_r * 1.12, zd);
 		ALBEDO = mix(t.rgb, vec3(0.05, 0.0, 0.0), edge * 0.85);
 		ROUGHNESS = 0.85;
+		if (tech_on > 0.5) {
+			// visualización técnica: la ropa también en papel y grises, con el borde del corte en tinta
+			float d = dot(NORMAL, normalize(VIEW + vec3(-0.3, 0.5, 0.0)));
+			float lv = d > 0.7 ? 1.0 : (d > 0.35 ? 0.86 : (d > 0.0 ? 0.75 : 0.65));
+			vec3 paper = vec3(0.965, 0.958, 0.94) * lv;
+			ALBEDO = vec3(0.0);
+			EMISSION = mix(paper, vec3(0.12), edge * 0.9);
+		}
 	}
 }
 """
