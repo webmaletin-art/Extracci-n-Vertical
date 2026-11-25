@@ -12,6 +12,7 @@ extends CharacterBody3D
 
 signal damaged(info: Dictionary)
 signal died(info: Dictionary)
+signal dismembered(joint: String, info: Dictionary)
 signal shot_fired(projectile: int, weapon: Firearm)
 signal weapon_changed
 signal landed(fall_height: float)
@@ -75,6 +76,8 @@ var slot: Node3D                    ## arma de fuego entre las manos (lo coloca 
 var knife_node: Node3D
 var hand_r: BoneAttachment3D
 var hitboxes: Array[Area3D] = []
+var severed := {}                   ## hueso de la articulación → true (miembros cortados)
+var limb_damage := {}               ## daño acumulado por miembro (desmembramiento)
 var reach: Area3D
 ## inventario de armas
 var weapons := {}                   ## "primary"/"secondary" → Firearm
@@ -996,6 +999,7 @@ func take_damage(info: Dictionary) -> void:
 			if Blood.instance:
 				Blood.instance.spray(bpd, dd, true, pw > 1.2, pw)
 				Blood.instance.wound(self, str(info.get("bone", "")), bpd, dd, pw)
+			Dismember.apply_hit(self, info, false)
 			velocity.x += signf(dd.x) * minf(pw * 0.9, 2.2)        # el impacto sacude el cuerpo (se desliza un poco)
 			if state == State.DEAD and is_on_floor():
 				_play_hit_jolt()
@@ -1047,6 +1051,7 @@ func take_damage(info: Dictionary) -> void:
 			Fx.blood(bp, dir, 1.0)
 	if health <= 0.0:
 		_die(info)
+		Dismember.apply_hit(self, info, true)         # el tiro que mata también puede arrancar el miembro
 		return
 	_react(info, amount)
 

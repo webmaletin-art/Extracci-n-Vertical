@@ -114,3 +114,15 @@
 * Cámara de muerte: si muere otro enemigo en plena toma, la toma pasa a ese cuerpo (antes no se encendía el rayos X);
   el radio de la ventana se conserva con los impactos siguientes.
 * Estilo plano: las mallas nuevas (enemigos que aparecen) se convierten en el acto, sin cuadros con los colores originales.
+
+## 0.10.0 — desmembramiento
+
+* Sólo en cuerpos que ya murieron o que mueren con el tiro (un cuerpo vivo no pierde miembros). El daño se acumula por
+  miembro: pistola ≈ 3 tiros, fusil ≈ 2, calibre grueso 1; la escopeta de cerca suma todos los perdigones y arranca
+  varios miembros. Cuello (cabeza) sólo con arma potente.
+* Cortes en articulaciones: hombro, codo, muñeca, cadera, rodilla, tobillo y nuca. El hueso se achica a casi cero
+  (`LimbCutter`, modificador del esqueleto), así desaparece el miembro con traje, huesos y vasos; queda un muñón con corte
+  de carne y hueso y un chorro arterial a latidos (~9 s).
+* El miembro suelto (`Limb`, cuerpo rígido en el plano) sale despedido, gira, cae y sangra; mientras se ve la ventana
+  de rayos X de ese cuerpo se muestra su versión de huesos y vasos; después, la normal.
+* Pendiente: cortes a mitad de hueso (hoy sólo en articulaciones).

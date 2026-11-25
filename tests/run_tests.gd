@@ -107,7 +107,7 @@ func _game_tests(filt: String) -> void:
 	var p := g.player
 	p.max_health = 1000.0
 	p.health = 1000.0
-	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "cuerpo_muerto", "anatomia", "captador"]:
+	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "cuerpo_muerto", "desmembrar", "anatomia", "captador"]:
 		if filt != "" and not t.contains(filt):
 			continue
 		p.inp = ActorInput.new()
@@ -287,6 +287,43 @@ func g_cuerpo_muerto(p: Actor) -> String:
 	await _wait_phys(20)
 	if hits[0] < 3:
 		return "el cuerpo muerto dejó de recibir impactos (%d de 5)" % hits[0]
+	return ""
+
+## Desmembramiento: sólo en cuerpos muertos (o que mueren con el tiro); el miembro suelto existe y el muñón se achica.
+func g_desmembrar(p: Actor) -> String:
+	var e: Actor = null
+	for c in g.tower.enemies:
+		if is_instance_valid(c) and not (c as Actor).is_dead():
+			e = c
+			break
+	if e == null:
+		return "no quedan enemigos vivos para la prueba"
+	await _place(p, Vector3(50, 0.05, 0))
+	e.global_position = Vector3(56, 0.05, 0)
+	e.velocity = Vector3.ZERO
+	await _wait_phys(6)
+	# vivo: un tiro al antebrazo NO arranca nada
+	e.max_health = 5000.0
+	e.health = 5000.0
+	for k in 4:
+		e.take_damage({"damage": 30.0, "type": "bullet", "zone": "arm", "bone": "mixamorig_LeftForeArm", "point": e.global_position + Vector3(0, 1.2, 0), "dir": Vector3(1, 0, 0), "shooter": p})
+	if not e.severed.is_empty():
+		return "se desmembró un cuerpo que seguía vivo"
+	e.health = 1.0
+	e.take_damage({"damage": 90.0, "type": "bullet", "zone": "head", "bone": "mixamorig_Head", "point": e.global_position + Vector3(0, 1.6, 0), "dir": Vector3(1, 0, 0), "shooter": p})
+	if not e.is_dead():
+		return "el enemigo no murió"
+	for k in 3:
+		e.take_damage({"damage": 40.0, "type": "bullet", "zone": "arm", "bone": "mixamorig_LeftForeArm", "point": e.global_position + Vector3(0, 0.3, 0), "dir": Vector3(1, 0, 0), "shooter": p})
+	await _wait_phys(10)
+	if e.severed.is_empty():
+		return "el cuerpo muerto no perdió el antebrazo"
+	var limbs := 0
+	for n in e.get_parent().get_children():
+		if n is Limb:
+			limbs += 1
+	if limbs == 0:
+		return "no apareció el miembro suelto"
 	return ""
 
 func g_destruccion(_p: Actor) -> String:
