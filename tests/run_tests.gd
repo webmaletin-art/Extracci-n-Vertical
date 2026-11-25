@@ -241,17 +241,23 @@ func g_granada(p: Actor) -> String:
 	return ""
 
 func g_lesiones(p: Actor) -> String:
-	seed(11)
-	p.injuries = Injuries.new()
-	await _place(p, Vector3(39.6, 13.55, 0))
-	p.inp.move = Vector2(0.5, 0)
-	await _wait_phys(30)
-	p.inp.move = Vector2.ZERO
 	var t := 0
-	while not (p.state == Actor.State.GROUND and p.global_position.y < 9.0) and t < 400:
-		await get_tree().physics_frame
-		t += 1
-	await _wait_phys(120)
+	# la fractura por caída es probabilística (como en la realidad): hasta 4 caídas, alguna tiene que romper la pierna
+	for intento in 4:
+		seed(11 + intento)
+		p.injuries = Injuries.new()
+		p.health = p.max_health
+		await _place(p, Vector3(39.6, 13.55, 0))
+		p.inp.move = Vector2(0.5, 0)
+		await _wait_phys(30)
+		p.inp.move = Vector2.ZERO
+		t = 0
+		while not (p.state == Actor.State.GROUND and p.global_position.y < 9.0) and t < 400:
+			await get_tree().physics_frame
+			t += 1
+		await _wait_phys(120)
+		if p.injuries.leg_broken:
+			break
 	if not p.injuries.leg_broken:
 		return "la caída de %.1f m no fracturó la pierna (estado %s, pos %s, vida %.0f, lesiones %s)" % [13.55 - p.global_position.y, Actor.State.keys()[p.state], p.global_position, p.health, p.injuries.log]
 	p.state = Actor.State.GROUND
