@@ -15,6 +15,7 @@ var fade: ColorRect
 var heli: Node3D
 var only := ""                         ## (pruebas) sólo esta escena
 var _quit_called := false
+var map_root: Node                      ## de dónde salen las mallas del mapa
 var no_map := false                     ## (GLB) la escena no lleva el mapa: se exporta aparte con --only=mapa
 var export_glb := ""                   ## si no está vacío: exporta la escena como GLB con animaciones (ver TrailerExport)
 const Exporter := preload("res://tools/trailer/trailer_export.gd")   # (tools/ no registra class_name)
@@ -39,6 +40,7 @@ func _ready() -> void:
 	controller.set_process_input(false)
 	controller.set_process_unhandled_input(false)
 	hud.touch_mode = true               # controles táctiles a la vista, con la disposición normal del juego
+	map_root = tower
 	cam_focus_fn = func(): return player.global_position + Vector3(0, 1.3, 0)
 	cap_layer = CanvasLayer.new()
 	cap_layer.layer = 20
@@ -50,6 +52,7 @@ func _ready() -> void:
 	fade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cap_layer.add_child(fade)
+	TimeFx.fixed_fps = FPS                         # la cámara de muerte y la cámara lenta duran lo mismo que en el juego real
 	Sfx.log_on = true
 	Sfx.event_log.clear()
 	Sfx.log_t0 = Engine.get_frames_drawn()
@@ -95,8 +98,6 @@ func _process(delta: float) -> void:
 		var f: Vector3 = cam_focus_fn.call()
 		camera.look_offset_x = lerpf(camera.look_offset_x, clampf(f.x - player.global_position.x, -7.0, 7.0), clampf(4.0 / FPS, 0.0, 1.0))
 	_mirror_inputs()
-	if rec != null:
-		rec.capture(vt)
 
 var _press := {}                       ## botón → segundos que sigue iluminado (pulsaciones de un cuadro: recargar, usar, cambiar arma)
 

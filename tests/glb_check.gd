@@ -28,6 +28,10 @@ func _ready() -> void:
 				if v.x > 0.5:
 					xt.append(snappedf(an0.track_get_key_time(i, k), 0.1))
 	print("ANATOMIA visible en t=", xt)
+	for i in an0.get_track_count():
+		var tq := str(an0.track_get_path(i))
+		if "Anatomia" in tq and an0.track_get_type(i) == Animation.TYPE_SCALE_3D:
+			print("  pista ", tq, " claves=", an0.track_get_key_count(i))
 	var lt: Array = []
 	for i in an0.get_track_count():
 		var tp2 := str(an0.track_get_path(i))
@@ -55,11 +59,24 @@ func _ready() -> void:
 	var an_name: String = ap.get_animation_list()[0]
 	ap.play(an_name)
 	ap.pause()
-	for t in (xt.slice(0, 2) + lt.slice(0, 3) if not (xt.is_empty() and lt.is_empty()) else [8.0]):
+	for t in ([3.0, 6.0] + xt.slice(0, 1) + lt.slice(0, 2)):
 		ap.seek(t, true)
 		var a0 := scene.find_child("Actor_0*", true, false) as Node3D
 		print("t=", t, " camara=", cam.global_position, " actor0=", a0.global_position if a0 else "?")
 		for i in 4:
 			await get_tree().process_frame
 		get_viewport().get_texture().get_image().save_png(out + "/chk_%d.png" % int(t * 10))
+		var a0c := scene.find_child("Actor_0*", true, false) as Node3D
+		if a0c:
+			var cc := Camera3D.new()
+			add_child(cc)
+			cc.fov = 28.0
+			cc.global_position = a0c.global_position + Vector3(0, 1.3, 3.2)
+			cc.look_at(a0c.global_position + Vector3(0, 1.3, 0), Vector3.UP)
+			cc.current = true
+			for i in 3:
+				await get_tree().process_frame
+			get_viewport().get_texture().get_image().save_png(out + "/close_%d.png" % int(t * 10))
+			cc.queue_free()
+			cam.current = true
 	get_tree().quit()

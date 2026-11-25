@@ -16,7 +16,11 @@ var owner_tag := ""              ## quién la pidió («bullet_time», «explosi
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
+var fixed_fps := 0.0             ## > 0: el reloj cuenta cuadros (grabación de escenas a 30 fps fijos) y no segundos reales
+
 func now() -> float:
+	if fixed_fps > 0.0:
+		return float(Engine.get_frames_drawn()) / fixed_fps
 	return Time.get_ticks_usec() / 1e6
 
 ## Cámara lenta durante `real_seconds` reales, entrando en `ease_in` s. Si ya hay una más lenta en curso, gana la más lenta.

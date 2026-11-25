@@ -44,6 +44,7 @@ func begin(g, actors: Array) -> void:
 	_cam.add_child(cam)
 	root.add_child(_cam)
 	_cam_tracks = [_pos_track("Camara"), _rot_track("Camara")]
+	RenderingServer.frame_post_draw.connect(func(): if is_instance_valid(game): capture(game.vt))
 	g.ballistics.projectile_hit.connect(func(_i, info: Dictionary):
 		var sh = info.get("shooter")
 		hits.append({"t": _t, "x": (info.point as Vector3).x, "y": (info.point as Vector3).y, "z": (info.point as Vector3).z,
@@ -103,7 +104,7 @@ func _build_map() -> void:
 	map.name = "Mapa"
 	root.add_child(map)
 	var n := 0
-	for node in game.tower.find_children("*", "MeshInstance3D", true, false):
+	for node in game.map_root.find_children("*", "MeshInstance3D", true, false):
 		var mi := node as MeshInstance3D
 		if mi.mesh == null or not mi.is_visible_in_tree() or mi.get_parent() is Skeleton3D or mi.has_meta("no_export") or (mi.has_meta("no_tech") and bool(mi.get_meta("no_tech"))):
 			continue
@@ -168,7 +169,7 @@ func _add_actor(a: Actor, t_spawn := 0.0) -> void:
 	d.hips_t = _pos_track("%s:%s" % [base, "mixamorig_Hips"])
 	_actors.append(d)
 	if t_spawn > 0.0:
-		_appear(w.name, t_spawn)
+		d["sc_t"] = _appear(w.name, t_spawn)
 		_add_anatomy(d, a, sk)
 	a.dismembered.connect(func(_j, info: Dictionary):
 		var c: Vector3 = (info.point as Vector3) if info.has("point") else a.global_position + Vector3(0, 1.2, 0)
@@ -196,9 +197,8 @@ func _add_anatomy(d: Dictionary, a: Actor, sk_dup: Skeleton3D) -> void:
 	var n := 0
 	for g in anat.groups.values():
 		var sysn := str(g.system)
-		if sysn != "hueso" and sysn != "organo" and sysn != "vaso":
-			continue
 		var mi := MeshInstance3D.new()
+		mi.name = "%s_%s" % [sysn, str(g.label).replace(" ", "_")]       # en Blender se agrupan / ocultan por sistema (hueso_, musculo_, organo_, vaso_, nervio_)
 		mi.mesh = g.mesh
 		mi.skin = anat.skin
 		mi.transform = anat.mesh_xf
@@ -224,6 +224,9 @@ func _anat_mat(sysn: String, label: String) -> StandardMaterial3D:
 	if not _anat_mats.has(key):
 		var m := StandardMaterial3D.new()
 		var c: Color = AnatomyBody.SYS_COLOR.get(sysn, Color(0.9, 0.85, 0.7))
+		if sysn == "musculo":
+			c = Color(0.62, 0.1, 0.08, 0.5)                   # la carne es translúcida: dejan verse los huesos y los órganos
+			m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		if sysn == "organo":
 			for k in AnatomyBody.ORGAN_COLOR:
 				if label.begins_with(k):
@@ -235,11 +238,31 @@ func _anat_mat(sysn: String, label: String) -> StandardMaterial3D:
 	return _anat_mats[key]
 
 ## El nodo está escondido (escala casi cero) hasta el momento en que aparece en la escena.
-func _appear(node_name: String, t: float) -> void:
+func _appear(node_name: String, t: float) -> int:
 	var st := _scale_track(node_name)
 	anim.scale_track_insert_key(st, 0.0, Vector3.ONE * 0.0001)
 	anim.scale_track_insert_key(st, maxf(t - 1.0 / FPS, 0.0), Vector3.ONE * 0.0001)
 	anim.scale_track_insert_key(st, t, Vector3.ONE)
+	return st
+
+## El personaje sale de la escena (fin de la ronda): se esconde y deja de grabarse.
+func remove_actor(a: Actor, t: float) -> void:
+	for d in _actors:
+		if d.actor == a and d.has("sc_t") and not d.get("gone", false):
+			d["gone"] = true
+			anim.scale_track_insert_key(d.sc_t, t, Vector3.ONE)
+			anim.scale_track_insert_key(d.sc_t, t + 1.0 / FPS, Vector3.ONE * 0.0001)
+
+## Fin de una ronda: la sangre del piso y los miembros se limpian a partir de este momento.
+var _clear_times: Array = []
+func clear_round(t: float) -> void:
+	_clear_times.append(t)
+	for id in _limbs:
+		var ld: Dictionary = _limbs[id]
+		if not ld.get("gone", false):
+			ld["gone"] = true
+			anim.scale_track_insert_key(ld.st, t, Vector3.ONE)
+			anim.scale_track_insert_key(ld.st, t + 1.0 / FPS, Vector3.ONE * 0.0001)
 
 func _track_weapons(a: Actor, t: float) -> void:
 	for slot in a.weapons:
@@ -267,15 +290,24 @@ func capture(t: float) -> void:
 	anim.length = maxf(anim.length, t)
 	for d in _actors:
 		var a = d.actor
-		if not is_instance_valid(a):
+		if not is_instance_valid(a) or d.get("gone", false):
 			continue
 		var m: Transform3D = a.model.global_transform
 		anim.position_track_insert_key(d.pos_t, t, m.origin)
 		anim.rotation_track_insert_key(d.rot_t, t, m.basis.orthonormalized().get_rotation_quaternion())
 		var sk: Skeleton3D = d.sk_src
+		# se toma la pose FINAL (global, con la IK de los brazos y el arma ya aplicadas) y se la pasa a local de cada hueso
+		var locs: Array = []
+		locs.resize(d.n)
 		for b in d.n:
-			anim.rotation_track_insert_key(d.rot[b], t, sk.get_bone_pose_rotation(b))
-			var sc := sk.get_bone_pose_scale(b)
+			var g: Transform3D = sk.get_bone_global_pose(b)
+			var pb := sk.get_bone_parent(b)
+			locs[b] = (sk.get_bone_global_pose(pb).affine_inverse() * g) if pb >= 0 else g
+		d["locs"] = locs
+		for b in d.n:
+			var lt: Transform3D = locs[b]
+			anim.rotation_track_insert_key(d.rot[b], t, lt.basis.orthonormalized().get_rotation_quaternion())
+			var sc: Vector3 = lt.basis.get_scale()
 			if not (d.scale as Dictionary).has(b):
 				if sc.x < 0.5:
 					var tr := _scale_track("%s:%s" % [d.base, sk.get_bone_name(b)])
@@ -284,13 +316,26 @@ func capture(t: float) -> void:
 					anim.scale_track_insert_key(tr, t, sc)
 			else:
 				anim.scale_track_insert_key(d.scale[b], t, sc)
-		anim.position_track_insert_key(d.hips_t, t, sk.get_bone_pose_position(sk.find_bone("mixamorig_Hips")))
+		anim.position_track_insert_key(d.hips_t, t, (locs[sk.find_bone("mixamorig_Hips")] as Transform3D).origin)
+		if not d.has("pos_tr"):
+			d["pos_tr"] = {}
+		for b in d.n:
+			var po: Vector3 = (locs[b] as Transform3D).origin
+			var pr: Vector3 = sk.get_bone_rest(b).origin
+			if (d.pos_tr as Dictionary).has(b):
+				anim.position_track_insert_key(d.pos_tr[b], t, po)
+			elif po.distance_to(pr) > 0.002 and sk.get_bone_name(b) != "mixamorig_Hips":
+				var ptr := _pos_track("%s:%s" % [d.base, sk.get_bone_name(b)])
+				d.pos_tr[b] = ptr
+				anim.position_track_insert_key(ptr, 0.0, pr)
+				anim.position_track_insert_key(ptr, t, po)
 		if d.has("rot2"):
 			for b in d.n:
-				anim.rotation_track_insert_key(d.rot2[b], t, sk.get_bone_pose_rotation(b))
-			anim.position_track_insert_key(d.hips2, t, sk.get_bone_pose_position(sk.find_bone("mixamorig_Hips")))
+				anim.rotation_track_insert_key(d.rot2[b], t, (d.locs[b] as Transform3D).basis.orthonormalized().get_rotation_quaternion())
+			anim.position_track_insert_key(d.hips2, t, (d.locs[sk.find_bone("mixamorig_Hips")] as Transform3D).origin)
 			var on: bool = is_instance_valid(d.anat) and d.anat._showing
 			if on != d.xon:
+				print("RAYOSX ", d.wrapper.name, " t=", snappedf(t, 0.01), " visible=", on)
 				d.xon = on
 				var t0 := maxf(t - 1.0 / FPS, 0.0)
 				anim.scale_track_insert_key(d.an_scale, t0, Vector3.ONE * (0.0001 if on else 1.0))
@@ -317,6 +362,8 @@ func capture(t: float) -> void:
 		anim.rotation_track_insert_key(_cam_tracks[1], t, cam.global_basis.orthonormalized().get_rotation_quaternion())
 	# miembros arrancados: aparecen cuando se desprenden
 	for a in _actors:
+		if not is_instance_valid(a.actor):
+			continue
 		var par: Node = (a.actor as Actor).get_parent()
 		if par == null:
 			continue
@@ -329,16 +376,38 @@ func capture(t: float) -> void:
 				cm.mesh = (n as Limb).suit.mesh
 				for s in cm.mesh.get_surface_count():
 					cm.set_surface_override_material(s, cm.mesh.surface_get_material(s) if s == cm.mesh.get_surface_count() - 1 else _white(0.92))
+				cm.name = "Traje"
 				lw.add_child(cm)
-				var ld := {"n": n, "pt": _pos_track(lw.name), "rt": _rot_track(lw.name), "st": _scale_track(lw.name)}
+				var ld := {"n": n, "pt": _pos_track(lw.name), "rt": _rot_track(lw.name), "st": _scale_track(lw.name), "owner": a, "lx": false}
+				for dd in _actors:
+					if dd.get("anat") != null and dd.get("anat") == (n as Limb).anat:
+						ld["owner"] = dd
+				if (n as Limb).xray != null:
+					var xm := MeshInstance3D.new()
+					xm.name = "Anatomia"
+					xm.mesh = (n as Limb).xray.mesh
+					lw.add_child(xm)
+					ld["xt"] = _scale_track("%s/Anatomia" % lw.name)
+					ld["tt"] = _scale_track("%s/Traje" % lw.name)
+					anim.scale_track_insert_key(ld.xt, 0.0, Vector3.ONE * 0.0001)
+					anim.scale_track_insert_key(ld.tt, 0.0, Vector3.ONE)
 				anim.scale_track_insert_key(ld.st, 0.0, Vector3.ONE * 0.0001)
 				anim.scale_track_insert_key(ld.st, maxf(t - 1.0 / FPS, 0.0), Vector3.ONE * 0.0001)
 				anim.scale_track_insert_key(ld.st, t, Vector3.ONE)
 				_limbs[n.get_instance_id()] = ld
 	for id in _limbs:
 		var ld: Dictionary = _limbs[id]
-		if is_instance_valid(ld.n):
+		if is_instance_valid(ld.n) and not ld.get("gone", false):
 			var ln := ld.n as Limb
+			if ld.has("xt"):
+				var xo: bool = ld.owner.get("xon", false)
+				if xo != ld.lx:
+					ld.lx = xo
+					var tp := maxf(t - 1.0 / FPS, 0.0)
+					anim.scale_track_insert_key(ld.xt, tp, Vector3.ONE * (0.0001 if xo else 1.0))
+					anim.scale_track_insert_key(ld.xt, t, Vector3.ONE * (1.0 if xo else 0.0001))
+					anim.scale_track_insert_key(ld.tt, tp, Vector3.ONE * (1.0 if xo else 0.0001))
+					anim.scale_track_insert_key(ld.tt, t, Vector3.ONE * (0.0001 if xo else 1.0))
 			anim.position_track_insert_key(ld.pt, t, ln.global_position)
 			anim.rotation_track_insert_key(ld.rt, t, ln.global_basis.orthonormalized().get_rotation_quaternion())
 
@@ -407,6 +476,11 @@ func _build_blood() -> void:
 					anim.scale_track_insert_key(ss, 0.0, Vector3.ONE * 0.0001)
 					anim.scale_track_insert_key(ss, maxf(t0 + land - 1.0 / FPS, 0.0), Vector3.ONE * 0.0001)
 					anim.scale_track_insert_key(ss, t0 + land, Vector3(sz, 1, sz))
+					for ct in _clear_times:
+						if ct > t0 + land:
+							anim.scale_track_insert_key(ss, ct, Vector3(sz, 1, sz))
+							anim.scale_track_insert_key(ss, ct + 1.0 / FPS, Vector3.ONE * 0.0001)
+							break
 					# (nodo estático con escala animada: su posición se guarda con una pista fija)
 					var ps := _pos_track(sp.name)
 					anim.position_track_insert_key(ps, 0.0, sp.position)
