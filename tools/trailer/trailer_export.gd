@@ -297,12 +297,34 @@ func capture(t: float) -> void:
 		anim.rotation_track_insert_key(d.rot_t, t, m.basis.orthonormalized().get_rotation_quaternion())
 		var sk: Skeleton3D = d.sk_src
 		# se toma la pose FINAL (global, con la IK de los brazos y el arma ya aplicadas) y se la pasa a local de cada hueso
+		var globs: Array = []
+		globs.resize(d.n)
+		for b in d.n:
+			globs[b] = sk.get_bone_global_pose(b)
+		# lo que realmente se dibuja (con la IK de los brazos y el arma): las matrices de piel que recibe el renderizador
+		if not d.has("skin_mi"):
+			d["skin_mi"] = null
+			for c in sk.get_children():
+				if c is MeshInstance3D and (c as MeshInstance3D).skin != null and c.has_meta("actor_mesh"):
+					d["skin_mi"] = c
+					break
+		var smi = d.skin_mi
+		if smi != null and is_instance_valid(smi):
+			var sref: SkinReference = (smi as MeshInstance3D).get_skin_reference()
+			if sref != null:
+				var skn: Skin = (smi as MeshInstance3D).skin
+				for i in skn.get_bind_count():
+					var bb := skn.get_bind_bone(i)
+					if bb < 0:
+						bb = sk.find_bone(str(skn.get_bind_name(i)).replace(":", "_"))
+					if bb >= 0 and bb < d.n:
+						var sm: Transform3D = RenderingServer.skeleton_bone_get_transform(sref.get_skeleton(), i)
+						globs[bb] = sm * skn.get_bind_pose(i).affine_inverse()
 		var locs: Array = []
 		locs.resize(d.n)
 		for b in d.n:
-			var g: Transform3D = sk.get_bone_global_pose(b)
 			var pb := sk.get_bone_parent(b)
-			locs[b] = (sk.get_bone_global_pose(pb).affine_inverse() * g) if pb >= 0 else g
+			locs[b] = ((globs[pb] as Transform3D).affine_inverse() * (globs[b] as Transform3D)) if pb >= 0 else globs[b]
 		d["locs"] = locs
 		for b in d.n:
 			var lt: Transform3D = locs[b]
