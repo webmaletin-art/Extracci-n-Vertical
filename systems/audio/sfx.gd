@@ -109,10 +109,11 @@ func _pick(sound: String) -> AudioStream:
 ## Registro de sonidos (sólo para grabar trailers: tools/trailer): cada sonido con su momento (segundos de video), archivo,
 ## posición, volumen y tono. Con eso se arma el CSV de tiempos y la mezcla de audio.
 var log_on := false
+var log_t0 := 0                      ## cuadro en que empieza el video (el tiempo del registro es relativo)
 var event_log: Array = []
 
 func _log(sound: String, s: AudioStream, pos: Variant, volume_db: float, pitch: float) -> void:
-	event_log.append({"t": snappedf(float(Engine.get_frames_drawn()) / 30.0, 0.001), "sound": sound, "file": s.resource_path if s else "",
+	event_log.append({"t": snappedf(float(Engine.get_frames_drawn() - log_t0) / 30.0, 0.001), "sound": sound, "file": s.resource_path if s else "",
 		"pos": pos, "db": volume_db, "pitch": pitch})
 
 func play(sound: String, pos: Vector3, volume_db := 0.0, pitch := 1.0, noise := 0.0, source: Node = null) -> void:

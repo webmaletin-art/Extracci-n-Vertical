@@ -18,6 +18,9 @@ var segments: Array[String] = []
 var only := ""                         ## (pruebas) sólo esta escena
 var max_seconds := 300.0
 var _quit_called := false
+var export_glb := ""                   ## si no está vacío: exporta la escena como GLB con animaciones (ver TrailerExport)
+const Exporter := preload("res://tools/trailer/trailer_export.gd")   # (tools/ no registra class_name)
+var rec
 
 func _ready() -> void:
 	Settings.fog_war = false
@@ -29,6 +32,8 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--only="):
 			only = a.substr(7)
+		if a.begins_with("--glb="):
+			export_glb = a.substr(6)
 	controller.set_process(false)
 	controller.set_physics_process(false)
 	controller.set_process_input(false)
@@ -47,6 +52,9 @@ func _ready() -> void:
 	cap_layer.add_child(fade)
 	Sfx.log_on = true
 	Sfx.event_log.clear()
+	Sfx.log_t0 = Engine.get_frames_drawn()
+	if export_glb != "":
+		TechView.set_mode.call_deferred(0)            # materiales originales (el estilo plano usa shaders que el GLB no puede llevar)
 	player.max_health = 500.0
 	player.health = 500.0
 	_find_heli()
@@ -87,6 +95,8 @@ func _process(delta: float) -> void:
 		var f: Vector3 = cam_focus_fn.call()
 		camera.look_offset_x = lerpf(camera.look_offset_x, clampf(f.x - player.global_position.x, -7.0, 7.0), clampf(4.0 / FPS, 0.0, 1.0))
 	_mirror_inputs()
+	if rec != null:
+		rec.capture(vt)
 
 var hud_hold := false
 var _press := {}                       ## botón → segundos que sigue iluminado (pulsaciones de un cuadro: recargar, usar, cambiar arma)
@@ -186,6 +196,8 @@ func spawn_enemy(x: float, y: float, char_id: String, weapon_id: String, floor_i
 	e.died.connect(func(info):
 		if info.get("shooter") == player:
 			_kills += 1)
+	if rec != null:
+		rec.add_actor(e, vt)
 	return e
 
 ## El jugador recibe un impacto escenificado (se sacude, sangra, baja la vida) sin lesiones graves.
@@ -215,6 +227,15 @@ func _on(name_: String) -> bool:
 
 func _run() -> void:
 	await wait_s(0.3)
+	if export_glb != "":
+		TechView.set_mode(0)                          # materiales originales (los shaders del estilo plano no caben en un GLB)
+		await wait_s(0.3)
+		var acts: Array = [player]
+		for e in tower.enemies:
+			if is_instance_valid(e):
+				acts.append(e)
+		rec = Exporter.new()
+		rec.begin(self, acts)
 	if _on("intro"):
 		await _intro()
 	if _on("pistolas"):
@@ -239,6 +260,12 @@ func _finish() -> void:
 	if _quit_called:
 		return
 	_quit_called = true
+	if rec != null:
+		var base := export_glb
+		rec.export_to(ProjectSettings.globalize_path(base))
+		var hf := FileAccess.open(base.get_basename() + "_disparos.json", FileAccess.WRITE)
+		hf.store_string(JSON.stringify(rec.hits, "\t"))
+		hf.close()
 	var f := FileAccess.open("user://trailer_sonidos.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify({"fps": FPS, "seconds": vt, "events": Sfx.event_log}, "\t"))
 	f.close()
@@ -323,6 +350,7 @@ func _escalera() -> void:
 	await wait_s(0.5)
 
 func _escopeta() -> void:
+	arm("primary", "remington")
 	put(Vector3(10.0, 4.55, 0))
 	face(1.0)
 	target_cam(func(): return player.global_position + Vector3(2.0, 1.3, 0), 8.0, 58.0, 0.6)
@@ -371,6 +399,7 @@ func _awm() -> void:
 	await wait_s(1.5)
 
 func _extraccion() -> void:
+	arm("primary", "awm")
 	var roof_y: float = tower.data.roof.y
 	var hx: float = float(tower.data.roof.extraction[0])
 	put(Vector3(hx - 14.0, roof_y + 0.05, 0))
