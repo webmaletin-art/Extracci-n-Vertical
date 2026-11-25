@@ -106,12 +106,23 @@ func _pick(sound: String) -> AudioStream:
 	return v[randi() % v.size()]
 
 ## Sonido en el mundo. noise > 0 avisa a la IA (radio en metros del ruido).
+## Registro de sonidos (sólo para grabar trailers: tools/trailer): cada sonido con su momento (segundos de video), archivo,
+## posición, volumen y tono. Con eso se arma el CSV de tiempos y la mezcla de audio.
+var log_on := false
+var event_log: Array = []
+
+func _log(sound: String, s: AudioStream, pos: Variant, volume_db: float, pitch: float) -> void:
+	event_log.append({"t": snappedf(float(Engine.get_frames_drawn()) / 30.0, 0.001), "sound": sound, "file": s.resource_path if s else "",
+		"pos": pos, "db": volume_db, "pitch": pitch})
+
 func play(sound: String, pos: Vector3, volume_db := 0.0, pitch := 1.0, noise := 0.0, source: Node = null) -> void:
 	if noise > 0.0:
 		NoiseBus.emit_noise(pos, noise, source)
 	var s := _pick(sound)
 	if s == null:
 		return
+	if log_on:
+		_log(sound, s, pos, volume_db, pitch * _time_pitch())
 	var p := _p3[_i3]
 	_i3 = (_i3 + 1) % POOL_3D
 	p.stream = s
@@ -125,6 +136,8 @@ func play_ui(sound: String, volume_db := 0.0, pitch := 1.0) -> void:
 	var s := _pick(sound)
 	if s == null:
 		return
+	if log_on:
+		_log(sound, s, null, volume_db, pitch)
 	var p := _p2[_i2]
 	_i2 = (_i2 + 1) % POOL_2D
 	p.stream = s
@@ -142,6 +155,8 @@ func ambient(sound: String, volume_db := -10.0) -> void:
 	var s := _pick(sound)
 	if s == null:
 		return
+	if log_on:
+		_log(sound + " (ambiente, en bucle)", s, null, volume_db, 1.0)
 	if s is AudioStreamOggVorbis:
 		(s as AudioStreamOggVorbis).loop = true
 	elif s is AudioStreamMP3:

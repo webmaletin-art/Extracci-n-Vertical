@@ -14,6 +14,7 @@ var player: Actor
 var tower: TowerBuilder
 var camera: SideCamera
 var touch_mode := false
+var clean_view := false              ## (trailers) oculta minimapa y textos: sólo vida, munición y controles
 var left_stick: TouchStick
 var right_stick: TouchStick
 var buttons := {}                  ## nombre → TouchButton
@@ -350,7 +351,7 @@ func _draw() -> void:
 
 ## Minimapa esquemático de la torre: sectores descubiertos, ascensor, escaleras y el jugador.
 func _draw_minimap(s: Vector2) -> void:
-	if tower == null:
+	if tower == null or clean_view:
 		return
 	var w := 200.0
 	var h := 150.0

@@ -593,10 +593,26 @@ func _build_roof(d: Dictionary, y: float) -> void:
 		_extraction(node, Vector3(float(d.roof.extraction[0]), y, 0), str(d.roof.extraction[1]))
 		_helicopter(node, Vector3(float(d.roof.extraction[0]), y + 4.5, -6.0))
 
+const HELI_MODEL := "res://assets/props/military_helicopter.glb"
+
+## Helicóptero de extracción de la azotea (modelo propio de assets/props; si falta, el de cajas de abajo). Es parte del mapa:
+## los mapas con IA pueden reutilizarlo como punto de extracción.
 func _helicopter(parent: Node3D, pos: Vector3) -> void:
 	var h := Node3D.new()
 	h.position = pos
 	parent.add_child(h)
+	if ResourceLoader.exists(HELI_MODEL):
+		var ps := load(HELI_MODEL) as PackedScene
+		if ps:
+			var m := ps.instantiate() as Node3D
+			m.scale = Vector3.ONE * 12.0               # el modelo mide 1 m de largo: ~12 m de helicóptero
+			m.position = Vector3(0, -1.0, 0)
+			m.set_meta("no_tech", false)
+			h.add_child(m)
+			var bob0 := create_tween().set_loops()
+			bob0.tween_property(h, "position:y", pos.y + 0.25, 1.8).set_trans(Tween.TRANS_SINE)
+			bob0.tween_property(h, "position:y", pos.y - 0.25, 1.8).set_trans(Tween.TRANS_SINE)
+			return
 	var body := MeshInstance3D.new()
 	var cm := CapsuleMesh.new()
 	cm.radius = 1.0

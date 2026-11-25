@@ -7,3 +7,4 @@ export_credentials.cfg
 # clave de DESARROLLO (contraseña pública): mantiene la firma estable entre compilaciones
 !build/dev.keystore
 build/*.pck
+override.cfg
