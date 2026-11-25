@@ -25,7 +25,7 @@ func _ready() -> void:
 	var v := b.velocity_of(bt._proj)
 	var x1 := float(b.visual_z[2]) if b.visual_z.size() == 4 else p0.x + 8.0
 	for k in 3:
-		var u := [0.1, 0.5, 0.9][k]
+		var u: float = [0.1, 0.5, 0.9][k]
 		b._pos[bt._proj] = p0 + v.normalized() * (x1 - p0.x) * u / maxf(absf(v.normalized().x), 0.1)
 		await _w(4)
 		await _snap(out, "1_vuelo_%d" % k)
@@ -36,7 +36,7 @@ func _ready() -> void:
 		t += 1
 	TimeFx.slowmo(0.0005, 9999.0, "kill", 0.0)
 	for k in 4:
-		bt.debug_u = [0.15, 0.4, 0.65, 0.95][k]
+		bt.debug_u = float([0.15, 0.4, 0.65, 0.95][k])
 		await _w(4)
 		await _snap(out, "2_dentro_%d" % k)
 	bt.debug_u = 1.0
