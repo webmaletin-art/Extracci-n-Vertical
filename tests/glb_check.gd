@@ -76,6 +76,7 @@ func _ready() -> void:
 		if a0c:
 			var sk0 := a0c.find_child("Skeleton3D", true, false) as Skeleton3D
 			if sk0:
+				print("YAW t=", t, " envoltorio=", snappedf(rad_to_deg(a0c.global_basis.get_euler().y), 0.1), " esqueleto=", snappedf(rad_to_deg(sk0.global_basis.get_euler().y), 0.1), " escala_esq=", sk0.global_basis.get_scale())
 				sk0.force_update_all_bone_transforms()
 				var rh := sk0.global_transform * sk0.get_bone_global_pose(sk0.find_bone("mixamorig_RightHand")).origin
 				var lh := sk0.global_transform * sk0.get_bone_global_pose(sk0.find_bone("mixamorig_LeftHand")).origin

@@ -156,6 +156,7 @@ func _add_actor(a: Actor, t_spawn := 0.0) -> void:
 			c.get_parent().remove_child(c)
 			c.queue_free()
 	var sk := model.get_node("Skeleton3D") as Skeleton3D
+	sk.reset_bone_poses()                           # la copia queda en su pose de reposo (el GLB toma de ahí el esqueleto)
 	for mi in sk.get_children():
 		if mi is MeshInstance3D:
 			for s in (mi as MeshInstance3D).mesh.get_surface_count():
@@ -340,6 +341,7 @@ func capture(t: float) -> void:
 				var o: Vector3 = lt0.origin if ((d.get("pos_tr", {}) as Dictionary).has(cbi) or sk.get_bone_name(cbi) == "mixamorig_Hips") else rest0.origin
 				var bs := Basis(lt0.basis.orthonormalized().get_rotation_quaternion()).scaled(lt0.basis.get_scale() if (d.scale as Dictionary).has(cbi) else Vector3.ONE)
 				acc = acc * Transform3D(bs, o)
+			print("YAW_JUEGO modelo=", snappedf(rad_to_deg((a.model.global_basis as Basis).get_euler().y), 0.1), " esqueleto=", snappedf(rad_to_deg(sk.global_basis.get_euler().y), 0.1), " escala_esq=", sk.global_basis.get_scale())
 			print("RECONSTRUIDA mano_der=", sk.global_transform * acc.origin, " real=", sk.global_transform * (globs[hi] as Transform3D).origin, " cadena=", chain.size())
 		for b in d.n:
 			var lt: Transform3D = locs[b]
