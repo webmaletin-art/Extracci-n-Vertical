@@ -31,7 +31,7 @@ var _apk := 0
 func _ready() -> void:
 	_build_ui()
 	# contenido ya presente (editor / PC / compilación completa): nada que descargar
-	if ResourceLoader.exists(PROBE) and not OS.has_feature("android"):
+	if ResourceLoader.exists(PROBE) and not OS.has_feature("android") and OS.get_environment("EV_FORZAR_DESCARGA") == "":
 		_go()
 		return
 	_apk = int(_read_json("res://boot/local_version.json").get("apk", 0))
@@ -106,10 +106,13 @@ func _say(t: String, sub := "") -> void:
 func _check() -> void:
 	_say("Buscando novedades…")
 	var url := str(_read_json("res://boot/update_config.json").get("manifest_url", ""))
+	if OS.get_environment("EV_MANIFEST_URL") != "":
+		url = OS.get_environment("EV_MANIFEST_URL")      # (pruebas) servidor local
 	if url == "":
 		_finish_offline()
 		return
 	_http.download_file = ""
+	_http.timeout = 30.0
 	_http.request_completed.connect(_on_manifest, CONNECT_ONE_SHOT)
 	if _http.request(url) != OK:
 		_http.request_completed.disconnect(_on_manifest)
@@ -152,36 +155,131 @@ func _finish_offline() -> void:
 
 # ---------------------------------------------------------------- descarga
 
+## Los paquetes se bajan por PARTES de 16 MB (pedido con Range): cada parte se guarda aparte, se reintenta sola si se
+## corta o se traba, y al volver a abrir el juego se sigue desde la última parte completa. Sin límite de tiempo total.
+const SEG := 16 * 1048576
+const MAX_TRIES := 6
+var _seg := 0
+var _tries := 0
+var _stall_t := 0.0
+var _last_bytes := -1
+
+func _seg_path(k: int) -> String:
+	return "%s/%s.seg%03d" % [CONTENT_DIR, _cur.name, k]
+
+func _segs() -> int:
+	return maxi(1, ceili(float(_cur.get("size", SEG)) / SEG))
+
 func _next() -> void:
 	if _queue.is_empty():
 		_go()
 		return
 	_cur = _queue.pop_front()
-	var part := "%s/%s.pck.part" % [CONTENT_DIR, _cur.name]
+	_seg = 0
+	_tries = 0
+	# partes ya bajadas en una vez anterior (del mismo archivo): se saltean
+	while _seg < _segs() and FileAccess.file_exists(_seg_path(_seg)) and _seg_ok(_seg):
+		_seg += 1
 	_say("Descargando %s" % str(_cur.get("desc", _cur.name)), "%.0f MB · una sola vez; después sólo se baja lo que cambie" % (float(_cur.get("size", 0)) / 1048576.0))
 	_bar.visible = true
 	_bar.max_value = 1.0
-	_http.download_file = part
-	_http.request_completed.connect(_on_pack, CONNECT_ONE_SHOT)
-	if _http.request(str(_cur.url)) != OK:
-		_http.request_completed.disconnect(_on_pack)
-		_fail("No se pudo iniciar la descarga")
+	_request_seg()
 
-func _process(_d: float) -> void:
+func _seg_len(k: int) -> int:
+	return mini(SEG, int(_cur.get("size", 0)) - k * SEG)
+
+func _seg_ok(k: int) -> bool:
+	var f := FileAccess.open(_seg_path(k), FileAccess.READ)
+	if f == null:
+		return false
+	var ok := int(f.get_length()) == _seg_len(k)
+	f.close()
+	var tag := "%s/%s.ver" % [CONTENT_DIR, _cur.name]
+	return ok and FileAccess.file_exists(tag) and FileAccess.get_file_as_string(tag) == str(_cur.get("sha256", ""))
+
+func _request_seg() -> void:
+	if _seg >= _segs():
+		_assemble()
+		return
+	var tag := FileAccess.open("%s/%s.ver" % [CONTENT_DIR, _cur.name], FileAccess.WRITE)
+	tag.store_string(str(_cur.get("sha256", "")))
+	tag.close()
+	var a := _seg * SEG
+	var b := a + _seg_len(_seg) - 1
+	_http.cancel_request()
+	_http.timeout = 0.0                         # sin límite: lo controla el vigilante de traba (_process)
+	_http.download_file = _seg_path(_seg)
+	_stall_t = 0.0
+	_last_bytes = -1
+	_http.request_completed.connect(_on_seg, CONNECT_ONE_SHOT)
+	if _http.request(str(_cur.url), ["Range: bytes=%d-%d" % [a, b]]) != OK:
+		_http.request_completed.disconnect(_on_seg)
+		_retry_seg("no se pudo iniciar")
+
+func _process(d: float) -> void:
 	if _bar.visible and _cur.size() > 0:
 		var got := _http.get_downloaded_bytes()
 		var total := float(maxi(_total_bytes, 1))
-		_bar.value = clampf((_done_bytes + got) / total, 0.0, 1.0)
-		_sub.text = "%.1f / %.1f MB" % [(_done_bytes + got) / 1048576.0, total / 1048576.0]
+		var now := _done_bytes + _seg * SEG + got
+		_bar.value = clampf(now / total, 0.0, 1.0)
+		_sub.text = "%.1f / %.1f MB%s" % [now / 1048576.0, total / 1048576.0, ("  · reintento %d" % _tries) if _tries > 0 else ""]
+		# vigilante: si no llega nada en 30 s, se corta y se reintenta esa parte
+		if _http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
+			if got == _last_bytes:
+				_stall_t += d
+				if _stall_t > 30.0:
+					_http.cancel_request()
+					if _http.request_completed.is_connected(_on_seg):
+						_http.request_completed.disconnect(_on_seg)
+					_retry_seg("sin datos 30 s")
+			else:
+				_stall_t = 0.0
+				_last_bytes = got
 
-func _on_pack(result: int, code: int, _h: PackedStringArray, _b: PackedByteArray) -> void:
-	var part := "%s/%s.pck.part" % [CONTENT_DIR, _cur.name]
-	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
-		DirAccess.remove_absolute(part)
-		_fail("La descarga se cortó (%d)" % code)
+func _on_seg(result: int, code: int, _h: PackedStringArray, _b: PackedByteArray) -> void:
+	if result != HTTPRequest.RESULT_SUCCESS or not (code == 206 or code == 200):
+		_retry_seg("error %d/%d" % [result, code])
 		return
-	_say("Verificando…")
+	if code == 200:
+		# el servidor ignoró el Range y mandó el archivo entero: listo de una vez
+		var final_part := "%s/%s.pck.part" % [CONTENT_DIR, _cur.name]
+		DirAccess.rename_absolute(_seg_path(_seg), final_part)
+		_verify_and_install(final_part)
+		return
+	_tries = 0
+	_seg += 1
+	_request_seg()
+
+func _retry_seg(why: String) -> void:
+	_tries += 1
+	if _tries > MAX_TRIES:
+		_fail("La descarga se cortó (%s)" % why)
+		return
+	await get_tree().create_timer(minf(2.0 * _tries, 10.0)).timeout
+	_request_seg()
+
+## Une las partes en el .pck, lo verifica y lo instala.
+func _assemble() -> void:
+	_say("Uniendo y verificando…")
+	await get_tree().process_frame
+	var part := "%s/%s.pck.part" % [CONTENT_DIR, _cur.name]
+	var out := FileAccess.open(part, FileAccess.WRITE)
+	for k in _segs():
+		var f := FileAccess.open(_seg_path(k), FileAccess.READ)
+		if f == null:
+			out.close()
+			_fail("Falta una parte de la descarga")
+			return
+		while f.get_position() < f.get_length():
+			out.store_buffer(f.get_buffer(4 * 1048576))
+		f.close()
+	out.close()
+	_verify_and_install(part)
+
+func _verify_and_install(part: String) -> void:
 	var sha := FileAccess.get_sha256(part)
+	for k in _segs():
+		DirAccess.remove_absolute(_seg_path(k))
 	if str(_cur.get("sha256", "")) != "" and sha != str(_cur.sha256):
 		DirAccess.remove_absolute(part)
 		_fail("El archivo descargado no coincide (se descartó)")
@@ -199,7 +297,7 @@ func _on_pack(result: int, code: int, _h: PackedStringArray, _b: PackedByteArray
 
 func _fail(msg: String) -> void:
 	_bar.visible = false
-	_say(msg, "Revisá la conexión y tocá Reintentar (lo ya descargado no se vuelve a bajar).")
+	_say(msg, "Revisá la conexión y tocá Reintentar: sigue desde la última parte completa.")
 	_retry.text = "Reintentar"
 	_retry.visible = true
 
