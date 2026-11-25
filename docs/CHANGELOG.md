@@ -91,3 +91,11 @@
 - Autoload `TechView` (reversible, no guarda nada): A filtro de pantalla, B materiales técnicos + contorno, C híbrido;
   rayos X realista / técnico gris / técnico con colores; parámetros en vivo. Se activa en Modo práctica y sigue
   activo al ir a la Torre en la misma sesión. Informe y mediciones: `docs/VISUAL_TECNICO.md`.
+
+## 0.9.0 — Modo D «Plano dibujado» y daño por potencia
+
+* Estilo D: sin texturas, luces ni sombras; tonos planos y líneas de tinta en bordes (agrupadas por tramos del mapa);
+  grosor ajustable; láser negro; explosión como onda de líneas. Reversible desde Modo práctica.
+* Test de rendimiento de estilos en Modo práctica (≈1 min, con disparos y granada, informe copiable).
+* Daño por potencia: sangre y orificio de herida según el daño; escopeta rompe más huesos de cerca.
+* Impactos visibles durante la cámara de muerte; rebotes corregidos (umbrales por material).

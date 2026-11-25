@@ -116,6 +116,9 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 			_strength = clampf(float(info.get("damage", 30.0)) / 30.0, 0.6, 2.5) * (1.4 if ricochet else 1.0)
 			if t == "fragment":
 				_strength = 0.6
+			# escopeta: cada perdigón rompe más de cerca (a quemarropa destroza; a 10 m apenas)
+			if int(info.get("pellets", 1)) > 1:
+				_strength = clampf(2.4 - float(info.get("distance", 6.0)) * 0.2, 0.6, 2.4)
 			# recorrido por dentro: al pegar en un hueso duro la bala puede desviarse y seguir rompiendo en otra dirección
 			var o := point - dir * 0.3
 			var d := dir

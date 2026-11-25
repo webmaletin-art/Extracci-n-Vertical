@@ -108,6 +108,12 @@ func _on_proj_hit(idx: int, _info: Dictionary) -> void:
 		_until = _now() + 0.12        # el daño se aplica justo después: se decide en el próximo cuadro
 
 func _on_damage(a: Actor, info: Dictionary) -> void:
+	# durante la toma de muerte, los disparos que siguen pegando en ese cuerpo SE VEN: la ventana de rayos X se
+	# actualiza con las heridas nuevas y la toma dura un poco más
+	if phase == "kill" and a == _victim and is_instance_valid(a):
+		AnatomyBody.for_actor(a).show_killcam(_main, 0.3)
+		_until = maxf(_until, _now() + 0.7)
+		return
 	var lines: Array = info.get("injuries", [])
 	if not lines.is_empty():
 		injury_report.emit(a, lines)

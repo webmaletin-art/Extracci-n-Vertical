@@ -21,6 +21,7 @@ var _vel := PackedVector3Array()
 var _dmg := PackedFloat32Array()
 var _from := PackedVector3Array()      ## de dónde salió (alcance efectivo)
 var _range := PackedFloat32Array()     ## alcance efectivo del arma (m)
+var _pellets := PackedInt32Array()     ## perdigones del disparo (escopeta: daño de cerca)
 var _pen := PackedFloat32Array()
 var _drag := PackedFloat32Array()
 var _life := PackedFloat32Array()
@@ -38,7 +39,7 @@ var stats := {"fired": 0, "hits": 0}
 
 func _ready() -> void:
 	instance = self
-	_pos.resize(MAX); _vel.resize(MAX); _dmg.resize(MAX); _from.resize(MAX); _range.resize(MAX); _pen.resize(MAX); _drag.resize(MAX); _life.resize(MAX); _ric.resize(MAX)
+	_pos.resize(MAX); _vel.resize(MAX); _dmg.resize(MAX); _from.resize(MAX); _range.resize(MAX); _pellets.resize(MAX); _pen.resize(MAX); _drag.resize(MAX); _life.resize(MAX); _ric.resize(MAX)
 	var tracer_mat := StandardMaterial3D.new()
 	tracer_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	tracer_mat.albedo_color = Color(1.0, 0.82, 0.45, 0.85)
@@ -81,6 +82,7 @@ func fire(from: Vector3, dir: Vector3, speed: float, damage: float, shooter: Nod
 	_dmg[i] = damage
 	_from[i] = from
 	_range[i] = float(opts.get("range", 0.0))
+	_pellets[i] = int(opts.get("pellets", 1))
 	_pen[i] = float(opts.get("penetration", 2.0))
 	_drag[i] = float(opts.get("drag", 0.05))
 	_ric[i] = float(opts.get("ricochet", 0.2))
@@ -141,7 +143,7 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 			if dd > _range[i]:
 				_dmg[i] *= lerpf(1.0, 0.5, clampf((dd - _range[i]) / _range[i], 0.0, 1.0))
 				_range[i] = 0.0
-		var info := {"point": point, "normal": normal, "dir": dir, "damage": _dmg[i], "shooter": _owner[i], "kind": _kind[i],
+		var info := {"distance": point.distance_to(_from[i]), "pellets": _pellets[i], "point": point, "normal": normal, "dir": dir, "damage": _dmg[i], "shooter": _owner[i], "kind": _kind[i],
 			"speed": _vel[i].length(), "index": i}
 		stats.hits += 1
 		if col is Area3D and (col as Area3D).has_meta("actor"):
@@ -198,10 +200,12 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 		# deformada y girando: si después pega en alguien abre una herida más ancha (info.ricochet)
 		var graze := -dir.dot(normal)
 		var chance := 0.0
-		if surface == "metal" and graze < 0.4:
-			chance = _ric[i] * 1.6
-		elif surface in ["concrete", "wood"] and graze < 0.22:
-			chance = _ric[i] * (1.4 if normal.y > 0.7 else 0.8)
+		# (graze = coseno con la normal: 1 = de frente · 0 = paralela). En metal rebota hasta ~33° de la superficie y es más
+		# probable cuanto más rasante; en hormigón / madera hasta ~17°.
+		if surface == "metal" and graze < 0.55:
+			chance = _ric[i] * 1.6 * (1.25 - graze / 0.55)
+		elif surface in ["concrete", "wood"] and graze < 0.3:
+			chance = _ric[i] * (1.4 if normal.y > 0.7 else 0.8) * (1.2 - graze / 0.3)
 		if _kind[i] != "fragment" and randf() < chance:
 			var r := dir.bounce(normal).rotated(Vector3.BACK, randf_range(-0.15, 0.15))
 			r.z = 0.0

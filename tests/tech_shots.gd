@@ -27,7 +27,7 @@ func _ready() -> void:
 	await _w(30)
 	g.camera._pos = g.camera._desired()
 	var report := []
-	for m in 4:
+	for m in 5:
 		TechView.set_mode(m)
 		await _w(20)
 		var t0 := Time.get_ticks_usec()
@@ -37,10 +37,19 @@ func _ready() -> void:
 		var dc := Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 		var prim := Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
 		report.append("%s: %.1f ms/cuadro (software) · %d llamadas de dibujo · %d primitivas" % [TechView.MODES[m], ms, dc, prim])
+		if m == 4:
+			var tris := 0
+			for ln in TechView._lines_nodes:
+				tris += ((ln as MeshInstance3D).mesh as ArrayMesh).surface_get_array_index_len(0) / 6
+			print("DBG lineas: nodos ", TechView._lines_nodes.size(), " aristas ", tris, " mallas convertidas ", TechView._orig.size())
 		await _snap("mapa_%d" % m)
 	# muerte con rayos X (toma breve del juego) en cada estilo, sobre el modo C
-	for xs in 3:
-		TechView.set_mode(3)
+	# explosión con el estilo D
+	Explosion.spawn(g, "frag", Vector3(53.0, 0.1, 0), p)
+	await _w(6)
+	await _snap("explosion_D")
+	for xs in []:
+		TechView.set_mode(4)
 		TechView.set_xray(xs)
 		var en: Actor = g.tower.enemies[1 + xs]
 		en.global_position = Vector3(55.0, 0.05, 0)

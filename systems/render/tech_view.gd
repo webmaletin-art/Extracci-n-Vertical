@@ -7,12 +7,15 @@ extends Node
 ##   2 B · MATERIALES     → cambia TEMPORALMENTE los materiales por un sombreado técnico de 4 tonos (sin luces) y agrega
 ##                          contorno de silueta (casco invertido). Guarda los originales y los devuelve al desactivar.
 ##   3 C · HÍBRIDO        → B + líneas interiores de pantalla (pliegues, uniones, escalones) sin filtro de color.
+##   4 D · PLANO DIBUJADO → sin texturas ni luces ni sombras: cada plano del mapa en un tono de papel y sus ARISTAS como
+##                          geometría de líneas fija (se calcula una vez); personajes y armas con contorno. El más liviano
+##                          por píxel. La colisión y la física son las mismas (sólo cambia el dibujo).
 ## Rayos X: 0 realista · 1 técnico gris · 2 técnico con colores (la anatomía dibujada con líneas pero con sus colores).
 ## Nada se guarda en disco: es para probar en la sesión (Modo práctica › VISUALIZACIÓN TÉCNICA 3D).
 
 signal changed
 
-const MODES := ["Desactivada", "A · Filtro sobre el juego", "B · Materiales técnicos", "C · Híbrido (B + líneas)"]
+const MODES := ["Desactivada", "A · Filtro sobre el juego", "B · Materiales técnicos", "C · Híbrido (B + líneas)", "D · Plano dibujado"]
 const XRAY := ["Rayos X realista", "Rayos X técnico (gris)", "Rayos X técnico con colores"]
 
 var mode := 0
@@ -30,6 +33,12 @@ var _outline: ShaderMaterial
 var _post: MeshInstance3D
 var _post_mat: ShaderMaterial
 var _scan_t := 0.0
+var _flat: ShaderMaterial
+var _lines_mat: ShaderMaterial
+var _line_cache := {}       ## mesh → ArrayMesh de aristas
+var _lines_nodes: Array = []
+var _lights := {}           ## luz → visible original
+var _env := {}              ## Environment → [modo de fondo, color]
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -46,6 +55,8 @@ func set_mode(m: int) -> void:
 	RenderingServer.global_shader_parameter_set("tech_on", 1.0 if mode >= 2 else 0.0)
 	if mode >= 2:
 		_convert_tree(get_tree().root)
+	if mode == 4:
+		_lights_off()
 	_update_post()
 	changed.emit()
 
@@ -69,6 +80,8 @@ func _process(delta: float) -> void:
 		_update_post()
 		if mode >= 2:
 			_convert_tree(get_tree().root)        # lo que apareció después (cajas rotas, armas recogidas…)
+		if mode == 4:
+			_lights_off()                         # luces de escenas nuevas (al entrar a la Torre)
 
 # ------------------------------------------------------------------------------------------------ materiales (B, C)
 
@@ -85,6 +98,7 @@ func _skip(n: Node) -> bool:
 	return false
 
 func _convert_tree(root: Node) -> void:
+	_batch = {}
 	for n in root.find_children("*", "MeshInstance3D", true, false):
 		var mi := n as MeshInstance3D
 		if mi.mesh == null or _orig.has(mi.get_instance_id()) or mi.has_meta("tech_skip_checked"):
@@ -93,15 +107,35 @@ func _convert_tree(root: Node) -> void:
 			mi.set_meta("tech_skip_checked", true)
 			continue
 		_convert(mi)
+	_batch_commit(root)
 
 func _convert(mi: MeshInstance3D) -> void:
 	var surf := []
 	for s in mi.mesh.get_surface_count():
 		surf.append(mi.get_surface_override_material(s))
 	_orig[mi.get_instance_id()] = [mi, mi.material_override, surf]
+	var moving := mi.skin != null or _under_actor(mi)
+	if mode == 4 and not moving:
+		# mapa y objetos quietos: tono plano por plano + aristas dibujadas (geometría fija, se calcula una vez)
+		mi.material_override = _flat_mat()
+		var ln := _lines_for(mi.mesh)
+		if ln:
+			if _is_static(mi):
+				_batch_add(ln, mi.global_transform)        # mapa fijo: a un bloque por sector (pocas llamadas de dibujo)
+			else:
+				var lm := MeshInstance3D.new()
+				lm.name = "TechLines"
+				lm.mesh = ln
+				lm.material_override = _lines_mat_get()
+				lm.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				lm.set_meta("no_tech", true)
+				lm.extra_cull_margin = 0.5
+				mi.add_child(lm)
+				_lines_nodes.append(lm)
+		return
 	# contorno de silueta: personajes, armas, cajas y objetos (en el híbrido la arquitectura usa las líneas de pantalla)
 	var small := mi.get_aabb().size.length() < 6.0
-	var outline := mode == 2 or small
+	var outline := mode == 2 or mode == 4 or small
 	mi.material_override = null
 	for s in mi.mesh.get_surface_count():
 		var src: Material = surf[s] if surf[s] else mi.mesh.surface_get_material(s)
@@ -130,7 +164,235 @@ func _tech_for(src: Material, outline: bool) -> ShaderMaterial:
 	_mats[key] = m
 	return m
 
+## ¿Es parte fija del mapa? (no se mueve ni se rompe: ni cuerpos físicos, ni puertas, ni cajas destructibles)
+func _is_static(mi: Node3D) -> bool:
+	var p := mi.get_parent()
+	while p:
+		if p is RigidBody3D or p is AnimatableBody3D or p is CharacterBody3D or p is Destructible or p is Interactable:
+			return false
+		p = p.get_parent()
+	return true
+
+var _batch := {}            ## sector (15 m) → [vértices, custom, índices]
+const BATCH := 15.0
+func _batch_add(ln: ArrayMesh, xf: Transform3D) -> void:
+	var arr := ln.surface_get_arrays(0)
+	var vv: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+	var cc: PackedFloat32Array = arr[Mesh.ARRAY_CUSTOM0]
+	var ii: PackedInt32Array = arr[Mesh.ARRAY_INDEX]
+	var key := int(floor(xf.origin.x / BATCH)) if vv.is_empty() else int(floor((xf * vv[0]).x / BATCH))
+	if not _batch.has(key):
+		_batch[key] = [PackedVector3Array(), PackedFloat32Array(), PackedInt32Array()]
+	var b: Array = _batch[key]
+	# (los arreglos compactos se COPIAN al leerlos de una lista: se trabaja sobre variables y se vuelven a guardar)
+	var bv: PackedVector3Array = b[0]
+	var bc: PackedFloat32Array = b[1]
+	var bi: PackedInt32Array = b[2]
+	var base := bv.size()
+	for k in vv.size():
+		bv.append(xf * vv[k])
+		var o := xf * Vector3(cc[k * 4], cc[k * 4 + 1], cc[k * 4 + 2])
+		bc.append_array([o.x, o.y, o.z, cc[k * 4 + 3]])
+	for k in ii:
+		bi.append(base + k)
+	_batch[key] = [bv, bc, bi]
+
+func _batch_commit(root: Node) -> void:
+	for key in _batch:
+		var b: Array = _batch[key]
+		if (b[0] as PackedVector3Array).is_empty():
+			continue
+		var la := []
+		la.resize(Mesh.ARRAY_MAX)
+		la[Mesh.ARRAY_VERTEX] = b[0]
+		la[Mesh.ARRAY_CUSTOM0] = b[1]
+		la[Mesh.ARRAY_INDEX] = b[2]
+		var am := ArrayMesh.new()
+		am.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, la, [], {}, Mesh.ARRAY_CUSTOM_RGBA_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT)
+		var lm := MeshInstance3D.new()
+		lm.name = "TechLinesSector%d" % key
+		lm.mesh = am
+		lm.material_override = _lines_mat_get()
+		lm.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		lm.set_meta("no_tech", true)
+		lm.extra_cull_margin = 0.5
+		var host: Node = get_tree().current_scene if get_tree().current_scene else root
+		host.add_child(lm)
+		_lines_nodes.append(lm)
+	_batch = {}
+
+func _under_actor(n: Node) -> bool:
+	var p := n.get_parent()
+	while p:
+		if p is Actor:
+			return true
+		p = p.get_parent()
+	return false
+
+func _flat_mat() -> ShaderMaterial:
+	if _flat == null:
+		_flat = ShaderMaterial.new()
+		_flat.shader = load("res://systems/render/tech_flat.gdshader")
+	return _flat
+
+func _lines_mat_get() -> ShaderMaterial:
+	if _lines_mat == null:
+		_lines_mat = ShaderMaterial.new()
+		_lines_mat.shader = load("res://systems/render/tech_lines.gdshader")
+	return _lines_mat
+
+## Aristas «de dibujo» de una malla: bordes abiertos y pliegues (caras vecinas a más de ~25°). Cada arista → cinta de
+## 4 vértices que el shader engorda en pantalla. Se calcula una vez por malla (cache).
+func _lines_for(mesh: Mesh) -> ArrayMesh:
+	if _line_cache.has(mesh):
+		return _line_cache[mesh]
+	var edges := {}          # clave → [a, b, normal, usos]
+	var q := func(v: Vector3) -> Vector3i: return Vector3i((v * 500.0).round())
+	for si in mesh.get_surface_count():
+		var arr := mesh.surface_get_arrays(si)
+		var vv: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+		var ii = arr[Mesh.ARRAY_INDEX]
+		var idx: PackedInt32Array = ii if ii != null and (ii as PackedInt32Array).size() > 0 else PackedInt32Array(range(vv.size()))
+		if idx.size() > 120000:
+			continue                      # malla enorme: no vale la pena (no hay en el mapa)
+		for t in range(0, idx.size() - 2, 3):
+			var p := [vv[idx[t]], vv[idx[t + 1]], vv[idx[t + 2]]]
+			var n: Vector3 = ((p[1] - p[0]) as Vector3).cross(p[2] - p[0])
+			if n.length_squared() < 1e-12:
+				continue
+			n = n.normalized()
+			for e in 3:
+				var a: Vector3 = p[e]
+				var b: Vector3 = p[(e + 1) % 3]
+				var ka: Vector3i = q.call(a)
+				var kb: Vector3i = q.call(b)
+				var key := [ka, kb] if str(ka) < str(kb) else [kb, ka]
+				var ks := str(key)
+				if edges.has(ks):
+					var ed: Array = edges[ks]
+					ed[3] = int(ed[3]) + 1
+					if absf((ed[2] as Vector3).dot(n)) < 0.9:
+						ed[4] = true      # pliegue
+				else:
+					edges[ks] = [a, b, n, 1, false]
+	var verts := PackedVector3Array()
+	var custom := PackedFloat32Array()
+	var ind := PackedInt32Array()
+	for ks in edges:
+		var ed: Array = edges[ks]
+		if int(ed[3]) >= 2 and not ed[4]:
+			continue                      # arista interna de una cara plana (diagonal de un rectángulo): no se dibuja
+		var a: Vector3 = ed[0]
+		var b: Vector3 = ed[1]
+		var base := verts.size()
+		for c in [[a, b, -1.0], [a, b, 1.0], [b, a, 1.0], [b, a, -1.0]]:
+			verts.append(c[0])
+			var o: Vector3 = c[1]
+			custom.append_array([o.x, o.y, o.z, float(c[2])])
+		ind.append_array([base, base + 1, base + 2, base, base + 2, base + 3])
+	if verts.is_empty():
+		_line_cache[mesh] = null
+		return null
+	var la := []
+	la.resize(Mesh.ARRAY_MAX)
+	la[Mesh.ARRAY_VERTEX] = verts
+	la[Mesh.ARRAY_CUSTOM0] = custom
+	la[Mesh.ARRAY_INDEX] = ind
+	var am := ArrayMesh.new()
+	am.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, la, [], {}, Mesh.ARRAY_CUSTOM_RGBA_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT)
+	_line_cache[mesh] = am
+	return am
+
+## Modo D: sin luces reales ni sombras, fondo de papel. Se guarda todo para devolverlo al salir.
+func _lights_off() -> void:
+	_veils_light()
+	for l in get_tree().root.find_children("*", "Light3D", true, false):
+		if not _lights.has(l):
+			_lights[l] = (l as Light3D).visible
+		(l as Light3D).visible = false
+	for we in get_tree().root.find_children("*", "WorldEnvironment", true, false):
+		var e: Environment = (we as WorldEnvironment).environment
+		if e and not _env.has(e) and not _skip(we):
+			_env[e] = [e.background_mode, e.background_color]
+			e.background_mode = Environment.BG_COLOR
+			e.background_color = Color(0.84, 0.84, 0.83)
+
+## Velos de sectores sin explorar: en el plano dibujado van en gris claro (no en gris oscuro).
+var _veils := {}
+func _veils_light() -> void:
+	for v in get_tree().get_nodes_in_group("perf_cubiertas"):
+		var mm := (v as MeshInstance3D).material_override as StandardMaterial3D
+		if mm and not _veils.has(mm):
+			_veils[mm] = mm.albedo_color
+			mm.albedo_color = Color(0.78, 0.78, 0.77, mm.albedo_color.a)
+
+func _veils_restore() -> void:
+	for mm in _veils:
+		if mm:
+			var c: Color = _veils[mm]
+			(mm as StandardMaterial3D).albedo_color = Color(c.r, c.g, c.b, (mm as StandardMaterial3D).albedo_color.a)
+	_veils.clear()
+
+func _lights_restore() -> void:
+	_veils_restore()
+	for l in _lights:
+		if is_instance_valid(l):
+			(l as Light3D).visible = _lights[l]
+	_lights.clear()
+	for e in _env:
+		if e:
+			(e as Environment).background_mode = _env[e][0]
+			(e as Environment).background_color = _env[e][1]
+	_env.clear()
+
+## Color del láser según el estilo: en tinta (casi negro) sobre papel, rojo en el juego normal.
+func laser_color(player: bool) -> Color:
+	if mode >= 1:
+		return Color(0.08, 0.08, 0.09, 0.95) if player else Color(0.35, 0.3, 0.25, 0.75)
+	return Color(1.0, 0.05, 0.03, 0.75) if player else Color(1.0, 0.55, 0.05, 0.45)
+
+## Explosión en el estilo técnico: una onda expansiva de LÍNEAS (anillos que crecen y rayas radiales), no fuego.
+func shockwave(parent: Node, pos: Vector3, radius: float) -> void:
+	var mi := MeshInstance3D.new()
+	var qm := QuadMesh.new()
+	qm.size = Vector2(radius * 2.6, radius * 2.6)
+	mi.mesh = qm
+	mi.set_meta("no_tech", true)
+	var m := ShaderMaterial.new()
+	var sh := Shader.new()
+	sh.code = """shader_type spatial;
+render_mode unshaded, cull_disabled, depth_draw_never, blend_mix;
+uniform float t = 0.0;
+void fragment() {
+	vec2 p = UV * 2.0 - 1.0;
+	float r = length(p);
+	float a = atan(p.y, p.x);
+	float ink = 0.0;
+	for (int i = 0; i < 3; i++) {
+		float rr = t * (1.0 - float(i) * 0.18);
+		float w = 0.012 + 0.01 * float(i);
+		ink = max(ink, (1.0 - smoothstep(w * 0.5, w, abs(r - rr))) * (1.0 - float(i) * 0.3));
+	}
+	float rays = step(0.82, fract(a * 4.77)) * smoothstep(t * 0.35, t * 0.6, r) * (1.0 - smoothstep(t * 0.75, t * 0.95, r));
+	ink = max(ink, rays * 0.8);
+	float fade = 1.0 - smoothstep(0.65, 1.0, t);
+	ALBEDO = vec3(0.1, 0.1, 0.11);
+	ALPHA = ink * fade;
+}"""
+	m.shader = sh
+	mi.material_override = m
+	parent.add_child(mi)
+	mi.global_position = pos + Vector3(0, 0.6, 0.4)
+	var tw := mi.create_tween()
+	tw.tween_method(func(v: float): m.set_shader_parameter("t", v), 0.0, 1.0, 0.55).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tw.tween_callback(mi.queue_free)
+
 func _restore_all() -> void:
+	for ln in _lines_nodes:
+		if is_instance_valid(ln):
+			(ln as Node).queue_free()
+	_lines_nodes.clear()
+	_lights_restore()
 	for id in _orig:
 		var e: Array = _orig[id]
 		var mi = e[0]

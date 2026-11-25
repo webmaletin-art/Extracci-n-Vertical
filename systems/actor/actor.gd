@@ -866,7 +866,8 @@ func _shoot(w: Firearm) -> void:
 		var d := fire_dir().rotated(Vector3.BACK, randf_range(-spread, spread) * 0.5)
 		if Ballistics.instance:
 			var idx := Ballistics.instance.fire(from, d, float(st.speed), float(st.damage), self, exclude,
-				{"penetration": st.penetration, "drag": st.drag, "ricochet": st.ricochet, "range": float(st.get("range", 0.0))})
+				{"penetration": st.penetration, "drag": st.drag, "ricochet": st.ricochet, "range": float(st.get("range", 0.0)),
+					"pellets": int(st.pellets)})
 			if first < 0:
 				first = idx
 	recoil_angle = minf(recoil_angle + deg_to_rad(float(st.recoil)) * (0.6 if crouching else 1.0), deg_to_rad(14.0))
@@ -983,6 +984,19 @@ func _release_grenade(kind: String) -> void:
 
 func take_damage(info: Dictionary) -> void:
 	if state == State.DEAD:
+		# el cuerpo muerto también recibe los disparos que siguen: heridas, huesos rotos y sangre (se ven en la toma)
+		var td := str(info.get("type", ""))
+		if td in ["bullet", "fragment"] and skel:
+			var rd: Dictionary = injuries.process(self, info)
+			info["anatomy_nodes"] = rd.get("nodes", [])
+			info["victim"] = self
+			var pw := clampf(float(info.get("damage", 30.0)) / 30.0, 0.5, 3.0)
+			var bpd: Vector3 = info.get("point", global_position + Vector3.UP)
+			var dd: Vector3 = info.get("dir", Vector3(-facing, 0, 0))
+			if Blood.instance:
+				Blood.instance.spray(bpd, dd, true, pw > 1.2, pw)
+				Blood.instance.wound(self, str(info.get("bone", "")), bpd, dd, pw)
+			damaged.emit(info)
 		return
 	var zone := str(info.get("zone", "torso"))
 	var t := str(info.get("type", ""))
@@ -1021,7 +1035,11 @@ func take_damage(info: Dictionary) -> void:
 		var bp: Vector3 = info.get("point", global_position + Vector3.UP * 1.2)
 		var through: bool = t == "bullet" and zone in ["head", "neck", "arm", "leg", "hand", "foot"]
 		if Blood.instance:
-			Blood.instance.spray(bp, dir, through, amount > 30.0)      # entrada y, si atravesó, salida
+			# cuánta sangre sale depende de la potencia del arma (un .338 / 7,62 salpica mucho más que una pistola)
+			var power := clampf(float(info.get("damage", amount)) / 30.0, 0.5, 3.0)
+			Blood.instance.spray(bp, dir, through, amount > 30.0, power)      # entrada y, si atravesó, salida
+			if t in ["bullet", "fragment"]:
+				Blood.instance.wound(self, str(info.get("bone", "")), bp, dir, power, through)
 		else:
 			Fx.blood(bp, dir, 1.0)
 	if health <= 0.0:
@@ -1354,6 +1372,16 @@ func _update_laser(w: Firearm, on: bool) -> void:
 		laser_dot.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		laser_dot.top_level = true
 		add_child(laser_dot)
+	# en el estilo técnico la mira va en tinta (negra): sobre el fondo blanco el rojo aditivo no se veía
+	var lm := laser.material_override as StandardMaterial3D
+	var want_c := TechView.laser_color(is_player)
+	if lm.albedo_color != want_c:
+		lm.albedo_color = want_c
+		lm.blend_mode = BaseMaterial3D.BLEND_MODE_MIX if TechView.mode >= 1 else BaseMaterial3D.BLEND_MODE_ADD
+		var dmat := laser_dot.material_override as StandardMaterial3D
+		dmat.albedo_color = Color(want_c.r, want_c.g, want_c.b, 1.0)
+		dmat.blend_mode = lm.blend_mode
+		(laser.mesh as BoxMesh).size = Vector3(0.014, 0.014, 1.0) if TechView.mode >= 1 else Vector3(0.008, 0.008, 1.0)
 	var show := on and w != null and Settings.laser and state != State.DEAD and (is_player or Settings.laser_enemies) and not TimeFx.active
 	laser.visible = show
 	laser_dot.visible = show

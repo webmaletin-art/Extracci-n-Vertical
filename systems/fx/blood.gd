@@ -151,10 +151,74 @@ func drops(point: Vector3, dir: Vector3, amount: float, speed: float, spread := 
 			pos = nxt
 
 ## Impacto: chorro de entrada (corto, hacia atrás) y de salida (más fuerte, hacia adelante si la bala atravesó).
-func spray(point: Vector3, dir: Vector3, through: bool, heavy := false) -> void:
-	drops(point, -dir, 0.35 if not heavy else 0.6, 2.5, 40.0)
+func spray(point: Vector3, dir: Vector3, through: bool, heavy := false, power := 1.0) -> void:
+	drops(point, -dir, (0.35 if not heavy else 0.6) * power, 2.5 + power * 0.6, 40.0)
 	if through:
-		drops(point + dir * 0.15, dir, 0.8 if not heavy else 1.0, 6.0, 26.0)
+		drops(point + dir * 0.15, dir, (0.8 if not heavy else 1.0) * power, 6.0 + power * 1.5, 26.0 + power * 6.0)
+
+## Borra todas las manchas (test de rendimiento: cada estilo empieza igual).
+func clear() -> void:
+	for mi in _stains:
+		(mi as MeshInstance3D).visible = false
+
+## Orificio en el cuerpo (entrada y, si atravesó, salida más grande): una mancha oscura con borde rojo pegada al hueso
+## que recibió el disparo, así se mueve con el cuerpo. Tamaño según la potencia del arma.
+var _wound_mat: StandardMaterial3D
+func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, through := false) -> void:
+	if a == null or a.skel == null or bone == "" or a.skel.find_bone(bone) < 0:
+		return
+	if _wound_mat == null:
+		_wound_mat = StandardMaterial3D.new()
+		_wound_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_wound_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_wound_mat.albedo_texture = _wound_tex()
+		_wound_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_wound_mat.no_depth_test = false
+		_wound_mat.render_priority = 4
+	var att := BoneAttachment3D.new()
+	att.bone_name = bone
+	att.set_meta("no_tech", true)
+	a.skel.add_child(att)
+	var holes := a.get_meta("wound_holes", []) as Array
+	holes.append(att)
+	if holes.size() > 10:
+		var old = holes.pop_front()
+		if is_instance_valid(old):
+			(old as Node).queue_free()
+	a.set_meta("wound_holes", holes)
+	var sz := 0.035 + 0.022 * power
+	for side in ([[-1.0, 1.0], [1.0, 1.7]] if through else [[-1.0, 1.0]]):
+		var mi := MeshInstance3D.new()
+		var q := QuadMesh.new()
+		q.size = Vector2(sz, sz) * float(side[1])
+		mi.mesh = q
+		mi.material_override = _wound_mat
+		mi.set_meta("no_tech", true)
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		att.add_child(mi)
+		# en la superficie del cuerpo, de cara a la bala (entrada) o al otro lado (salida), siempre hacia la cámara
+		var face := dir.normalized() * float(side[0])
+		var p := point + face * 0.02 + Vector3(0, 0, 0.12)
+		if side[0] > 0.0:
+			p = point + dir.normalized() * 0.22 + Vector3(0, 0, 0.12)
+		mi.global_transform = Transform3D(Basis.looking_at(Vector3(0, 0, -1), Vector3.UP).rotated(Vector3.BACK, randf() * TAU), p)
+
+static func _wound_tex() -> Texture2D:
+	var n := 64
+	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
+	for y in n:
+		for x in n:
+			var d := Vector2(x - n * 0.5, y - n * 0.5).length() / (n * 0.5)
+			var jag := 0.85 + 0.15 * sin(atan2(y - n * 0.5, x - n * 0.5) * 7.0)
+			var c := Color(0, 0, 0, 0)
+			if d < 0.32 * jag:
+				c = Color(0.08, 0.0, 0.0, 1.0)                   # orificio
+			elif d < 0.62 * jag:
+				c = Color(0.55, 0.03, 0.03, 0.95)                # carne desgarrada
+			elif d < 1.0:
+				c = Color(0.45, 0.02, 0.02, (1.0 - d) * 1.6)     # sangre alrededor
+			img.set_pixel(x, y, c)
+	return ImageTexture.create_from_image(img)
 
 func stain(pos: Vector3, normal: Vector3, size: float, grow := false, mat: Material = null) -> MeshInstance3D:
 	var mi := _stains[_stain_i]
