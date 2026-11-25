@@ -35,6 +35,18 @@ static func all_stats() -> Dictionary:
 				_all[k] = d[k]
 	return _all
 
+## Resumen de capacidades de un arma (para el modo práctica y la tienda): calibre, daño, cadencia, DPS, alcance, cargador, recarga.
+static func summary(stats: Dictionary) -> String:
+	var pellets := int(stats.get("pellets", 1))
+	var dmg := float(stats.get("damage", 0))
+	var rpm := float(stats.get("rpm", 0))
+	var dps := dmg * pellets * rpm / 60.0
+	var dmg_txt := ("%d×%d" % [int(dmg), pellets]) if pellets > 1 else str(int(dmg))
+	var ttk := int(ceil(100.0 / maxf(dmg * (pellets if pellets > 1 else 1), 1.0)))
+	return "%s · daño %s · %d disp/min (%s) · DPS %d · %d tiros p/ 100 de vida\nalcance %d m · cargador %d · recarga %.1f s · dispersión %.1f° · retroceso %.1f°" % [
+		str(stats.get("caliber", "—")), dmg_txt, int(rpm), "auto" if bool(stats.get("auto", false)) else "semi", int(dps), ttk,
+		int(stats.get("range", 0)), int(stats.get("mag", 0)), float(stats.get("reload", 0)), float(stats.get("spread", 0)), float(stats.get("recoil", 0))]
+
 static func models() -> Dictionary:
 	if _models.is_empty():
 		_models = JSON.parse_string(FileAccess.get_file_as_string("res://assets/weapons/models.json"))

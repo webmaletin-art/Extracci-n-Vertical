@@ -27,6 +27,9 @@ WEAPONS = {
     "m4a1": ("M4A1.fbx", 0.84, "rifle"), "m4a1_1": ("M4A1_1.fbx", 0.84, "rifle"),
 }
 ONLY = argv[3:]          # (opcional) convertir sólo estos id
+if os.environ.get("ROSTER"):       # lista extra (tools/weapons/gen_roster.py --convert-list)
+    for _k, _v in json.load(open(os.environ["ROSTER"])).items():
+        WEAPONS[_k] = (_v[0], _v[1], _v[2])
 MAX_TRIS = 16000
 
 
@@ -96,15 +99,24 @@ for wid, (fname, length, kind) in WEAPONS.items():
     # empuñadura: entre 55 % y 85 % desde la boca, el punto más bajo de esa zona es la mano; Grip queda arriba de ella
     if kind == "pistol":
         band = P[(P[:, 2] > zf + Lz * 0.55)]
+        if len(band) == 0:
+            band = P[np.argsort(P[:, 2])[-20:]]
         g_low = band[np.argmin(band[:, 1])]
         grip = [0.0, float(g_low[1] * 0.35 + yt * 0.15), float(g_low[2] - Lz * 0.08)]
         support = [0.0, grip[1] - 0.02, grip[2] + 0.01]
     else:
         band = P[(P[:, 2] > zf + Lz * 0.45) & (P[:, 2] < zf + Lz * 0.85)]
+        if len(band) == 0:                              # modelos de pocos vértices: se ensancha la zona
+            band = P[(P[:, 2] > zf + Lz * 0.3)]
         g_low = band[np.argmin(band[:, 1])]
         grip = [0.0, float(g_low[1] + (yt - g_low[1]) * 0.45), float(g_low[2] - 0.01)]
         fore = P[(P[:, 2] > zf + Lz * 0.18) & (P[:, 2] < zf + Lz * 0.42)]
-        support = [0.0, float(fore[:, 1].min() + 0.012), float(fore[:, 2].mean())]
+        if len(fore) == 0:
+            fore = P[(P[:, 2] > zf + Lz * 0.1) & (P[:, 2] < zf + Lz * 0.6)]
+        if len(fore) == 0:
+            support = [0.0, float(muzzle[1] - 0.03), float(zf + Lz * 0.3)]
+        else:
+            support = [0.0, float(fore[:, 1].min() + 0.012), float(fore[:, 2].mean())]
     sight = [0.0, float(yt), float(zf + Lz * 0.65)]
     # escribir los vértices transformados y exportar
     for i, v in enumerate(ob.data.vertices):
@@ -131,4 +143,5 @@ for wid, (fname, length, kind) in WEAPONS.items():
                                 "Muzzle": [round(x, 4) for x in muzzle], "Sight": [round(x, 4) for x in sight]},
                     "materials": mats, "tris": int(sum(len(p.vertices) - 2 for p in ob.data.polygons))}
     print(wid, "ok", markers[wid]["tris"], "tris")
+    json.dump(markers, open(MK, "w"), indent=1)         # se guarda en cada arma (si una falla no se pierde lo hecho)
 json.dump(markers, open(MK, "w"), indent=1)

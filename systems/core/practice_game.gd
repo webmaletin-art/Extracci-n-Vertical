@@ -260,9 +260,9 @@ func _process(delta: float) -> void:
 		dummy.inp.crouch = crouched
 	if _info and player:
 		var w := player.weapon()
-		_info.text = "%s · %s%s\nManiquí a %.0f m · %s" % [
+		_info.text = "%s · %s%s\n%s\nManiquí a %.0f m · %s" % [
 			Firearm.all_stats()[weapon_id].name, AMMO[ammo_id].name, ("  [%d/%d]" % [w.mag, int(w.stats.mag)]) if w else "",
-			distance, "inmortal" if immortal else "mortal"]
+			Firearm.summary(Firearm.all_stats()[weapon_id]), distance, "inmortal" if immortal else "mortal"]
 	if w_valid():
 		var w2 := player.weapon()
 		if w2.mag <= 2:
