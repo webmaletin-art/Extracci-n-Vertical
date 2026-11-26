@@ -248,3 +248,7 @@
 * **Escena de la portada** (`MenuScene`): letrero «EXTRACCIÓN EXTREME VERTICAL» y municiones (entera, perforante, deformada en «hongo» con esquirlas, casquillo, fogonazo, anillos de velocidad) modelados en Blender (`tools/menu_scene/make_scene.py`, fuentes `tools/menu_scene/*.glb`) y horneados en línea (`tools/bake_lined.gd -- menu`). Un tirador y un blanco, movimiento lentísimo en bucle. En el menú queda a la derecha del edificio: se gira arrastrando y se acerca con la rueda o el pellizco.
 * **Pantalla de carga** (`boot/boot.gd`): imagen de la misma escena (`boot/carga.png`) con el estado y la barra abajo. Sin logo de Godot (`boot_splash/show_image=false`, fondo claro).
 * **Sangre:** las gotas vuelan sólo en el plano del juego (no caían por delante del piso) y las manchas no se pegan en el borde delantero del piso.
+
+## 0.19.1 — imagen de la pantalla de carga: impacto con rayos X
+
+* `boot/carga.png` (1920×1080) ahora es una captura real del juego (práctica, fusil con munición perforante, rayos X y toma de muerte) justo cuando el impacto atraviesa el cuerpo: cráneo, costillas y pelvis visibles, sangre saliendo por delante y por detrás. Sólo cambia la pantalla de carga; la portada y el letrero no se tocaron.
