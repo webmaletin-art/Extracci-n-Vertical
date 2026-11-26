@@ -195,3 +195,8 @@
 * TechView convierte las mallas nuevas antes de dibujar el cuadro: no se ve más el color real por un instante.
 * Práctica: usa la configuración del juego (sin forzar la toma de cerca) y tiene el botón «CONFIGURACIÓN DEL JUEGO»; sombras según la calidad elegida.
 * Fx: no falla si el grupo de efectos quedó de un mapa anterior.
+
+## 0.15.4
+
+* Los personajes (jugador y enemigos) se ven de perfil exacto (90°), sin giro hacia la cámara; la culata del fusil apoya en el frente del hombro.
+* Apuntado con joystick: al pasar de un lado al otro la mira se espeja de golpe (conserva la altura) en vez de recorrer el arco por arriba o por abajo.

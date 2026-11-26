@@ -151,7 +151,7 @@ func _ready() -> void:
 	if is_player:
 		add_to_group("player")
 	add_to_group("actors")
-	_yaw = facing * deg_to_rad(70.0)
+	_yaw = facing * deg_to_rad(90.0)
 
 # ---------------------------------------------------------------- construcción
 
@@ -473,6 +473,10 @@ func _update_aim(delta := 1.0 / 60.0) -> void:
 		if inp.aim_snap:
 			aim_dir = tgt
 		else:
+			# cambio rápido de lado: si el joystick pasa de un lado al otro, la mira se espeja de golpe (conserva la altura) en vez
+			# de recorrer todo el arco por arriba o por abajo
+			if signf(tgt.x) != signf(aim_dir.x) and absf(tgt.x) > 0.3 and absf(aim_dir.x) > 0.2:
+				aim_dir = Vector2(-aim_dir.x, aim_dir.y).normalized()
 			var a := aim_dir.angle()
 			var diff := angle_difference(a, tgt.angle())
 			var t := clampf((mag - dz) / maxf(1.0 - dz, 0.05), 0.0, 1.0)
@@ -1413,7 +1417,7 @@ func _update_visual(delta: float) -> void:
 		if not (_anim == "jump_up" and ap.is_playing()) and not (_anim == "jump_down" and ap.is_playing() and absf(velocity.x) < 0.5):
 			_play(la[0], 0.2, la[1])
 	# --- orientación del cuerpo: 3/4 hacia la cámara mirando a donde apunta
-	var target_yaw := facing * deg_to_rad(70.0)
+	var target_yaw := facing * deg_to_rad(90.0)            # de perfil, como el resto del juego (lateral)
 	_model_offset = plane_shift
 	if state == State.LADDER:
 		# Climbing_Ladder de Mixamo viene girado 180° respecto de las demás: con 0 queda de espaldas a la cámara, mirando la pared

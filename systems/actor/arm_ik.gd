@@ -272,7 +272,7 @@ func _process_attached(sk: Skeleton3D, inv: Transform3D) -> void:
 			var center := sr.lerp(sl, 0.3) + Vector3(0, -0.06, 0)    # más cerca del hombro de tiro: la izquierda no cruza el pecho
 			weapon_target = Transform3D(bb, center + d * 0.43 - bb * weapon_grip_local)
 		else:
-			var pocket := sr + d * 0.06 + Vector3(0, -0.03, 0)
+			var pocket := sr + d * 0.13 + Vector3(0, -0.02, 0)           # la culata apoya en el FRENTE del hombro, no dentro del torso
 			weapon_target = Transform3D(bb, pocket - bb * weapon_butt)
 	if weapon_target_w > 0.001 and not right_override_active:
 		# apuntando: el arma va exactamente donde pide el jugador y las dos manos la siguen
