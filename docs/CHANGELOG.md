@@ -214,3 +214,8 @@
 * `tools/bake_lined.gd` (`godot --headless --script tools/bake_lined.gd -- weapons|props|all`) genera `assets/lined/`: cada modelo sin texturas ni colores originales, con tono plano por pieza (armas: `tech_surface` + contorno) o relleno plano + aristas ya calculadas (props: `tech_flat` + malla `Lineas`). Se marca `no_tech`: TechView no lo convierte. `LinedBake` (`systems/render/lined_bake.gd`) comparte la extracción de aristas con TechView.
 * Cargan la versión en línea si existe: `Firearm.create` (71 armas), `TowerBuilder._prop` y `Destructible.setup` (cajas y objetos). Si falta el archivo se usa el modelo original con el filtro.
 * Anatomía: no se toca (queda tal cual). Pendiente de las próximas etapas: personajes (esqueleto), arquitectura del mapa y munición.
+
+## 0.16.1 — personajes en línea horneados (etapa 2)
+
+* Los 6 personajes (`assets/lined/characters/`): sin texturas; el color de la textura se hornea en los vértices (`COLOR`) y se dibuja con `tech_surface_vc.gdshader` (mismo estilo y contorno que antes). `CharacterModel.instantiate` carga la versión en línea y la marca `no_tech`. Esqueleto, animaciones, armas en la mano, anatomía y desmembramiento no cambian (6 pruebas de juego siguen en verde).
+* Pendiente: arquitectura del mapa (paredes, pisos, escaleras), munición, y borrar los originales cuando todo esté convertido.

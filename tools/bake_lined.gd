@@ -37,6 +37,10 @@ func _initialize() -> void:
 				var id := f.get_basename()
 				var inst := (load("res://assets/props/" + f) as PackedScene).instantiate()
 				n += _bake(inst, "props", id, true)
+	if what in ["characters", "all"]:
+		for c in CharacterModel.all():
+			var inst := (load(str(c.path)) as PackedScene).instantiate()
+			n += _bake(inst, "characters", str(c.id), false, true)
 	print("BAKE: %d modelos en línea" % n)
 	quit()
 
@@ -53,7 +57,7 @@ func _mat_for(src: Material) -> ShaderMaterial:
 	_mats[key] = m
 	return m
 
-func _bake(root: Node, kind: String, id: String, with_lines: bool) -> int:
+func _bake(root: Node, kind: String, id: String, with_lines: bool, vertex_color := false) -> int:
 	var meshes := root.find_children("*", "MeshInstance3D", true, false)
 	if root is MeshInstance3D:
 		meshes.append(root)
@@ -66,6 +70,8 @@ func _bake(root: Node, kind: String, id: String, with_lines: bool) -> int:
 			for s in mi.mesh.get_surface_count():
 				mi.set_surface_override_material(s, null)
 			mi.material_override = _flat
+		elif vertex_color:
+			_bake_vertex_colors(mi)
 		else:
 			# lo que se lleva en la mano o se mueve (armas): tono por pieza + contorno de silueta
 			for s in mi.mesh.get_surface_count():
@@ -102,3 +108,54 @@ func _own(n: Node, owner_: Node) -> void:
 	for c in n.get_children():
 		c.owner = owner_
 		_own(c, owner_)
+
+## Personajes: el color de la textura se hornea en los vértices (COLOR) y el material ya no lleva textura.
+func _bake_vertex_colors(mi: MeshInstance3D) -> void:
+	var old := mi.mesh
+	var nm := ArrayMesh.new()
+	var mats := []
+	for s in old.get_surface_count():
+		var arrays := old.surface_get_arrays(s)
+		var src: Material = mi.get_surface_override_material(s)
+		if src == null:
+			src = old.surface_get_material(s)
+		var img: Image = null
+		var base := Color(1, 1, 1, 1)
+		if src is StandardMaterial3D:
+			base = (src as StandardMaterial3D).albedo_color
+			var tex := (src as StandardMaterial3D).albedo_texture
+			if tex:
+				img = tex.get_image()
+				if img.is_compressed():
+					img.decompress()
+		var vv: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var uv = arrays[Mesh.ARRAY_TEX_UV]
+		var cols := PackedColorArray()
+		cols.resize(vv.size())
+		for k in vv.size():
+			var c := Color(1, 1, 1, 1)
+			if img and uv != null:
+				var u: Vector2 = (uv as PackedVector2Array)[k]
+				var x := int(clampf(fposmod(u.x, 1.0), 0.0, 0.9999) * img.get_width())
+				var y := int(clampf(fposmod(u.y, 1.0), 0.0, 0.9999) * img.get_height())
+				c = img.get_pixel(x, y)
+			cols[k] = c
+		arrays[Mesh.ARRAY_COLOR] = cols
+		var flags := 0
+		var bones = arrays[Mesh.ARRAY_BONES]
+		if bones != null and (bones as PackedInt32Array).size() == vv.size() * 8:
+			flags |= Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS
+		nm.add_surface_from_arrays(old.surface_get_primitive_type(s), arrays, [], {}, flags)
+		nm.surface_set_name(nm.get_surface_count() - 1, old.surface_get_name(s))
+		var key := "vc|" + base.to_html()
+		if not _mats.has(key):
+			var m := ShaderMaterial.new()
+			m.shader = load("res://systems/render/tech_surface_vc.gdshader")
+			m.set_shader_parameter("albedo", Color(base.r, base.g, base.b, 1.0))
+			m.next_pass = _outline
+			_mats[key] = m
+		mats.append(_mats[key])
+	mi.mesh = nm
+	for s in mats.size():
+		mi.set_surface_override_material(s, mats[s])
+	mi.material_override = null

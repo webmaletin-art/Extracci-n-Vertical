@@ -56,7 +56,8 @@ static func find_skeleton(root: Node) -> Skeleton3D:
 
 static func instantiate(id: String) -> Node3D:
 	var def := find(id)
-	var src: Node = (load(str(def.path)) as PackedScene).instantiate()
+	var lp := LinedBake.lined_path("characters", str(def.id))
+	var src: Node = (load(lp if lp != "" else str(def.path)) as PackedScene).instantiate()
 	var sk := find_skeleton(src)
 	if sk == null:
 		return src as Node3D
@@ -77,7 +78,10 @@ static func instantiate(id: String) -> Node3D:
 	root.add_child(sk)
 	sk.transform = Transform3D(fix.rc, Vector3.ZERO) * sk_xf
 	src.free()
-	_apply_materials(root, def)
+	if lp != "":
+		root.set_meta("no_tech", true)        # ya viene en línea (sin texturas): TechView no lo convierte
+	else:
+		_apply_materials(root, def)
 	return root
 
 static func anim_library(id: String) -> AnimationLibrary:
