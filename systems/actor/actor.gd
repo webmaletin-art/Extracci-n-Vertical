@@ -387,6 +387,7 @@ func equip(slot_name: String) -> void:
 		var anim_name := "pistol_idle" if f.is_pistol else "idle_aim"
 		var anim := ap.get_animation(anim_name)
 		ik.calibrate_attach(anim, 0.0, f.grip, f.support, f.is_pistol)
+		ik.weapon_support_kind = f.support_kind
 		ik.grip_r = ArmIK.GRIP_PISTOL_R if f.is_pistol else ArmIK.GRIP_RIFLE_R
 		ik.grip_l = ArmIK.GRIP_HANDGUARD_L
 		Sfx.play("equip", global_position, -8.0)

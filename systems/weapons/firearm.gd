@@ -12,6 +12,7 @@ var stats := {}
 var model: Node3D
 var grip := Vector3.ZERO
 var support := Vector3.ZERO
+var support_kind := "rail"            ## "rail" guardamanos (palma arriba) · "vgrip" empuñadura vertical · "pistol"
 var muzzle := Vector3.ZERO
 var butt := Vector3.ZERO
 var length := 0.7
@@ -80,6 +81,7 @@ static func create(weapon_id: String) -> Firearm:
 	f.grip = _marker(f.model, "Grip", mk)
 	f.support = _marker(f.model, "Support", mk)
 	f.muzzle = _marker(f.model, "Muzzle", mk)
+	f.support_kind = str(models().get(str(f.stats.model), {}).get("support_kind", "rail"))
 	f.length = float(models().get(str(f.stats.model), {}).get("length", 0.8))
 	f.butt = Vector3(0.0, f.muzzle.y - 0.045, f.muzzle.z + f.length - 0.015)
 	f.is_pistol = str(f.stats.hold) == "pistol"

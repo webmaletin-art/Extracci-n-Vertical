@@ -8,11 +8,13 @@ extends RefCounted
 const RIFLE_RIGHT := [Vector3(-0.3, -0.55, -0.78), Vector3(-0.85, -0.35, 0.1), 0.075, 0.035]
 const RIFLE_LEFT := [Vector3(0.6, 0.15, -0.78), Vector3(0.55, 0.85, 0.0), 0.07, 0.035]
 const PISTOL_RIGHT := [Vector3(-0.2, -0.6, -0.77), Vector3(-0.85, -0.3, 0.1), 0.07, 0.03]
+## Empuñadura vertical delantera: la izquierda la rodea como la derecha a la de pistola (espejada).
+const VGRIP_LEFT := [Vector3(0.3, -0.55, -0.78), Vector3(0.85, -0.35, 0.1), 0.075, 0.035]
 const PISTOL_LEFT := [Vector3(0.5, -0.5, -0.7), Vector3(0.9, 0.35, 0.15), 0.07, 0.03]
 
 ## Devuelve {wrist, finger, palm} en espacio mundo.
-static func hand_frame(weapon_xf: Transform3D, marker: Vector3, right: bool, pistol: bool) -> Dictionary:
-	var d: Array = (PISTOL_RIGHT if right else PISTOL_LEFT) if pistol else (RIFLE_RIGHT if right else RIFLE_LEFT)
+static func hand_frame(weapon_xf: Transform3D, marker: Vector3, right: bool, pistol: bool, kind := "rail") -> Dictionary:
+	var d: Array = (PISTOL_RIGHT if right else PISTOL_LEFT) if pistol else (RIFLE_RIGHT if right else (VGRIP_LEFT if kind == "vgrip" else RIFLE_LEFT))
 	var b := weapon_xf.basis.orthonormalized()
 	var fdir: Vector3 = (b * (d[0] as Vector3)).normalized()
 	var pdir: Vector3 = (b * (d[1] as Vector3)).normalized()

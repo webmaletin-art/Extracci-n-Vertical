@@ -712,13 +712,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0137,
-    0.0378
+    -0.0095,
+    0.063
    ],
    "Support": [
     0.0,
-    -0.0337,
-    0.0478
+    -0.0375,
+    0.073
    ],
    "Muzzle": [
     0.0,
@@ -761,7 +761,8 @@
    }
   },
   "tris": 5102,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "pistol"
  },
  "deagle": {
   "kind": "pistol",
@@ -771,13 +772,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0157,
-    0.088
+    -0.0116,
+    0.072
    ],
    "Support": [
     0.0,
-    -0.0357,
-    0.098
+    -0.0416,
+    0.082
    ],
    "Muzzle": [
     0.0,
@@ -802,7 +803,8 @@
    }
   },
   "tris": 2888,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "pistol"
  },
  "mp7": {
   "kind": "smg",
@@ -812,13 +814,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0217,
-    0.0533
+    -0.0087,
+    0.0704
    ],
    "Support": [
     0.0,
-    0.0559,
-    -0.1382
+    0.0607,
+    -0.096
    ],
    "Muzzle": [
     0.0,
@@ -843,7 +845,8 @@
    }
   },
   "tris": 2484,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "vector": {
   "kind": "smg",
@@ -853,13 +856,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.011,
-    -0.0302
+    0.0154,
+    0.0868
    ],
    "Support": [
     0.0,
-    -0.1226,
-    -0.1182
+    0.0679,
+    -0.1364
    ],
    "Muzzle": [
     0.0,
@@ -884,7 +887,8 @@
    }
   },
   "tris": 15998,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "p90": {
   "kind": "smg",
@@ -894,13 +898,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0089,
-    0.0327
+    -0.0295,
+    0.06
    ],
    "Support": [
     0.0,
-    -0.0802,
-    -0.1077
+    -0.0258,
+    -0.09
    ],
    "Muzzle": [
     0.0,
@@ -925,7 +929,8 @@
    }
   },
   "tris": 4526,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "vgrip"
  },
  "cqbm4": {
   "kind": "rifle",
@@ -935,13 +940,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0066,
-    0.0972
+    0.0,
+    0.0836
    ],
    "Support": [
     0.0,
-    -0.1622,
-    -0.1687
+    0.0038,
+    -0.19
    ],
    "Muzzle": [
     0.0,
@@ -984,7 +989,8 @@
    }
   },
   "tris": 7869,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "vgrip"
  },
  "m4supp": {
   "kind": "rifle",
@@ -994,13 +1000,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0146,
-    0.1284
+    0.0029,
+    0.247
    ],
    "Support": [
     0.0,
-    0.0637,
-    -0.1901
+    0.0497,
+    0.0
    ],
    "Muzzle": [
     0.0,
@@ -1034,7 +1040,8 @@
    }
   },
   "tris": 10888,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "m16": {
   "kind": "rifle",
@@ -1044,13 +1051,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0133,
-    0.0666
+    0.0,
+    0.19
    ],
    "Support": [
     0.0,
-    0.0284,
-    -0.1971
+    0.0399,
+    -0.13
    ],
    "Muzzle": [
     0.0,
@@ -1084,7 +1091,8 @@
    }
   },
   "tris": 12224,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "g36c": {
   "kind": "rifle",
@@ -1094,13 +1102,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0136,
-    0.0758
+    -0.0163,
+    0.0936
    ],
    "Support": [
     0.0,
-    -0.1102,
-    -0.1769
+    0.0463,
+    -0.144
    ],
    "Muzzle": [
     0.0,
@@ -1134,7 +1142,8 @@
    }
   },
   "tris": 8948,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "ak47": {
   "kind": "rifle",
@@ -1144,13 +1153,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0123,
-    -0.0534
+    0.0,
+    0.132
    ],
    "Support": [
     0.0,
-    -0.0718,
-    -0.1344
+    0.0466,
+    -0.1232
    ],
    "Muzzle": [
     0.0,
@@ -1193,7 +1202,8 @@
    }
   },
   "tris": 5542,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "scarh": {
   "kind": "rifle",
@@ -1203,13 +1213,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0151,
-    0.0612
+    -0.0181,
+    0.1552
    ],
    "Support": [
     0.0,
-    0.0184,
-    -0.2124
+    0.0302,
+    -0.1358
    ],
    "Muzzle": [
     0.0,
@@ -1252,7 +1262,8 @@
    }
   },
   "tris": 11482,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "aug": {
   "kind": "rifle",
@@ -1262,13 +1273,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0158,
-    0.1591
+    0.0,
+    0.0237
    ],
    "Support": [
     0.0,
-    -0.071,
-    -0.1706
+    0.0063,
+    -0.1817
    ],
    "Muzzle": [
     0.0,
@@ -1302,7 +1313,8 @@
    }
   },
   "tris": 15999,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "vgrip"
  },
  "m4dmr": {
   "kind": "rifle",
@@ -1312,13 +1324,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0144,
-    0.0526
+    -0.0058,
+    0.1785
    ],
    "Support": [
     0.0,
-    -0.1247,
-    -0.1905
+    0.0288,
+    -0.105
    ],
    "Muzzle": [
     0.0,
@@ -1370,7 +1382,8 @@
    }
   },
   "tris": 11589,
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "m1911_1": {
   "kind": "pistol",
@@ -1380,13 +1393,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.014,
-    0.0459
+    -0.0082,
+    0.068
    ],
    "Support": [
     0.0,
-    -0.034,
-    0.0559
+    -0.0362,
+    0.076
    ],
    "Muzzle": [
     0.0,
@@ -1421,7 +1434,8 @@
   },
   "tris": 1420,
   "name": "Pistola M1911 B",
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "pistol"
  },
  "m1911t": {
   "kind": "pistol",
@@ -1431,13 +1445,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0144,
-    0.0468
+    -0.0102,
+    0.069
    ],
    "Support": [
     0.0,
-    -0.0344,
-    0.0568
+    -0.0382,
+    0.077
    ],
    "Muzzle": [
     0.0,
@@ -1463,7 +1477,8 @@
   },
   "tris": 1536,
   "name": "Pistola M1911 T\u00e1ctica",
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "pistol"
  },
  "m16_1": {
   "kind": "rifle",
@@ -1474,12 +1489,12 @@
    "Grip": [
     0.0,
     -0.0114,
-    0.2131
+    0.19
    ],
    "Support": [
     0.0,
-    0.022,
-    -0.3043
+    0.0114,
+    -0.05
    ],
    "Muzzle": [
     0.0,
@@ -1505,7 +1520,8 @@
   },
   "tris": 1750,
   "name": "Fusil M16 B",
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "mp5_1": {
   "kind": "smg",
@@ -1515,13 +1531,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0183,
-    0.1708
+    0.0,
+    0.1632
    ],
    "Support": [
     0.0,
-    -0.1673,
-    -0.1332
+    0.0502,
+    -0.0816
    ],
    "Muzzle": [
     0.0,
@@ -1574,7 +1590,8 @@
   },
   "tris": 6095,
   "name": "Subfusil MP5 A",
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "mp5_2": {
   "kind": "smg",
@@ -1584,13 +1601,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0162,
-    -0.0208
+    -0.0032,
+    0.1564
    ],
    "Support": [
     0.0,
-    0.1119,
-    -0.1819
+    0.0453,
+    -0.0884
    ],
    "Muzzle": [
     0.0,
@@ -1616,7 +1633,8 @@
   },
   "tris": 1934,
   "name": "Subfusil MP5 B",
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "scar": {
   "kind": "rifle",
@@ -1627,12 +1645,12 @@
    "Grip": [
     0.0,
     -0.0124,
-    0.0963
+    0.171
    ],
    "Support": [
     0.0,
-    0.0159,
-    -0.1409
+    0.0347,
+    -0.072
    ],
    "Muzzle": [
     0.0,
@@ -1667,7 +1685,8 @@
   },
   "tris": 3920,
   "name": "Fusil SCAR",
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "m4a1": {
   "kind": "rifle",
@@ -1677,13 +1696,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0158,
-    -0.0057
+    0.0,
+    0.1596
    ],
    "Support": [
     0.0,
-    -0.1385,
-    -0.1718
+    0.0032,
+    -0.168
    ],
    "Muzzle": [
     0.0,
@@ -1736,7 +1755,8 @@
   },
   "tris": 9348,
   "name": "Fusil M4A1",
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "vgrip"
  },
  "m4a1_1": {
   "kind": "rifle",
@@ -1746,13 +1766,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0159,
-    -0.0077
+    -0.0032,
+    0.1428
    ],
    "Support": [
     0.0,
-    -0.1395,
-    -0.1678
+    0.0318,
+    -0.1008
    ],
    "Muzzle": [
     0.0,
@@ -1778,7 +1798,8 @@
   },
   "tris": 7899,
   "name": "Fusil M4A1 B",
-  "format": "glb"
+  "format": "glb",
+  "support_kind": "rail"
  },
  "pistol_5": {
   "kind": "pistol",
@@ -1788,13 +1809,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0112,
-    0.0257
+    -0.006,
+    0.05
    ],
    "Support": [
     0.0,
-    -0.0312,
-    0.0357
+    -0.028,
+    0.058
    ],
    "Muzzle": [
     0.0,
@@ -1838,7 +1859,8 @@
   },
   "tris": 968,
   "format": "glb",
-  "name": "pistol_5"
+  "name": "pistol_5",
+  "support_kind": "pistol"
  },
  "pistol_1": {
   "kind": "pistol",
@@ -1848,13 +1870,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0128,
-    0.0717
+    -0.0162,
+    0.065
    ],
    "Support": [
     0.0,
-    -0.0328,
-    0.0817
+    -0.0382,
+    0.072
    ],
    "Muzzle": [
     0.0,
@@ -1925,7 +1947,8 @@
   },
   "tris": 1040,
   "format": "glb",
-  "name": "pistol_1"
+  "name": "pistol_1",
+  "support_kind": "pistol"
  },
  "pistol_2": {
   "kind": "pistol",
@@ -1935,13 +1958,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0128,
-    0.0717
+    -0.0162,
+    0.065
    ],
    "Support": [
     0.0,
-    -0.0328,
-    0.0817
+    -0.0382,
+    0.072
    ],
    "Muzzle": [
     0.0,
@@ -2003,7 +2026,8 @@
   },
   "tris": 1200,
   "format": "glb",
-  "name": "pistol_2"
+  "name": "pistol_2",
+  "support_kind": "pistol"
  },
  "pistol_3": {
   "kind": "pistol",
@@ -2013,13 +2037,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0147,
-    0.0755
+    -0.0244,
+    0.069
    ],
    "Support": [
     0.0,
-    -0.0347,
-    0.0855
+    -0.0464,
+    0.076
    ],
    "Muzzle": [
     0.0,
@@ -2081,7 +2105,8 @@
   },
   "tris": 1442,
   "format": "glb",
-  "name": "pistol_3"
+  "name": "pistol_3",
+  "support_kind": "pistol"
  },
  "pistol_4": {
   "kind": "pistol",
@@ -2091,13 +2116,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.019,
-    0.0675
+    -0.0172,
+    0.071
    ],
    "Support": [
     0.0,
-    -0.039,
-    0.0775
+    -0.0532,
+    0.081
    ],
    "Muzzle": [
     0.0,
@@ -2141,7 +2166,8 @@
   },
   "tris": 1320,
   "format": "glb",
-  "name": "pistol_4"
+  "name": "pistol_4",
+  "support_kind": "pistol"
  },
  "pistol_6": {
   "kind": "pistol",
@@ -2151,13 +2177,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0142,
-    0.0732
+    -0.0248,
+    0.113
    ],
    "Support": [
     0.0,
-    -0.0342,
-    0.0832
+    -0.0468,
+    0.121
    ],
    "Muzzle": [
     0.0,
@@ -2201,7 +2227,8 @@
   },
   "tris": 1878,
   "format": "glb",
-  "name": "pistol_6"
+  "name": "pistol_6",
+  "support_kind": "pistol"
  },
  "revolver_4": {
   "kind": "pistol",
@@ -2211,13 +2238,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0106,
-    0.041
+    -0.0092,
+    0.059
    ],
    "Support": [
     0.0,
-    -0.0306,
-    0.051
+    -0.0292,
+    0.068
    ],
    "Muzzle": [
     0.0,
@@ -2261,7 +2288,8 @@
   },
   "tris": 966,
   "format": "glb",
-  "name": "revolver_4"
+  "name": "revolver_4",
+  "support_kind": "pistol"
  },
  "revolver_1": {
   "kind": "pistol",
@@ -2271,13 +2299,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0108,
-    0.0977
+    -0.0101,
+    0.081
    ],
    "Support": [
     0.0,
-    -0.0308,
-    0.1077
+    -0.0301,
+    0.1
    ],
    "Muzzle": [
     0.0,
@@ -2321,7 +2349,8 @@
   },
   "tris": 1046,
   "format": "glb",
-  "name": "revolver_1"
+  "name": "revolver_1",
+  "support_kind": "pistol"
  },
  "revolver_2": {
   "kind": "pistol",
@@ -2331,13 +2360,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0133,
-    0.1115
+    -0.0093,
+    0.106
    ],
    "Support": [
     0.0,
-    -0.0333,
-    0.1215
+    -0.0353,
+    0.117
    ],
    "Muzzle": [
     0.0,
@@ -2390,7 +2419,8 @@
   },
   "tris": 1252,
   "format": "glb",
-  "name": "revolver_2"
+  "name": "revolver_2",
+  "support_kind": "pistol"
  },
  "revolver_3": {
   "kind": "pistol",
@@ -2400,13 +2430,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0148,
-    0.1195
+    -0.0178,
+    0.118
    ],
    "Support": [
     0.0,
-    -0.0348,
-    0.1295
+    -0.0438,
+    0.125
    ],
    "Muzzle": [
     0.0,
@@ -2459,7 +2489,8 @@
   },
   "tris": 1438,
   "format": "glb",
-  "name": "revolver_3"
+  "name": "revolver_3",
+  "support_kind": "pistol"
  },
  "revolver_5": {
   "kind": "pistol",
@@ -2469,13 +2500,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0167,
-    0.1322
+    0.0076,
+    0.07
    ],
    "Support": [
     0.0,
-    -0.0367,
-    0.1422
+    -0.0344,
+    0.135
    ],
    "Muzzle": [
     0.0,
@@ -2519,7 +2550,8 @@
   },
   "tris": 1334,
   "format": "glb",
-  "name": "revolver_5"
+  "name": "revolver_5",
+  "support_kind": "pistol"
  },
  "smg_4": {
   "kind": "smg",
@@ -2529,13 +2561,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0106,
-    -0.0066
+    0.0021,
+    0.1089
    ],
    "Support": [
     0.0,
-    -0.0761,
-    -0.0659
+    0.0509,
+    -0.0594
    ],
    "Muzzle": [
     0.0,
@@ -2588,7 +2620,8 @@
   },
   "tris": 1024,
   "format": "glb",
-  "name": "smg_4"
+  "name": "smg_4",
+  "support_kind": "rail"
  },
  "smg_1": {
   "kind": "smg",
@@ -2598,13 +2631,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0111,
-    0.0011
+    -0.0022,
+    0.1008
    ],
    "Support": [
     0.0,
-    -0.0946,
-    -0.0735
+    0.0444,
+    -0.0576
    ],
    "Muzzle": [
     0.0,
@@ -2657,7 +2690,8 @@
   },
   "tris": 1164,
   "format": "glb",
-  "name": "smg_1"
+  "name": "smg_1",
+  "support_kind": "rail"
  },
  "smg_3": {
   "kind": "smg",
@@ -2667,13 +2701,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0103,
-    0.0257
+    0.002,
+    0.0208
    ],
    "Support": [
     0.0,
-    -0.087,
-    -0.1192
+    0.002,
+    -0.1716
    ],
    "Muzzle": [
     0.0,
@@ -2726,7 +2760,8 @@
   },
   "tris": 1566,
   "format": "glb",
-  "name": "smg_3"
+  "name": "smg_3",
+  "support_kind": "vgrip"
  },
  "smg_2": {
   "kind": "smg",
@@ -2736,13 +2771,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.019,
-    0.0206
+    0.0,
+    0.044
    ],
    "Support": [
     0.0,
-    -0.1136,
-    -0.1132
+    0.0352,
+    -0.132
    ],
    "Muzzle": [
     0.0,
@@ -2795,7 +2830,8 @@
   },
   "tris": 1374,
   "format": "glb",
-  "name": "smg_2"
+  "name": "smg_2",
+  "support_kind": "rail"
  },
  "smg_5": {
   "kind": "smg",
@@ -2805,13 +2841,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0112,
-    -0.011
+    0.0,
+    0.0975
    ],
    "Support": [
     0.0,
-    0.0398,
-    -0.127
+    0.0313,
+    -0.13
    ],
    "Muzzle": [
     0.0,
@@ -2864,7 +2900,8 @@
   },
   "tris": 1440,
   "format": "glb",
-  "name": "smg_5"
+  "name": "smg_5",
+  "support_kind": "rail"
  },
  "ar_1": {
   "kind": "rifle",
@@ -2874,13 +2911,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0112,
-    0.0474
+    0.0022,
+    0.209
    ],
    "Support": [
     0.0,
-    0.0373,
-    -0.131
+    0.0424,
+    -0.055
    ],
    "Muzzle": [
     0.0,
@@ -2942,7 +2979,8 @@
   },
   "tris": 1256,
   "format": "glb",
-  "name": "ar_1"
+  "name": "ar_1",
+  "support_kind": "rail"
  },
  "ar2_4": {
   "kind": "rifle",
@@ -2952,13 +2990,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0065,
-    0.0649
+    -0.0029,
+    0.0896
    ],
    "Support": [
     0.0,
-    -0.1352,
-    -0.1137
+    0.053,
+    -0.1344
    ],
    "Muzzle": [
     0.0,
@@ -3020,7 +3058,8 @@
   },
   "tris": 1372,
   "format": "glb",
-  "name": "ar2_4"
+  "name": "ar2_4",
+  "support_kind": "rail"
  },
  "ar_3": {
   "kind": "rifle",
@@ -3030,13 +3069,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0145,
-    0.0166
+    0.0116,
+    0.2542
    ],
    "Support": [
     0.0,
-    0.0772,
-    -0.1697
+    0.0579,
+    -0.0744
    ],
    "Muzzle": [
     0.0,
@@ -3098,7 +3137,8 @@
   },
   "tris": 1220,
   "format": "glb",
-  "name": "ar_3"
+  "name": "ar_3",
+  "support_kind": "rail"
  },
  "ar2_3": {
   "kind": "rifle",
@@ -3108,13 +3148,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0132,
-    0.1881
+    0.0053,
+    0.2856
    ],
    "Support": [
     0.0,
-    0.0341,
-    -0.1151
+    0.0475,
+    0.0
    ],
    "Muzzle": [
     0.0,
@@ -3185,7 +3225,8 @@
   },
   "tris": 1614,
   "format": "glb",
-  "name": "ar2_3"
+  "name": "ar2_3",
+  "support_kind": "rail"
  },
  "ar2_2": {
   "kind": "rifle",
@@ -3195,13 +3236,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.016,
-    -0.0018
+    -0.0032,
+    0.1634
    ],
    "Support": [
     0.0,
-    0.0635,
-    -0.1634
+    0.0542,
+    -0.1032
    ],
    "Muzzle": [
     0.0,
@@ -3272,7 +3313,8 @@
   },
   "tris": 1796,
   "format": "glb",
-  "name": "ar2_2"
+  "name": "ar2_2",
+  "support_kind": "rail"
  },
  "ar_2": {
   "kind": "rifle",
@@ -3282,13 +3324,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0109,
-    -0.0495
+    0.0115,
+    0.1843
    ],
    "Support": [
     0.0,
-    -0.0778,
-    -0.2138
+    0.0688,
+    -0.1746
    ],
    "Muzzle": [
     0.0,
@@ -3350,7 +3392,8 @@
   },
   "tris": 1306,
   "format": "glb",
-  "name": "ar_2"
+  "name": "ar_2",
+  "support_kind": "rail"
  },
  "ar_5": {
   "kind": "rifle",
@@ -3360,13 +3403,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0109,
-    -0.0495
+    0.0086,
+    0.1746
    ],
    "Support": [
     0.0,
-    -0.0778,
-    -0.2138
+    0.0688,
+    -0.1746
    ],
    "Muzzle": [
     0.0,
@@ -3419,7 +3462,8 @@
   },
   "tris": 1306,
   "format": "glb",
-  "name": "ar_5"
+  "name": "ar_5",
+  "support_kind": "rail"
  },
  "ar2_1": {
   "kind": "rifle",
@@ -3429,13 +3473,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0171,
-    0.0316
+    -0.0034,
+    0.2079
    ],
    "Support": [
     0.0,
-    0.0672,
-    -0.1963
+    0.0686,
+    -0.099
    ],
    "Muzzle": [
     0.0,
@@ -3506,7 +3550,8 @@
   },
   "tris": 1930,
   "format": "glb",
-  "name": "ar2_1"
+  "name": "ar2_1",
+  "support_kind": "rail"
  },
  "ar_4": {
   "kind": "rifle",
@@ -3516,13 +3561,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0111,
-    -0.0567
+    0.0146,
+    0.17
    ],
    "Support": [
     0.0,
-    -0.0793,
-    -0.2166
+    0.07,
+    -0.18
    ],
    "Muzzle": [
     0.0,
@@ -3584,7 +3629,8 @@
   },
   "tris": 1390,
   "format": "glb",
-  "name": "ar_4"
+  "name": "ar_4",
+  "support_kind": "rail"
  },
  "bullpup_2": {
   "kind": "rifle",
@@ -3595,12 +3641,12 @@
    "Grip": [
     0.0,
     -0.0125,
-    0.1281
+    0.1302
    ],
    "Support": [
     0.0,
-    -0.0403,
-    -0.1504
+    -0.005,
+    -0.1922
    ],
    "Muzzle": [
     0.0,
@@ -3644,7 +3690,8 @@
   },
   "tris": 2536,
   "format": "glb",
-  "name": "bullpup_2"
+  "name": "bullpup_2",
+  "support_kind": "vgrip"
  },
  "bullpup_3": {
   "kind": "rifle",
@@ -3654,13 +3701,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0068,
-    0.0777
+    -0.0156,
+    0.091
    ],
    "Support": [
     0.0,
-    0.0325,
-    -0.1435
+    0.0104,
+    -0.14
    ],
    "Muzzle": [
     0.0,
@@ -3713,7 +3760,8 @@
   },
   "tris": 2390,
   "format": "glb",
-  "name": "bullpup_3"
+  "name": "bullpup_3",
+  "support_kind": "rail"
  },
  "bullpup_1": {
   "kind": "rifle",
@@ -3723,13 +3771,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0112,
-    0.0012
+    -0.0179,
+    0.0228
    ],
    "Support": [
     0.0,
-    -0.0187,
-    -0.1514
+    0.0,
+    -0.266
    ],
    "Muzzle": [
     0.0,
@@ -3773,7 +3821,8 @@
   },
   "tris": 2782,
   "format": "glb",
-  "name": "bullpup_1"
+  "name": "bullpup_1",
+  "support_kind": "vgrip"
  },
  "shotgun_sawed": {
   "kind": "rifle",
@@ -3783,13 +3832,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0158,
-    0.1404
+    0.003,
+    0.1705
    ],
    "Support": [
     0.0,
-    0.0167,
-    -0.1477
+    0.0198,
+    0.0
    ],
    "Muzzle": [
     0.0,
@@ -3851,7 +3900,8 @@
   },
   "tris": 956,
   "format": "glb",
-  "name": "shotgun_sawed"
+  "name": "shotgun_sawed",
+  "support_kind": "rail"
  },
  "shotgun_short": {
   "kind": "rifle",
@@ -3861,13 +3911,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0221,
-    0.1871
+    0.0184,
+    0.255
    ],
    "Support": [
     0.0,
-    0.0102,
-    -0.2166
+    0.0018,
+    -0.204
    ],
    "Muzzle": [
     0.0,
@@ -3929,7 +3979,8 @@
   },
   "tris": 1612,
   "format": "glb",
-  "name": "shotgun_short"
+  "name": "shotgun_short",
+  "support_kind": "rail"
  },
  "shotgun_1": {
   "kind": "rifle",
@@ -3939,13 +3990,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.015,
-    0.1382
+    0.0036,
+    0.2
    ],
    "Support": [
     0.0,
-    0.0033,
-    -0.2035
+    0.0036,
+    -0.18
    ],
    "Muzzle": [
     0.0,
@@ -3998,7 +4049,8 @@
   },
   "tris": 1270,
   "format": "glb",
-  "name": "shotgun_1"
+  "name": "shotgun_1",
+  "support_kind": "rail"
  },
  "shotgun_2": {
   "kind": "rifle",
@@ -4008,13 +4060,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0151,
-    0.1774
+    0.0072,
+    0.242
    ],
    "Support": [
     0.0,
-    0.007,
-    -0.1538
+    0.0054,
+    -0.22
    ],
    "Muzzle": [
     0.0,
@@ -4076,7 +4128,8 @@
   },
   "tris": 746,
   "format": "glb",
-  "name": "shotgun_2"
+  "name": "shotgun_2",
+  "support_kind": "rail"
  },
  "shotgun_3": {
   "kind": "rifle",
@@ -4086,13 +4139,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0174,
-    0.1652
+    0.0072,
+    0.242
    ],
    "Support": [
     0.0,
-    0.0035,
-    -0.1834
+    -0.0036,
+    -0.198
    ],
    "Muzzle": [
     0.0,
@@ -4154,7 +4207,8 @@
   },
   "tris": 978,
   "format": "glb",
-  "name": "shotgun_3"
+  "name": "shotgun_3",
+  "support_kind": "rail"
  },
  "shotgun_4": {
   "kind": "rifle",
@@ -4164,13 +4218,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0155,
-    0.1476
+    0.0071,
+    0.231
    ],
    "Support": [
     0.0,
-    0.0146,
-    -0.1783
+    0.0054,
+    -0.084
    ],
    "Muzzle": [
     0.0,
@@ -4232,7 +4286,8 @@
   },
   "tris": 668,
   "format": "glb",
-  "name": "shotgun_4"
+  "name": "shotgun_4",
+  "support_kind": "rail"
  },
  "sniper_6": {
   "kind": "rifle",
@@ -4242,13 +4297,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0137,
-    0.34
+    -0.0076,
+    0.252
    ],
    "Support": [
     0.0,
-    0.019,
-    -0.1834
+    0.0025,
+    -0.048
    ],
    "Muzzle": [
     0.0,
@@ -4310,7 +4365,8 @@
   },
   "tris": 1370,
   "format": "glb",
-  "name": "sniper_6"
+  "name": "sniper_6",
+  "support_kind": "rail"
  },
  "sniper_3": {
   "kind": "rifle",
@@ -4320,13 +4376,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0082,
-    0.2717
+    -0.0207,
+    0.2875
    ],
    "Support": [
     0.0,
-    -0.0053,
-    -0.1887
+    -0.0166,
+    -0.075
    ],
    "Muzzle": [
     0.0,
@@ -4388,7 +4444,8 @@
   },
   "tris": 1722,
   "format": "glb",
-  "name": "sniper_3"
+  "name": "sniper_3",
+  "support_kind": "rail"
  },
  "sniper_1": {
   "kind": "rifle",
@@ -4398,13 +4455,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0144,
-    0.3393
+    -0.0076,
+    0.2375
    ],
    "Support": [
     0.0,
-    0.0221,
-    -0.1964
+    0.0102,
+    -0.0625
    ],
    "Muzzle": [
     0.0,
@@ -4475,7 +4532,8 @@
   },
   "tris": 1382,
   "format": "glb",
-  "name": "sniper_1"
+  "name": "sniper_1",
+  "support_kind": "rail"
  },
  "sniper_2": {
   "kind": "rifle",
@@ -4485,13 +4543,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0151,
-    0.3383
+    -0.0053,
+    0.286
    ],
    "Support": [
     0.0,
-    0.0245,
-    -0.1869
+    0.0106,
+    0.143
    ],
    "Muzzle": [
     0.0,
@@ -4553,7 +4611,8 @@
   },
   "tris": 1732,
   "format": "glb",
-  "name": "sniper_2"
+  "name": "sniper_2",
+  "support_kind": "rail"
  },
  "sniper_4": {
   "kind": "rifle",
@@ -4563,13 +4622,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0267,
-    0.224
+    -0.0147,
+    0.299
    ],
    "Support": [
     0.0,
-    0.0073,
-    -0.161
+    0.0098,
+    0.046
    ],
    "Muzzle": [
     0.0,
@@ -4631,7 +4690,8 @@
   },
   "tris": 1346,
   "format": "glb",
-  "name": "sniper_4"
+  "name": "sniper_4",
+  "support_kind": "rail"
  },
  "sniper_5": {
   "kind": "rifle",
@@ -4641,13 +4701,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0513,
-    0.3449
+    -0.0084,
+    0.378
    ],
    "Support": [
     0.0,
-    -0.1978,
-    -0.1843
+    0.0462,
+    0.028
    ],
    "Muzzle": [
     0.0,
@@ -4718,7 +4778,8 @@
   },
   "tris": 1690,
   "format": "glb",
-  "name": "sniper_5"
+  "name": "sniper_5",
+  "support_kind": "rail"
  },
  "flat_pistol_c": {
   "kind": "pistol",
@@ -4728,13 +4789,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0128,
-    0.0537
+    -0.0079,
+    0.052
    ],
    "Support": [
     0.0,
-    -0.0328,
-    0.0637
+    -0.0339,
+    0.056
    ],
    "Muzzle": [
     0.0,
@@ -4821,7 +4882,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 1263
+  "tris": 1263,
+  "support_kind": "pistol"
  },
  "flat_pistol_f": {
   "kind": "pistol",
@@ -4831,13 +4893,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0151,
-    0.0401
+    -0.0106,
+    0.066
    ],
    "Support": [
     0.0,
-    -0.0351,
-    0.0501
+    -0.0406,
+    0.074
    ],
    "Muzzle": [
     0.0,
@@ -4915,7 +4977,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 1216
+  "tris": 1216,
+  "support_kind": "pistol"
  },
  "flat_smg_c": {
   "kind": "smg",
@@ -4925,13 +4988,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0165,
-    -0.0253
+    0.006,
+    -0.0217
    ],
    "Support": [
     0.0,
-    -0.0625,
-    -0.0453
+    0.0328,
+    -0.093
    ],
    "Muzzle": [
     0.0,
@@ -5009,7 +5072,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 1685
+  "tris": 1685,
+  "support_kind": "rail"
  },
  "flat_smg_f": {
   "kind": "smg",
@@ -5019,13 +5083,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0271,
-    0.0455
+    0.0108,
+    0.066
    ],
    "Support": [
     0.0,
-    -0.1225,
-    -0.0793
+    0.0538,
+    -0.132
    ],
    "Muzzle": [
     0.0,
@@ -5103,7 +5167,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 2146
+  "tris": 2146,
+  "support_kind": "rail"
  },
  "flat_rifle_a": {
   "kind": "rifle",
@@ -5113,13 +5178,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0096,
-    -0.0473
+    0.007,
+    0.133
    ],
    "Support": [
     0.0,
-    -0.1295,
-    -0.1533
+    0.0564,
+    -0.19
    ],
    "Muzzle": [
     0.0,
@@ -5197,7 +5262,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 3271
+  "tris": 3271,
+  "support_kind": "rail"
  },
  "flat_rifle_b": {
   "kind": "rifle",
@@ -5207,13 +5273,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0112,
-    -0.046
+    0.0035,
+    0.2
    ],
    "Support": [
     0.0,
-    -0.162,
-    -0.1351
+    0.0696,
+    -0.18
    ],
    "Muzzle": [
     0.0,
@@ -5291,7 +5357,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 3143
+  "tris": 3143,
+  "support_kind": "rail"
  },
  "flat_shotgun_p": {
   "kind": "rifle",
@@ -5301,13 +5368,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0229,
-    0.2559
+    0.0079,
+    0.14
    ],
    "Support": [
     0.0,
-    0.0195,
-    -0.1581
+    0.0217,
+    -0.12
    ],
    "Muzzle": [
     0.0,
@@ -5385,7 +5452,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 1508
+  "tris": 1508,
+  "support_kind": "rail"
  },
  "flat_shotgun_a": {
   "kind": "rifle",
@@ -5395,13 +5463,13 @@
   "markers": {
    "Grip": [
     0.0,
-    0.0158,
-    -0.0481
+    0.0116,
+    0.152
    ],
    "Support": [
     0.0,
-    -0.16,
-    -0.121
+    0.085,
+    -0.209
    ],
    "Muzzle": [
     0.0,
@@ -5488,7 +5556,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 1930
+  "tris": 1930,
+  "support_kind": "rail"
  },
  "flat_sniper_r": {
   "kind": "rifle",
@@ -5498,13 +5567,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0126,
-    0.2066
+    -0.0151,
+    0.198
    ],
    "Support": [
     0.0,
-    0.025,
-    -0.2258
+    0.0101,
+    -0.176
    ],
    "Muzzle": [
     0.0,
@@ -5582,7 +5651,8 @@
     "roughness": 1.0
    }
   },
-  "tris": 2943
+  "tris": 2943,
+  "support_kind": "rail"
  },
  "flat_sniper_m": {
   "kind": "rifle",
@@ -5592,13 +5662,13 @@
   "markers": {
    "Grip": [
     0.0,
-    -0.0132,
-    0.4357
+    -0.0158,
+    0.1485
    ],
    "Support": [
     0.0,
-    0.008,
-    -0.1835
+    0.0158,
+    -0.162
    ],
    "Muzzle": [
     0.0,
@@ -5676,6 +5746,7 @@
     "roughness": 1.0
    }
   },
-  "tris": 2452
+  "tris": 2452,
+  "support_kind": "rail"
  }
 }

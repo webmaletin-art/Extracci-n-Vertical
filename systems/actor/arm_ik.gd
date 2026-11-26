@@ -38,6 +38,7 @@ var use_attached_weapon := false
 var weapon_attach := Transform3D()     ## arma en el espacio del hueso de la mano derecha
 var weapon_support := Vector3.ZERO     ## marcador Support (espacio del arma)
 var weapon_is_pistol := false
+var weapon_support_kind := "rail"
 var left_grip_weight := 1.0            ## 0 = la mano izquierda queda como la animación, 1 = va al guardamanos
 var left_override_active := false      ## recarga / curar / granada: la mano izquierda va a un marco propio
 var left_override_frame := {}          ## marco en espacio mundo
@@ -283,7 +284,7 @@ func _process_attached(sk: Skeleton3D, inv: Transform3D) -> void:
 	if weapon_node:
 		weapon_node.transform = last_weapon_skel
 	# mano izquierda: al guardamanos, salvo que haya un movimiento propio (recarga, etc.)
-	var frame := WeaponGrip.hand_frame(sk.global_transform * last_weapon_skel, weapon_support, false, weapon_is_pistol)
+	var frame := WeaponGrip.hand_frame(sk.global_transform * last_weapon_skel, weapon_support, false, weapon_is_pistol, weapon_support_kind)
 	var w := left_grip_weight
 	if left_override_active and left_override_weight > 0.001:
 		frame = _blend_frames(frame, left_override_frame, left_override_weight)

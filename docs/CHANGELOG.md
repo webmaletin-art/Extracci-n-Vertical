@@ -202,3 +202,8 @@
 * Apuntado con joystick: al pasar de un lado al otro la mira se espeja de golpe (conserva la altura) en vez de recorrer el arco por arriba o por abajo.
 * Pistola: brazos más estirados (semiflexionados) y más bajos, lejos de la cara; probado con alfa, vigia y doc.
 * Pistola: el brazo sale del hombro por fuera del chaleco (antes salía del pecho): mira por fuera del hombro de tiro, codo hacia afuera, sin adelantar la clavícula; a la altura del pecho y más estirado. Probado en colores reales con alfa y vigia.
+
+## 0.15.5 — empuñaduras reales en las 71 armas
+
+* Nuevos marcadores de manos para TODAS las armas (`tools/weapons/fix_grips.py`): la derecha en la empuñadura de pistola (antes varias agarraban el cargador o el guardamonte), la izquierda en el guardamanos, en la corredera de la escopeta o en la empuñadura vertical delantera. Pistolas y revólveres se calculan solos de la silueta; fusiles, subfusiles, escopetas y francotiradores están marcados a mano (`tools/weapons/grips_manual.py`) mirando el perfil de cada modelo. Hoja de control: `docs/img_empunaduras.png` (rojo = mano derecha, azul = izquierda).
+* Empuñadura vertical delantera: la mano izquierda la rodea (marco propio `VGRIP_LEFT`), no se apoya con la palma arriba.
