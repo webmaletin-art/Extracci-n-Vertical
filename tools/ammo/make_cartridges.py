@@ -61,10 +61,11 @@ def build(key, typ):
     copper = mat("cobre", (0.72, 0.34, 0.2), 0.7, 0.4)
     red = mat("punta_roja", (0.85, 0.05, 0.05), 0.2, 0.5)
     black = mat("punta_negra", (0.03, 0.03, 0.035), 0.4, 0.4)
+    orange = mat("punta_naranja", (0.95, 0.45, 0.05), 0.3, 0.45)
     clen, db, dn, oal, dbul = c["case_len"] * MM, c["d_base"] * MM, c["d_neck"] * MM, c["oal"] * MM, c["d_bullet"] * MM
     rb, rn_case, rbul = db / 2, dn / 2, dbul / 2
     if c["shape"] == "shell":
-        hull = {"std": (0.75, 0.08, 0.08), "hp": (0.18, 0.4, 0.15), "tr": (0.95, 0.4, 0.05), "ap": (0.04, 0.04, 0.05)}[typ]
+        hull = {"std": (0.75, 0.08, 0.08), "hp": (0.18, 0.4, 0.15), "tr": (0.95, 0.4, 0.05), "ap": (0.04, 0.04, 0.05), "in": (0.9, 0.25, 0.05), "fl": (0.1, 0.3, 0.7)}[typ]
         plastic = mat("plastico", hull, 0.0, 0.55)
         head_h = 16 * MM
         lathe("culote", [(0, 0), (rb * 1.06, 0), (rb * 1.06, 2 * MM), (rb, 2.6 * MM), (rb, head_h), (0, head_h)], brass, 24)
@@ -82,16 +83,28 @@ def build(key, typ):
         vis = oal - clen
         rn = rbul * (0.14 if c["shape"] == "bottle" else 0.32)
         cyl = 0.30 if c["shape"] == "bottle" else 0.22
-        if typ == "hp":
-            top = rbul * 0.62
+        if typ in ("hp", "fl"):
+            top = rbul * (0.62 if typ == "hp" else 0.78)
             body = ogive(rbul, top, clen, vis, cyl, 6, 0.0, 1.0)
             body[-1] = (top, clen + vis)
-            body += [(top * 0.55, clen + vis), (top * 0.5, clen + vis - 2.6 * MM), (0.0, clen + vis - 3.6 * MM)]       # cavidad
-            lathe("bala_hueca", [(0, clen)] + body, copper, 24)
-        elif typ in ("tr", "ap"):
-            split = 0.62 if typ == "tr" else 0.52
+            depth = 3.6 if typ == "hp" else 6.5
+            body += [(top * 0.55, clen + vis), (top * 0.5, clen + vis - depth * 0.7 * MM), (0.0, clen + vis - depth * MM)]       # cavidad
+            ob = lathe("bala_hueca" if typ == "hp" else "bala_flor", [(0, clen)] + body, copper, 24)
+            # borde en estrella: los vértices del borde de la boca se alternan hacia afuera / adentro (6 muescas la hueca, 8 pétalos la flor)
+            petals = 6 if typ == "hp" else 8
+            ytop = clen + vis
+            for v in ob.data.vertices:
+                if abs(v.co.z - ytop) < 1e-5 and (v.co.x ** 2 + v.co.y ** 2) ** 0.5 > top * 0.5:
+                    ang = math.atan2(v.co.y, v.co.x)
+                    k = 0.82 + 0.34 * (0.5 + 0.5 * math.cos(ang * petals))
+                    v.co.x *= k
+                    v.co.y *= k
+                    if typ == "fl":
+                        v.co.z -= 1.2 * MM * (0.5 - 0.5 * math.cos(ang * petals))     # pétalos a distinta altura
+        elif typ in ("tr", "ap", "in"):
+            split = {"tr": 0.62, "ap": 0.52, "in": 0.58}[typ]
             lathe("bala_cuerpo", [(0, clen)] + ogive(rbul, rn, clen, vis, cyl, 6, 0.0, split), copper, 24)
-            lathe("punta", ogive(rbul, rn, clen, vis, cyl, 6, split, 1.0) + [(0, clen + vis)], red if typ == "tr" else black, 24)
+            lathe("punta", ogive(rbul, rn, clen, vis, cyl, 6, split, 1.0) + [(0, clen + vis)], {"tr": red, "ap": black, "in": orange}[typ], 24)
         else:
             lathe("bala", [(0, clen)] + ogive(rbul, rn, clen, vis, cyl, 7) + [(0, clen + vis)], copper, 24)
     bpy.ops.object.select_all(action="SELECT")
@@ -103,7 +116,7 @@ def build(key, typ):
 bpy.ops.wm.read_factory_settings(use_empty=True)
 n = 0
 for key in D["calibers"]:
-    for typ in ("std", "hp", "tr", "ap"):
+    for typ in ("std", "tr", "hp", "ap", "in", "fl"):
         t = build(key, typ)
         n += 1
         print("cartucho", key, typ, t, "tris")

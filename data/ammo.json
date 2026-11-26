@@ -10,18 +10,12 @@
    "spread": 1.0,
    "noise": 0,
    "price": 1.0,
-   "text": "Camisa completa: equilibrada y barata."
-  },
-  "hp": {
-   "name": "Punta hueca",
-   "dmg": 1.3,
-   "pen": 0.45,
-   "ric": 0.5,
-   "speed": 0.97,
-   "spread": 1.0,
-   "noise": 0,
-   "price": 2.2,
-   "text": "Se abre al impactar: más daño y más sangre, atraviesa poco."
+   "text": "Camisa completa: equilibrada y barata.",
+   "bone": 1.0,
+   "wound": 1.0,
+   "blood": 1.0,
+   "organ": 1.0,
+   "burst": false
   },
   "tr": {
    "name": "Trazante",
@@ -32,7 +26,28 @@
    "spread": 0.95,
    "noise": 2,
    "price": 1.5,
-   "text": "Deja una estela luminosa: se ve adónde van los tiros."
+   "text": "Deja una estela luminosa: se ve adónde van los tiros.",
+   "bone": 1.0,
+   "wound": 1.0,
+   "blood": 1.0,
+   "organ": 1.0,
+   "burst": false
+  },
+  "hp": {
+   "name": "Punta hueca",
+   "dmg": 1.3,
+   "pen": 0.45,
+   "ric": 0.5,
+   "speed": 0.97,
+   "spread": 1.0,
+   "noise": 0,
+   "price": 2.2,
+   "text": "Se abre al impactar: más daño, orificio más grande y más sangre; atraviesa poco.",
+   "bone": 1.25,
+   "wound": 1.5,
+   "blood": 1.5,
+   "organ": 1.2,
+   "burst": false
   },
   "ap": {
    "name": "Perforante",
@@ -43,7 +58,44 @@
    "spread": 0.9,
    "noise": 2,
    "price": 3.0,
-   "text": "Núcleo de acero: atraviesa paredes y coberturas."
+   "text": "Núcleo de acero: atraviesa paredes y coberturas y rompe el hueso por el medio.",
+   "bone": 1.45,
+   "wound": 0.8,
+   "blood": 0.9,
+   "organ": 1.0,
+   "burst": false
+  },
+  "in": {
+   "name": "Incendiaria",
+   "dmg": 1.25,
+   "pen": 0.7,
+   "ric": 0.4,
+   "speed": 0.98,
+   "spread": 1.0,
+   "noise": 4,
+   "price": 3.6,
+   "text": "Estalla al entrar: revienta órganos y partes del cuerpo, quema y destroza la ropa.",
+   "bone": 1.7,
+   "wound": 2.1,
+   "blood": 2.0,
+   "organ": 2.2,
+   "burst": true
+  },
+  "fl": {
+   "name": "Punta de flor",
+   "dmg": 1.55,
+   "pen": 0.35,
+   "ric": 0.2,
+   "speed": 0.96,
+   "spread": 1.0,
+   "noise": 0,
+   "price": 4.8,
+   "text": "Se abre en pétalos: el máximo daño, huesos astillados, orificio enorme y mucha sangre.",
+   "bone": 1.9,
+   "wound": 2.7,
+   "blood": 2.5,
+   "organ": 1.8,
+   "burst": false
   }
  },
  "shotgun_types": {
@@ -56,7 +108,28 @@
    "spread": 1.0,
    "noise": 0,
    "price": 1.0,
-   "text": "8-9 perdigones: devastadora de cerca."
+   "text": "8-9 perdigones: devastadora de cerca.",
+   "bone": 1.0,
+   "wound": 1.0,
+   "blood": 1.0,
+   "organ": 1.0,
+   "burst": false
+  },
+  "tr": {
+   "name": "Postas trazantes",
+   "dmg": 1.0,
+   "pen": 1.0,
+   "ric": 1.0,
+   "speed": 1.0,
+   "spread": 1.0,
+   "noise": 2,
+   "price": 1.5,
+   "text": "Perdigones con estela luminosa.",
+   "bone": 1.0,
+   "wound": 1.0,
+   "blood": 1.0,
+   "organ": 1.0,
+   "burst": false
   },
   "hp": {
    "name": "Balón (slug)",
@@ -67,18 +140,12 @@
    "spread": 0.25,
    "noise": 0,
    "price": 2.2,
-   "text": "Un solo proyectil pesado: mucho daño y más alcance."
-  },
-  "tr": {
-   "name": "Incendiaria",
-   "dmg": 0.85,
-   "pen": 0.8,
-   "ric": 0.8,
-   "speed": 0.95,
-   "spread": 1.1,
-   "noise": 4,
-   "price": 1.8,
-   "text": "Perdigones incandescentes: se ven y encienden."
+   "text": "Un solo proyectil pesado: mucho daño y más alcance.",
+   "bone": 1.4,
+   "wound": 1.6,
+   "blood": 1.5,
+   "organ": 1.2,
+   "burst": false
   },
   "ap": {
    "name": "Balón perforante",
@@ -89,7 +156,44 @@
    "spread": 0.22,
    "noise": 2,
    "price": 3.0,
-   "text": "Dardo de acero: atraviesa casi todo."
+   "text": "Dardo de acero: atraviesa casi todo.",
+   "bone": 1.6,
+   "wound": 0.8,
+   "blood": 0.9,
+   "organ": 1.0,
+   "burst": false
+  },
+  "in": {
+   "name": "Incendiaria",
+   "dmg": 0.95,
+   "pen": 0.8,
+   "ric": 0.6,
+   "speed": 0.95,
+   "spread": 1.1,
+   "noise": 4,
+   "price": 3.6,
+   "text": "Perdigones incandescentes: se ven, encienden y revientan lo que tocan.",
+   "bone": 1.6,
+   "wound": 2.1,
+   "blood": 2.0,
+   "organ": 2.2,
+   "burst": true
+  },
+  "fl": {
+   "name": "Balón de pétalos",
+   "dmg": 6.0,
+   "pen": 0.6,
+   "ric": 0.3,
+   "speed": 1.1,
+   "spread": 0.25,
+   "noise": 0,
+   "price": 4.8,
+   "text": "Balón que se abre en pétalos: el mayor daño, huesos astillados.",
+   "bone": 2.0,
+   "wound": 2.8,
+   "blood": 2.5,
+   "organ": 1.8,
+   "burst": false
   }
  },
  "calibers": {
@@ -451,22 +555,22 @@
     "pistol_5"
    ]
   },
-  "380_hp": {
-   "caliber": "380",
-   "type": "hp",
-   "name": ".380 ACP · Punta hueca",
-   "box": 24,
-   "price": 100,
-   "weapons": [
-    "pistol_5"
-   ]
-  },
   "380_tr": {
    "caliber": "380",
    "type": "tr",
    "name": ".380 ACP · Trazante",
    "box": 24,
    "price": 70,
+   "weapons": [
+    "pistol_5"
+   ]
+  },
+  "380_hp": {
+   "caliber": "380",
+   "type": "hp",
+   "name": ".380 ACP · Punta hueca",
+   "box": 24,
+   "price": 100,
    "weapons": [
     "pistol_5"
    ]
@@ -481,28 +585,32 @@
     "pistol_5"
    ]
   },
+  "380_in": {
+   "caliber": "380",
+   "type": "in",
+   "name": ".380 ACP · Incendiaria",
+   "box": 24,
+   "price": 165,
+   "weapons": [
+    "pistol_5"
+   ]
+  },
+  "380_fl": {
+   "caliber": "380",
+   "type": "fl",
+   "name": ".380 ACP · Punta de flor",
+   "box": 24,
+   "price": 220,
+   "weapons": [
+    "pistol_5"
+   ]
+  },
   "9x19_std": {
    "caliber": "9x19",
    "type": "std",
    "name": "9×19 mm · Estándar (FMJ)",
    "box": 30,
    "price": 80,
-   "weapons": [
-    "mp5_1",
-    "mp5_2",
-    "pistol_1",
-    "pistol_2",
-    "smg_4",
-    "smg_1",
-    "smg_3"
-   ]
-  },
-  "9x19_hp": {
-   "caliber": "9x19",
-   "type": "hp",
-   "name": "9×19 mm · Punta hueca",
-   "box": 30,
-   "price": 175,
    "weapons": [
     "mp5_1",
     "mp5_2",
@@ -529,12 +637,60 @@
     "smg_3"
    ]
   },
+  "9x19_hp": {
+   "caliber": "9x19",
+   "type": "hp",
+   "name": "9×19 mm · Punta hueca",
+   "box": 30,
+   "price": 175,
+   "weapons": [
+    "mp5_1",
+    "mp5_2",
+    "pistol_1",
+    "pistol_2",
+    "smg_4",
+    "smg_1",
+    "smg_3"
+   ]
+  },
   "9x19_ap": {
    "caliber": "9x19",
    "type": "ap",
    "name": "9×19 mm · Perforante",
    "box": 30,
    "price": 235,
+   "weapons": [
+    "mp5_1",
+    "mp5_2",
+    "pistol_1",
+    "pistol_2",
+    "smg_4",
+    "smg_1",
+    "smg_3"
+   ]
+  },
+  "9x19_in": {
+   "caliber": "9x19",
+   "type": "in",
+   "name": "9×19 mm · Incendiaria",
+   "box": 30,
+   "price": 285,
+   "weapons": [
+    "mp5_1",
+    "mp5_2",
+    "pistol_1",
+    "pistol_2",
+    "smg_4",
+    "smg_1",
+    "smg_3"
+   ]
+  },
+  "9x19_fl": {
+   "caliber": "9x19",
+   "type": "fl",
+   "name": "9×19 mm · Punta de flor",
+   "box": 30,
+   "price": 375,
    "weapons": [
     "mp5_1",
     "mp5_2",
@@ -555,22 +711,22 @@
     "pistol_3"
    ]
   },
-  "40sw_hp": {
-   "caliber": "40sw",
-   "type": "hp",
-   "name": ".40 S&W · Punta hueca",
-   "box": 24,
-   "price": 165,
-   "weapons": [
-    "pistol_3"
-   ]
-  },
   "40sw_tr": {
    "caliber": "40sw",
    "type": "tr",
    "name": ".40 S&W · Trazante",
    "box": 24,
    "price": 110,
+   "weapons": [
+    "pistol_3"
+   ]
+  },
+  "40sw_hp": {
+   "caliber": "40sw",
+   "type": "hp",
+   "name": ".40 S&W · Punta hueca",
+   "box": 24,
+   "price": 165,
    "weapons": [
     "pistol_3"
    ]
@@ -585,27 +741,32 @@
     "pistol_3"
    ]
   },
+  "40sw_in": {
+   "caliber": "40sw",
+   "type": "in",
+   "name": ".40 S&W · Incendiaria",
+   "box": 24,
+   "price": 265,
+   "weapons": [
+    "pistol_3"
+   ]
+  },
+  "40sw_fl": {
+   "caliber": "40sw",
+   "type": "fl",
+   "name": ".40 S&W · Punta de flor",
+   "box": 24,
+   "price": 355,
+   "weapons": [
+    "pistol_3"
+   ]
+  },
   "45acp_std": {
    "caliber": "45acp",
    "type": "std",
    "name": ".45 ACP · Estándar (FMJ)",
    "box": 24,
    "price": 65,
-   "weapons": [
-    "m1911",
-    "vector",
-    "m1911_1",
-    "m1911t",
-    "pistol_4",
-    "smg_2"
-   ]
-  },
-  "45acp_hp": {
-   "caliber": "45acp",
-   "type": "hp",
-   "name": ".45 ACP · Punta hueca",
-   "box": 24,
-   "price": 140,
    "weapons": [
     "m1911",
     "vector",
@@ -630,12 +791,57 @@
     "smg_2"
    ]
   },
+  "45acp_hp": {
+   "caliber": "45acp",
+   "type": "hp",
+   "name": ".45 ACP · Punta hueca",
+   "box": 24,
+   "price": 140,
+   "weapons": [
+    "m1911",
+    "vector",
+    "m1911_1",
+    "m1911t",
+    "pistol_4",
+    "smg_2"
+   ]
+  },
   "45acp_ap": {
    "caliber": "45acp",
    "type": "ap",
    "name": ".45 ACP · Perforante",
    "box": 24,
    "price": 195,
+   "weapons": [
+    "m1911",
+    "vector",
+    "m1911_1",
+    "m1911t",
+    "pistol_4",
+    "smg_2"
+   ]
+  },
+  "45acp_in": {
+   "caliber": "45acp",
+   "type": "in",
+   "name": ".45 ACP · Incendiaria",
+   "box": 24,
+   "price": 230,
+   "weapons": [
+    "m1911",
+    "vector",
+    "m1911_1",
+    "m1911t",
+    "pistol_4",
+    "smg_2"
+   ]
+  },
+  "45acp_fl": {
+   "caliber": "45acp",
+   "type": "fl",
+   "name": ".45 ACP · Punta de flor",
+   "box": 24,
+   "price": 310,
    "weapons": [
     "m1911",
     "vector",
@@ -655,22 +861,22 @@
     "revolver_4"
    ]
   },
-  "38sp_hp": {
-   "caliber": "38sp",
-   "type": "hp",
-   "name": ".38 Special · Punta hueca",
-   "box": 12,
-   "price": 55,
-   "weapons": [
-    "revolver_4"
-   ]
-  },
   "38sp_tr": {
    "caliber": "38sp",
    "type": "tr",
    "name": ".38 Special · Trazante",
    "box": 12,
    "price": 40,
+   "weapons": [
+    "revolver_4"
+   ]
+  },
+  "38sp_hp": {
+   "caliber": "38sp",
+   "type": "hp",
+   "name": ".38 Special · Punta hueca",
+   "box": 12,
+   "price": 55,
    "weapons": [
     "revolver_4"
    ]
@@ -685,24 +891,32 @@
     "revolver_4"
    ]
   },
+  "38sp_in": {
+   "caliber": "38sp",
+   "type": "in",
+   "name": ".38 Special · Incendiaria",
+   "box": 12,
+   "price": 90,
+   "weapons": [
+    "revolver_4"
+   ]
+  },
+  "38sp_fl": {
+   "caliber": "38sp",
+   "type": "fl",
+   "name": ".38 Special · Punta de flor",
+   "box": 12,
+   "price": 120,
+   "weapons": [
+    "revolver_4"
+   ]
+  },
   "357_std": {
    "caliber": "357",
    "type": "std",
    "name": ".357 Magnum · Estándar (FMJ)",
    "box": 12,
    "price": 40,
-   "weapons": [
-    "pistol_6",
-    "revolver_1",
-    "revolver_2"
-   ]
-  },
-  "357_hp": {
-   "caliber": "357",
-   "type": "hp",
-   "name": ".357 Magnum · Punta hueca",
-   "box": 12,
-   "price": 95,
    "weapons": [
     "pistol_6",
     "revolver_1",
@@ -721,12 +935,48 @@
     "revolver_2"
    ]
   },
+  "357_hp": {
+   "caliber": "357",
+   "type": "hp",
+   "name": ".357 Magnum · Punta hueca",
+   "box": 12,
+   "price": 95,
+   "weapons": [
+    "pistol_6",
+    "revolver_1",
+    "revolver_2"
+   ]
+  },
   "357_ap": {
    "caliber": "357",
    "type": "ap",
    "name": ".357 Magnum · Perforante",
    "box": 12,
    "price": 125,
+   "weapons": [
+    "pistol_6",
+    "revolver_1",
+    "revolver_2"
+   ]
+  },
+  "357_in": {
+   "caliber": "357",
+   "type": "in",
+   "name": ".357 Magnum · Incendiaria",
+   "box": 12,
+   "price": 150,
+   "weapons": [
+    "pistol_6",
+    "revolver_1",
+    "revolver_2"
+   ]
+  },
+  "357_fl": {
+   "caliber": "357",
+   "type": "fl",
+   "name": ".357 Magnum · Punta de flor",
+   "box": 12,
+   "price": 200,
    "weapons": [
     "pistol_6",
     "revolver_1",
@@ -743,22 +993,22 @@
     "revolver_3"
    ]
   },
-  "44mag_hp": {
-   "caliber": "44mag",
-   "type": "hp",
-   "name": ".44 Magnum · Punta hueca",
-   "box": 12,
-   "price": 140,
-   "weapons": [
-    "revolver_3"
-   ]
-  },
   "44mag_tr": {
    "caliber": "44mag",
    "type": "tr",
    "name": ".44 Magnum · Trazante",
    "box": 12,
    "price": 95,
+   "weapons": [
+    "revolver_3"
+   ]
+  },
+  "44mag_hp": {
+   "caliber": "44mag",
+   "type": "hp",
+   "name": ".44 Magnum · Punta hueca",
+   "box": 12,
+   "price": 140,
    "weapons": [
     "revolver_3"
    ]
@@ -773,22 +1023,32 @@
     "revolver_3"
    ]
   },
+  "44mag_in": {
+   "caliber": "44mag",
+   "type": "in",
+   "name": ".44 Magnum · Incendiaria",
+   "box": 12,
+   "price": 235,
+   "weapons": [
+    "revolver_3"
+   ]
+  },
+  "44mag_fl": {
+   "caliber": "44mag",
+   "type": "fl",
+   "name": ".44 Magnum · Punta de flor",
+   "box": 12,
+   "price": 310,
+   "weapons": [
+    "revolver_3"
+   ]
+  },
   "454_std": {
    "caliber": "454",
    "type": "std",
    "name": ".454 Casull · Estándar (FMJ)",
    "box": 10,
    "price": 75,
-   "weapons": [
-    "revolver_5"
-   ]
-  },
-  "454_hp": {
-   "caliber": "454",
-   "type": "hp",
-   "name": ".454 Casull · Punta hueca",
-   "box": 10,
-   "price": 160,
    "weapons": [
     "revolver_5"
    ]
@@ -803,12 +1063,42 @@
     "revolver_5"
    ]
   },
+  "454_hp": {
+   "caliber": "454",
+   "type": "hp",
+   "name": ".454 Casull · Punta hueca",
+   "box": 10,
+   "price": 160,
+   "weapons": [
+    "revolver_5"
+   ]
+  },
   "454_ap": {
    "caliber": "454",
    "type": "ap",
    "name": ".454 Casull · Perforante",
    "box": 10,
    "price": 220,
+   "weapons": [
+    "revolver_5"
+   ]
+  },
+  "454_in": {
+   "caliber": "454",
+   "type": "in",
+   "name": ".454 Casull · Incendiaria",
+   "box": 10,
+   "price": 260,
+   "weapons": [
+    "revolver_5"
+   ]
+  },
+  "454_fl": {
+   "caliber": "454",
+   "type": "fl",
+   "name": ".454 Casull · Punta de flor",
+   "box": 10,
+   "price": 350,
    "weapons": [
     "revolver_5"
    ]
@@ -823,22 +1113,22 @@
     "deagle"
    ]
   },
-  "50ae_hp": {
-   "caliber": "50ae",
-   "type": "hp",
-   "name": ".50 AE · Punta hueca",
-   "box": 10,
-   "price": 130,
-   "weapons": [
-    "deagle"
-   ]
-  },
   "50ae_tr": {
    "caliber": "50ae",
    "type": "tr",
    "name": ".50 AE · Trazante",
    "box": 10,
    "price": 90,
+   "weapons": [
+    "deagle"
+   ]
+  },
+  "50ae_hp": {
+   "caliber": "50ae",
+   "type": "hp",
+   "name": ".50 AE · Punta hueca",
+   "box": 10,
+   "price": 130,
    "weapons": [
     "deagle"
    ]
@@ -853,22 +1143,32 @@
     "deagle"
    ]
   },
+  "50ae_in": {
+   "caliber": "50ae",
+   "type": "in",
+   "name": ".50 AE · Incendiaria",
+   "box": 10,
+   "price": 215,
+   "weapons": [
+    "deagle"
+   ]
+  },
+  "50ae_fl": {
+   "caliber": "50ae",
+   "type": "fl",
+   "name": ".50 AE · Punta de flor",
+   "box": 10,
+   "price": 290,
+   "weapons": [
+    "deagle"
+   ]
+  },
   "46x30_std": {
    "caliber": "46x30",
    "type": "std",
    "name": "4,6×30 mm · Estándar (FMJ)",
    "box": 40,
    "price": 100,
-   "weapons": [
-    "mp7"
-   ]
-  },
-  "46x30_hp": {
-   "caliber": "46x30",
-   "type": "hp",
-   "name": "4,6×30 mm · Punta hueca",
-   "box": 40,
-   "price": 215,
    "weapons": [
     "mp7"
    ]
@@ -883,6 +1183,16 @@
     "mp7"
    ]
   },
+  "46x30_hp": {
+   "caliber": "46x30",
+   "type": "hp",
+   "name": "4,6×30 mm · Punta hueca",
+   "box": 40,
+   "price": 215,
+   "weapons": [
+    "mp7"
+   ]
+  },
   "46x30_ap": {
    "caliber": "46x30",
    "type": "ap",
@@ -893,23 +1203,32 @@
     "mp7"
    ]
   },
+  "46x30_in": {
+   "caliber": "46x30",
+   "type": "in",
+   "name": "4,6×30 mm · Incendiaria",
+   "box": 40,
+   "price": 355,
+   "weapons": [
+    "mp7"
+   ]
+  },
+  "46x30_fl": {
+   "caliber": "46x30",
+   "type": "fl",
+   "name": "4,6×30 mm · Punta de flor",
+   "box": 40,
+   "price": 470,
+   "weapons": [
+    "mp7"
+   ]
+  },
   "57x28_std": {
    "caliber": "57x28",
    "type": "std",
    "name": "5,7×28 mm · Estándar (FMJ)",
    "box": 50,
    "price": 130,
-   "weapons": [
-    "p90",
-    "smg_5"
-   ]
-  },
-  "57x28_hp": {
-   "caliber": "57x28",
-   "type": "hp",
-   "name": "5,7×28 mm · Punta hueca",
-   "box": 50,
-   "price": 290,
    "weapons": [
     "p90",
     "smg_5"
@@ -926,6 +1245,17 @@
     "smg_5"
    ]
   },
+  "57x28_hp": {
+   "caliber": "57x28",
+   "type": "hp",
+   "name": "5,7×28 mm · Punta hueca",
+   "box": 50,
+   "price": 290,
+   "weapons": [
+    "p90",
+    "smg_5"
+   ]
+  },
   "57x28_ap": {
    "caliber": "57x28",
    "type": "ap",
@@ -937,38 +1267,34 @@
     "smg_5"
    ]
   },
+  "57x28_in": {
+   "caliber": "57x28",
+   "type": "in",
+   "name": "5,7×28 mm · Incendiaria",
+   "box": 50,
+   "price": 470,
+   "weapons": [
+    "p90",
+    "smg_5"
+   ]
+  },
+  "57x28_fl": {
+   "caliber": "57x28",
+   "type": "fl",
+   "name": "5,7×28 mm · Punta de flor",
+   "box": 50,
+   "price": 630,
+   "weapons": [
+    "p90",
+    "smg_5"
+   ]
+  },
   "556_std": {
    "caliber": "556",
    "type": "std",
    "name": "5,56×45 mm · Estándar (FMJ)",
    "box": 30,
    "price": 170,
-   "weapons": [
-    "cqbm4",
-    "g36c",
-    "m16",
-    "m4supp",
-    "aug",
-    "m16_1",
-    "scar",
-    "m4a1",
-    "m4a1_1",
-    "ar_1",
-    "ar2_4",
-    "ar_3",
-    "ar2_2",
-    "ar_2",
-    "bullpup_2",
-    "bullpup_3",
-    "bullpup_1"
-   ]
-  },
-  "556_hp": {
-   "caliber": "556",
-   "type": "hp",
-   "name": "5,56×45 mm · Punta hueca",
-   "box": 30,
-   "price": 370,
    "weapons": [
     "cqbm4",
     "g36c",
@@ -1015,12 +1341,90 @@
     "bullpup_1"
    ]
   },
+  "556_hp": {
+   "caliber": "556",
+   "type": "hp",
+   "name": "5,56×45 mm · Punta hueca",
+   "box": 30,
+   "price": 370,
+   "weapons": [
+    "cqbm4",
+    "g36c",
+    "m16",
+    "m4supp",
+    "aug",
+    "m16_1",
+    "scar",
+    "m4a1",
+    "m4a1_1",
+    "ar_1",
+    "ar2_4",
+    "ar_3",
+    "ar2_2",
+    "ar_2",
+    "bullpup_2",
+    "bullpup_3",
+    "bullpup_1"
+   ]
+  },
   "556_ap": {
    "caliber": "556",
    "type": "ap",
    "name": "5,56×45 mm · Perforante",
    "box": 30,
    "price": 505,
+   "weapons": [
+    "cqbm4",
+    "g36c",
+    "m16",
+    "m4supp",
+    "aug",
+    "m16_1",
+    "scar",
+    "m4a1",
+    "m4a1_1",
+    "ar_1",
+    "ar2_4",
+    "ar_3",
+    "ar2_2",
+    "ar_2",
+    "bullpup_2",
+    "bullpup_3",
+    "bullpup_1"
+   ]
+  },
+  "556_in": {
+   "caliber": "556",
+   "type": "in",
+   "name": "5,56×45 mm · Incendiaria",
+   "box": 30,
+   "price": 605,
+   "weapons": [
+    "cqbm4",
+    "g36c",
+    "m16",
+    "m4supp",
+    "aug",
+    "m16_1",
+    "scar",
+    "m4a1",
+    "m4a1_1",
+    "ar_1",
+    "ar2_4",
+    "ar_3",
+    "ar2_2",
+    "ar_2",
+    "bullpup_2",
+    "bullpup_3",
+    "bullpup_1"
+   ]
+  },
+  "556_fl": {
+   "caliber": "556",
+   "type": "fl",
+   "name": "5,56×45 mm · Punta de flor",
+   "box": 30,
+   "price": 805,
    "weapons": [
     "cqbm4",
     "g36c",
@@ -1053,24 +1457,24 @@
     "ar_5"
    ]
   },
-  "762x39_hp": {
-   "caliber": "762x39",
-   "type": "hp",
-   "name": "7,62×39 mm · Punta hueca",
-   "box": 30,
-   "price": 410,
-   "weapons": [
-    "ak47",
-    "ar2_3",
-    "ar_5"
-   ]
-  },
   "762x39_tr": {
    "caliber": "762x39",
    "type": "tr",
    "name": "7,62×39 mm · Trazante",
    "box": 30,
    "price": 280,
+   "weapons": [
+    "ak47",
+    "ar2_3",
+    "ar_5"
+   ]
+  },
+  "762x39_hp": {
+   "caliber": "762x39",
+   "type": "hp",
+   "name": "7,62×39 mm · Punta hueca",
+   "box": 30,
+   "price": 410,
    "weapons": [
     "ak47",
     "ar2_3",
@@ -1089,26 +1493,36 @@
     "ar_5"
    ]
   },
+  "762x39_in": {
+   "caliber": "762x39",
+   "type": "in",
+   "name": "7,62×39 mm · Incendiaria",
+   "box": 30,
+   "price": 670,
+   "weapons": [
+    "ak47",
+    "ar2_3",
+    "ar_5"
+   ]
+  },
+  "762x39_fl": {
+   "caliber": "762x39",
+   "type": "fl",
+   "name": "7,62×39 mm · Punta de flor",
+   "box": 30,
+   "price": 890,
+   "weapons": [
+    "ak47",
+    "ar2_3",
+    "ar_5"
+   ]
+  },
   "762x51_std": {
    "caliber": "762x51",
    "type": "std",
    "name": "7,62×51 mm · Estándar (FMJ)",
    "box": 20,
    "price": 170,
-   "weapons": [
-    "scarh",
-    "m4dmr",
-    "ar2_1",
-    "ar_4",
-    "sniper_3"
-   ]
-  },
-  "762x51_hp": {
-   "caliber": "762x51",
-   "type": "hp",
-   "name": "7,62×51 mm · Punta hueca",
-   "box": 20,
-   "price": 380,
    "weapons": [
     "scarh",
     "m4dmr",
@@ -1131,12 +1545,54 @@
     "sniper_3"
    ]
   },
+  "762x51_hp": {
+   "caliber": "762x51",
+   "type": "hp",
+   "name": "7,62×51 mm · Punta hueca",
+   "box": 20,
+   "price": 380,
+   "weapons": [
+    "scarh",
+    "m4dmr",
+    "ar2_1",
+    "ar_4",
+    "sniper_3"
+   ]
+  },
   "762x51_ap": {
    "caliber": "762x51",
    "type": "ap",
    "name": "7,62×51 mm · Perforante",
    "box": 20,
    "price": 515,
+   "weapons": [
+    "scarh",
+    "m4dmr",
+    "ar2_1",
+    "ar_4",
+    "sniper_3"
+   ]
+  },
+  "762x51_in": {
+   "caliber": "762x51",
+   "type": "in",
+   "name": "7,62×51 mm · Incendiaria",
+   "box": 20,
+   "price": 620,
+   "weapons": [
+    "scarh",
+    "m4dmr",
+    "ar2_1",
+    "ar_4",
+    "sniper_3"
+   ]
+  },
+  "762x51_fl": {
+   "caliber": "762x51",
+   "type": "fl",
+   "name": "7,62×51 mm · Punta de flor",
+   "box": 20,
+   "price": 825,
    "weapons": [
     "scarh",
     "m4dmr",
@@ -1156,23 +1612,23 @@
     "sniper_1"
    ]
   },
-  "308_hp": {
-   "caliber": "308",
-   "type": "hp",
-   "name": ".308 Win · Punta hueca",
-   "box": 20,
-   "price": 380,
-   "weapons": [
-    "sniper_6",
-    "sniper_1"
-   ]
-  },
   "308_tr": {
    "caliber": "308",
    "type": "tr",
    "name": ".308 Win · Trazante",
    "box": 20,
    "price": 260,
+   "weapons": [
+    "sniper_6",
+    "sniper_1"
+   ]
+  },
+  "308_hp": {
+   "caliber": "308",
+   "type": "hp",
+   "name": ".308 Win · Punta hueca",
+   "box": 20,
+   "price": 380,
    "weapons": [
     "sniper_6",
     "sniper_1"
@@ -1189,22 +1645,34 @@
     "sniper_1"
    ]
   },
+  "308_in": {
+   "caliber": "308",
+   "type": "in",
+   "name": ".308 Win · Incendiaria",
+   "box": 20,
+   "price": 620,
+   "weapons": [
+    "sniper_6",
+    "sniper_1"
+   ]
+  },
+  "308_fl": {
+   "caliber": "308",
+   "type": "fl",
+   "name": ".308 Win · Punta de flor",
+   "box": 20,
+   "price": 825,
+   "weapons": [
+    "sniper_6",
+    "sniper_1"
+   ]
+  },
   "300wm_std": {
    "caliber": "300wm",
    "type": "std",
    "name": ".300 Win Mag · Estándar (FMJ)",
    "box": 10,
    "price": 95,
-   "weapons": [
-    "sniper_2"
-   ]
-  },
-  "300wm_hp": {
-   "caliber": "300wm",
-   "type": "hp",
-   "name": ".300 Win Mag · Punta hueca",
-   "box": 10,
-   "price": 210,
    "weapons": [
     "sniper_2"
    ]
@@ -1219,12 +1687,42 @@
     "sniper_2"
    ]
   },
+  "300wm_hp": {
+   "caliber": "300wm",
+   "type": "hp",
+   "name": ".300 Win Mag · Punta hueca",
+   "box": 10,
+   "price": 210,
+   "weapons": [
+    "sniper_2"
+   ]
+  },
   "300wm_ap": {
    "caliber": "300wm",
    "type": "ap",
    "name": ".300 Win Mag · Perforante",
    "box": 10,
    "price": 285,
+   "weapons": [
+    "sniper_2"
+   ]
+  },
+  "300wm_in": {
+   "caliber": "300wm",
+   "type": "in",
+   "name": ".300 Win Mag · Incendiaria",
+   "box": 10,
+   "price": 340,
+   "weapons": [
+    "sniper_2"
+   ]
+  },
+  "300wm_fl": {
+   "caliber": "300wm",
+   "type": "fl",
+   "name": ".300 Win Mag · Punta de flor",
+   "box": 10,
+   "price": 455,
    "weapons": [
     "sniper_2"
    ]
@@ -1239,22 +1737,22 @@
     "sniper_4"
    ]
   },
-  "338_hp": {
-   "caliber": "338",
-   "type": "hp",
-   "name": ".338 Lapua · Punta hueca",
-   "box": 10,
-   "price": 270,
-   "weapons": [
-    "sniper_4"
-   ]
-  },
   "338_tr": {
    "caliber": "338",
    "type": "tr",
    "name": ".338 Lapua · Trazante",
    "box": 10,
    "price": 185,
+   "weapons": [
+    "sniper_4"
+   ]
+  },
+  "338_hp": {
+   "caliber": "338",
+   "type": "hp",
+   "name": ".338 Lapua · Punta hueca",
+   "box": 10,
+   "price": 270,
    "weapons": [
     "sniper_4"
    ]
@@ -1269,22 +1767,32 @@
     "sniper_4"
    ]
   },
+  "338_in": {
+   "caliber": "338",
+   "type": "in",
+   "name": ".338 Lapua · Incendiaria",
+   "box": 10,
+   "price": 440,
+   "weapons": [
+    "sniper_4"
+   ]
+  },
+  "338_fl": {
+   "caliber": "338",
+   "type": "fl",
+   "name": ".338 Lapua · Punta de flor",
+   "box": 10,
+   "price": 585,
+   "weapons": [
+    "sniper_4"
+   ]
+  },
   "50bmg_std": {
    "caliber": "50bmg",
    "type": "std",
    "name": ".50 BMG · Estándar (FMJ)",
    "box": 5,
    "price": 115,
-   "weapons": [
-    "sniper_5"
-   ]
-  },
-  "50bmg_hp": {
-   "caliber": "50bmg",
-   "type": "hp",
-   "name": ".50 BMG · Punta hueca",
-   "box": 5,
-   "price": 255,
    "weapons": [
     "sniper_5"
    ]
@@ -1299,6 +1807,16 @@
     "sniper_5"
    ]
   },
+  "50bmg_hp": {
+   "caliber": "50bmg",
+   "type": "hp",
+   "name": ".50 BMG · Punta hueca",
+   "box": 5,
+   "price": 255,
+   "weapons": [
+    "sniper_5"
+   ]
+  },
   "50bmg_ap": {
    "caliber": "50bmg",
    "type": "ap",
@@ -1309,12 +1827,47 @@
     "sniper_5"
    ]
   },
+  "50bmg_in": {
+   "caliber": "50bmg",
+   "type": "in",
+   "name": ".50 BMG · Incendiaria",
+   "box": 5,
+   "price": 420,
+   "weapons": [
+    "sniper_5"
+   ]
+  },
+  "50bmg_fl": {
+   "caliber": "50bmg",
+   "type": "fl",
+   "name": ".50 BMG · Punta de flor",
+   "box": 5,
+   "price": 560,
+   "weapons": [
+    "sniper_5"
+   ]
+  },
   "12ga_std": {
    "caliber": "12ga",
    "type": "std",
    "name": "12 ga · Postas",
    "box": 10,
    "price": 60,
+   "weapons": [
+    "shotgun_sawed",
+    "shotgun_short",
+    "shotgun_1",
+    "shotgun_2",
+    "shotgun_3",
+    "shotgun_4"
+   ]
+  },
+  "12ga_tr": {
+   "caliber": "12ga",
+   "type": "tr",
+   "name": "12 ga · Postas trazantes",
+   "box": 10,
+   "price": 95,
    "weapons": [
     "shotgun_sawed",
     "shotgun_short",
@@ -1339,12 +1892,12 @@
     "shotgun_4"
    ]
   },
-  "12ga_tr": {
+  "12ga_ap": {
    "caliber": "12ga",
-   "type": "tr",
-   "name": "12 ga · Incendiaria",
+   "type": "ap",
+   "name": "12 ga · Balón perforante",
    "box": 10,
-   "price": 110,
+   "price": 185,
    "weapons": [
     "shotgun_sawed",
     "shotgun_short",
@@ -1354,12 +1907,27 @@
     "shotgun_4"
    ]
   },
-  "12ga_ap": {
+  "12ga_in": {
    "caliber": "12ga",
-   "type": "ap",
-   "name": "12 ga · Balón perforante",
+   "type": "in",
+   "name": "12 ga · Incendiaria",
    "box": 10,
-   "price": 185,
+   "price": 225,
+   "weapons": [
+    "shotgun_sawed",
+    "shotgun_short",
+    "shotgun_1",
+    "shotgun_2",
+    "shotgun_3",
+    "shotgun_4"
+   ]
+  },
+  "12ga_fl": {
+   "caliber": "12ga",
+   "type": "fl",
+   "name": "12 ga · Balón de pétalos",
+   "box": 10,
+   "price": 295,
    "weapons": [
     "shotgun_sawed",
     "shotgun_short",

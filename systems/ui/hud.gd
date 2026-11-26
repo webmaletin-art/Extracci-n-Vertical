@@ -53,7 +53,7 @@ func _build() -> void:
 	for d in [["fire", "◎", 64.0, Color(1.0, 0.35, 0.25)], ["jump", "⤒", 46.0, Color(0.5, 0.85, 1.0)],
 			["melee", "✊", 42.0, Color(0.95, 0.95, 0.95)], ["grenade", "●", 34.0, Color(0.7, 0.9, 0.4)],
 			["use", "USAR", 44.0, Color(1.0, 0.85, 0.3)], ["reload", "R", 28.0, Color(0.9, 0.9, 0.9)],
-			["swap", "⇄", 30.0, Color(0.9, 0.9, 0.9)], ["crouch", "▼", 30.0, Color(0.8, 0.8, 0.8)],
+			["swap", "⇄", 30.0, Color(0.9, 0.9, 0.9)], ["ammo", "MUN", 30.0, Color(1.0, 0.8, 0.4)], ["crouch", "▼", 30.0, Color(0.8, 0.8, 0.8)],
 			["pause", "II", 26.0, Color(0.9, 0.9, 0.9)], ["heal", "✚", 32.0, Color(0.4, 1.0, 0.5)], ["inventory", "▤", 26.0, Color(0.9, 0.9, 0.9)]]:
 		var b := TouchButton.new()
 		b.label = d[1]
@@ -86,7 +86,7 @@ func _build() -> void:
 const DEFAULT_POS := {
 	"stick_l": Vector2(0.15, 0.76), "stick_r": Vector2(0.87, 0.74),
 	"fire": Vector2(0.73, 0.86), "jump": Vector2(0.65, 0.90), "melee": Vector2(0.65, 0.73), "grenade": Vector2(0.73, 0.62),
-	"crouch": Vector2(0.57, 0.84), "use": Vector2(0.62, 0.47), "reload": Vector2(0.73, 0.11), "swap": Vector2(0.79, 0.11),
+	"crouch": Vector2(0.57, 0.84), "use": Vector2(0.62, 0.47), "reload": Vector2(0.73, 0.11), "swap": Vector2(0.79, 0.11), "ammo": Vector2(0.85, 0.11),
 	"pause": Vector2(0.03, 0.07), "inventory": Vector2(0.09, 0.07), "heal": Vector2(0.27, 0.92)}
 
 func ctl_pos(n: String) -> Vector2:
@@ -136,7 +136,7 @@ func _layout() -> void:
 		(buttons[n] as TouchButton).scale_k = k * float(Settings.ctl_scale.get(n, 1.0))
 		(buttons[n] as TouchButton).modulate.a = Settings.ctl_opacity
 	_place_all(s)
-	for n in ["fire", "jump", "melee", "grenade", "use", "reload", "swap", "crouch", "inventory", "heal"]:
+	for n in ["fire", "jump", "melee", "grenade", "use", "reload", "swap", "ammo", "crouch", "inventory", "heal"]:
 		(buttons[n] as Control).visible = touch_mode
 	left_stick.visible = touch_mode
 	right_stick.visible = touch_mode
@@ -202,6 +202,8 @@ func _button(n: String, down: bool) -> void:
 		pause_pressed.emit()
 	if down and n == "inventory":
 		inventory_pressed.emit()
+	if down and n == "ammo" and player:
+		toast(player.cycle_ammo())
 	if down and n == "crouch":
 		crouch_toggle = not crouch_toggle
 
@@ -309,7 +311,7 @@ func _process(delta: float) -> void:
 		_lbl.fps.text = "%d FPS · %d dibujos" % [Engine.get_frames_per_second(), RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)] if Settings.show_fps else ""
 	_flash = move_toward(_flash, 0.0, rd * 0.5)
 	_cinematic = move_toward(_cinematic, 1.0 if _cinematic_on else 0.0, rd * 4.0)
-	for n in ["fire", "jump", "melee", "grenade", "reload", "swap", "crouch"]:
+	for n in ["fire", "jump", "melee", "grenade", "reload", "swap", "ammo", "crouch"]:
 		(buttons[n] as Control).modulate.a = 1.0 - _cinematic
 	(buttons.melee as TouchButton).label = "🔪" if player.current == "knife" else "✊"
 	for n in ["ammo", "weapon", "floor", "objective", "prompt", "loot"]:

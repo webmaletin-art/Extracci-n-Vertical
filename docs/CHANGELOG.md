@@ -148,3 +148,20 @@
 * Cada una con calibre, daño por calibre, cadencia, cargador, recarga, alcance, dispersión y retroceso simulados a partir de armas reales (`tools/weapons/gen_roster.py`); precio y nivel salen de su poder (DPS y alcance). `docs/ARMAS.md` las lista por tipo con DPS y tiros para matar.
 * Escopetas y rifle .50 BMG vuelven al juego. El modo práctica muestra las capacidades del arma elegida (calibre, daño, cadencia, DPS, alcance, cargador, recarga).
 * Todas las armas se pueden encontrar en cajas y maletines y vender (`w_<id>`); munición por calibre.
+
+## 0.14.0 — munición por tipo, Armería y menú blanco lineal
+
+* **Munición:** 6 tipos por arma (estándar, trazante, punta hueca, perforante, incendiaria, punta de flor) en 19 calibres; las
+  pistolas del mismo calibre comparten munición. Datos en `data/ammo.json` (generado por `tools/ammo/gen_ammo.py`), 114 cartuchos
+  modelados en Blender (`tools/ammo/make_cartridges.py`). Precio por caja según energía × tipo: más potencia, más caro.
+* **Efecto real por tipo:** daño, penetración, rebote, dispersión y ruido; además hueso (`bone`), tamaño de herida (`wound`),
+  sangre (`blood`) y órganos (`organ`). La incendiaria revienta órganos al entrar; la punta de flor es la de mayor daño.
+  Las heridas no letales dejan una mancha de sangre que se expande sobre la ropa/cuerpo bajo el orificio.
+* **Cambio en partida:** botón «MUN» del HUD (`Actor.cycle_ammo`); `Firearm.reserves` guarda las balas por tipo.
+* **Perfil** (autoload `Profile`): créditos, armas propias y equipadas, stock de munición; se guarda en `user://perfil.json`;
+  se lleva al combate y se devuelve al extraer (morir pierde lo cargado). La munición sólo se compra con el arma en propiedad.
+* **Armería** (`systems/ui/armory.gd`, botón en el menú): operador con el arma bien empuñada y cámara libre (arrastrar, rueda o
+  pellizco, «VER EL ARMA»), cartel con datos (daño, cadencia, DPS, alcance, cargador, recarga, control, precisión) y, abajo, los
+  cartuchos en 3D (parados y tumbados) con «USAR» y «COMPRAR».
+* **Menú blanco con líneas:** `UiTheme` claro (tinta sobre blanco) y la torre de la portada pasa por el modo «Plano dibujado».
+* Prueba nueva `municion` (tipos, precios, compra sólo con el arma). 17 pruebas, 0 fallas.

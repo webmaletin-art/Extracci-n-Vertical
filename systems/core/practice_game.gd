@@ -14,10 +14,10 @@ extends Node3D
 signal match_over(result: Dictionary)
 
 var WEAPONS: Array = []          ## todas las armas de data/weapons.json, ordenadas por clase y precio
-const AMMO := {
-	"fmj": {"name": "Camisa completa (estándar)", "dmg": 1.0, "pen": 1.0, "ric": 1.0, "speed": 1.0},
-	"jhp": {"name": "Punta hueca (se deforma, daña más)", "dmg": 1.3, "pen": 0.45, "ric": 0.5, "speed": 1.0},
-	"ap": {"name": "Perforante (atraviesa)", "dmg": 0.85, "pen": 2.6, "ric": 0.6, "speed": 1.08},
+## Tipos de munición del juego (Ammo): estándar, trazante, punta hueca, perforante, incendiaria y punta de flor; más dos de prueba
+## sólo para la práctica (rebotadora y trazadora lenta).
+var AMMO := {}
+const AMMO_TEST := {
 	"rico": {"name": "Rebotadora (prueba de rebotes)", "dmg": 1.0, "pen": 0.5, "ric": 3.0, "speed": 1.0},
 	"slow": {"name": "Trazadora lenta (ver el vuelo)", "dmg": 1.0, "pen": 1.0, "ric": 1.0, "speed": 0.12},
 }
@@ -45,7 +45,7 @@ var panel: PanelContainer
 var ui: CanvasLayer
 
 var weapon_id := "m4a1"
-var ammo_id := "fmj"
+var ammo_id := "std"
 var distance := 6.0
 var dummy_char := "vigia"
 var crouched := false
@@ -71,6 +71,9 @@ var _plates: Array[Node3D] = []
 func _ready() -> void:
 	PlayerController.setup_input_map()
 	WEAPONS = Firearm.all_stats().keys()
+	for t in Ammo.TYPE_ORDER:
+		AMMO[t] = {"name": str(Ammo.data().types[t].name)}
+	AMMO.merge(AMMO_TEST)
 	_saved_bt = Settings.bullet_time
 	Settings.bullet_time = 2           # toma de cerca de cada herida
 	Fx.attach(self)
@@ -209,13 +212,15 @@ func _equip() -> void:
 func _apply_ammo(w: Firearm) -> void:
 	if w == null:
 		return
-	var base: Dictionary = Firearm.all_stats()[weapon_id]
-	var a: Dictionary = AMMO[ammo_id]
-	w.stats = base.duplicate()                     # no tocar los datos compartidos del arma
-	w.stats.damage = float(base.damage) * float(a.dmg)
-	w.stats.penetration = float(base.penetration) * float(a.pen)
-	w.stats.ricochet = minf(float(base.ricochet) * float(a.ric), 0.95)
-	w.stats.speed = float(base.speed) * float(a.speed)
+	if Ammo.TYPE_ORDER.has(ammo_id):
+		w.set_ammo(ammo_id)                          # daño, penetración, rebote, velocidad y lo que le hace al cuerpo
+	else:
+		var base: Dictionary = Firearm.all_stats()[weapon_id]
+		var a: Dictionary = AMMO[ammo_id]
+		w.set_ammo("std")
+		w.stats.penetration = float(base.penetration) * float(a.pen)
+		w.stats.ricochet = minf(float(base.ricochet) * float(a.ric), 0.95)
+		w.stats.speed = float(base.speed) * float(a.speed)
 	w.mag = int(w.stats.mag)
 	w.reserve = 9999
 

@@ -166,9 +166,10 @@ func clear() -> void:
 
 ## Orificio en el cuerpo (entrada y, si atravesó, salida más grande): una mancha oscura con borde rojo pegada al hueso
 ## que recibió el disparo, así se mueve con el cuerpo. Tamaño según la potencia del arma.
+var _wound_stain_mat: StandardMaterial3D
 var _holes_all: Array = []
 var _wound_mat: StandardMaterial3D
-func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, through := false) -> void:
+func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, through := false, wound_k := 1.0) -> void:
 	if a == null or a.skel == null or bone == "" or a.skel.find_bone(bone) < 0:
 		return
 	if _wound_mat == null:
@@ -192,7 +193,7 @@ func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, t
 		if is_instance_valid(old):
 			(old as Node).queue_free()
 	a.set_meta("wound_holes", holes)
-	var sz := 0.035 + 0.022 * power
+	var sz := (0.04 + 0.026 * power) * wound_k              # el tamaño sale de la potencia y del tipo de munición (flor / incendiaria: enorme)
 	for side in ([[-1.0, 1.0], [1.0, 1.7]] if through else [[-1.0, 1.0]]):
 		var mi := MeshInstance3D.new()
 		var q := QuadMesh.new()
@@ -212,6 +213,28 @@ func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, t
 		if side[0] > 0.0:
 			p = point + dir.normalized() * (inset * 1.9 + 0.03) + Vector3(0, 0, zd)
 		mi.global_transform = Transform3D(Basis.looking_at(Vector3(0, 0, -1), Vector3.UP).rotated(Vector3.BACK, randf() * TAU), p)
+		if side[0] < 0.0:
+			# mancha de sangre que se va extendiendo sobre la ropa alrededor del orificio (se ve la herida aunque no mate)
+			if _wound_stain_mat == null:
+				_wound_stain_mat = StandardMaterial3D.new()
+				_wound_stain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+				_wound_stain_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+				_wound_stain_mat.albedo_texture = _stain_tex()
+				_wound_stain_mat.albedo_color = Color(0.55, 0.03, 0.03, 0.9)
+				_wound_stain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+				_wound_stain_mat.no_depth_test = true
+				_wound_stain_mat.render_priority = 3
+			var st := MeshInstance3D.new()
+			var sq := QuadMesh.new()
+			sq.size = Vector2(sz, sz) * 2.6
+			st.mesh = sq
+			st.material_override = _wound_stain_mat
+			st.set_meta("no_tech", true)
+			st.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			att.add_child(st)
+			st.global_transform = Transform3D(Basis.looking_at(Vector3(0, 0, -1), Vector3.UP).rotated(Vector3.BACK, randf() * TAU), p + Vector3(0, 0, -0.004))
+			st.scale = Vector3(0.5, 0.5, 1.0)
+			st.create_tween().tween_property(st, "scale", Vector3(1.0 + 0.5 * wound_k, 1.0 + 0.5 * wound_k, 1.0), 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 ## Distancia de la piel al plano del juego (z = 0) según el hueso: el orificio se pega a la superficie del cuerpo y no flota.
 static func _inset(bone: String) -> float:

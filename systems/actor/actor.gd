@@ -54,6 +54,7 @@ var inp := ActorInput.new()
 var injuries := Injuries.new()
 var laser: MeshInstance3D           ## láser desde la boca del cañón hasta donde pega
 var laser_dot: MeshInstance3D
+var laser_enabled := true           ## false en la vitrina de la Armería
 var _bleed_t := 0.0
 var blob: MeshInstance3D            ## sombra simple (círculo oscuro en el piso): reemplaza a las sombras reales en teléfonos flojos
 var _thrown := false                ## lanzado por una explosión (choque contra pared / piso = lesión terciaria)
@@ -338,6 +339,21 @@ func give_weapon(slot_name: String, weapon_id: String) -> Firearm:
 	if current == "fists" or current == slot_name:
 		equip(slot_name)
 	return f
+
+## Pasa al siguiente tipo de munición que haya a mano (estándar → trazante → punta hueca → perforante → incendiaria → flor). Devuelve el texto para el aviso.
+func cycle_ammo() -> String:
+	var w := weapon()
+	if w == null:
+		return ""
+	var order: Array = Ammo.TYPE_ORDER
+	var i := order.find(w.ammo_type)
+	for k in order.size():
+		var t: String = order[(i + 1 + k) % order.size()]
+		if not is_player or int(w.reserves.get(t, 0)) > 0 or t == w.ammo_type:
+			w.set_ammo(t)
+			Sfx.play_ui("ui_click", -8.0)
+			return "Munición: %s (%d)" % [Ammo.label(w.id, t), w.reserve]
+	return "Sin otra munición"
 
 func weapon() -> Firearm:
 	return weapons.get(current) as Firearm
@@ -870,7 +886,7 @@ func _shoot(w: Firearm) -> void:
 		if Ballistics.instance:
 			var idx := Ballistics.instance.fire(from, d, float(st.speed), float(st.damage), self, exclude,
 				{"penetration": st.penetration, "drag": st.drag, "ricochet": st.ricochet, "range": float(st.get("range", 0.0)),
-					"pellets": int(st.pellets)})
+					"pellets": int(st.pellets), "ammo": w.ammo_type, "ammo_fx": w.ammo_fx})
 			if first < 0:
 				first = idx
 	recoil_angle = minf(recoil_angle + deg_to_rad(float(st.recoil)) * (0.6 if crouching else 1.0), deg_to_rad(14.0))
@@ -993,12 +1009,13 @@ func take_damage(info: Dictionary) -> void:
 			var rd: Dictionary = injuries.process(self, info)
 			info["anatomy_nodes"] = rd.get("nodes", [])
 			info["victim"] = self
-			var pw := clampf(float(info.get("damage", 30.0)) / 30.0, 0.5, 3.0)
+			var afx_d: Dictionary = info.get("ammo_fx", {})
+			var pw := clampf(float(info.get("damage", 30.0)) / 30.0, 0.5, 3.0) * float(afx_d.get("blood", 1.0))
 			var bpd: Vector3 = info.get("point", global_position + Vector3.UP)
 			var dd: Vector3 = info.get("dir", Vector3(-facing, 0, 0))
 			if Blood.instance:
 				Blood.instance.spray(bpd, dd, true, pw > 1.2, pw)
-				Blood.instance.wound(self, str(info.get("bone", "")), bpd, dd, pw)
+				Blood.instance.wound(self, str(info.get("bone", "")), bpd, dd, pw, false, float(afx_d.get("wound", 1.0)))
 			Dismember.apply_hit(self, info, false)
 			velocity.x += signf(dd.x) * minf(pw * 0.9, 2.2)        # el impacto sacude el cuerpo (se desliza un poco)
 			if state == State.DEAD and is_on_floor():
@@ -1043,10 +1060,11 @@ func take_damage(info: Dictionary) -> void:
 		var through: bool = t == "bullet" and zone in ["head", "neck", "arm", "leg", "hand", "foot"]
 		if Blood.instance:
 			# cuánta sangre sale depende de la potencia del arma (un .338 / 7,62 salpica mucho más que una pistola)
-			var power := clampf(float(info.get("damage", amount)) / 30.0, 0.5, 3.0)
-			Blood.instance.spray(bp, dir, through, amount > 30.0, power)      # entrada y, si atravesó, salida
+			var afx: Dictionary = info.get("ammo_fx", {})
+			var power := clampf(float(info.get("damage", amount)) / 30.0, 0.5, 3.0) * float(afx.get("blood", 1.0))
+			Blood.instance.spray(bp, dir, through or float(afx.get("wound", 1.0)) > 1.6, amount > 30.0, power)      # entrada y, si atravesó, salida
 			if t in ["bullet", "fragment"]:
-				Blood.instance.wound(self, str(info.get("bone", "")), bp, dir, power, through)
+				Blood.instance.wound(self, str(info.get("bone", "")), bp, dir, power, through, float(afx.get("wound", 1.0)))
 		else:
 			Fx.blood(bp, dir, 1.0)
 	if health <= 0.0:
@@ -1360,7 +1378,7 @@ func _weapon_target(w: Firearm) -> Transform3D:
 ## Láser desde la boca del cañón en la dirección real del disparo (con temblor y retroceso) hasta lo primero que toca.
 ## Rojo para el jugador, ámbar para los enemigos (delata su puntería: lectura táctica). Se apaga en Configuración.
 func _update_laser(w: Firearm, on: bool) -> void:
-	if BulletTime.closeup_active:
+	if BulletTime.closeup_active or not laser_enabled:
 		on = false
 	if laser == null:
 		laser = MeshInstance3D.new()

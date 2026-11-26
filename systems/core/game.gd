@@ -91,8 +91,9 @@ func _spawn_player() -> void:
 	player.max_health = 100.0
 	add_child(player)
 	player.global_position = tower.data.start
-	player.give_weapon("primary", "m4a1")
-	player.give_weapon("secondary", "m1911")
+	for slot in ["primary", "secondary"]:
+		var wid := str(Profile.equipped.get(slot, "m4a1" if slot == "primary" else "m1911"))
+		Profile.load_weapon(player.give_weapon(slot, wid))        # arma y munición del perfil (Armería)
 	player.equip("primary")
 	player.add_to_group("perf_personajes_jugador")
 	player.died.connect(_on_player_died)
@@ -290,6 +291,8 @@ func _on_extracted(a: Actor, label: String) -> void:
 	if over:
 		return
 	over = true
+	for slot in player.weapons:
+		Profile.store_weapon(player.weapons[slot] as Firearm)        # lo que sobró de munición vuelve al depósito
 	Sfx.play_ui("ui_confirm", 0.0)
 	match_over.emit({"result": "extraido", "where": label, "value": a.inventory.total_value(), "kills": _kills, "time": _t,
 		"items": a.inventory.items.duplicate()})

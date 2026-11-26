@@ -113,12 +113,14 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 				r = 0.005
 			if ricochet:
 				r *= 2.0                                 # la bala deformada abre una herida más ancha
-			_strength = clampf(float(info.get("damage", 30.0)) / 30.0, 0.6, 2.5) * (1.4 if ricochet else 1.0)
+			var afx: Dictionary = info.get("ammo_fx", {})
+			r *= float(afx.get("wound", 1.0))               # punta hueca / flor / incendiaria: orificio más grande
+			_strength = clampf(float(info.get("damage", 30.0)) / 30.0, 0.6, 2.5) * (1.4 if ricochet else 1.0) * float(afx.get("bone", 1.0))
 			if t == "fragment":
 				_strength = 0.6
 			# escopeta: cada perdigón rompe más de cerca (a quemarropa destroza; a 10 m apenas)
 			if int(info.get("pellets", 1)) > 1:
-				_strength = clampf(2.4 - float(info.get("distance", 6.0)) * 0.2, 0.6, 2.4)
+				_strength = clampf(2.4 - float(info.get("distance", 6.0)) * 0.2, 0.6, 2.4) * float(afx.get("bone", 1.0))
 			# recorrido por dentro: al pegar en un hueso duro la bala puede desviarse y seguir rompiendo en otra dirección
 			var o := point - dir * 0.3
 			var d := dir
@@ -173,6 +175,22 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 					res.path[-1]["lodged"] = true
 				else:
 					res.path.append({"node": last_hit.node, "p": last_hit.p_out + (last_hit.dir as Vector3) * 0.35, "seq": -1, "exit": true})
+			# incendiaria / punta de flor: el daño interno se ensancha (revienta lo que hay alrededor del recorrido)
+			var organ_k := float(afx.get("organ", 1.0))
+			if t == "bullet" and organ_k > 1.15 and not last_hit.is_empty():
+				var burst_r := 0.045 * organ_k
+				var added := 0
+				for n in anat.near(point, burst_r):
+					if seen.has(n) or added >= (4 if bool(afx.get("burst", false)) else 2):
+						continue
+					seen[n] = true
+					added += 1
+					var hh := {"node": n, "label": anat.groups[n].label, "system": anat.groups[n].system,
+						"p_in": anat.world_to_bind(n, point), "p_out": anat.world_to_bind(n, point + dir * 0.03), "dir": anat.dir_to_bind(n, dir), "t_in": 0.0, "t_out": 0.03}
+					anat.next_seq()
+					_hit_structure(anat, actor, hh, t, r * 1.8, res, o, d)
+					if bool(afx.get("burst", false)):
+						res.texts.append("Estallido de %s" % hh.label)
 			res["seq1"] = anat._seq
 			if t in ["bullet", "fragment"] and max_depth < INF and not last_hit.is_empty():
 				var ln := str(last_hit.node)

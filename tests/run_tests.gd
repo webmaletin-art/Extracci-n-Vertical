@@ -10,7 +10,7 @@ func _ready() -> void:
 	var a := OS.get_cmdline_user_args()
 	if a.size() >= 2 and a[0] == "--filter":
 		filt = a[1]
-	var tests := ["mapa", "velocidad", "settings", "inventario", "juego"]
+	var tests := ["mapa", "velocidad", "settings", "inventario", "municion", "juego"]
 	for t in tests:
 		if filt != "" and not t.contains(filt) and t != "juego":
 			continue
@@ -31,6 +31,41 @@ func _wait_phys(n: int) -> void:
 		await get_tree().physics_frame
 
 # ---------------------------------------------------------------- sin mundo
+
+func t_municion() -> String:
+	# cada tipo debe dar un daño distinto y el precio debe crecer con el poder
+	var base := Ammo.apply(Firearm.all_stats()["m4a1"], "m4a1", "std")
+	var prev_price := 0
+	for ty in ["std", "hp", "ap", "in", "fl"]:
+		var it := Ammo.item("m4a1", ty)
+		if it.is_empty():
+			return "falta el ítem de munición %s" % ty
+		if ty != "std" and Ammo.apply(Firearm.all_stats()["m4a1"], "m4a1", ty).damage == base.damage and ty != "ap":
+			return "el tipo %s no cambia el daño" % ty
+	if Ammo.apply(Firearm.all_stats()["m4a1"], "m4a1", "fl").damage <= Ammo.apply(Firearm.all_stats()["m4a1"], "m4a1", "hp").damage:
+		return "punta de flor debería pegar más que punta hueca"
+	if int(Ammo.item("m4a1", "fl").price) <= int(Ammo.item("m4a1", "std").price):
+		return "la munición más potente debe costar más"
+	if Ammo.fx("m4a1", "in").organ <= Ammo.fx("m4a1", "std").organ or not Ammo.fx("m4a1", "in").burst:
+		return "la incendiaria debe reventar órganos"
+	# compra: sólo con el arma en propiedad
+	var pr = get_node("/root/Profile")
+	pr.reset()
+	if pr.can_buy_ammo("scar", "hp"):
+		return "se pudo comprar munición de un arma que no se tiene"
+	pr.add_credits(100000)
+	if not pr.buy_weapon("scar"):
+		return "no se pudo comprar el arma con créditos suficientes"
+	if not pr.can_buy_ammo("scar", "hp"):
+		return "con el arma comprada debería poder comprar su munición"
+	var before: int = pr.rounds("scar", "hp")
+	if not pr.buy_ammo("scar", "hp") or pr.rounds("scar", "hp") <= before:
+		return "la compra no sumó balas"
+	# pistolas del mismo calibre comparten munición
+	if Ammo.item("m1911", "std").get("id", "a") != Ammo.item("m1911_b", "std").get("id", "b") if Firearm.all_stats().has("m1911_b") else false:
+		return "pistolas del mismo calibre deben compartir munición"
+	pr.reset()
+	return ""
 
 func t_mapa() -> String:
 	var gr := MapGraph.from_data(TorreAlfa.data())

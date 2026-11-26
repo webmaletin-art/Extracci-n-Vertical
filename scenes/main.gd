@@ -41,19 +41,6 @@ func show_menu(result := {}) -> void:
 	bg.color = UiTheme.BG
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	menu.add_child(bg)
-	# cielo: degradé nocturno
-	var sky := TextureRect.new()
-	var gt := GradientTexture2D.new()
-	var gr := Gradient.new()
-	gr.colors = PackedColorArray([Color(0.02, 0.03, 0.05), Color(0.07, 0.09, 0.14), Color(0.16, 0.1, 0.1)])
-	gr.offsets = PackedFloat32Array([0.0, 0.65, 1.0])
-	gt.gradient = gr
-	gt.fill_from = Vector2(0.5, 0)
-	gt.fill_to = Vector2(0.5, 1)
-	sky.texture = gt
-	sky.stretch_mode = TextureRect.STRETCH_SCALE
-	sky.set_anchors_preset(Control.PRESET_FULL_RECT)
-	menu.add_child(sky)
 	# la torre en corte, a la derecha
 	var tw := MenuTower.new()
 	tw.anchor_left = 0.0
@@ -63,7 +50,7 @@ func show_menu(result := {}) -> void:
 	menu.add_child(tw)
 	# columna izquierda: título y botones
 	var shade := ColorRect.new()
-	shade.color = Color(0.02, 0.03, 0.04, 0.72)
+	shade.color = Color(1, 1, 1, 0.82)
 	shade.anchor_right = 0.36
 	shade.anchor_bottom = 1.0
 	menu.add_child(shade)
@@ -82,24 +69,22 @@ func show_menu(result := {}) -> void:
 	var t := Label.new()
 	t.text = "EXTRACCIÓN\nVERTICAL"
 	t.add_theme_font_size_override("font_size", 64)
-	t.add_theme_color_override("font_color", Color(0.95, 0.96, 0.98))
-	t.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
-	t.add_theme_constant_override("outline_size", 8)
+	t.add_theme_color_override("font_color", UiTheme.TEXT)
 	v.add_child(t)
 	var s := Label.new()
 	s.text = "EXPLORA · SAQUEA · SOBREVIVE · EXTRAE"
 	s.add_theme_font_size_override("font_size", 17)
-	s.add_theme_color_override("font_color", UiTheme.ACCENT)
+	s.add_theme_color_override("font_color", UiTheme.MUTED)
 	v.add_child(s)
 	if not result.is_empty():
 		var r := Label.new()
 		match str(result.get("result", "")):
 			"extraido":
 				r.text = "EXTRACCIÓN EXITOSA (%s)\nBotín: $%d · Bajas: %d · Tiempo: %d s" % [result.get("where", ""), result.value, result.kills, int(result.time)]
-				r.add_theme_color_override("font_color", Color(0.4, 1.0, 0.5))
+				r.add_theme_color_override("font_color", Color(0.1, 0.45, 0.2))
 			"muerto":
 				r.text = "CAÍSTE EN LA TORRE\nBotín perdido: $%d · Bajas: %d" % [result.get("lost", 0), result.kills]
-				r.add_theme_color_override("font_color", Color(1.0, 0.4, 0.35))
+				r.add_theme_color_override("font_color", Color(0.7, 0.12, 0.1))
 			_:
 				r.text = ""
 		r.add_theme_font_size_override("font_size", 20)
@@ -107,17 +92,19 @@ func show_menu(result := {}) -> void:
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 8)
 	v.add_child(gap)
-	var items := [["▶  JUGAR · Torre Alfa", start_game, true], ["🎯  MODO PRÁCTICA", start_practice, false], ["⚙  CONFIGURACIÓN", _settings, false],
-		["📈  ANALIZAR RENDIMIENTO", _probe, false], ["⏻  SALIR", func(): get_tree().quit(), false]]
+	var items := [["JUGAR · Torre Alfa", start_game, true], ["ARMERÍA", _armory, false], ["MODO PRÁCTICA", start_practice, false], ["CONFIGURACIÓN", _settings, false],
+		["ANALIZAR RENDIMIENTO", _probe, false], ["SALIR", func(): get_tree().quit(), false]]
 	for d in items:
 		var b := Button.new()
 		b.text = d[0]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size = Vector2(380, 62)
-		b.add_theme_font_size_override("font_size", 26)
+		b.custom_minimum_size = Vector2(380, 54)
+		b.add_theme_font_size_override("font_size", 24)
 		if d[2]:
-			b.add_theme_stylebox_override("normal", UiTheme.box(UiTheme.ACCENT_DIM, 10, UiTheme.ACCENT, 2))
-			b.add_theme_stylebox_override("hover", UiTheme.box(UiTheme.ACCENT, 10, Color.WHITE, 2))
+			b.add_theme_stylebox_override("normal", UiTheme.box(UiTheme.TEXT, 10, UiTheme.TEXT, 2))
+			b.add_theme_color_override("font_color", Color.WHITE)
+			b.add_theme_color_override("font_hover_color", Color.WHITE)
+			b.add_theme_stylebox_override("hover", UiTheme.box(Color(0.25, 0.25, 0.28), 10, UiTheme.TEXT, 2))
 		b.pressed.connect(d[1])
 		v.add_child(b)
 	var credits := Label.new()
@@ -158,6 +145,13 @@ func start_practice() -> void:
 		Sfx.stop_ambient()
 		practice.queue_free()
 		practice = null
+		show_menu())
+
+func _armory() -> void:
+	var a := Armory.new()
+	ui.add_child(a)
+	a.closed.connect(func():
+		a.queue_free()
 		show_menu())
 
 func _settings() -> void:

@@ -20,6 +20,7 @@ NoiseBus="*res://systems/core/noise_bus.gd"
 TimeFx="*res://systems/core/time_fx.gd"
 Fx="*res://systems/fx/fx.gd"
 TechView="*res://systems/render/tech_view.gd"
+Profile="*res://systems/core/profile.gd"
 
 [display]
 

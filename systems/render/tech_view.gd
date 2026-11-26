@@ -97,7 +97,7 @@ func _process(delta: float) -> void:
 func _skip(n: Node) -> bool:
 	var p := n
 	while p:
-		if p.has_meta("no_tech") or p is Blood or p is Gibs or p is Ballistics or p is MenuTower or p is AnatomyBody:
+		if p.has_meta("no_tech") or p is Blood or p is Gibs or p is Ballistics or p is AnatomyBody:
 			return true
 		if p.name == "FxPool":
 			return true

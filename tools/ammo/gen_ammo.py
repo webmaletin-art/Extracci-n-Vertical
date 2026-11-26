@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Munición por calibre y por tipo (estándar, punta hueca, trazante, perforante). Escribe data/ammo.json (dimensiones reales
+"""Munición por calibre y por tipo (estándar, trazante, punta hueca, perforante, incendiaria, punta de flor). Escribe data/ammo.json (dimensiones reales
 del cartucho, multiplicadores por tipo, precio por caja) y actualiza los objetos de botín `ammo_<calibre>_<tipo>` en
 data/items.json y data/loot_tables.json. Los modelos 3D se hacen con Blender: tools/ammo/make_cartridges.py.
 Uso: python3 tools/ammo/gen_ammo.py   (después de tools/weapons/gen_roster.py)
 
-Los precios suben con el poder: la perforante cuesta ×3, la punta hueca ×2,2 y la trazante ×1,5 que la estándar."""
+Los precios suben con el poder: trazante ×1,5, punta hueca ×2,2, perforante ×3, incendiaria ×3,6 y punta de flor ×4,8 que la estándar."""
 import json, os
 R = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 
@@ -30,27 +30,36 @@ CAL = {
  "50bmg":  (".50 BMG",    17000, 99.1, 20.4, 14.2, 138.8, 12.95, "bottle", False, 5),
  "12ga":   ("12 ga",       2000, 70.0, 21.3, 21.3, 76.0, 18.5, "shell", False, 10),
 }
-# tipo → nombre, daño, penetración, rebote, velocidad, dispersión, ruido (+m), precio ×, descripción
+# tipo → nombre, daño, penetración, rebote, velocidad, dispersión, ruido (+m), precio ×, descripción, hueso, herida, sangre, órganos, estalla
+#   hueso = fuerza con que rompe huesos · herida = tamaño del orificio · sangre = cuánta sangre sale · órganos = radio del daño interno
 TYPES = {
- "std": ("Estándar (FMJ)",   1.00, 1.00, 1.00, 1.00, 1.00, 0, 1.0, "Camisa completa: equilibrada y barata."),
- "hp":  ("Punta hueca",      1.30, 0.45, 0.50, 0.97, 1.00, 0, 2.2, "Se abre al impactar: más daño y más sangre, atraviesa poco."),
- "tr":  ("Trazante",         1.00, 1.00, 1.20, 1.00, 0.95, 2, 1.5, "Deja una estela luminosa: se ve adónde van los tiros."),
- "ap":  ("Perforante",       1.12, 2.60, 0.60, 1.06, 0.90, 2, 3.0, "Núcleo de acero: atraviesa paredes y coberturas."),
+ "std": ("Estándar (FMJ)",   1.00, 1.00, 1.00, 1.00, 1.00, 0, 1.0, "Camisa completa: equilibrada y barata.", 1.0, 1.0, 1.0, 1.0, False),
+ "tr":  ("Trazante",         1.00, 1.00, 1.20, 1.00, 0.95, 2, 1.5, "Deja una estela luminosa: se ve adónde van los tiros.", 1.0, 1.0, 1.0, 1.0, False),
+ "hp":  ("Punta hueca",      1.30, 0.45, 0.50, 0.97, 1.00, 0, 2.2, "Se abre al impactar: más daño, orificio más grande y más sangre; atraviesa poco.", 1.25, 1.5, 1.5, 1.2, False),
+ "ap":  ("Perforante",       1.12, 2.60, 0.60, 1.06, 0.90, 2, 3.0, "Núcleo de acero: atraviesa paredes y coberturas y rompe el hueso por el medio.", 1.45, 0.8, 0.9, 1.0, False),
+ "in":  ("Incendiaria",      1.25, 0.70, 0.40, 0.98, 1.00, 4, 3.6, "Estalla al entrar: revienta órganos y partes del cuerpo, quema y destroza la ropa.", 1.7, 2.1, 2.0, 2.2, True),
+ "fl":  ("Punta de flor",    1.55, 0.35, 0.20, 0.96, 1.00, 0, 4.8, "Se abre en pétalos: el máximo daño, huesos astillados, orificio enorme y mucha sangre.", 1.9, 2.7, 2.5, 1.8, False),
 }
-# escopetas: los tipos cambian de sentido (postas / balón / balón perforante / incendiaria)
+# escopetas: los tipos cambian de sentido
 SHOTGUN = {
- "std": ("Postas",            1.00, 1.00, 1.00, 1.00, 1.00, 0, 1.0, "8-9 perdigones: devastadora de cerca."),
- "hp":  ("Balón (slug)",      5.00, 1.40, 0.60, 1.20, 0.25, 0, 2.2, "Un solo proyectil pesado: mucho daño y más alcance."),
- "tr":  ("Incendiaria",       0.85, 0.80, 0.80, 0.95, 1.10, 4, 1.8, "Perdigones incandescentes: se ven y encienden."),
- "ap":  ("Balón perforante",  4.50, 3.50, 0.50, 1.30, 0.22, 2, 3.0, "Dardo de acero: atraviesa casi todo."),
+ "std": ("Postas",            1.00, 1.00, 1.00, 1.00, 1.00, 0, 1.0, "8-9 perdigones: devastadora de cerca.", 1.0, 1.0, 1.0, 1.0, False),
+ "tr":  ("Postas trazantes",  1.00, 1.00, 1.00, 1.00, 1.00, 2, 1.5, "Perdigones con estela luminosa.", 1.0, 1.0, 1.0, 1.0, False),
+ "hp":  ("Balón (slug)",      5.00, 1.40, 0.60, 1.20, 0.25, 0, 2.2, "Un solo proyectil pesado: mucho daño y más alcance.", 1.4, 1.6, 1.5, 1.2, False),
+ "ap":  ("Balón perforante",  4.50, 3.50, 0.50, 1.30, 0.22, 2, 3.0, "Dardo de acero: atraviesa casi todo.", 1.6, 0.8, 0.9, 1.0, False),
+ "in":  ("Incendiaria",       0.95, 0.80, 0.60, 0.95, 1.10, 4, 3.6, "Perdigones incandescentes: se ven, encienden y revientan lo que tocan.", 1.6, 2.1, 2.0, 2.2, True),
+ "fl":  ("Balón de pétalos",  6.00, 0.60, 0.30, 1.10, 0.25, 0, 4.8, "Balón que se abre en pétalos: el mayor daño, huesos astillados.", 2.0, 2.8, 2.5, 1.8, False),
 }
+def tdict(v):
+    return {"name": v[0], "dmg": v[1], "pen": v[2], "ric": v[3], "speed": v[4], "spread": v[5], "noise": v[6], "price": v[7], "text": v[8],
+            "bone": v[9], "wound": v[10], "blood": v[11], "organ": v[12], "burst": v[13]}
+
 def base_price(energy):
     return max(1.0, energy ** 0.62 / 18.0)
 
 def main():
     ammo = {"_doc": "Municiones. calibres: dimensiones reales en mm; tipos: multiplicadores contra la munición estándar; items: <calibre>_<tipo> con precio por caja. Generado por tools/ammo/gen_ammo.py",
-            "types": {k: {"name": v[0], "dmg": v[1], "pen": v[2], "ric": v[3], "speed": v[4], "spread": v[5], "noise": v[6], "price": v[7], "text": v[8]} for k, v in TYPES.items()},
-            "shotgun_types": {k: {"name": v[0], "dmg": v[1], "pen": v[2], "ric": v[3], "speed": v[4], "spread": v[5], "noise": v[6], "price": v[7], "text": v[8]} for k, v in SHOTGUN.items()},
+            "types": {k: tdict(v) for k, v in TYPES.items()},
+            "shotgun_types": {k: tdict(v) for k, v in SHOTGUN.items()},
             "calibers": {}, "items": {}}
     w = json.load(open(R + "/data/weapons.json"))
     by_name = {}
@@ -90,7 +99,8 @@ def main():
         if name == "crate_metal":
             items += [["ammo_556_ap", 2, 1, 1], ["ammo_762x51_std", 4, 1, 1]]
         if name == "lab_case":
-            items += [["ammo_338_std", 8, 1, 1], ["ammo_338_ap", 3, 1, 1], ["ammo_762x51_ap", 3, 1, 1], ["ammo_50bmg_std", 3, 1, 1]]
+            items += [["ammo_338_std", 8, 1, 1], ["ammo_338_ap", 3, 1, 1], ["ammo_762x51_ap", 3, 1, 1], ["ammo_50bmg_std", 3, 1, 1],
+                      ["ammo_556_in", 2, 1, 1], ["ammo_9x19_fl", 1, 1, 1], ["ammo_45acp_fl", 1, 1, 1]]
         if name == "suitcase":
             items += [["ammo_45acp_hp", 5, 1, 1], ["ammo_9x19_ap", 3, 1, 1]]
         tbl["items"] = items

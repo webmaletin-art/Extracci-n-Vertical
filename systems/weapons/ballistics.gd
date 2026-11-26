@@ -21,6 +21,8 @@ var _vel := PackedVector3Array()
 var _dmg := PackedFloat32Array()
 var _from := PackedVector3Array()      ## de dónde salió (alcance efectivo)
 var _range := PackedFloat32Array()     ## alcance efectivo del arma (m)
+var _ammo: Array = []                  ## tipo de munición de cada proyectil
+var _afx: Array = []                   ## efectos de la munición sobre el cuerpo
 var _pellets := PackedInt32Array()     ## perdigones del disparo (escopeta: daño de cerca)
 var _pen := PackedFloat32Array()
 var _drag := PackedFloat32Array()
@@ -39,7 +41,7 @@ var stats := {"fired": 0, "hits": 0}
 
 func _ready() -> void:
 	instance = self
-	_pos.resize(MAX); _vel.resize(MAX); _dmg.resize(MAX); _from.resize(MAX); _range.resize(MAX); _pellets.resize(MAX); _pen.resize(MAX); _drag.resize(MAX); _life.resize(MAX); _ric.resize(MAX)
+	_pos.resize(MAX); _vel.resize(MAX); _dmg.resize(MAX); _from.resize(MAX); _range.resize(MAX); _pellets.resize(MAX); _ammo.resize(MAX); _afx.resize(MAX); _pen.resize(MAX); _drag.resize(MAX); _life.resize(MAX); _ric.resize(MAX)
 	var tracer_mat := StandardMaterial3D.new()
 	tracer_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	tracer_mat.albedo_color = Color(1.0, 0.82, 0.45, 0.85)
@@ -83,6 +85,8 @@ func fire(from: Vector3, dir: Vector3, speed: float, damage: float, shooter: Nod
 	_from[i] = from
 	_range[i] = float(opts.get("range", 0.0))
 	_pellets[i] = int(opts.get("pellets", 1))
+	_ammo[i] = str(opts.get("ammo", "std"))
+	_afx[i] = opts.get("ammo_fx", {})
 	_pen[i] = float(opts.get("penetration", 2.0))
 	_drag[i] = float(opts.get("drag", 0.05))
 	_ric[i] = float(opts.get("ricochet", 0.2))
@@ -143,7 +147,7 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 			if dd > _range[i]:
 				_dmg[i] *= lerpf(1.0, 0.5, clampf((dd - _range[i]) / _range[i], 0.0, 1.0))
 				_range[i] = 0.0
-		var info := {"distance": point.distance_to(_from[i]), "pellets": _pellets[i], "point": point, "normal": normal, "dir": dir, "damage": _dmg[i], "shooter": _owner[i], "kind": _kind[i],
+		var info := {"distance": point.distance_to(_from[i]), "pellets": _pellets[i], "point": point, "normal": normal, "dir": dir, "damage": _dmg[i], "shooter": _owner[i], "kind": _kind[i], "ammo": _ammo[i], "ammo_fx": _afx[i],
 			"speed": _vel[i].length(), "index": i}
 		stats.hits += 1
 		if col is Area3D and (col as Area3D).has_meta("actor"):
@@ -161,6 +165,11 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 			if is_instance_valid(actor) and actor.has_method("take_damage"):
 				actor.take_damage(info)
 			Fx.impact(point, -dir, "flesh")
+			if bool((_afx[i] as Dictionary).get("burst", false)):
+				# incendiaria: estalla al entrar (chispas, fuego y un destello)
+				Fx.emit("spark", point, -dir, 2.0)
+				Fx.emit("fireball", point, Vector3.UP, 0.35)
+				Fx.flash(point, 5.0, 3.0, 0.18, Color(1.0, 0.55, 0.2))
 			Sfx.play("impact_flesh", point, -2.0)
 			# la bala atraviesa las partes finas (cabeza, cuello, brazos, piernas, manos, pies) y sigue; el torso sólo
 			# lo atraviesan los calibres potentes
@@ -226,7 +235,7 @@ func _draw_tracer(i: int, prev: Vector3) -> void:
 	var l := seg.length()
 	if l < 0.001:
 		return
-	var vis_len := clampf(l, 0.05, 2.5)
+	var vis_len := clampf(l, 0.05, 6.0 if bool((_afx[i] as Dictionary).get("tracer", false)) else 2.5)     # trazante / incendiaria: estela larga
 	var d := seg / l
 	var up := Vector3.UP if absf(d.y) < 0.95 else Vector3.RIGHT
 	t.global_transform = Transform3D(Basis.looking_at(d, up).scaled_local(Vector3(1, 1, vis_len)), _pos[i] - d * vis_len * 0.5)

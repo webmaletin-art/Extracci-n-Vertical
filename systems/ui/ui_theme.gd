@@ -1,14 +1,14 @@
 class_name UiTheme
 extends RefCounted
-## Estilo común de los menús: acero oscuro con acento naranja (como la torre de la portada).
+## Estilo común de los menús: blanco con líneas de tinta (como el juego).
 
-const BG := Color(0.035, 0.045, 0.06)
-const PANEL := Color(0.075, 0.09, 0.115, 0.96)
-const PANEL_HI := Color(0.12, 0.145, 0.18, 1.0)
-const ACCENT := Color(1.0, 0.55, 0.15)
-const ACCENT_DIM := Color(0.75, 0.38, 0.1)
-const TEXT := Color(0.9, 0.93, 0.97)
-const MUTED := Color(0.55, 0.6, 0.67)
+const BG := Color(0.97, 0.97, 0.96)
+const PANEL := Color(1, 1, 1, 0.97)
+const PANEL_HI := Color(1, 1, 1, 1.0)
+const ACCENT := Color(0.07, 0.07, 0.09)
+const ACCENT_DIM := Color(0.86, 0.86, 0.85)
+const TEXT := Color(0.07, 0.07, 0.09)
+const MUTED := Color(0.42, 0.42, 0.45)
 
 static func box(c: Color, radius := 8, border := Color(0, 0, 0, 0), bw := 0) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
@@ -27,13 +27,13 @@ static func make() -> Theme:
 	t.set_font_size("font_size", "Label", 20)
 	t.set_color("font_color", "Label", TEXT)
 	for cls in ["Button", "OptionButton"]:
-		t.set_stylebox("normal", cls, box(PANEL_HI, 10, Color(1, 1, 1, 0.08), 1))
-		t.set_stylebox("hover", cls, box(Color(0.17, 0.2, 0.25), 10, ACCENT_DIM, 2))
-		t.set_stylebox("pressed", cls, box(ACCENT_DIM, 10, ACCENT, 2))
+		t.set_stylebox("normal", cls, box(PANEL_HI, 10, TEXT, 2))
+		t.set_stylebox("hover", cls, box(Color(0.93, 0.93, 0.92), 10, TEXT, 2))
+		t.set_stylebox("pressed", cls, box(ACCENT_DIM, 10, TEXT, 3))
 		t.set_stylebox("focus", cls, box(Color(0, 0, 0, 0), 10, ACCENT, 2))
 		t.set_color("font_color", cls, TEXT)
-		t.set_color("font_hover_color", cls, Color.WHITE)
-		t.set_color("font_pressed_color", cls, Color.WHITE)
+		t.set_color("font_hover_color", cls, TEXT)
+		t.set_color("font_pressed_color", cls, TEXT)
 		t.set_font_size("font_size", cls, 22)
 	t.set_stylebox("panel", "PopupMenu", box(PANEL, 8, ACCENT_DIM, 1))
 	t.set_stylebox("hover", "PopupMenu", box(ACCENT_DIM, 4))

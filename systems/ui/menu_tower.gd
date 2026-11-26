@@ -31,7 +31,7 @@ func _ready() -> void:
 	var env := WorldEnvironment.new()
 	var e := Environment.new()
 	e.background_mode = Environment.BG_COLOR
-	e.background_color = Color(0.015, 0.02, 0.035)
+	e.background_color = Color(0.97, 0.97, 0.96)
 	env.environment = e
 	_vp.add_child(env)
 	_root = Node3D.new()
@@ -441,7 +441,11 @@ func _process(delta: float) -> void:
 	for i in _beacons.size():
 		var b := _beacons[i]
 		var k := 0.25 + 0.75 * maxf(sin(_t * 2.6 + i * 1.7), 0.0)
-		(b.material_override as StandardMaterial3D).albedo_color = Color(1.0, 0.08, 0.04) * k
+		var bm := b.material_override as StandardMaterial3D
+		if bm:
+			bm.albedo_color = Color(1.0, 0.08, 0.04) * k
 	for f in _flicker:
 		var on := fmod(_t * 0.7 + float(_flicker.find(f)), 7.0) > 0.25 or sin(_t * 40.0) > 0.0
-		(f[0] as StandardMaterial3D).albedo_color = (f[1] as Color) * (1.0 if on else 0.25)
+		var fm := f[0] as StandardMaterial3D
+		if fm:
+			fm.albedo_color = (f[1] as Color) * (1.0 if on else 0.25)

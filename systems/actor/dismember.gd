@@ -45,6 +45,7 @@ static func apply_hit(a: Actor, info: Dictionary, lethal: bool) -> void:
 	var pellets := int(info.get("pellets", 1))
 	if pellets > 1:
 		dmg *= clampf(2.4 - float(info.get("distance", 6.0)) * 0.2, 0.6, 2.4)       # la escopeta de cerca arranca todo
+	dmg *= float((info.get("ammo_fx", {}) as Dictionary).get("bone", 1.0))        # incendiaria / flor / perforante arrancan más fácil
 	if lethal:
 		dmg *= 1.5
 	var acc: float = float(a.limb_damage.get(bone, 0.0)) + dmg

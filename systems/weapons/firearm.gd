@@ -22,6 +22,9 @@ var reloading := false
 var reload_t := 0.0
 var _next_shot := 0.0
 var _trigger_was := false
+var ammo_type := "std"          ## tipo de munición cargada (Ammo.TYPE_ORDER)
+var reserves := {}               ## tipo de munición → cartuchos de reserva (con más de un tipo a mano)
+var ammo_fx := {}                ## lo que el proyectil le hace al cuerpo (Ammo.fx)
 var cycle_left := 0.0          ## cerrojo / corredera de bombeo (escopeta, francotirador)
 
 static var _all := {}
@@ -36,6 +39,14 @@ static func all_stats() -> Dictionary:
 	return _all
 
 ## Resumen de capacidades de un arma (para el modo práctica y la tienda): calibre, daño, cadencia, DPS, alcance, cargador, recarga.
+## Cambia el tipo de munición cargada (recalcula daño, penetración, rebote, velocidad y dispersión).
+func set_ammo(type: String) -> void:
+	reserves[ammo_type] = reserve                  # lo que quedaba del tipo anterior
+	ammo_type = type
+	reserve = int(reserves.get(type, 0))
+	stats = Ammo.apply(all_stats()[id], id, type)
+	ammo_fx = Ammo.fx(id, type)
+
 static func summary(stats: Dictionary) -> String:
 	var pellets := int(stats.get("pellets", 1))
 	var dmg := float(stats.get("damage", 0))
@@ -57,6 +68,7 @@ static func create(weapon_id: String) -> Firearm:
 	f.id = weapon_id
 	f.name = weapon_id
 	f.stats = all_stats()[weapon_id]
+	f.ammo_fx = Ammo.fx(weapon_id, "std")
 	var mpath := "res://assets/weapons/%s.scn" % f.stats.model
 	if not ResourceLoader.exists(mpath):
 		mpath = "res://assets/weapons/%s.glb" % f.stats.model        # armas nuevas (tools/weapons/convert_fbx.py)
