@@ -325,6 +325,18 @@ func _apply_curl(sk: Skeleton3D) -> void:
 		sk.set_bone_pose_rotation(f.bone, f.rest * Quaternion(f.axis, ang))
 
 func _solve(sk: Skeleton3D, upper: int, lower: int, hand: int, target: Transform3D, pole: Vector3, w: float) -> void:
+	# La clavícula acompaña al brazo (como en una animación real): sin eso el hombro se estira y se «hunde» en el torso.
+	var shoulder := sk.get_bone_parent(upper)
+	if shoulder >= 0 and w > 0.3:
+		var a0 := sk.get_bone_global_pose(upper).origin
+		var b0 := sk.get_bone_global_pose(lower).origin
+		var d_now := (b0 - a0).normalized()
+		var d_want := (target.origin - a0).normalized()
+		var qs := Quaternion(d_now, d_want) if d_now.dot(d_want) < 0.9999 else Quaternion.IDENTITY
+		var part := Quaternion.IDENTITY.slerp(qs, 0.3 * w)
+		var sg := sk.get_bone_global_pose(shoulder)
+		sg.basis = Basis(part) * sg.basis
+		sk.set_bone_global_pose(shoulder, sg)
 	var hand_now := sk.get_bone_global_pose(hand)
 	if w < 0.999:
 		target = hand_now.interpolate_with(target, w)
@@ -354,7 +366,17 @@ func _solve(sk: Skeleton3D, upper: int, lower: int, hand: int, target: Transform
 	var c2 := sk.get_bone_global_pose(hand).origin
 	lg.basis = Basis(Quaternion((c2 - lg.origin).normalized(), (tpos - lg.origin).normalized())) * lg.basis
 	sk.set_bone_global_pose(lower, lg)
+	# El antebrazo no tiene huesos de torsión: si la mano se gira de golpe respecto del antebrazo se «retuerce» como caramelo.
+	# Se reparte la torsión: ~70 % la toma el antebrazo y sólo el resto se nota en la muñeca.
 	var hg := sk.get_bone_global_pose(hand)
+	var f_axis := (tpos - sk.get_bone_global_pose(lower).origin).normalized()
+	var qd := (target.basis.orthonormalized() * hg.basis.orthonormalized().inverse()).get_rotation_quaternion()
+	var tw := 2.0 * atan2(Vector3(qd.x, qd.y, qd.z).dot(f_axis), qd.w)
+	tw = wrapf(tw, -PI, PI)
+	var lg3 := sk.get_bone_global_pose(lower)
+	lg3.basis = Basis(f_axis, tw * 0.7) * lg3.basis
+	sk.set_bone_global_pose(lower, lg3)
+	hg = sk.get_bone_global_pose(hand)
 	var scl := hg.basis.get_scale()
 	hg.basis = target.basis.orthonormalized().scaled(scl)
 	sk.set_bone_global_pose(hand, hg)

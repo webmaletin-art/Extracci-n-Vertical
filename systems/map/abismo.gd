@@ -5,8 +5,8 @@ extends RefCounted
 ## equipo, y se sube: arriba hay mejores armas y botín, pero también más enemigos.
 ##
 ## Mecánicas del mapa (además de las de la Torre):
-##   puertas de oficina que se patean o se balean ("office"), paredes de vidrio y tabiques finos que se rompen ("glass",
-##   "thin") — romperlos hace ruido —, puertas con tarjeta ("locked:<ítem>"), persianas pesadas que abre una palanca
+##   puertas de oficina que se patean o se balean ("door"), paredes de vidrio y tabiques finos que se rompen ("door",
+##   "duct") — romperlos hace ruido —, puertas con tarjeta ("locked:<ítem>"), persianas pesadas que abre una palanca
 ##   ("shutter:<id>" + "levers"), trampas de gas con palanca ("gas_traps"), bóvedas con botín, minas sueltas,
 ##   dos extracciones: el túnel de evacuación del piso −4 (siempre abierto) y el helicóptero de la superficie (llega a los 4 min).
 ## Los pisos se rellenan con un generador determinista (misma semilla → mismo mapa): decorado, cajas y enemigos según la
@@ -24,14 +24,14 @@ const LADDERS := [[[8.0, 1.0], [100.0, -1.0]], [[112.0, -1.0], [30.0, 1.0]], [[6
 const STAIRS := {0: [70.0, 76.6], 3: [24.0, 30.6], 5: [86.0, 92.6]}
 
 const WALLS := [
-	[[18.0, "door"], [34.0, "office"], [47.0, "thin"], [53.0, "door"], [67.0, "office"], [80.0, "glass"], [90.0, "door"], [108.0, "locked:keycard_c"]],
-	[[16.0, "door"], [40.0, "office"], [53.0, "door"], [67.0, "door"], [84.0, "office"], [94.0, "glass"], [106.0, "door"]],
-	[[14.0, "door"], [22.0, "office"], [46.0, "thin"], [53.0, "door"], [68.0, "door"], [80.0, "shutter:S2"], [100.0, "office"], [108.0, "door"]],
-	[[16.0, "door"], [36.0, "office"], [52.0, "door"], [68.0, "thin"], [76.0, "glass"], [100.0, "door"]],
-	[[22.0, "office"], [38.0, "door"], [52.0, "thin"], [66.0, "door"], [90.0, "locked:keycard_b"], [106.0, "door"]],
-	[[24.0, "door"], [46.0, "office"], [54.0, "glass"], [66.0, "door"], [96.0, "office"]],
-	[[20.0, "thin"], [48.0, "door"], [54.0, "office"], [68.0, "thin"], [78.0, "door"], [112.0, "locked:keycard_vault"]],
-	[[30.0, "door"], [46.0, "glass"], [53.0, "door"], [67.0, "office"], [84.0, "door"]],
+	[[18.0, "door"], [34.0, "door"], [47.0, "duct"], [53.0, "door"], [67.0, "door"], [80.0, "door"], [90.0, "door"], [108.0, "locked:keycard_c"]],
+	[[16.0, "door"], [40.0, "door"], [53.0, "door"], [67.0, "door"], [84.0, "door"], [94.0, "door"], [106.0, "door"]],
+	[[14.0, "door"], [22.0, "door"], [46.0, "duct"], [53.0, "door"], [68.0, "door"], [80.0, "shutter:S2"], [100.0, "door"], [108.0, "door"]],
+	[[16.0, "door"], [36.0, "door"], [52.0, "door"], [68.0, "duct"], [76.0, "door"], [100.0, "door"]],
+	[[22.0, "door"], [38.0, "door"], [52.0, "duct"], [66.0, "door"], [90.0, "locked:keycard_b"], [106.0, "door"]],
+	[[24.0, "door"], [46.0, "door"], [54.0, "door"], [66.0, "door"], [96.0, "door"]],
+	[[20.0, "duct"], [48.0, "door"], [54.0, "door"], [68.0, "duct"], [78.0, "door"], [112.0, "locked:keycard_vault"]],
+	[[30.0, "door"], [46.0, "door"], [53.0, "door"], [67.0, "door"], [84.0, "door"]],
 ]
 
 const NAMES := ["Piso −7 · Cimientos", "Piso −6 · Depósitos", "Piso −5 · Servicios", "Piso −4 · Túneles", "Piso −3 · Laboratorios",
@@ -53,6 +53,7 @@ const PROPS := [
 	[["sc_cctv", 0, "decor"], ["prop_locked_locker", 0, "decor"], ["sf_transporter_console_best", 0.55, "decor"], ["cabinet_filing_cabinet", 0, "decor"], ["sf_light_fixture", 0, "decor"]],
 	[["sc_cctv", 0, "decor"], ["prop_locked_locker", 0, "decor"], ["sf_main_laboratory_computer_bank", 0.5, "decor"], ["table_workbench", 0, "decor"], ["sf_wall_panel", 0, "decor"]],
 ]
+const COVERS := [["crate_shipping_container", 0.5, "cover"], ["truck_fork_lift", 0, "cover"], ["crate_shipping_container", 0.4, "cover"]]
 const CRATES := [["crate_wood", "crate_wood"], ["crate_wood", "crate_wood"], ["crate_wood", "crate_wood"], ["crate_metal", "crate_metal"],
 	["crate_metal", "crate_metal"], ["suitcase", "suitcase"], ["suitcase", "suitcase"], ["lab_case", "lab_case"]]
 
@@ -118,6 +119,8 @@ static func data() -> Dictionary:
 				if px < 0.0:
 					continue
 				var pd: Array = PROPS[f][rng.randi() % PROPS[f].size()]
+				if rng.randf() < 0.4:
+					pd = COVERS[rng.randi() % COVERS.size()]          # obstáculos para cubrirse y trepar
 				props.append([px, pd[0], pd[1], pd[2]])
 				forbid.append([px - 1.3, px + 1.3])
 			var nc := 1 + int((x1 - x0) / 14.0)

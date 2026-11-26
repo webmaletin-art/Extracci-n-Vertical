@@ -46,7 +46,7 @@ func t_abismo() -> String:
 	for f in d.floors:
 		for w in f.walls:
 			types[str(w[1]).get_slice(":", 0)] = true
-	for need in ["door", "office", "glass", "thin", "locked", "shutter"]:
+	for need in ["door", "duct", "locked", "shutter"]:
 		if not types.has(need):
 			return "falta el tipo de pared %s" % need
 	# todas las armas y objetos colocados existen

@@ -187,3 +187,11 @@
 * Desmembramiento: la pierna entera sale por la ingle con un tiro potente o al morir.
 * Armería: cada tipo de munición muestra un cartucho parado y otro tumbado con la punta de frente.
 * Agarre: los hombros se abren un poco hacia afuera al apuntar.
+
+## 0.15.3
+
+* Abismo Vertical: sin paredes que romper, puertas para patear ni vidrios (el código queda apagado); más obstáculos (coberturas) en todos los pisos.
+* Agarre: la clavícula acompaña al brazo y la torsión del antebrazo se reparte (menos «caramelo» en la muñeca y hombro hundido). `tests/grip_shots.tscn` con `NATURAL=1` saca la captura en colores reales.
+* TechView convierte las mallas nuevas antes de dibujar el cuadro: no se ve más el color real por un instante.
+* Práctica: usa la configuración del juego (sin forzar la toma de cerca) y tiene el botón «CONFIGURACIÓN DEL JUEGO»; sombras según la calidad elegida.
+* Fx: no falla si el grupo de efectos quedó de un mapa anterior.

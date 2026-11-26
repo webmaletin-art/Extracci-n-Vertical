@@ -72,8 +72,7 @@ func _ready() -> void:
 	PlayerController.setup_input_map()
 	WEAPONS = Firearm.all_stats().keys()
 	_rebuild_ammo()
-	_saved_bt = Settings.bullet_time
-	Settings.bullet_time = 2           # toma de cerca de cada herida
+	# la práctica usa EXACTAMENTE la configuración del juego (toma de cerca, rayos X, calidad, cámara…)
 	Fx.attach(self)
 	ballistics = Ballistics.new()
 	ballistics.name = "Ballistics"
@@ -132,7 +131,6 @@ func _rebuild_ammo() -> void:
 		ammo_id = "std"
 
 func _exit_tree() -> void:
-	Settings.bullet_time = _saved_bt
 	_stop_recording()
 	Engine.time_scale = 1.0
 
@@ -151,6 +149,8 @@ func _build_arena() -> void:
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-50, 25, 0)
 	sun.light_energy = 0.9
+	sun.shadow_enabled = Settings.shadows >= 2
+	Settings.changed.connect(func(): if is_instance_valid(sun): sun.shadow_enabled = Settings.shadows >= 2)
 	add_child(sun)
 	var concrete := _mat(Color(0.34, 0.35, 0.37))
 	var floor_m := _mat(Color(0.22, 0.23, 0.25))
@@ -474,7 +474,6 @@ func _build_ui() -> void:
 		immortal = on
 		_spawn_dummy())
 	_check(v, "Reaparece solo al morir", func(on): auto_respawn = on, true)
-	_check(v, "Toma de cerca de cada herida", func(on): Settings.bullet_time = 2 if on else 1, true)
 	var row := HBoxContainer.new()
 	v.add_child(row)
 	for d in [["NUEVO", func(): _spawn_dummy()], ["GRABAR ●", null], ["VOLVER A LA LOBBY", func(): _exit()]]:
@@ -513,7 +512,7 @@ func _build_ui() -> void:
 	# configuración REAL del juego (la misma que usa la partida): se aplica en vivo y se guarda
 	var row2 := HBoxContainer.new()
 	v.add_child(row2)
-	for d in [["CÁMARA Y CONTROLES", func(): _open_settings()], ["GUARDAR", func():
+	for d in [["CONFIGURACIÓN DEL JUEGO", func(): _open_settings()], ["GUARDAR", func():
 			Settings.save_settings()
 			hud.toast("Configuración guardada: se usa también en la partida")],
 			["RESTABLECER", func():

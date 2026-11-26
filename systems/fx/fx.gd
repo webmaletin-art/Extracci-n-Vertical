@@ -296,8 +296,10 @@ func emit(kind: String, pos: Vector3, dir := Vector3.UP, scale := 1.0) -> CPUPar
 	if k < 0.4 and kind in ["dust", "splinter"] and randf() > 0.5:
 		return null
 	var arr: Array = _pools[kind]
-	var p: CPUParticles3D = arr[_idx[kind]]
+	var p: CPUParticles3D = arr[_idx[kind]] if is_instance_valid(arr[_idx[kind]]) else null
 	_idx[kind] = (_idx[kind] + 1) % arr.size()
+	if p == null:
+		return null                      # el grupo quedó de un mapa anterior ya liberado
 	p.global_position = pos
 	if dir.length_squared() > 0.0001:
 		var d := dir.normalized()

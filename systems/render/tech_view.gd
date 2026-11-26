@@ -45,7 +45,16 @@ func _ready() -> void:
 	for p in [["tech_line_w", line_w], ["tech_line_k", line_k], ["tech_shade", shade], ["tech_detail", detail],
 			["tech_contrast", contrast], ["tech_red", red], ["tech_xray", 0.0], ["tech_on", 0.0]]:
 		RenderingServer.global_shader_parameter_add(str(p[0]), RenderingServer.GLOBAL_VAR_TYPE_FLOAT, float(p[1]))
-	get_tree().node_added.connect(func(n: Node): if n is MeshInstance3D and mode >= 2: _dirty = true)
+	get_tree().node_added.connect(func(n: Node):
+		if mode < 2:
+			return
+		if n is MeshInstance3D:
+			_dirty = true
+			_pending.append(n)
+			_queue_flush()
+		elif n is Light3D or n is WorldEnvironment:
+			_lights_dirty = true
+			_queue_flush())
 	if DisplayServer.get_name() != "headless":          # sin pantalla (pruebas) no hay datos de malla para las aristas
 		set_mode.call_deferred(4)        # estilo por defecto: D · Plano dibujado (el modo práctica permite volver al original)
 
@@ -73,6 +82,29 @@ func set_param(key: String, v: float) -> void:
 func set_xray(s: int) -> void:
 	xray_style = s
 	RenderingServer.global_shader_parameter_set("tech_xray", float(s))
+
+var _pending: Array = []          ## mallas recién agregadas: se convierten antes de dibujar el cuadro (nunca se ve el color original)
+var _lights_dirty := false
+var _flush_q := false
+func _queue_flush() -> void:
+	if not _flush_q:
+		_flush_q = true
+		_flush_pending.call_deferred()
+
+func _flush_pending() -> void:
+	_flush_q = false
+	if mode < 2:
+		_pending.clear()
+		return
+	_batch = {}
+	for n in _pending:
+		if is_instance_valid(n) and (n as Node).is_inside_tree():
+			_try_convert(n as MeshInstance3D)
+	_pending.clear()
+	_batch_commit(get_tree().root)
+	if mode == 4 and _lights_dirty:
+		_lights_off()
+	_lights_dirty = false
 
 var _dirty := false         ## apareció una malla nueva: se convierte en seguida (sin cuadros con los colores originales)
 func _process(delta: float) -> void:
@@ -107,16 +139,18 @@ func _skip(n: Node) -> bool:
 func _convert_tree(root: Node) -> void:
 	_batch = {}
 	for n in root.find_children("*", "MeshInstance3D", true, false):
-		var mi := n as MeshInstance3D
-		if mi.mesh == null or _orig.has(mi.get_instance_id()) or mi.has_meta("tech_skip_checked"):
-			continue
-		if mi.has_meta("actor_mesh") and mi.material_override is ShaderMaterial:
-			continue                      # ventana de rayos X encendida: se convierte cuando termine (no pisar su material)
-		if _skip(mi):
-			mi.set_meta("tech_skip_checked", true)
-			continue
-		_convert(mi)
+		_try_convert(n as MeshInstance3D)
 	_batch_commit(root)
+
+func _try_convert(mi: MeshInstance3D) -> void:
+	if mi.mesh == null or _orig.has(mi.get_instance_id()) or mi.has_meta("tech_skip_checked"):
+		return
+	if mi.has_meta("actor_mesh") and mi.material_override is ShaderMaterial:
+		return                            # ventana de rayos X encendida: se convierte cuando termine (no pisar su material)
+	if _skip(mi):
+		mi.set_meta("tech_skip_checked", true)
+		return
+	_convert(mi)
 
 func _convert(mi: MeshInstance3D) -> void:
 	var surf := []

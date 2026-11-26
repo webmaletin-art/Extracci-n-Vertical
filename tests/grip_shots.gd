@@ -9,6 +9,9 @@ func _ready() -> void:
 	var ar := Armory.new()
 	ui.add_child(ar)
 	await _w(30)
+	if OS.get_environment("NATURAL") != "":
+		TechView.set_mode(0)             # colores naturales: se ve la deformación real de la malla
+		await _w(10)
 	for id in a.slice(1):
 		ar._select(id)
 		await _w(30)

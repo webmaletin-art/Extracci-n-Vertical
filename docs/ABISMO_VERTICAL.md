@@ -16,7 +16,7 @@ Instalación de **8 pisos** (Piso −7 abajo … Piso 0 en la superficie), 120 m
 | Sup. | Azotea | – | **helicóptero** (llega a los 4 min, hélice girando) |
 
 Conexiones: 2 escaleras de mano por piso, 3 escaleras inclinadas, ascensor central (x = 60) con las 8 paradas.
-Paredes nuevas: `office` (puerta que se patea / se baleá), `glass` (vidrio), `thin` (tabique fino: aguanta unos tiros),
+**Paredes que se rompen, puertas para patear y vidrios: APAGADOS en el mapa (decisión del autor; se retomarán).** El código sigue (`office`, `glass`, `thin`). Paredes disponibles hoy: `door` (vano abierto), `duct`, `locked:<tarjeta>`, `shutter:<id>`. Antes: `office` (puerta que se patea / se baleá), `glass` (vidrio), `thin` (tabique fino: aguanta unos tiros),
 `locked:<tarjeta>`, `shutter:<id>` (persiana que abre una `lever`). Romperlas hace ruido (`NoiseBus`).
 `tests/map_shots.tscn -- <carpeta> [piso:x …]` saca capturas del mapa.
 

@@ -296,8 +296,15 @@ func _build_stage() -> void:
 	env.set_meta("no_tech", true)
 	var e := Environment.new()
 	e.background_mode = Environment.BG_CLEAR_COLOR
+	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	e.ambient_light_color = Color(0.8, 0.82, 0.88)
+	e.ambient_light_energy = 0.7
 	env.environment = e
 	_stage.add_child(env)
+	var sun := DirectionalLight3D.new()
+	sun.rotation_degrees = Vector3(-40, 30, 0)
+	sun.light_energy = 0.9
+	_stage.add_child(sun)
 	var floor_ := StaticBody3D.new()
 	var cs := CollisionShape3D.new()
 	var bx := BoxShape3D.new()
