@@ -231,8 +231,8 @@ func set_cinematic(on: bool) -> void:
 
 func show_injuries(victim: Actor, lines: Array) -> void:
 	var who := "VOS" if victim == player else "ENEMIGO"
-	_injuries = ["RAYOS X · %s" % who] + lines
-	_injury_t = 4.0
+	_injuries = []                       # sin textos de daños en pantalla
+	_injury_t = 0.0
 
 func show_elevator_menu(e: Elevator) -> void:
 	if _elev_panel:
@@ -272,16 +272,16 @@ func _process(delta: float) -> void:
 	if player == null or not is_instance_valid(player):
 		return
 	_lbl.health.text = "♥ %d" % int(maxf(player.health, 0.0))
-	_lbl.status.text = player.injuries.summary() + ("   [H] curar" if not touch_mode and player.injuries.any() else "")
+	_lbl.status.text = ""               # sin textos de lesiones en pantalla
 	var can_heal := player.injuries.any() and (player.inventory.count("bandage") + player.inventory.count("medkit")) > 0
 	(buttons.heal as Control).visible = touch_mode and can_heal
 	var w := player.weapon()
 	if w:
 		_lbl.ammo.text = ("RECARGANDO" if w.reloading else "%d | %d" % [w.mag, w.reserve])
-		_lbl.weapon.text = w.display_name()
+		_lbl.weapon.text = ""
 	else:
 		_lbl.ammo.text = "—"
-		_lbl.weapon.text = "Cuchillo" if player.current == "knife" else "Puños"
+		_lbl.weapon.text = ""
 	_lbl.weapon.text += "\n● %d × %s" % [int(player.grenades.get(player.grenade_kind, 0)), str(Explosion.defs().get(player.grenade_kind, {}).get("name", "")).replace("Granada de ", "").replace("Granada ", "")]
 	_lbl.loot.text = "Botín: $%d" % player.inventory.total_value()
 	if tower:

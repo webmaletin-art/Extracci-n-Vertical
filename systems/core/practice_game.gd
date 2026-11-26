@@ -367,6 +367,7 @@ func _build_ui() -> void:
 	toggle.size = Vector2(190, 44)
 	ui.add_child(toggle)
 	_info = Label.new()
+	_info.visible = false                # sin textos de arma ni de daños en pantalla
 	_info.position = Vector2(80, 8)
 	_info.add_theme_font_size_override("font_size", 20)
 	_info.add_theme_color_override("font_color", Color(0.95, 0.9, 0.6))
