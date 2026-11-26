@@ -269,8 +269,8 @@ func _process_attached(sk: Skeleton3D, inv: Transform3D) -> void:
 		var d := weapon_aim_dir.normalized()
 		var bb := Basis.looking_at(d, Vector3.UP if absf(d.y) < 0.97 else Vector3(weapon_aim_facing, 0, 0))
 		if weapon_is_pistol:
-			var center := sr.lerp(sl, 0.3) + Vector3(0, -0.08, 0)    # más cerca del hombro de tiro: la izquierda no cruza el pecho
-			weapon_target = Transform3D(bb, center + d * 0.50 - bb * weapon_grip_local)
+			var center := sr.lerp(sl, -0.3) + Vector3(0, -0.15, 0)    # por fuera del hombro de tiro: el brazo sale del hombro, por encima del chaleco
+			weapon_target = Transform3D(bb, center + d * 0.56 - bb * weapon_grip_local)
 		else:
 			var pocket := sr + d * 0.13 + Vector3(0, -0.02, 0)           # la culata apoya en el FRENTE del hombro, no dentro del torso
 			weapon_target = Transform3D(bb, pocket - bb * weapon_butt)
@@ -301,7 +301,7 @@ func _solve_pole(sk: Skeleton3D, right: bool, target: Transform3D, w: float) -> 
 	var lo: int = _b.RightForeArm if right else _b.LeftForeArm
 	var ha: int = _b.RightHand if right else _b.LeftHand
 	var side := -1.0 if right else 1.0
-	var pole_skel := (Vector3(side * 0.6, -1.0, 0.25)).normalized()
+	var pole_skel := (Vector3(side * 1.5, -1.0, 0.25)).normalized()          # codo hacia afuera y abajo
 	_solve(sk, up, lo, ha, target, pole_skel, w)
 
 func _apply_curl(sk: Skeleton3D) -> void:
@@ -333,7 +333,7 @@ func _solve(sk: Skeleton3D, upper: int, lower: int, hand: int, target: Transform
 		var d_now := (b0 - a0).normalized()
 		var d_want := (target.origin - a0).normalized()
 		var qs := Quaternion(d_now, d_want) if d_now.dot(d_want) < 0.9999 else Quaternion.IDENTITY
-		var part := Quaternion.IDENTITY.slerp(qs, 0.3 * w)
+		var part := Quaternion.IDENTITY.slerp(qs, 0.0 if weapon_is_pistol else 0.3 * w)      # con pistola la clavícula no se adelanta (el brazo saldría del pecho)
 		var sg := sk.get_bone_global_pose(shoulder)
 		sg.basis = Basis(part) * sg.basis
 		sk.set_bone_global_pose(shoulder, sg)
