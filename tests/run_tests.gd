@@ -169,7 +169,7 @@ func _game_tests(filt: String) -> void:
 	var p := g.player
 	p.max_health = 1000.0
 	p.health = 1000.0
-	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "cuerpo_muerto", "desmembrar", "anatomia", "captador", "mecanicas"]:
+	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "cuerpo_muerto", "desmembrar", "anatomia", "captador", "mecanicas", "practica_armas"]:
 		if filt != "" and not t.contains(filt):
 			continue
 		p.inp = ActorInput.new()
@@ -485,6 +485,29 @@ func g_mecanicas(p: Actor) -> String:
 	if p.radar_t < 9.0:
 		return "el radar no se activó"
 	p.shield_hp = 0.0
+	return ""
+
+## Práctica: elegir cada arma desde el menú (como en el teléfono) no debe fallar ni dejar la munición vacía.
+func g_practica_armas(_p: Actor) -> String:
+	var pg := PracticeGame.new()
+	add_child(pg)
+	await _wait_phys(10)
+	var obs := pg.panel.find_children("*", "OptionButton", true, false)
+	var arma: OptionButton = obs[0]
+	var amm: OptionButton = obs[1]
+	var n := arma.item_count
+	for idx in range(0, n, 3):
+		arma.select(idx)
+		arma.item_selected.emit(idx)
+		await _wait_phys(2)
+		if pg.weapon_id != pg.WEAPONS[idx]:
+			pg.queue_free()
+			return "no cambió el arma %d" % idx
+		if amm.item_count < 6 or pg.player.weapon() == null:
+			pg.queue_free()
+			return "arma %s sin munición o sin arma en mano" % pg.weapon_id
+	pg.queue_free()
+	await _wait_phys(2)
 	return ""
 
 func g_granada(p: Actor) -> String:

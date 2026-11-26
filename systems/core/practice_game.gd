@@ -121,6 +121,15 @@ func _ready() -> void:
 	Sfx.ambient("amb_wind", -26.0)
 
 ## Munición disponible para el arma elegida: las escopetas usan sus propios cartuchos (postas, balón, etc.).
+var _ammo_opt: OptionButton
+func _fill_ammo_options() -> void:
+	if _ammo_opt == null or not is_instance_valid(_ammo_opt):
+		return
+	_ammo_opt.clear()
+	for k in AMMO.keys():
+		_ammo_opt.add_item(str(AMMO[k].name))
+	_ammo_opt.selected = maxi(AMMO.keys().find(ammo_id), 0)
+
 func _rebuild_ammo() -> void:
 	AMMO = {}
 	for t in Ammo.TYPE_ORDER:
@@ -402,19 +411,15 @@ func _build_ui() -> void:
 	v.add_theme_constant_override("separation", 6)
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(v)
-	var ammo_opt: OptionButton
-	var fill_ammo := func():
-		ammo_opt.clear()
-		for k in AMMO.keys():
-			ammo_opt.add_item(str(AMMO[k].name))
-		ammo_opt.selected = maxi(AMMO.keys().find(ammo_id), 0)
+	# la lista de munición se arma DESPUÉS que la de armas: se guarda en una variable de la clase (no en una local que la
+	# función anónima capturaría vacía) y se vuelve a llenar cada vez que cambia el arma
 	_option(v, "Arma", WEAPONS.map(func(k): return Firearm.all_stats()[k].name), WEAPONS.find(weapon_id), func(i):
 		weapon_id = WEAPONS[i]
 		_rebuild_ammo()
-		fill_ammo.call()
+		_fill_ammo_options()
 		_equip())
 	var ammo_keys0 := AMMO.keys()
-	ammo_opt = _option(v, "Munición", ammo_keys0.map(func(k): return AMMO[k].name), ammo_keys0.find(ammo_id), func(i):
+	_ammo_opt = _option(v, "Munición", ammo_keys0.map(func(k): return AMMO[k].name), ammo_keys0.find(ammo_id), func(i):
 		ammo_id = AMMO.keys()[i]
 		_apply_ammo(player.weapon()))
 	var chars: Array = []

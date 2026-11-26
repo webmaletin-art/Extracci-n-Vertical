@@ -224,3 +224,8 @@
 
 * `BoxBatcher.commit` arma pisos, paredes, escaleras, tarimas y escombros directamente con relleno plano (`tech_flat`) + aristas dibujadas (`Lineas`), marcados `no_tech`: TechView ya no los convierte al vuelo. Carga del mapa ≈ 1,9 s contra 2,9 s y 109 objetos convertidos al vuelo en lugar de 270 (medido en escritorio). En pruebas sin pantalla se mantiene el camino anterior.
 * La sangre, las heridas y los efectos no cambian (siguen rojos, fuera del estilo en línea).
+
+## 0.16.3
+
+* Práctica: elegir un arma desde el menú cerraba el juego (la lista de munición se capturaba vacía). Corregido; prueba nueva `practica_armas` (20 pruebas).
+* Bullet time / rayos X: el cuerpo conserva el contorno de tinta mientras la ropa se abre (casco invertido que respeta la ventana), y los miembros que salen volando conservan el material en línea de fábrica (con contorno).

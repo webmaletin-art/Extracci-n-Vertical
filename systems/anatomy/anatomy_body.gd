@@ -623,8 +623,13 @@ func _apply_skin() -> void:
 		if src is StandardMaterial3D:
 			zm.set_shader_parameter("albedo_tex", (src as StandardMaterial3D).albedo_texture)
 			zm.set_shader_parameter("albedo_color", (src as StandardMaterial3D).albedo_color)
+		# contorno de silueta también mientras la ropa se abre (el casco invertido respeta la misma ventana de rayos X)
+		var om := ShaderMaterial.new()
+		om.shader = _ozshader()
+		zm.next_pass = om
 		m.material_override = zm
 		_skin_mats.append(zm)
+		_skin_mats.append(om)
 
 func _process(delta: float) -> void:
 	if not _showing:
@@ -915,6 +920,44 @@ void fragment() {
 	return _frag_shader
 
 ## Piel / ropa del personaje: normal afuera; dentro de la ventana desaparece y queda la silueta oscura (caras de atrás).
+static var _zone_outline_shader: Shader
+## Contorno de tinta (casco invertido) que respeta la ventana de rayos X: no se dibuja donde la ropa desaparece.
+static func _ozshader() -> Shader:
+	if _zone_outline_shader == null:
+		_zone_outline_shader = Shader.new()
+		_zone_outline_shader.code = """
+shader_type spatial;
+render_mode unshaded, cull_front, depth_draw_opaque;
+global uniform float tech_line_w;
+global uniform float tech_line_k;
+""" + _ZONE_FUNC + """
+varying vec3 wp;
+void vertex() {
+	wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec4 vp = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
+	float dist = max(-vp.z, 0.5);
+	VERTEX += normalize(NORMAL) * tech_line_w * 0.0011 * dist;
+}
+bool tunnel(vec3 p) {
+	for (int i = 0; i < 4; i++) {
+		if (i >= zone_n) break;
+		vec3 c = zone_c[i].xyz;
+		vec3 v = c - cam_pos;
+		float len = length(v);
+		vec3 d = v / max(len, 0.0001);
+		float t = dot(p - cam_pos, d);
+		if (t < len + zone_r * 0.5 && t > 0.0 && length(cross(p - cam_pos, d)) < zone_r * 1.25) { return true; }
+	}
+	return false;
+}
+void fragment() {
+	if (tech_line_k < 0.02) { discard; }
+	if (zone_d(wp) < zone_r * 1.15 || tunnel(wp)) { discard; }
+	ALBEDO = mix(vec3(0.94), vec3(0.13, 0.13, 0.14), tech_line_k);
+}
+"""
+	return _zone_outline_shader
+
 static func _zshader() -> Shader:
 	if _zone_skin_shader == null:
 		_zone_skin_shader = Shader.new()

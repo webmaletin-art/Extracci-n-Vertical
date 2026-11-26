@@ -271,7 +271,7 @@ static func _build_meshes(a: Actor, anat: AnatomyBody, bones: Dictionary, joint_
 					sel_idx.append_array([ind[t], ind[t + 1], ind[t + 2]])
 			if sel_idx.is_empty():
 				continue
-			surfaces.append({"pts": pts, "uv": uv, "idx": sel_idx, "mat": m.get_active_material(s)})
+			surfaces.append({"pts": pts, "uv": uv, "idx": sel_idx, "mat": m.get_surface_override_material(s) if m.get_surface_override_material(s) else m.get_active_material(s)})
 			for k in sel_idx:
 				all_pts.append(pts[k])
 	if all_pts.is_empty():
