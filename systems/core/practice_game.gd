@@ -149,18 +149,12 @@ func _build_arena() -> void:
 	var env := WorldEnvironment.new()
 	var e := Environment.new()
 	e.background_mode = Environment.BG_COLOR
-	e.background_color = Color(0.09, 0.10, 0.12)
+	e.background_color = Color(0.84, 0.84, 0.83)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.82, 0.84, 0.9)
-	e.ambient_light_energy = 0.75
+	e.ambient_light_color = Color.WHITE
+	e.ambient_light_energy = 1.0
 	env.environment = e
 	add_child(env)
-	var sun := DirectionalLight3D.new()
-	sun.rotation_degrees = Vector3(-50, 25, 0)
-	sun.light_energy = 0.9
-	sun.shadow_enabled = Settings.shadows >= 2
-	Settings.changed.connect(func(): if is_instance_valid(sun): sun.shadow_enabled = Settings.shadows >= 2)
-	add_child(sun)
 	var concrete := _mat(Color(0.34, 0.35, 0.37))
 	var floor_m := _mat(Color(0.22, 0.23, 0.25))
 	var metal := _mat(Color(0.5, 0.54, 0.6), 0.85, 0.35)
@@ -187,6 +181,7 @@ func _build_arena() -> void:
 	_set_plates(false)
 	_box(Vector3(38.0, 0.6, 0.0), Vector3(1.2, 1.2, 1.2), "concrete", concrete)
 	_box(Vector3(41.0, 0.45, 0.0), Vector3(0.9, 0.9, 0.9), "wood", wood)
+	LinedBake.style_tree(self)             # la arena nace en línea (la sangre y los efectos no se tocan)
 
 func _set_plates(on: bool) -> void:
 	for p in _plates:
@@ -498,22 +493,14 @@ func _build_ui() -> void:
 		else:
 			b.pressed.connect(d[1])
 		row.add_child(b)
-	# VISUALIZACIÓN TÉCNICA 3D (experimento): cambia el aspecto del juego real en vivo; nada se guarda
+	# estilo de línea (grosor, intensidad, contraste): se aplica en vivo
 	var tl := Label.new()
-	tl.text = "VISUALIZACIÓN TÉCNICA 3D (experimento)"
+	tl.text = "ESTILO DE LÍNEA"
 	tl.add_theme_color_override("font_color", Color(1.0, 0.6, 0.2))
 	v.add_child(tl)
-	_option(v, "Estilo", TechView.MODES, TechView.mode, func(i): TechView.set_mode(i))
-	_option(v, "Rayos X", TechView.XRAY, TechView.xray_style, func(i): TechView.set_xray(i))
 	for d in [["Grosor de líneas", "line_w", 0.5, 4.0], ["Intensidad de líneas", "line_k", 0.0, 1.0], ["Sombreado", "shade", 0.0, 1.0],
-			["Detalle original", "detail", 0.0, 1.0], ["Contraste", "contrast", 0.5, 1.5], ["Rojo (sangre)", "red", 0.0, 1.0]]:
+			["Detalle original", "detail", 0.0, 1.0], ["Contraste", "contrast", 0.5, 1.5]]:
 		_slider_row(v, d[0], d[2], d[3], float(TechView.get(d[1])), func(x): TechView.set_param(d[1], x))
-	var perf_b := Button.new()
-	perf_b.text = "▶ TEST DE RENDIMIENTO DE ESTILOS (≈1 min)"
-	perf_b.custom_minimum_size = Vector2(0, 46)
-	perf_b.add_theme_font_size_override("font_size", 15)
-	perf_b.pressed.connect(func(): style_benchmark())
-	v.add_child(perf_b)
 	# configuración REAL del juego (la misma que usa la partida): se aplica en vivo y se guarda
 	var row2 := HBoxContainer.new()
 	v.add_child(row2)
@@ -551,105 +538,6 @@ func _option(parent: Control, title: String, items: Array, selected: int, cb: Ca
 	ob.item_selected.connect(cb)
 	hb.add_child(ob)
 	return ob
-
-## TEST RÁPIDO DE RENDIMIENTO POR ESTILO VISUAL: misma escena y misma acción para cada estilo (actual, A, B, C, D):
-## 10 s de ráfaga contra el maniquí, sangre y una granada. Mide cuadros por segundo (promedio y 1 % más lento) y
-## llamadas de dibujo, en ESTE dispositivo. Muestra la tabla y la guarda en user://rendimiento_estilos.txt.
-var bench_report := ""
-var _bench_running := false
-func style_benchmark(seconds := 10.0) -> String:
-	if _bench_running:
-		return ""
-	_bench_running = true
-	var prev_mode := TechView.mode
-	var was_imm := immortal
-	immortal = true
-	_spawn_dummy()
-	panel.visible = false
-	controller.set_physics_process(false)
-	var rows := []
-	# precalentar: la primera vez que se dispara se carga la anatomía (no debe pesar sobre el primer estilo)
-	var tw0 := Time.get_ticks_msec()
-	while Time.get_ticks_msec() - tw0 < 2500:
-		var tg := dummy.global_position + Vector3(0, 1.3, 0)
-		if player.weapon():
-			var mz0 := player.weapon().muzzle_world()
-			player.aim_dir = Vector2(tg.x - mz0.x, tg.y - mz0.y).normalized()
-		player.inp.fire = true
-		await get_tree().process_frame
-	player.inp.fire = false
-	for m in TechView.MODES.size():
-		TechView.set_mode(m)
-		player.global_position = Vector3(dummy.global_position.x - distance, 0.05, 0.0)
-		player.velocity = Vector3.ZERO
-		_info.text = "TEST DE RENDIMIENTO · %s" % TechView.MODES[m]
-		if Blood.instance:
-			Blood.instance.clear()                # misma escena para todos: sin la sangre del estilo anterior
-		for i in 40:
-			await get_tree().process_frame        # calentar (compilar shaders, convertir materiales)
-		var times := PackedFloat32Array()
-		var draws := 0.0
-		var t0 := Time.get_ticks_msec()
-		var last := Time.get_ticks_usec()
-		var nade := false
-		while Time.get_ticks_msec() - t0 < int(seconds * 1000.0):
-			var target := dummy.global_position + Vector3(0, 1.3, 0)
-			var w := player.weapon()
-			if w:
-				var mz := w.muzzle_world()
-				player.aim_dir = Vector2(target.x - mz.x, target.y - mz.y).normalized()
-			player.inp.fire = true
-			if not nade and Time.get_ticks_msec() - t0 > int(seconds * 400.0):
-				nade = true
-				Explosion.spawn(self, "frag", dummy.global_position + Vector3(1.5, 0.1, 0), player)
-			await get_tree().process_frame
-			var now := Time.get_ticks_usec()
-			times.append(1000000.0 / maxf(float(now - last), 1.0))       # FPS de ESTE cuadro
-			last = now
-			draws += Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
-		player.inp.fire = false
-		var deltas := []
-		var sum := 0.0
-		for f in times:
-			sum += f
-			deltas.append(f)
-		deltas.sort()
-		var low: float = deltas[int(deltas.size() * 0.01)] if not deltas.is_empty() else 0.0
-		rows.append("%-28s %5.1f FPS  · 1 %% más lento %5.1f FPS · %4d llamadas de dibujo" % [TechView.MODES[m], sum / maxf(times.size(), 1.0), low, int(draws / maxf(times.size(), 1.0))])
-		_spawn_dummy()
-	TechView.set_mode(prev_mode)
-	immortal = was_imm
-	_spawn_dummy()
-	controller.set_physics_process(true)
-	bench_report = "TEST DE RENDIMIENTO DE ESTILOS (%s, %d×%d)\n" % [OS.get_model_name(), get_viewport().get_visible_rect().size.x, get_viewport().get_visible_rect().size.y] + "\n".join(rows)
-	var f := FileAccess.open("user://rendimiento_estilos.txt", FileAccess.WRITE)
-	if f:
-		f.store_string(bench_report)
-		f.close()
-	_show_report(bench_report)
-	_bench_running = false
-	return bench_report
-
-func _show_report(text: String) -> void:
-	var pc := PanelContainer.new()
-	pc.position = Vector2(120, 120)
-	var vb := VBoxContainer.new()
-	pc.add_child(vb)
-	var l := Label.new()
-	l.text = text
-	l.add_theme_font_size_override("font_size", 18)
-	vb.add_child(l)
-	var hb := HBoxContainer.new()
-	vb.add_child(hb)
-	var cp := Button.new()
-	cp.text = "Copiar"
-	cp.pressed.connect(func(): DisplayServer.clipboard_set(text))
-	hb.add_child(cp)
-	var ok := Button.new()
-	ok.text = "Cerrar"
-	ok.pressed.connect(pc.queue_free)
-	hb.add_child(ok)
-	ui.add_child(pc)
 
 func _slider_row(parent: Control, title: String, mn: float, mx: float, val: float, cb: Callable) -> void:
 	var hb := HBoxContainer.new()

@@ -236,3 +236,9 @@
 * El helicóptero ahora se arma con piezas simples (≈ 300 triángulos; rotores que giran): ya no hay modelo.
 * El horneado (`tools/bake_lined.gd`) sigue en el repositorio, pero necesita los originales: están en el historial de git (commit `d5e9464` y anteriores). Un arma nueva: `tools/weapons/convert_fbx.py` → `bake_lined.gd -- weapons` → borrar el GLB.
 * La compilación empaqueta `assets/lined` en lugar de `assets/characters`; `boot.gd` comprueba el contenido con el personaje en línea.
+
+## 0.18.0 — se quita el filtro de pantalla: todo nace en línea
+
+* `TechView` ya no convierte nada al vuelo (de 442 a ~50 líneas): sólo guarda los parámetros globales de línea (grosor, intensidad, contraste, sombreado), el láser en tinta y la onda expansiva. Se eliminaron los estilos A/B/C/original, la pasada de pantalla (`tech_post`), el test de rendimiento de estilos, el selector de estilo y de rayos X de la práctica y las pruebas `tech_*`.
+* Lo armado por código (rieles, escaleras de mano, ascensor, lámparas, cajas, objetos sueltos, granadas, minas, cohete, arena de práctica, plataforma de la Armería) se pinta al crearlo con `LinedBake.style_tree`. Conservan su color: anatomía (rayos X), sangre, heridas, fogonazo, láser, luz roja de alarma y de las puertas.
+* Sin luces ni sombras de escenario: fondo de papel blanco; se quitaron la luna, el grupo de 4 luces, la luz del ascensor y la de la zona de extracción. Los velos de sectores son gris claro.

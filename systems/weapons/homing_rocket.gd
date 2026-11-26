@@ -30,6 +30,7 @@ func _ready() -> void:
 	mi.rotation.z = PI * 0.5
 	add_child(mi)
 	mi.name = "Cuerpo"
+	LinedBake.style_tree(self)
 
 func _nearest() -> Actor:
 	var best: Actor = null

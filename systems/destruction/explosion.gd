@@ -52,16 +52,8 @@ func _go(kind: String, by: Node) -> void:
 	# --- explosión con fuego
 	Sfx.play("explosion", pos, 6.0, randf_range(0.9, 1.05), float(d.noise), by)
 	Fx.flash(pos + Vector3.UP * 0.4, 12.0 if lvl > 0 else 6.0, radius * 3.0, 0.35, Color(1.0, 0.65, 0.3))
-	if TechView.mode >= 1:
-		TechView.shockwave(get_parent(), pos, radius)      # estilo técnico: onda expansiva de líneas, sin fuego ni humo
-	else:
-		Fx.emit("fireball", pos + Vector3.UP * 0.3, Vector3.UP, 1.0 + radius * 0.1)
-		Fx.emit("spark", pos, Vector3.UP, 2.0)
-		Fx.emit("dust", pos, Vector3.UP, 2.0)
-		Fx.smoke(pos + Vector3.UP * 0.5, 1.0)
+	TechView.shockwave(get_parent(), pos, radius)      # estilo en línea: onda expansiva de líneas, sin fuego ni humo
 	Fx.debris(pos + Vector3.UP * 0.2, Color(0.2, 0.19, 0.18), int(d.get("fragments", 8)) / 2, float(d.impulse))
-	if lvl >= 1 and TechView.mode == 0:
-		_shockwave(radius)
 	TimeFx.shake(float(d.shake) * _shake_k(pos))
 	# daño radial
 	var dmg := float(d.damage)

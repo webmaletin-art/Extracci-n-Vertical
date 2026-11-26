@@ -24,7 +24,6 @@ var covers := {}               ## id de sector → MeshInstance3D (velo del sect
 var revealed := {}
 var elevator: Elevator
 var lamp_data: Array = []         ## [{pos, color, energy, floor, alarm}] focos PINTADOS en los materiales (no son luces reales)
-var light_pool: Array[OmniLight3D] = []   ## 0–4 luces reales que siguen al jugador (sólo afectan personajes y objetos)
 var _pool_t := 0.0
 var cm := {}                     ## materiales del escenario del piso que se está armando (shader liviano, luz pintada)
 var _floor_mats := {}
@@ -53,7 +52,7 @@ func build(d: Dictionary) -> void:
 	_build_crater(d)
 	_build_elevator(d)
 	_build_covers()
-	_build_light_pool()
+	LinedBake.style_tree(self)             # lo armado por código (rieles, escaleras, lámparas, cajas) nace ya en línea
 	_build_environment()
 
 ## Focos del escenario (de los datos del mapa): se pintan en los materiales y se dibuja un artefacto emisivo en cada uno.
@@ -403,48 +402,10 @@ func _red_light(parent: Node3D, pos: Vector3) -> void:
 	sm.rings = 4
 	mi.mesh = sm
 	mi.material_override = mats.red_light
+	mi.set_meta("no_tech", true)             # detalle que conserva su color (alarma)
 	mi.position = pos
 	mi.add_to_group("decor_1")
 	parent.add_child(mi)
-
-## Luces reales: un grupo chico que se coloca en las lámparas más cercanas al jugador (Settings.lights: 0, 2 o 4).
-func _build_light_pool() -> void:
-	for i in 4:
-		var l := OmniLight3D.new()
-		l.light_energy = 0.0
-		l.omni_range = 8.0
-		l.omni_attenuation = 1.0
-		l.light_specular = 0.2
-		l.shadow_enabled = false
-		l.visible = false
-		l.add_to_group("perf_luces")
-		l.set_meta("target", Vector3(0, -1000, 0))
-		l.set_meta("energy", 0.0)
-		add_child(l)
-		light_pool.append(l)
-
-func update_lights(player_pos: Vector3, delta: float) -> void:
-	var n: int = [0, 2, 4][clampi(Settings.lights, 0, 2)]
-	_pool_t -= delta
-	if _pool_t <= 0.0:
-		_pool_t = 0.25
-		var order := lamp_data.duplicate()
-		order.sort_custom(func(a, b): return (a.pos as Vector3).distance_squared_to(player_pos) < (b.pos as Vector3).distance_squared_to(player_pos))
-		for i in light_pool.size():
-			var l := light_pool[i]
-			if i < n and i < order.size() and (order[i].pos as Vector3).distance_to(player_pos) < 14.0:
-				var d: Dictionary = order[i]
-				l.set_meta("target", (d.pos as Vector3) + Vector3(0, -0.2, 0.6))
-				l.set_meta("energy", 1.6 if not d.alarm else 1.0)
-				l.light_color = d.color
-			else:
-				l.set_meta("energy", 0.0)
-	for l in light_pool:
-		var e := float(l.get_meta("energy"))
-		l.light_energy = move_toward(l.light_energy, e, delta * 4.0)
-		l.visible = l.light_energy > 0.02
-		var t: Vector3 = l.get_meta("target")
-		l.position = t if l.position.distance_to(t) > 12.0 else l.position.lerp(t, clampf(delta * 6.0, 0.0, 1.0))
 
 static var _prop_defs := {}
 func _prop(parent: Node3D, id: String, pos: Vector3, scale: float, role: String) -> void:
@@ -854,7 +815,7 @@ func _build_background(d: Dictionary) -> void:
 func _build_covers() -> void:
 	var m := StandardMaterial3D.new()
 	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	m.albedo_color = Color(0.02, 0.025, 0.03, 1.0)
+	m.albedo_color = Color(0.78, 0.78, 0.77, 1.0)           # velo gris claro (papel)
 	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	for r in graph.rooms:
 		var mi := MeshInstance3D.new()
@@ -894,35 +855,22 @@ func floor_at(y: float) -> int:
 	return clampi(int(floor((y + 0.5) / float(data.floor_h))), 0, data.floors.size())
 
 var world_env: WorldEnvironment
-var moon: DirectionalLight3D
 func _build_environment() -> void:
+	# Juego en línea: papel blanco de fondo, sin luces, sin niebla ni brillo (todo se dibuja plano con sus aristas)
 	world_env = WorldEnvironment.new()
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.02, 0.022, 0.03)
+	env.background_color = Color(0.84, 0.84, 0.83)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.32, 0.36, 0.45)
-	env.ambient_light_energy = 0.55
-	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.tonemap_exposure = 1.05
-	env.fog_enabled = false           # sin niebla ni brillo: son pasadas de pantalla completa (17 % del cuadro en el Mali-G57)
+	env.ambient_light_color = Color.WHITE
+	env.ambient_light_energy = 1.0
+	env.fog_enabled = false
 	env.glow_enabled = false
 	world_env.environment = env
 	add_child(world_env)
-	moon = DirectionalLight3D.new()
-	moon.light_color = Color(0.55, 0.62, 0.8)
-	moon.light_energy = 0.35
-	moon.rotation_degrees = Vector3(-35, -25, 0)
-	moon.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
-	moon.directional_shadow_max_distance = 30.0
-	add_child(moon)
 
-## Aplica la configuración gráfica que depende del mapa (luces reales, sombras, fondo, decorado).
+## Aplica la configuración gráfica que depende del mapa (fondo y decorado).
 func apply_settings(_player_floor: int) -> void:
-	moon.shadow_enabled = Settings.shadows >= 2          # sólo en ALTA: sombras reales de la luna sobre personajes
-	moon.light_energy = 0.35 if Settings.lights > 0 else 0.5
-	world_env.environment.glow_enabled = false
-	world_env.environment.fog_enabled = false
 	for n in get_tree().get_nodes_in_group("bg_1"):
 		(n as Node3D).visible = Settings.background >= 1
 	for n in get_tree().get_nodes_in_group("bg_2"):

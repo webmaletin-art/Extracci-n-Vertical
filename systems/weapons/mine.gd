@@ -39,6 +39,7 @@ func _ready() -> void:
 	_led.material_override = lm
 	_led.set_meta("no_tech", true)
 	add_child(_led)
+	LinedBake.style_tree(self)
 	Sfx.play("pickup", global_position, -6.0, 1.6, 4.0)
 	add_to_group("mines")
 

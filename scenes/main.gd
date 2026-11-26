@@ -32,8 +32,6 @@ func _ready() -> void:
 	show_menu()
 
 func show_menu(result := {}) -> void:
-	if stage == null:
-		TechView.purge_lines()
 	if menu:
 		menu.queue_free()
 	menu = Control.new()
@@ -112,7 +110,6 @@ func show_menu(result := {}) -> void:
 	menu.add_child(credits)
 
 func _free_stage() -> void:
-	TechView.purge_lines()
 	if stage:
 		stage.queue_free()
 		stage = null

@@ -26,6 +26,43 @@ static func lines_material() -> ShaderMaterial:
 		_lines.shader = load("res://systems/render/tech_lines.gdshader")
 	return _lines
 
+## Estilo en línea para lo que arma el código (cajas, rieles, escaleras, lámparas…): relleno plano + aristas, una sola vez al
+## crear el objeto. No toca lo que lleva la marca `no_tech` (efectos, sangre, anatomía, láser, detalles que conservan su color)
+## ni lo que cuelga de un personaje, de la anatomía o de los efectos. Devuelve cuántas mallas pintó.
+static func style_tree(root: Node) -> int:
+	var n := 0
+	var stack: Array = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node.has_meta("no_tech") or node is Actor or node is AnatomyBody or node is Ballistics or node is Blood or node is Gibs or node.name == "FxPool":
+			continue
+		for c in node.get_children():
+			stack.append(c)
+		if node is MultiMeshInstance3D:
+			(node as MultiMeshInstance3D).material_override = flat_material()
+			node.set_meta("no_tech", true)
+			n += 1
+		elif node is MeshInstance3D:
+			var mi := node as MeshInstance3D
+			if mi.mesh == null or mi.skin != null:
+				continue
+			mi.material_override = flat_material()
+			for s in mi.mesh.get_surface_count():
+				mi.set_surface_override_material(s, null)
+			mi.set_meta("no_tech", true)
+			var ln := lines_for(mi.mesh) if native_lines() else null
+			if ln:
+				var lm := MeshInstance3D.new()
+				lm.name = "Lineas"
+				lm.mesh = ln
+				lm.material_override = lines_material()
+				lm.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				lm.extra_cull_margin = 0.5
+				lm.set_meta("no_tech", true)
+				mi.add_child(lm)
+			n += 1
+	return n
+
 ## Ruta de la versión en línea de un modelo (o "" si todavía no existe).
 static func lined_path(kind: String, id: String) -> String:
 	var p := OUT + kind + "/" + id + ".scn"

@@ -97,13 +97,6 @@ func _build() -> void:
 	top.material_override = yellow
 	top.position = Vector3(0, 2.4, -0.8)
 	platform.add_child(top)
-	var lamp := OmniLight3D.new()
-	lamp.light_color = Color(1.0, 0.7, 0.35)
-	lamp.light_energy = 0.8
-	lamp.omni_range = 4.0
-	lamp.position = Vector3(0, 2.2, -0.5)
-	lamp.add_to_group("dyn_light")
-	platform.add_child(lamp)
 	var panel := ElevatorPanel.new()
 	panel.elevator = self
 	panel.position = Vector3(width * 0.5 - 0.35, 1.1, -0.4)

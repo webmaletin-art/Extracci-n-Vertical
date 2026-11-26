@@ -125,7 +125,6 @@ func _process(delta: float) -> void:
 		var w := float(r.get("x1", 10.0)) - float(r.get("x0", 0.0))
 		var in_crater := room in ["1:3", "2:3", "3:3"]
 		Sfx.set_room(clampf(w / 20.0, 0.15, 1.0) if not in_crater else 0.95, not in_crater and int(r.get("floor", 0)) < 5)
-	tower.update_lights(player.global_position, rd)
 	var pf := tower.floor_at(player.global_position.y + 0.5)
 	if pf != _player_floor:
 		_player_floor = pf

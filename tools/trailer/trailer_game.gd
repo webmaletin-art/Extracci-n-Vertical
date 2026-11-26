@@ -57,7 +57,6 @@ func _ready() -> void:
 	Sfx.event_log.clear()
 	Sfx.log_t0 = Engine.get_frames_drawn()
 	if export_glb != "":
-		TechView.set_mode.call_deferred(0)            # materiales originales (el estilo plano usa shaders que el GLB no puede llevar)
 	player.max_health = 500.0
 	player.health = 500.0
 	_find_heli()
@@ -230,7 +229,6 @@ func _on(name_: String) -> bool:
 func _run() -> void:
 	await wait_s(0.3)
 	if export_glb != "":
-		TechView.set_mode(0)                          # materiales originales (los shaders del estilo plano no caben en un GLB)
 		await wait_s(0.3)
 		var acts: Array = [player]
 		for e in tower.enemies:

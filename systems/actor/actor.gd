@@ -1539,11 +1539,11 @@ func _update_laser(w: Firearm, on: bool) -> void:
 	var want_c := TechView.laser_color(is_player)
 	if lm.albedo_color != want_c:
 		lm.albedo_color = want_c
-		lm.blend_mode = BaseMaterial3D.BLEND_MODE_MIX if TechView.mode >= 1 else BaseMaterial3D.BLEND_MODE_ADD
+		lm.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
 		var dmat := laser_dot.material_override as StandardMaterial3D
 		dmat.albedo_color = Color(want_c.r, want_c.g, want_c.b, 1.0)
 		dmat.blend_mode = lm.blend_mode
-		(laser.mesh as BoxMesh).size = Vector3(0.014, 0.014, 1.0) if TechView.mode >= 1 else Vector3(0.008, 0.008, 1.0)
+		(laser.mesh as BoxMesh).size = Vector3(0.014, 0.014, 1.0)
 	var show := on and w != null and Settings.laser and state != State.DEAD and (is_player or Settings.laser_enemies) and not TimeFx.active
 	laser.visible = show
 	laser_dot.visible = show

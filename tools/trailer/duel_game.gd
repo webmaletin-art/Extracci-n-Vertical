@@ -83,7 +83,6 @@ func _fighter(id: String, team: int, x: float, facing: float, weapon_id: String)
 	return a
 
 func _run() -> void:
-	TechView.set_mode(0)                          # materiales originales (los shaders del estilo plano no caben en un GLB)
 	for i in 12:
 		await get_tree().process_frame
 	rec = Exporter.new()

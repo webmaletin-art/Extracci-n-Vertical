@@ -60,6 +60,7 @@ func _ready() -> void:
 	spoon.position = Vector3(0.04, 0.02, 0)
 	spoon.material_override = m
 	add_child(spoon)
+	LinedBake.style_tree(self)
 	body_entered.connect(_on_hit)
 
 func _on_hit(_b: Node) -> void:

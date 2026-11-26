@@ -25,7 +25,6 @@ var running := false
 var report_text := ""
 
 const CATEGORIES := [
-	["Luces dinámicas (lámparas)", "perf_luces"],
 	["Sombras", "_shadows"],
 	["Decorado (galería de modelos)", "perf_decorado"],
 	["Tuberías y cables del fondo", "perf_tuberias"],
@@ -91,12 +90,6 @@ func _set_category(cat: String, hidden: bool) -> void:
 		"_shadows":
 			for l in tree.get_nodes_in_group("blob_shadow"):
 				(l as Node3D).visible = not hidden and Settings.shadows >= 1
-			var moon: DirectionalLight3D = game.tower.moon
-			if hidden:
-				moon.set_meta("probe_shadow", moon.shadow_enabled)
-				moon.shadow_enabled = false
-			else:
-				moon.shadow_enabled = bool(moon.get_meta("probe_shadow", false))
 		"_fx":
 			var pool: Node = game.tower.get_parent().get_node_or_null("FxPool")
 			if pool:

@@ -31,6 +31,7 @@ class Pickup extends Interactable:
 				visual = mi
 			visual.position.y = 0.12
 			add_child(visual)
+		LinedBake.style_tree(self)             # objeto suelto en línea (el arma ya viene horneada y no se toca)
 	func _process(delta: float) -> void:
 		if visual:
 			visual.rotation.y += delta * 1.2
@@ -87,6 +88,7 @@ class LockedDoor extends Interactable:
 		light.material_override = lmat
 		light.position = Vector3(0.3, height + 0.2, -0.9)
 		light.name = "Lamp"
+		light.set_meta("no_tech", true)             # luz de la puerta: conserva su color (rojo / verde)
 		add_child(light)
 	func can_use(_actor: Actor) -> bool:
 		return not opened
@@ -248,12 +250,6 @@ class ExtractionZone extends Area3D:
 		mi.material_override = m
 		mi.position.y = 0.03
 		add_child(mi)
-		var l := OmniLight3D.new()
-		l.light_color = Color(0.2, 1.0, 0.4)
-		l.light_energy = 1.5
-		l.omni_range = 5.0
-		l.position.y = 2.0
-		add_child(l)
 	func progress() -> float:
 		return clampf(_t / seconds, 0.0, 1.0)
 	func _physics_process(delta: float) -> void:
