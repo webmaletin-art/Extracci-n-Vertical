@@ -28,10 +28,10 @@ var _ammo_note: Label
 var _stage: SubViewport
 var _cam: Camera3D
 var _op: Actor
-var _yaw := 35.0
+var _yaw := 14.0
 var _pitch := 6.0
-var _dist := 3.3
-var _target := Vector3(0, 1.2, 0)
+var _dist := 3.5
+var _target := Vector3(0, 1.0, 0)
 var _drag := false
 var _touches := {}
 var _pinch0 := 0.0
@@ -40,6 +40,8 @@ var _avp: SubViewport
 var _acam: Camera3D
 var _aroot: Node3D
 var _ammo_view: SubViewportContainer
+var _tags: Node3D
+var _tag_nodes := []        ## [{anchor, pos, caption, value, line}]
 
 func _ready() -> void:
 	theme = UiTheme.make()
@@ -85,9 +87,9 @@ func _build_ui() -> void:
 	svc.stretch = true
 	svc.set_anchors_preset(Control.PRESET_FULL_RECT)
 	svc.anchor_left = 0.0
-	svc.offset_left = 330
-	svc.offset_right = -370
-	svc.offset_top = 58
+	svc.offset_left = 314
+	svc.offset_right = -14
+	svc.offset_top = 14
 	svc.offset_bottom = -262
 	svc.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(svc)
@@ -101,16 +103,10 @@ func _build_ui() -> void:
 	cam_hint.text = "Arrastrá para girar · rueda o pellizco para acercar"
 	cam_hint.add_theme_font_size_override("font_size", 14)
 	cam_hint.add_theme_color_override("font_color", MUTED)
-	cam_hint.position = Vector2(344, 64)
+	cam_hint.position = Vector2(326, 62)
 	add_child(cam_hint)
 	var cam_btns := HBoxContainer.new()
-	cam_btns.position = Vector2(344, 600 - 232 + 50)
-	cam_btns.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	cam_btns.anchor_top = 1.0
-	cam_btns.anchor_bottom = 1.0
-	cam_btns.offset_left = 384
-	cam_btns.offset_top = -304
-	cam_btns.offset_bottom = -266
+	cam_btns.position = Vector2(326, 18)
 	cam_btns.add_theme_constant_override("separation", 8)
 	add_child(cam_btns)
 	for d in [["−", func(): _zoom(0.25)], ["+", func(): _zoom(-0.25)], ["VER EL ARMA", _focus_weapon], ["VER AL OPERADOR", _focus_body]]:
@@ -167,10 +163,11 @@ func _build_ui() -> void:
 	# columna derecha: cartel con los datos
 	var right := PanelContainer.new()
 	right.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
-	right.offset_left = -356
-	right.offset_right = -14
-	right.offset_top = 14
+	right.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	right.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	right.offset_bottom = -262
+	right.offset_left = -300
+	right.offset_right = -14
 	right.add_theme_stylebox_override("panel", UiTheme.box(Color(1, 1, 1, 0.95), 14, INK, 2))
 	add_child(right)
 	_card = VBoxContainer.new()
@@ -187,6 +184,7 @@ func _build_ui() -> void:
 	_card.add_child(_sub)
 	_bars = VBoxContainer.new()
 	_bars.add_theme_constant_override("separation", 3)
+	_bars.visible = false
 	_card.add_child(_bars)
 	var sp := Control.new()
 	sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -351,6 +349,7 @@ func _build_stage() -> void:
 	_op.global_position = Vector3(0, 0.05, 0)
 	_op.facing = 1.0
 	_op.aim_dir = Vector2(1, 0)
+	_build_tags()
 	_update_cam()
 
 func _update_cam() -> void:
@@ -361,6 +360,9 @@ func _update_cam() -> void:
 	var off := Vector3(sin(y) * cos(p), sin(p), cos(y) * cos(p)) * _dist
 	_cam.global_position = _target + off
 	_cam.look_at(_target, Vector3.UP)
+	if _tags:
+		# los datos flotan del lado del arma que mira a +Z: al dar la vuelta quedan del otro lado y desaparecen
+		_tags.visible = off.normalized().z > 0.12
 
 func _zoom(d: float) -> void:
 	_dist = clampf(_dist + d, 0.7, 6.0)
@@ -369,19 +371,19 @@ func _zoom(d: float) -> void:
 func _focus_weapon() -> void:
 	var w := _op.weapon() if _op else null
 	_target = w.global_position if w else Vector3(0.4, 1.3, 0)
-	_dist = 1.3
+	_dist = 1.6
 	_update_cam()
 
 func _focus_body() -> void:
-	_target = Vector3(0, 1.2, 0)
-	_dist = 3.3
-	_yaw = 35.0
+	_target = Vector3(0, 1.0, 0)
+	_dist = 3.5
+	_yaw = 14.0
 	_pitch = 6.0
 	_update_cam()
 
 func _gui_input(ev: InputEvent) -> void:
 	var local := get_local_mouse_position()
-	var in_stage := Rect2(Vector2(330, 58), size - Vector2(700, 320)).has_point(local)
+	var in_stage := Rect2(Vector2(314, 14), size - Vector2(328, 276)).has_point(local)
 	if ev is InputEventMouseButton:
 		var mb := ev as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT:
@@ -492,6 +494,7 @@ func _refresh() -> void:
 	var eq: bool = Profile.equipped.get(Profile.slot_for(sel)) == sel
 	_btn_equip.text = ("EQUIPADA (%s)" % ("secundaria" if Profile.slot_for(sel) == "secondary" else "principal")) if eq else ("EQUIPAR COMO %s" % ("SECUNDARIA" if Profile.slot_for(sel) == "secondary" else "PRINCIPAL"))
 	_btn_equip.disabled = eq
+	_fill_tags(s2)
 	_refresh_ammo()
 
 func _bar_row(label: String, value: String, k: float) -> Control:
@@ -585,6 +588,7 @@ func _load_cartridges(cal: String) -> void:
 		var n := (load(path) as PackedScene).instantiate() as Node3D
 		n.scale = Vector3.ONE * k
 		n.name = "c_" + str(t)
+		_ink(n)
 		_aroot.add_child(n)
 		n.position = Vector3(float(i), 0.0, 0.0)
 		if i % 2 == 1:                              # algunas munición tumbada (como sueltas sobre la mesa)
@@ -615,3 +619,98 @@ func _layout_ammo() -> void:
 			ch.position.y = 0.0
 		i += 1
 	_acam.global_position = Vector3(0.0, 0.5, 3.0)
+
+# ------------------------------------------------------------------------------------------------ datos flotantes
+
+func _build_tags() -> void:
+	_tags = Node3D.new()
+	_tags.set_meta("no_tech", true)
+	_stage.add_child(_tags)
+	# [clave, posición del cartel relativa al arma, ancla en el arma (relativa), tamaño]
+	var defs := [["dmg", Vector3(0.62, 0.62, 0.0), Vector3(0.3, 0.03, 0), 1.35], ["range", Vector3(0.95, 0.12, 0.0), Vector3(0.35, 0.0, 0), 1.0],
+		["dps", Vector3(-0.35, 0.78, 0.0), Vector3(-0.05, 0.04, 0), 1.2], ["rpm", Vector3(0.62, -0.5, 0.0), Vector3(0.1, -0.03, 0), 1.0],
+		["mag", Vector3(-0.1, -0.62, 0.0), Vector3(0.0, -0.12, 0), 1.0], ["reload", Vector3(-0.7, -0.3, 0.0), Vector3(-0.1, -0.08, 0), 1.0]]
+	for d in defs:
+		var cap := Label3D.new()
+		cap.pixel_size = 0.0013 * float(d[3])
+		cap.font_size = 40
+		cap.modulate = MUTED
+		cap.double_sided = false
+		cap.outline_size = 6
+		cap.outline_modulate = Color(1, 1, 1, 0.9)
+		cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		cap.set_meta("no_tech", true)
+		_tags.add_child(cap)
+		var val := Label3D.new()
+		val.pixel_size = 0.0021 * float(d[3])
+		val.font_size = 72
+		val.modulate = INK
+		val.double_sided = false
+		val.outline_size = 8
+		val.outline_modulate = Color(1, 1, 1, 0.9)
+		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		_tags.add_child(val)
+		var line := MeshInstance3D.new()
+		line.mesh = ImmediateMesh.new()
+		var lm := StandardMaterial3D.new()
+		lm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		lm.albedo_color = INK
+		line.material_override = lm
+		line.set_meta("no_tech", true)
+		_tags.add_child(line)
+		_tag_nodes.append({"key": d[0], "pos": d[1], "anchor": d[2], "cap": cap, "val": val, "line": line})
+
+func _fill_tags(s: Dictionary) -> void:
+	var pel := int(s.pellets)
+	var dps := float(s.damage) * float(pel) * float(s.rpm) / 60.0
+	var txt := {
+		"dmg": ["DAÑO", ("%d×%d" % [int(s.damage), pel]) if pel > 1 else str(int(s.damage))],
+		"range": ["ALCANCE", "%d m" % int(s.range)],
+		"dps": ["PODER DE FUEGO", "%d" % int(dps)],
+		"rpm": ["CADENCIA", "%d/min" % int(s.rpm)],
+		"mag": ["CARGADOR", str(int(s.mag))],
+		"reload": ["RECARGA", "%.1f s" % float(s.reload)]}
+	for t in _tag_nodes:
+		(t.cap as Label3D).text = txt[t.key][0]
+		(t.val as Label3D).text = txt[t.key][1]
+
+func _process(_delta: float) -> void:
+	if _tags == null or _op == null:
+		return
+	var w := _op.weapon()
+	if w == null:
+		return
+	var c := w.global_position
+	for t in _tag_nodes:
+		var p: Vector3 = c + (t.pos as Vector3) * 0.8
+		(t.cap as Label3D).global_position = p + Vector3(0, 0.09, 0.05)
+		(t.val as Label3D).global_position = p + Vector3(0, 0.0, 0.05)
+		(t.cap as Label3D).offset = Vector2(0, 0)
+		var im := (t.line as MeshInstance3D).mesh as ImmediateMesh
+		im.clear_surfaces()
+		im.surface_begin(Mesh.PRIMITIVE_LINES)
+		var a: Vector3 = c + (t.anchor as Vector3)
+		var mid := Vector3(p.x, p.y - 0.02, 0.05)
+		im.surface_add_vertex(a)
+		im.surface_add_vertex(mid)
+		im.surface_add_vertex(mid)
+		im.surface_add_vertex(mid + Vector3(0.3 if (t.pos as Vector3).x > -0.2 else -0.0, 0, 0))
+		im.surface_end()
+
+## Los cartuchos van en línea: tono plano por pieza (latón claro, cobre medio, punta oscura) y contorno de tinta.
+func _ink(n: Node3D) -> void:
+	n.set_meta("no_tech", true)
+	var sh := load("res://systems/ui/ink_line.gdshader") as Shader
+	for m in n.find_children("*", "MeshInstance3D", true, false):
+		var mi := m as MeshInstance3D
+		for i in mi.mesh.get_surface_count():
+			var src := mi.mesh.surface_get_material(i) as BaseMaterial3D
+			var lum := 0.85
+			if src:
+				var c := src.albedo_color
+				lum = clampf(c.r * 0.3 + c.g * 0.59 + c.b * 0.11, 0.0, 1.0)
+				lum = 0.45 + lum * 0.5
+			var sm := ShaderMaterial.new()
+			sm.shader = sh
+			sm.set_shader_parameter("tone", lum)
+			mi.set_surface_override_material(i, sm)

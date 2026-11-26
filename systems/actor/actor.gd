@@ -54,6 +54,7 @@ var inp := ActorInput.new()
 var injuries := Injuries.new()
 var laser: MeshInstance3D           ## láser desde la boca del cañón hasta donde pega
 var laser_dot: MeshInstance3D
+var menu_pose := false              ## portada: nunca apunta, el arma sigue la animación (el cuerpo mira al edificio)
 var laser_enabled := true           ## false en la vitrina de la Armería
 var _bleed_t := 0.0
 var blob: MeshInstance3D            ## sombra simple (círculo oscuro en el piso): reemplaza a las sombras reales en teléfonos flojos
@@ -1309,7 +1310,7 @@ func _update_visual(delta: float) -> void:
 	model.position = model.position.lerp(_model_offset, clampf(delta * 10.0, 0.0, 1.0))
 	# --- pose del arma: ArmIK la lleva a la dirección de apuntado del mundo y las manos la siguen
 	var w := weapon()
-	var aiming := w != null and state in [State.GROUND, State.AIR] and _action_anim == "" and not w.reloading
+	var aiming := w != null and not menu_pose and state in [State.GROUND, State.AIR] and _action_anim == "" and not w.reloading
 	_ik_w = move_toward(_ik_w, 1.0 if aiming else 0.0, delta * 6.0)
 	_update_laser(w, aiming and _ik_w > 0.6)
 	if state == State.DEAD:

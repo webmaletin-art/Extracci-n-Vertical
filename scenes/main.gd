@@ -6,6 +6,7 @@ extends Node
 var game: Game
 var practice: PracticeGame
 var menu: Control
+var stage: Node3D                 ## fondo 3D del menú (la Torre dibujada en línea y el operador)
 var ui: CanvasLayer
 
 func _ready() -> void:
@@ -37,17 +38,9 @@ func show_menu(result := {}) -> void:
 	menu.theme = UiTheme.make()
 	menu.set_anchors_preset(Control.PRESET_FULL_RECT)
 	ui.add_child(menu)
-	var bg := ColorRect.new()
-	bg.color = UiTheme.BG
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	menu.add_child(bg)
-	# la torre en corte, a la derecha
-	var tw := MenuTower.new()
-	tw.anchor_left = 0.0
-	tw.anchor_right = 1.0
-	tw.anchor_top = 0.0
-	tw.anchor_bottom = 1.0
-	menu.add_child(tw)
+	if stage == null:
+		stage = MenuTower.new()
+		add_child(stage)
 	# columna izquierda: título y botones
 	var shade := ColorRect.new()
 	shade.color = Color(1, 1, 1, 0.82)
@@ -115,7 +108,13 @@ func show_menu(result := {}) -> void:
 	credits.position = Vector2(20, 696)
 	menu.add_child(credits)
 
+func _free_stage() -> void:
+	if stage:
+		stage.queue_free()
+		stage = null
+
 func start_game() -> void:
+	_free_stage()
 	if menu:
 		menu.queue_free()
 		menu = null
@@ -132,6 +131,7 @@ func start_game() -> void:
 		show_menu(r))
 
 func start_practice() -> void:
+	_free_stage()
 	if menu:
 		menu.queue_free()
 		menu = null
@@ -148,6 +148,7 @@ func start_practice() -> void:
 		show_menu())
 
 func _armory() -> void:
+	_free_stage()
 	var a := Armory.new()
 	ui.add_child(a)
 	a.closed.connect(func():
