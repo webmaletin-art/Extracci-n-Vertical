@@ -12,6 +12,7 @@ var stats := {}
 var model: Node3D
 var grip := Vector3.ZERO
 var support := Vector3.ZERO
+var extended := false                ## subfusil sin culata: brazos estirados (como pistola) con las dos manos
 var support_kind := "rail"            ## "rail" guardamanos (palma arriba) · "vgrip" empuñadura vertical · "pistol"
 var muzzle := Vector3.ZERO
 var butt := Vector3.ZERO
@@ -85,6 +86,8 @@ static func create(weapon_id: String) -> Firearm:
 	f.length = float(models().get(str(f.stats.model), {}).get("length", 0.8))
 	f.butt = Vector3(0.0, f.muzzle.y - 0.045, f.muzzle.z + f.length - 0.015)
 	f.is_pistol = str(f.stats.hold) == "pistol"
+	# sin culata (la empuñadura está en el último cuarto del arma): se sostiene con los brazos estirados, no al hombro
+	f.extended = not f.is_pistol and bool(models().get(str(f.stats.model), {}).get("stockless", false))
 	f.mag = int(f.stats.mag)
 	f.reserve = int(f.stats.reserve)
 	return f

@@ -762,7 +762,8 @@
   },
   "tris": 5102,
   "format": "glb",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "deagle": {
   "kind": "pistol",
@@ -804,7 +805,8 @@
   },
   "tris": 2888,
   "format": "glb",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "mp7": {
   "kind": "smg",
@@ -846,7 +848,8 @@
   },
   "tris": 2484,
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "vector": {
   "kind": "smg",
@@ -888,7 +891,8 @@
   },
   "tris": 15998,
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "p90": {
   "kind": "smg",
@@ -930,7 +934,8 @@
   },
   "tris": 4526,
   "format": "glb",
-  "support_kind": "vgrip"
+  "support_kind": "vgrip",
+  "stockless": false
  },
  "cqbm4": {
   "kind": "rifle",
@@ -990,7 +995,8 @@
   },
   "tris": 7869,
   "format": "glb",
-  "support_kind": "vgrip"
+  "support_kind": "vgrip",
+  "stockless": false
  },
  "m4supp": {
   "kind": "rifle",
@@ -1041,7 +1047,8 @@
   },
   "tris": 10888,
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "m16": {
   "kind": "rifle",
@@ -1092,7 +1099,8 @@
   },
   "tris": 12224,
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "g36c": {
   "kind": "rifle",
@@ -1143,7 +1151,8 @@
   },
   "tris": 8948,
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "ak47": {
   "kind": "rifle",
@@ -1203,7 +1212,8 @@
   },
   "tris": 5542,
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "scarh": {
   "kind": "rifle",
@@ -1263,7 +1273,8 @@
   },
   "tris": 11482,
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "aug": {
   "kind": "rifle",
@@ -1314,7 +1325,8 @@
   },
   "tris": 15999,
   "format": "glb",
-  "support_kind": "vgrip"
+  "support_kind": "vgrip",
+  "stockless": false
  },
  "m4dmr": {
   "kind": "rifle",
@@ -1383,7 +1395,8 @@
   },
   "tris": 11589,
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "m1911_1": {
   "kind": "pistol",
@@ -1435,7 +1448,8 @@
   "tris": 1420,
   "name": "Pistola M1911 B",
   "format": "glb",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "m1911t": {
   "kind": "pistol",
@@ -1478,7 +1492,8 @@
   "tris": 1536,
   "name": "Pistola M1911 T\u00e1ctica",
   "format": "glb",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "m16_1": {
   "kind": "rifle",
@@ -1521,7 +1536,8 @@
   "tris": 1750,
   "name": "Fusil M16 B",
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "mp5_1": {
   "kind": "smg",
@@ -1591,7 +1607,8 @@
   "tris": 6095,
   "name": "Subfusil MP5 A",
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "mp5_2": {
   "kind": "smg",
@@ -1634,7 +1651,8 @@
   "tris": 1934,
   "name": "Subfusil MP5 B",
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "scar": {
   "kind": "rifle",
@@ -1686,7 +1704,8 @@
   "tris": 3920,
   "name": "Fusil SCAR",
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "m4a1": {
   "kind": "rifle",
@@ -1756,7 +1775,8 @@
   "tris": 9348,
   "name": "Fusil M4A1",
   "format": "glb",
-  "support_kind": "vgrip"
+  "support_kind": "vgrip",
+  "stockless": false
  },
  "m4a1_1": {
   "kind": "rifle",
@@ -1799,7 +1819,8 @@
   "tris": 7899,
   "name": "Fusil M4A1 B",
   "format": "glb",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "pistol_5": {
   "kind": "pistol",
@@ -1860,7 +1881,8 @@
   "tris": 968,
   "format": "glb",
   "name": "pistol_5",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "pistol_1": {
   "kind": "pistol",
@@ -1948,7 +1970,8 @@
   "tris": 1040,
   "format": "glb",
   "name": "pistol_1",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "pistol_2": {
   "kind": "pistol",
@@ -2027,7 +2050,8 @@
   "tris": 1200,
   "format": "glb",
   "name": "pistol_2",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "pistol_3": {
   "kind": "pistol",
@@ -2106,7 +2130,8 @@
   "tris": 1442,
   "format": "glb",
   "name": "pistol_3",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "pistol_4": {
   "kind": "pistol",
@@ -2167,7 +2192,8 @@
   "tris": 1320,
   "format": "glb",
   "name": "pistol_4",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "pistol_6": {
   "kind": "pistol",
@@ -2228,7 +2254,8 @@
   "tris": 1878,
   "format": "glb",
   "name": "pistol_6",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "revolver_4": {
   "kind": "pistol",
@@ -2289,7 +2316,8 @@
   "tris": 966,
   "format": "glb",
   "name": "revolver_4",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "revolver_1": {
   "kind": "pistol",
@@ -2350,7 +2378,8 @@
   "tris": 1046,
   "format": "glb",
   "name": "revolver_1",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "revolver_2": {
   "kind": "pistol",
@@ -2420,7 +2449,8 @@
   "tris": 1252,
   "format": "glb",
   "name": "revolver_2",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "revolver_3": {
   "kind": "pistol",
@@ -2490,7 +2520,8 @@
   "tris": 1438,
   "format": "glb",
   "name": "revolver_3",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "revolver_5": {
   "kind": "pistol",
@@ -2551,7 +2582,8 @@
   "tris": 1334,
   "format": "glb",
   "name": "revolver_5",
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "smg_4": {
   "kind": "smg",
@@ -2621,7 +2653,8 @@
   "tris": 1024,
   "format": "glb",
   "name": "smg_4",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": true
  },
  "smg_1": {
   "kind": "smg",
@@ -2691,7 +2724,8 @@
   "tris": 1164,
   "format": "glb",
   "name": "smg_1",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": true
  },
  "smg_3": {
   "kind": "smg",
@@ -2761,7 +2795,8 @@
   "tris": 1566,
   "format": "glb",
   "name": "smg_3",
-  "support_kind": "vgrip"
+  "support_kind": "vgrip",
+  "stockless": false
  },
  "smg_2": {
   "kind": "smg",
@@ -2831,7 +2866,8 @@
   "tris": 1374,
   "format": "glb",
   "name": "smg_2",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "smg_5": {
   "kind": "smg",
@@ -2901,7 +2937,8 @@
   "tris": 1440,
   "format": "glb",
   "name": "smg_5",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "ar_1": {
   "kind": "rifle",
@@ -2980,7 +3017,8 @@
   "tris": 1256,
   "format": "glb",
   "name": "ar_1",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": true
  },
  "ar2_4": {
   "kind": "rifle",
@@ -3059,7 +3097,8 @@
   "tris": 1372,
   "format": "glb",
   "name": "ar2_4",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "ar_3": {
   "kind": "rifle",
@@ -3138,7 +3177,8 @@
   "tris": 1220,
   "format": "glb",
   "name": "ar_3",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": true
  },
  "ar2_3": {
   "kind": "rifle",
@@ -3226,7 +3266,8 @@
   "tris": 1614,
   "format": "glb",
   "name": "ar2_3",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": true
  },
  "ar2_2": {
   "kind": "rifle",
@@ -3314,7 +3355,8 @@
   "tris": 1796,
   "format": "glb",
   "name": "ar2_2",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "ar_2": {
   "kind": "rifle",
@@ -3393,7 +3435,8 @@
   "tris": 1306,
   "format": "glb",
   "name": "ar_2",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "ar_5": {
   "kind": "rifle",
@@ -3463,7 +3506,8 @@
   "tris": 1306,
   "format": "glb",
   "name": "ar_5",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "ar2_1": {
   "kind": "rifle",
@@ -3551,7 +3595,8 @@
   "tris": 1930,
   "format": "glb",
   "name": "ar2_1",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "ar_4": {
   "kind": "rifle",
@@ -3630,7 +3675,8 @@
   "tris": 1390,
   "format": "glb",
   "name": "ar_4",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "bullpup_2": {
   "kind": "rifle",
@@ -3691,7 +3737,8 @@
   "tris": 2536,
   "format": "glb",
   "name": "bullpup_2",
-  "support_kind": "vgrip"
+  "support_kind": "vgrip",
+  "stockless": false
  },
  "bullpup_3": {
   "kind": "rifle",
@@ -3761,7 +3808,8 @@
   "tris": 2390,
   "format": "glb",
   "name": "bullpup_3",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "bullpup_1": {
   "kind": "rifle",
@@ -3822,7 +3870,8 @@
   "tris": 2782,
   "format": "glb",
   "name": "bullpup_1",
-  "support_kind": "vgrip"
+  "support_kind": "vgrip",
+  "stockless": false
  },
  "shotgun_sawed": {
   "kind": "rifle",
@@ -3901,7 +3950,8 @@
   "tris": 956,
   "format": "glb",
   "name": "shotgun_sawed",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": true
  },
  "shotgun_short": {
   "kind": "rifle",
@@ -3980,7 +4030,8 @@
   "tris": 1612,
   "format": "glb",
   "name": "shotgun_short",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": true
  },
  "shotgun_1": {
   "kind": "rifle",
@@ -4050,7 +4101,8 @@
   "tris": 1270,
   "format": "glb",
   "name": "shotgun_1",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "shotgun_2": {
   "kind": "rifle",
@@ -4129,7 +4181,8 @@
   "tris": 746,
   "format": "glb",
   "name": "shotgun_2",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "shotgun_3": {
   "kind": "rifle",
@@ -4208,7 +4261,8 @@
   "tris": 978,
   "format": "glb",
   "name": "shotgun_3",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "shotgun_4": {
   "kind": "rifle",
@@ -4287,7 +4341,8 @@
   "tris": 668,
   "format": "glb",
   "name": "shotgun_4",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "sniper_6": {
   "kind": "rifle",
@@ -4366,7 +4421,8 @@
   "tris": 1370,
   "format": "glb",
   "name": "sniper_6",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "sniper_3": {
   "kind": "rifle",
@@ -4445,7 +4501,8 @@
   "tris": 1722,
   "format": "glb",
   "name": "sniper_3",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "sniper_1": {
   "kind": "rifle",
@@ -4533,7 +4590,8 @@
   "tris": 1382,
   "format": "glb",
   "name": "sniper_1",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "sniper_2": {
   "kind": "rifle",
@@ -4612,7 +4670,8 @@
   "tris": 1732,
   "format": "glb",
   "name": "sniper_2",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "sniper_4": {
   "kind": "rifle",
@@ -4691,7 +4750,8 @@
   "tris": 1346,
   "format": "glb",
   "name": "sniper_4",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "sniper_5": {
   "kind": "rifle",
@@ -4779,7 +4839,8 @@
   "tris": 1690,
   "format": "glb",
   "name": "sniper_5",
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "flat_pistol_c": {
   "kind": "pistol",
@@ -4883,7 +4944,8 @@
    }
   },
   "tris": 1263,
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "flat_pistol_f": {
   "kind": "pistol",
@@ -4978,7 +5040,8 @@
    }
   },
   "tris": 1216,
-  "support_kind": "pistol"
+  "support_kind": "pistol",
+  "stockless": false
  },
  "flat_smg_c": {
   "kind": "smg",
@@ -5073,7 +5136,8 @@
    }
   },
   "tris": 1685,
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "flat_smg_f": {
   "kind": "smg",
@@ -5168,7 +5232,8 @@
    }
   },
   "tris": 2146,
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "flat_rifle_a": {
   "kind": "rifle",
@@ -5263,7 +5328,8 @@
    }
   },
   "tris": 3271,
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "flat_rifle_b": {
   "kind": "rifle",
@@ -5358,7 +5424,8 @@
    }
   },
   "tris": 3143,
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "flat_shotgun_p": {
   "kind": "rifle",
@@ -5453,7 +5520,8 @@
    }
   },
   "tris": 1508,
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "flat_shotgun_a": {
   "kind": "rifle",
@@ -5557,7 +5625,8 @@
    }
   },
   "tris": 1930,
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "flat_sniper_r": {
   "kind": "rifle",
@@ -5652,7 +5721,8 @@
    }
   },
   "tris": 2943,
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  },
  "flat_sniper_m": {
   "kind": "rifle",
@@ -5747,6 +5817,7 @@
    }
   },
   "tris": 2452,
-  "support_kind": "rail"
+  "support_kind": "rail",
+  "stockless": false
  }
 }

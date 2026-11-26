@@ -25,3 +25,6 @@ M = {
     "flat_shotgun_p": ((3.6, 4.6), (6.2, 3.9), "rail"), "flat_shotgun_a": ((3.4, 4.7), (7.2, 2.8), "rail"),
     "flat_sniper_r": ((3.2, 5.6), (6.6, 4.6), "rail"), "flat_sniper_m": ((3.9, 5.6), (6.2, 4.4), "rail"),
 }
+
+## Sin culata (o con culata de pistola): se sostienen adelante con los brazos estirados, no apoyadas en el hombro.
+STOCKLESS = {"smg_4", "smg_1", "ar_1", "ar_3", "ar2_3", "shotgun_sawed", "shotgun_short"}

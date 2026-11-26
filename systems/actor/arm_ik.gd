@@ -39,6 +39,8 @@ var weapon_attach := Transform3D()     ## arma en el espacio del hueso de la man
 var weapon_support := Vector3.ZERO     ## marcador Support (espacio del arma)
 var weapon_is_pistol := false
 var weapon_support_kind := "rail"
+var weapon_extended := false           ## sin culata: se sostiene adelante con los brazos estirados
+var weapon_length := 0.8
 var left_grip_weight := 1.0            ## 0 = la mano izquierda queda como la animación, 1 = va al guardamanos
 var left_override_active := false      ## recarga / curar / granada: la mano izquierda va a un marco propio
 var left_override_frame := {}          ## marco en espacio mundo
@@ -269,11 +271,14 @@ func _process_attached(sk: Skeleton3D, inv: Transform3D) -> void:
 		var sl := sk.global_transform * sk.get_bone_global_pose(_b.LeftArm).origin
 		var d := weapon_aim_dir.normalized()
 		var bb := Basis.looking_at(d, Vector3.UP if absf(d.y) < 0.97 else Vector3(weapon_aim_facing, 0, 0))
-		if weapon_is_pistol:
+		if weapon_extended:
+			var c2 := sr.lerp(sl, -0.2) + Vector3(0, -0.13, 0)
+			weapon_target = Transform3D(bb, c2 + d * 0.46 - bb * weapon_grip_local)
+		elif weapon_is_pistol:
 			var center := sr.lerp(sl, -0.3) + Vector3(0, -0.15, 0)    # por fuera del hombro de tiro: el brazo sale del hombro, por encima del chaleco
 			weapon_target = Transform3D(bb, center + d * 0.56 - bb * weapon_grip_local)
 		else:
-			var pocket := sr + d * 0.13 + Vector3(0, -0.02, 0)           # la culata apoya en el FRENTE del hombro, no dentro del torso
+			var pocket := sr + d * (0.17 if weapon_length < 0.72 else 0.13) + Vector3(0, -0.02, 0)           # la culata apoya en el FRENTE del hombro, no dentro del torso
 			weapon_target = Transform3D(bb, pocket - bb * weapon_butt)
 	if weapon_target_w > 0.001 and not right_override_active:
 		# apuntando: el arma va exactamente donde pide el jugador y las dos manos la siguen
@@ -334,7 +339,7 @@ func _solve(sk: Skeleton3D, upper: int, lower: int, hand: int, target: Transform
 		var d_now := (b0 - a0).normalized()
 		var d_want := (target.origin - a0).normalized()
 		var qs := Quaternion(d_now, d_want) if d_now.dot(d_want) < 0.9999 else Quaternion.IDENTITY
-		var part := Quaternion.IDENTITY.slerp(qs, 0.0 if weapon_is_pistol else 0.3 * w)      # con pistola la clavícula no se adelanta (el brazo saldría del pecho)
+		var part := Quaternion.IDENTITY.slerp(qs, 0.0 if (weapon_is_pistol or weapon_extended) else 0.3 * w)      # con pistola la clavícula no se adelanta (el brazo saldría del pecho)
 		var sg := sk.get_bone_global_pose(shoulder)
 		sg.basis = Basis(part) * sg.basis
 		sk.set_bone_global_pose(shoulder, sg)

@@ -283,6 +283,7 @@ def main():
         mk[model]["markers"]["Grip"] = r["Grip"]
         mk[model]["markers"]["Support"] = r["Support"]
         mk[model]["support_kind"] = r["SupportKind"]
+        mk[model]["stockless"] = model in grips_manual.STOCKLESS
         done += 1
     json.dump(mk, open(R + "/assets/weapons/models.json", "w"), indent=1)
     print("marcadores recalculados:", done, "sin cambio:", fail)
