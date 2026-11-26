@@ -269,8 +269,8 @@ func _process_attached(sk: Skeleton3D, inv: Transform3D) -> void:
 		var d := weapon_aim_dir.normalized()
 		var bb := Basis.looking_at(d, Vector3.UP if absf(d.y) < 0.97 else Vector3(weapon_aim_facing, 0, 0))
 		if weapon_is_pistol:
-			var center := sr.lerp(sl, 0.3) + Vector3(0, -0.06, 0)    # más cerca del hombro de tiro: la izquierda no cruza el pecho
-			weapon_target = Transform3D(bb, center + d * 0.43 - bb * weapon_grip_local)
+			var center := sr.lerp(sl, 0.3) + Vector3(0, -0.08, 0)    # más cerca del hombro de tiro: la izquierda no cruza el pecho
+			weapon_target = Transform3D(bb, center + d * 0.50 - bb * weapon_grip_local)
 		else:
 			var pocket := sr + d * 0.13 + Vector3(0, -0.02, 0)           # la culata apoya en el FRENTE del hombro, no dentro del torso
 			weapon_target = Transform3D(bb, pocket - bb * weapon_butt)

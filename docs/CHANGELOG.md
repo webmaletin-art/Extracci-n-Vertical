@@ -200,3 +200,4 @@
 
 * Los personajes (jugador y enemigos) se ven de perfil exacto (90°), sin giro hacia la cámara; la culata del fusil apoya en el frente del hombro.
 * Apuntado con joystick: al pasar de un lado al otro la mira se espeja de golpe (conserva la altura) en vez de recorrer el arco por arriba o por abajo.
+* Pistola: brazos más estirados (semiflexionados) y más bajos, lejos de la cara; probado con alfa, vigia y doc.

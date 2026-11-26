@@ -4,6 +4,8 @@ func _ready() -> void:
 	var a := OS.get_cmdline_user_args()
 	var out: String = a[0]
 	DirAccess.make_dir_recursive_absolute(out)
+	if OS.get_environment("CHAR") != "":
+		Settings.character_id = OS.get_environment("CHAR")
 	var ui := CanvasLayer.new()
 	add_child(ui)
 	var ar := Armory.new()
