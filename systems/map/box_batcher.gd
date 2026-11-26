@@ -80,6 +80,20 @@ func commit(parent: Node3D, cast_shadow := true) -> Array[MeshInstance3D]:
 		mi.name = "Batch_" + str(k)
 		mi.mesh = mesh
 		mi.material_override = _mats[k]
+		if LinedBake.native_lines():
+			# arquitectura «en línea» de fábrica: relleno plano + aristas dibujadas, sin pasar por el filtro (ni texturas)
+			mi.material_override = LinedBake.flat_material()
+			mi.set_meta("no_tech", true)
+			var ln := LinedBake.lines_for(mesh)
+			if ln:
+				var lm := MeshInstance3D.new()
+				lm.name = "Lineas"
+				lm.mesh = ln
+				lm.material_override = LinedBake.lines_material()
+				lm.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				lm.extra_cull_margin = 0.5
+				lm.set_meta("no_tech", true)
+				mi.add_child(lm)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if cast_shadow else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		parent.add_child(mi)
 		out.append(mi)

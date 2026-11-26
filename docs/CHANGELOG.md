@@ -219,3 +219,8 @@
 
 * Los 6 personajes (`assets/lined/characters/`): sin texturas; el color de la textura se hornea en los vértices (`COLOR`) y se dibuja con `tech_surface_vc.gdshader` (mismo estilo y contorno que antes). `CharacterModel.instantiate` carga la versión en línea y la marca `no_tech`. Esqueleto, animaciones, armas en la mano, anatomía y desmembramiento no cambian (6 pruebas de juego siguen en verde).
 * Pendiente: arquitectura del mapa (paredes, pisos, escaleras), munición, y borrar los originales cuando todo esté convertido.
+
+## 0.16.2 — arquitectura del mapa en línea de fábrica (etapa 3)
+
+* `BoxBatcher.commit` arma pisos, paredes, escaleras, tarimas y escombros directamente con relleno plano (`tech_flat`) + aristas dibujadas (`Lineas`), marcados `no_tech`: TechView ya no los convierte al vuelo. Carga del mapa ≈ 1,9 s contra 2,9 s y 109 objetos convertidos al vuelo en lugar de 270 (medido en escritorio). En pruebas sin pantalla se mantiene el camino anterior.
+* La sangre, las heridas y los efectos no cambian (siguen rojos, fuera del estilo en línea).

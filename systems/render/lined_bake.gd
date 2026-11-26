@@ -7,6 +7,25 @@ extends RefCounted
 
 const OUT := "res://assets/lined/"
 
+static var _flat: ShaderMaterial
+static var _lines: ShaderMaterial
+
+## ¿La arquitectura se arma ya «en línea»? (no en pruebas sin pantalla: ahí no hay datos de malla para las aristas)
+static func native_lines() -> bool:
+	return DisplayServer.get_name() != "headless"
+
+static func flat_material() -> ShaderMaterial:
+	if _flat == null:
+		_flat = ShaderMaterial.new()
+		_flat.shader = load("res://systems/render/tech_flat.gdshader")
+	return _flat
+
+static func lines_material() -> ShaderMaterial:
+	if _lines == null:
+		_lines = ShaderMaterial.new()
+		_lines.shader = load("res://systems/render/tech_lines.gdshader")
+	return _lines
+
 ## Ruta de la versión en línea de un modelo (o "" si todavía no existe).
 static func lined_path(kind: String, id: String) -> String:
 	var p := OUT + kind + "/" + id + ".scn"
