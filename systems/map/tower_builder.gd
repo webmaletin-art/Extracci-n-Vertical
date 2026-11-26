@@ -449,6 +449,9 @@ func update_lights(player_pos: Vector3, delta: float) -> void:
 static var _prop_defs := {}
 func _prop(parent: Node3D, id: String, pos: Vector3, scale: float, role: String) -> void:
 	var path := "res://assets/props/%s.glb" % id
+	var lp := LinedBake.lined_path("props", id)
+	if lp != "":
+		path = lp
 	if not ResourceLoader.exists(path):
 		return
 	var n := (load(path) as PackedScene).instantiate() as Node3D

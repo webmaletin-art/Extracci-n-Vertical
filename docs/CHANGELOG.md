@@ -208,3 +208,9 @@
 * Nuevos marcadores de manos para TODAS las armas (`tools/weapons/fix_grips.py`): la derecha en la empuñadura de pistola (antes varias agarraban el cargador o el guardamonte), la izquierda en el guardamanos, en la corredera de la escopeta o en la empuñadura vertical delantera. Pistolas y revólveres se calculan solos de la silueta; fusiles, subfusiles, escopetas y francotiradores están marcados a mano (`tools/weapons/grips_manual.py`) mirando el perfil de cada modelo. Hoja de control: `docs/img_empunaduras.png` (rojo = mano derecha, azul = izquierda).
 * Empuñadura vertical delantera: la mano izquierda la rodea (marco propio `VGRIP_LEFT`), no se apoya con la palma arriba.
 * Subfusiles y armas sin culata (smg_1, smg_4, ar_1, ar_3, ar2_3, escopetas recortada y de culata corta): se sostienen adelante con los dos brazos estirados en vez de apoyarse en el hombro (`stockless` en models.json). Los subfusiles compactos con culata (MP5 y otros) se apoyan un poco más adelante para no tocar la cara.
+
+## 0.16.0 — modelos «en línea» horneados (etapa 1: armas y props)
+
+* `tools/bake_lined.gd` (`godot --headless --script tools/bake_lined.gd -- weapons|props|all`) genera `assets/lined/`: cada modelo sin texturas ni colores originales, con tono plano por pieza (armas: `tech_surface` + contorno) o relleno plano + aristas ya calculadas (props: `tech_flat` + malla `Lineas`). Se marca `no_tech`: TechView no lo convierte. `LinedBake` (`systems/render/lined_bake.gd`) comparte la extracción de aristas con TechView.
+* Cargan la versión en línea si existe: `Firearm.create` (71 armas), `TowerBuilder._prop` y `Destructible.setup` (cajas y objetos). Si falta el archivo se usa el modelo original con el filtro.
+* Anatomía: no se toca (queda tal cual). Pendiente de las próximas etapas: personajes (esqueleto), arquitectura del mapa y munición.

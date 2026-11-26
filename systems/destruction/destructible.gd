@@ -56,6 +56,10 @@ func setup(kind_: String, size_: Vector3, model_path := "") -> void:
 	cs.shape = b
 	cs.position.y = size.y * 0.5
 	add_child(cs)
+	if model_path != "":
+		var lp := LinedBake.lined_path("props", model_path.get_file().get_basename())
+		if lp != "":
+			model_path = lp
 	if model_path != "" and ResourceLoader.exists(model_path):
 		visual = (load(model_path) as PackedScene).instantiate()
 		_fit(visual, size)

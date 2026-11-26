@@ -74,8 +74,12 @@ static func create(weapon_id: String) -> Firearm:
 	var mpath := "res://assets/weapons/%s.scn" % f.stats.model
 	if not ResourceLoader.exists(mpath):
 		mpath = "res://assets/weapons/%s.glb" % f.stats.model        # armas nuevas (tools/weapons/convert_fbx.py)
-	f.model = (load(mpath) as PackedScene).instantiate()
-	WeaponMaterials.apply(str(f.stats.model), f.model)
+	var lp := LinedBake.lined_path("weapons", str(f.stats.model))
+	if lp != "":
+		f.model = (load(lp) as PackedScene).instantiate()          # ya en línea (sin texturas ni colores): no se convierte al vuelo
+	else:
+		f.model = (load(mpath) as PackedScene).instantiate()
+		WeaponMaterials.apply(str(f.stats.model), f.model)
 	f.add_child(f.model)
 	_set_shadow(f.model)
 	var mk: Dictionary = models().get(str(f.stats.model), {}).get("markers", {})
