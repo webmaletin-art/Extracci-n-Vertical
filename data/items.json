@@ -2136,5 +2136,29 @@
   "caliber": "12ga",
   "ammo_type": "fl",
   "icon": "ammo_9mm_common"
+ },
+ "keycard_b": {
+  "name": "Tarjeta azul (seguridad)",
+  "type": "llave",
+  "value": 0,
+  "icon": "usb_drive"
+ },
+ "keycard_c": {
+  "name": "Tarjeta amarilla (mantenimiento)",
+  "type": "llave",
+  "value": 0,
+  "icon": "usb_drive"
+ },
+ "keycard_vault": {
+  "name": "Tarjeta roja (bóveda)",
+  "type": "llave",
+  "value": 0,
+  "icon": "usb_drive"
+ },
+ "mine": {
+  "name": "Mina de proximidad",
+  "type": "mina",
+  "value": 180,
+  "icon": "grenade"
  }
 }

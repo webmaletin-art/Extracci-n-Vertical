@@ -37,6 +37,9 @@ static func setup_input_map() -> void:
 func _ready() -> void:
 	process_physics_priority = -10
 
+var _q_down := false
+var _m_down := false
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and not hud.touch_mode:
 		_mouse_moved = true
@@ -92,6 +95,12 @@ func _physics_process(_delta: float) -> void:
 	inp.crouch = hud.crouch_toggle or _crouch_kb
 	if hud.take_edge("heal") or Input.is_action_just_pressed("heal"):
 		actor.use_medical()
+	if Input.is_physical_key_pressed(KEY_Q) and not _q_down:
+		hud.toast(actor.use_specialty())
+	_q_down = Input.is_physical_key_pressed(KEY_Q)
+	if Input.is_physical_key_pressed(KEY_M) and not _m_down:
+		hud.toast(actor.plant_mine())
+	_m_down = Input.is_physical_key_pressed(KEY_M)
 	if hud.take_edge("swap") or Input.is_action_just_pressed("swap"):
 		inp.switch_to = "next"
 	for i in 4:

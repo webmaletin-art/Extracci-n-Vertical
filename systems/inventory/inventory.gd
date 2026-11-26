@@ -66,6 +66,9 @@ static func apply_pickup(actor: Actor, id: String, n: int) -> String:
 			actor.give_weapon(slot_name, wid)
 			actor.equip(slot_name)
 			return "Nueva arma: %s" % d.name
+		"mina":
+			actor.mines += n
+			return "+%d %s" % [n, d.name]
 		"explosivo":
 			var g := str(d.grenade)
 			actor.grenades[g] = int(actor.grenades.get(g, 0)) + n

@@ -6,7 +6,9 @@ extends Node3D
 
 signal match_over(result: Dictionary)
 
+var map_id := "torre"             ## "torre" (Torre Alfa) o "abismo" (Abismo Vertical)
 var tower: TowerBuilder
+var overlay: NoiseOverlay
 var player: Actor
 var controller: PlayerController
 var camera: SideCamera
@@ -34,7 +36,7 @@ func _ready() -> void:
 	tower = TowerBuilder.new()
 	tower.name = "TorreAlfa"
 	add_child(tower)
-	tower.build(TorreAlfa.data())
+	tower.build(AbismoVertical.data() if map_id == "abismo" else TorreAlfa.data())
 	tower.extracted.connect(_on_extracted)
 	_spawn_player()
 	# la anatomía de calidad máxima se prepara en segundo plano (un hilo por tipo de personaje)
@@ -45,7 +47,7 @@ func _ready() -> void:
 		AnatomyBody.warm(str(id))
 	camera = SideCamera.new()
 	camera.target = player
-	camera.bounds = Rect2(0, -1, float(tower.data.width), float(tower.data.floor_h) * 6.0)
+	camera.bounds = Rect2(0, -1, float(tower.data.width), float(tower.data.floor_h) * float(tower.data.floors.size() + 1))
 	add_child(camera)
 	camera.make_current()
 	hud_layer = CanvasLayer.new()
@@ -56,6 +58,10 @@ func _ready() -> void:
 	hud.camera = camera
 	hud.game = self
 	hud_layer.add_child(hud)
+	overlay = NoiseOverlay.new()
+	overlay.player = player
+	overlay.camera = camera
+	hud_layer.add_child(overlay)
 	hud.pause_pressed.connect(toggle_pause)
 	hud.inventory_pressed.connect(toggle_pause)
 	controller = PlayerController.new()
@@ -95,6 +101,8 @@ func _spawn_player() -> void:
 		var wid := str(Profile.equipped.get(slot, "m4a1" if slot == "primary" else "m1911"))
 		Profile.load_weapon(player.give_weapon(slot, wid))        # arma y munición del perfil (Armería)
 	player.equip("primary")
+	player.specialty = Profile.specialty
+	player.mines = 2
 	player.add_to_group("perf_personajes_jugador")
 	player.died.connect(_on_player_died)
 

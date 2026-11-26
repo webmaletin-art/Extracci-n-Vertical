@@ -85,6 +85,14 @@ var reach: Area3D
 var weapons := {}                   ## "primary"/"secondary" → Firearm
 var current := "fists"              ## "primary" | "secondary" | "knife" | "fists"
 var has_knife := true
+var specialty := "radar"             ## especialidad del operador (ver Specialty)
+var spec_cd := 0.0
+var shield_hp := 0.0
+var shield_t := 0.0
+var boost_t := 0.0
+var radar_t := 0.0
+var mines := 0
+var _dome: MeshInstance3D
 var grenades := {"frag": 2, "smoke": 1, "stun": 0, "incendiary": 0, "c4": 0}
 var grenade_kind := "frag"
 var inventory: Inventory
@@ -404,6 +412,7 @@ func cycle_weapon() -> void:
 
 func _physics_process(delta: float) -> void:
 	_time += delta
+	_spec_tick(delta)
 	if injuries.deaf > 0.0:
 		injuries.deaf = maxf(injuries.deaf - delta, 0.0)
 		if is_player:
@@ -518,7 +527,7 @@ func _move_free(delta: float) -> void:
 	if _action_anim in ["punch_jab", "punch_cross", "punch_hook", "kick_front", "kick_side", "stab", "stab_reverse", "throw_grenade"]:
 		mx *= 0.25
 	crouching = on_floor and (inp.crouch or (inp.move.y < -0.6 and absf(inp.move.x) < 0.5 and not _ladder_here())) and state == State.GROUND
-	var target := speed_for(mx) * signf(mx)
+	var target := speed_for(mx) * signf(mx) * (1.5 if boost_t > 0.0 else 1.0)
 	if crouching:
 		target = clampf(target, -CROUCH_MAX, CROUCH_MAX)
 	elif weapon() != null and signf(target) != facing and absf(target) > BACK_MAX:
@@ -971,6 +980,72 @@ func _melee_hit(anim_name: String, dir: float) -> void:
 		if is_player:
 			TimeFx.shake(0.15)
 
+## Usa la especialidad (botón «ESP»).
+func use_specialty() -> String:
+	if state == State.DEAD:
+		return ""
+	return Specialty.activate(self)
+
+## Planta una mina delante (botón «MINA»).
+func plant_mine() -> String:
+	if mines <= 0:
+		return "No tenés minas"
+	if not is_on_floor() or state == State.DEAD:
+		return "No se puede plantar acá"
+	mines -= 1
+	Mine.plant(self)
+	return "Mina plantada (%d)" % mines
+
+func _spec_tick(delta: float) -> void:
+	spec_cd = maxf(spec_cd - delta, 0.0)
+	boost_t = maxf(boost_t - delta, 0.0)
+	radar_t = maxf(radar_t - delta, 0.0)
+	if shield_t > 0.0:
+		shield_t -= delta
+		if shield_t <= 0.0 or shield_hp <= 0.0:
+			shield_t = 0.0
+			shield_hp = 0.0
+	if shield_hp > 0.0 and _dome == null:
+		_dome = MeshInstance3D.new()
+		var sm := SphereMesh.new()
+		sm.radius = 1.15
+		sm.height = 2.3
+		_dome.mesh = sm
+		var m := StandardMaterial3D.new()
+		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		m.albedo_color = Color(0.5, 0.75, 1.0, 0.18)
+		m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_dome.material_override = m
+		_dome.set_meta("no_tech", true)
+		_dome.position.y = 1.0
+		add_child(_dome)
+	elif shield_hp <= 0.0 and _dome != null:
+		_dome.queue_free()
+		_dome = null
+
+## Patea de frente un objeto rompible (una puerta): hace ruido y la rompe si es débil.
+func kick_at(target: Node3D) -> void:
+	if busy() or not is_instance_valid(target):
+		return
+	facing = 1.0 if target.global_position.x >= global_position.x else -1.0
+	aim_dir = Vector2(facing, 0)
+	var f := facing
+	var m: Dictionary = MELEE["kick_front"]
+	var w := weapon()
+	if w:
+		w.visible = false
+	var len_ := ap.get_animation("kick_front").length if ap.get_animation("kick_front") else 0.8
+	_action("kick_front", m.speed, func():
+		if weapon():
+			weapon().visible = true
+		, [[float(m.t) / len_ * float(m.speed), func():
+			if is_instance_valid(target) and target.has_method("apply_damage"):
+				target.apply_damage(float(m.dmg) * 3.0, target.global_position + Vector3.UP, Vector3(f, 0, 0), "melee", self)
+				NoiseBus.emit_noise(target.global_position, 18.0, self)
+				TimeFx.shake(0.2)]])
+	Sfx.play("swing", global_position + Vector3.UP * 1.3, -10.0, 0.9, 3.0, self)
+
 func _throw_grenade() -> void:
 	if grenades.get(grenade_kind, 0) <= 0 or busy():
 		return
@@ -1026,6 +1101,10 @@ func take_damage(info: Dictionary) -> void:
 	var zone := str(info.get("zone", "torso"))
 	var t := str(info.get("type", ""))
 	var amount := float(info.get("damage", 10.0))
+	if shield_hp > 0.0 and t in ["bullet", "fragment", "blast", "knife", "impact"]:
+		shield_hp -= amount          # el domo absorbe el golpe (y se ve el destello)
+		Fx.emit("spark", info.get("point", global_position + Vector3.UP * 1.2), -(info.get("dir", Vector3.RIGHT) as Vector3), 0.5)
+		return
 	if t in ["bullet", "fragment"]:
 		amount *= float(ZONE_MULT.get(zone, 1.0))
 	elif t == "punch" and zone in ["torso", "pelvis"]:

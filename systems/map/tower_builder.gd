@@ -281,8 +281,19 @@ func _build_floor(node: Node3D, f: Dictionary, fh: float) -> void:
 		_moving_platform(node, f.moving_platform, y)
 	if f.has("hazard"):
 		_hazard(node, f.hazard, y)
+	for lv in f.get("levers", []):       # [x, id de la persiana que abre]
+		var l := WorldInteractables.Lever.new()
+		l.lever_id = str(lv[1])
+		node.add_child(l)
+		l.global_position = Vector3(float(lv[0]), y, Z_BACK + 0.35)
+	for gt in f.get("gas_traps", []):    # [x palanca, x0 nube, x1 nube]
+		var g := WorldInteractables.GasTrap.new()
+		g.x0 = float(gt[1])
+		g.x1 = float(gt[2])
+		node.add_child(g)
+		g.global_position = Vector3(float(gt[0]), y, Z_BACK + 0.35)
 	if f.has("extraction"):
-		_extraction(node, Vector3(float(f.extraction[0]), y, 0), str(f.extraction[1]))
+		_extraction(node, Vector3(float(f.extraction[0]), y, 0), str(f.extraction[1]), float(f.extraction[2]) if f.extraction.size() > 2 else 0.0)
 	for e in f.enemies:
 		_enemy(node, Vector3(float(e[0]), y + 0.05, 0), str(e[1]), str(e[2]), int(f.id))
 
@@ -310,14 +321,66 @@ func _build_wall(node: Node3D, bb: BoxBatcher, body: StaticBody3D, x: float, y: 
 			grate.position = Vector3(x - 0.8, y + 0.6, Z_BACK + 0.3)
 			grate.add_to_group("decor_1")
 			node.add_child(grate)
+		"office", "glass", "thin":
+			_closed_wall(node, bb, body, x, y, h, type)
 		"locked":
 			var door := WorldInteractables.LockedDoor.new()
 			door.height = h
 			node.add_child(door)
 			door.global_position = Vector3(x, y, -0.2)
+		_:
+			if type.begins_with("locked:"):
+				var d2 := WorldInteractables.LockedDoor.new()
+				d2.height = h
+				d2.key_item = type.get_slice(":", 1)
+				node.add_child(d2)
+				d2.global_position = Vector3(x, y, -0.2)
+			elif type.begins_with("shutter:"):
+				var sh := WorldInteractables.Shutter.new()
+				sh.height = h
+				sh.lever_id = type.get_slice(":", 1)
+				node.add_child(sh)
+				sh.global_position = Vector3(x, y, -0.2)
 		"solid":
 			bb.add_box("concrete", cm.concrete, Vector3(x, y + h * 0.5, -0.2), Vector3(t, h, DEPTH - 0.1))
 			_shape(body, Vector3(x, y + h * 0.5, -0.2), Vector3(t, h, DEPTH - 0.1))
+
+## Paredes que cierran el paso pero se pueden romper: puerta de oficina (se patea o se baleá), vidrio y tabique fino.
+## Romperlas hace ruido (la IA y el indicador de ruido lo reciben).
+func _closed_wall(node: Node3D, bb: BoxBatcher, body: StaticBody3D, x: float, y: float, h: float, type: String) -> void:
+	var t := 0.3
+	var dh := 2.5
+	# dintel macizo sobre el vano (igual que una puerta abierta)
+	bb.add_box("concrete", cm.concrete, Vector3(x, y + dh + (h - dh) * 0.5, -0.2), Vector3(t, h - dh, DEPTH - 0.1))
+	_shape(body, Vector3(x, y + dh + (h - dh) * 0.5, -0.2), Vector3(t, h - dh, DEPTH - 0.1))
+	var d := Destructible.new()
+	var kind := "door" if type == "office" else ("glass" if type == "glass" else "drywall")
+	d.kind = kind
+	node.add_child(d)
+	var thick := 0.12 if kind != "drywall" else 0.2
+	d.setup(kind, Vector3(thick, dh, DEPTH - 0.15), "")
+	d.global_position = Vector3(x, y, -0.2)
+	d.add_to_group("perf_destructibles")
+	if kind == "door":
+		# manija y marco: se distingue a simple vista que es una puerta
+		bb.add_box("steel", cm.steel, Vector3(x, y + dh - 0.05, 0.55), Vector3(t + 0.08, 0.1, 0.1))
+		var k := DoorKick.new()
+		k.door = d
+		d.add_child(k)
+		k.position = Vector3(0, 1.0, 0.45)
+
+## Interactuable de una puerta cerrada: el operador la patea de frente.
+class DoorKick extends Interactable:
+	var door: Destructible
+	func _ready() -> void:
+		prompt = "Patear la puerta (hace ruido)"
+		radius = 1.2
+		super._ready()
+		door.broken.connect(func(_by): queue_free())
+	func can_use(_a: Actor) -> bool:
+		return door != null and door.phase != Destructible.Phase.BROKEN
+	func use(a: Actor) -> void:
+		a.kick_at(door)
 
 ## Artefacto de la lámpara (emisivo). La luz está pintada en los materiales del piso; las luces reales las maneja el pool.
 func _lamp(parent: Node3D, pos: Vector3, _floor_i: int) -> void:
@@ -433,20 +496,25 @@ func _crate(parent: Node3D, x: float, y: float, kind: String, table: String, flo
 		m.roughness = 0.35
 	if table != "":
 		var lc := LootContainer.new()
-		lc.table = "crate_wood" if table == "key" else table
+		var key_id := ""
+		if table == "key":
+			key_id = "keycard_lab"
+		elif table.begins_with("key:"):
+			key_id = table.get_slice(":", 1)
+		lc.table = "crate_wood" if key_id != "" else table
 		lc.floor_bonus = floor_i / 2
 		lc.open_time = {"crate_wood": 2.4, "crate_metal": 3.2, "suitcase": 1.8, "lab_case": 3.6}.get(kind, 2.6)
 		d.add_child(lc)
 		lc.position = Vector3(0, size.y + 0.1, 0.15)
 		lc.add_to_group("perf_cajas_botin")
 		d.loot = lc
-		if table == "key":
+		if key_id != "":
 			lc.opened.connect(func(by: Actor):
-				by.inventory.add("keycard_lab", 1)
-				get_tree().call_group("hud", "toast", "Tarjeta del laboratorio (abre la puerta del P4)"))
+				by.inventory.add(key_id, 1)
+				get_tree().call_group("hud", "toast", "%s (abre una puerta bloqueada)" % str(Inventory.def(key_id).get("name", key_id))))
 			d.broken.connect(func(_by):
 				var p := WorldInteractables.Pickup.new()
-				p.item_id = "keycard_lab"
+				p.item_id = key_id
 				d.get_parent().add_child(p)
 				p.global_position = d.global_position + Vector3(0.4, 0.05, 0.15))
 		# tapa que se levanta al abrir (cajas y maletines)
@@ -512,9 +580,10 @@ func _hazard(parent: Node3D, hz: Array, y: float) -> void:
 	bb.add_box("hazard", cm.hazard, Vector3((n.x0 + n.x1) * 0.5, y + 0.01, 0), Vector3(n.x1 - n.x0, 0.02, 1.4))
 	bb.commit(parent, false)
 
-func _extraction(parent: Node3D, pos: Vector3, label: String) -> void:
+func _extraction(parent: Node3D, pos: Vector3, label: String, opens_at := 0.0) -> void:
 	var z := WorldInteractables.ExtractionZone.new()
 	z.label = label
+	z.opens_at = opens_at
 	parent.add_child(z)
 	z.global_position = pos
 	z.extracted.connect(func(a: Actor): extracted.emit(a, label))
@@ -590,7 +659,7 @@ func _build_roof(d: Dictionary, y: float) -> void:
 	bb.commit(node, false)
 	_red_light(node, Vector3(12.0, y + 8.1, Z_BACK + 0.2))
 	if d.roof.has("extraction"):
-		_extraction(node, Vector3(float(d.roof.extraction[0]), y, 0), str(d.roof.extraction[1]))
+		_extraction(node, Vector3(float(d.roof.extraction[0]), y, 0), str(d.roof.extraction[1]), float(d.roof.extraction[2]) if d.roof.extraction.size() > 2 else 0.0)
 		_helicopter(node, Vector3(float(d.roof.extraction[0]), y + 4.5, -6.0))
 
 const HELI_MODEL := "res://assets/props/military_helicopter.glb"
@@ -607,8 +676,24 @@ func _helicopter(parent: Node3D, pos: Vector3) -> void:
 			var m := ps.instantiate() as Node3D
 			m.scale = Vector3.ONE * 12.0               # el modelo mide 1 m de largo: ~12 m de helicóptero
 			m.position = Vector3(0, -1.0, 0)
-			m.set_meta("no_tech", false)
 			h.add_child(m)
+			for hm in m.find_children("*", "MeshInstance3D", true, false):
+				(hm as MeshInstance3D).material_override = _col_mat(Color(0.82, 0.83, 0.85))      # liso: el estilo de línea lo dibuja de blanco
+			# el modelo es una sola malla: las hélices se agregan aparte y giran (rotor principal)
+			var ab := Destructible._aabb(m, Transform3D.IDENTITY)
+			var hub := Node3D.new()
+			hub.position = Vector3(ab.get_center().x * 12.0, m.position.y + ab.end.y * 12.0 + 0.1, ab.get_center().z * 12.0)
+			h.add_child(hub)
+			for k in 2:
+				var bl := MeshInstance3D.new()
+				var bm := BoxMesh.new()
+				bm.size = Vector3(11.0, 0.05, 0.4)
+				bl.mesh = bm
+				bl.rotation.y = k * PI * 0.5
+				bl.material_override = mats.steel
+				hub.add_child(bl)
+			var spin := create_tween().set_loops()
+			spin.tween_property(hub, "rotation:y", TAU, 0.16).as_relative()
 			var bob0 := create_tween().set_loops()
 			bob0.tween_property(h, "position:y", pos.y + 0.25, 1.8).set_trans(Tween.TRANS_SINE)
 			bob0.tween_property(h, "position:y", pos.y - 0.25, 1.8).set_trans(Tween.TRANS_SINE)
@@ -712,7 +797,7 @@ func _build_elevator(d: Dictionary) -> void:
 	var names: Array[String] = []
 	for s in d.elevator.stops:
 		st.append(float(s) * float(d.floor_h))
-		names.append("P%d" % int(s))
+		names.append(str((d.floors[int(s)] as Dictionary).get("elev_name", "P%d" % int(s))))
 	elevator.stops = st
 	elevator.stop_names = names
 	elevator.width = float(d.elevator.width)

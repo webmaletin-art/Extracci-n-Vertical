@@ -53,7 +53,7 @@ func _build() -> void:
 	for d in [["fire", "◎", 64.0, Color(1.0, 0.35, 0.25)], ["jump", "⤒", 46.0, Color(0.5, 0.85, 1.0)],
 			["melee", "✊", 42.0, Color(0.95, 0.95, 0.95)], ["grenade", "●", 34.0, Color(0.7, 0.9, 0.4)],
 			["use", "USAR", 44.0, Color(1.0, 0.85, 0.3)], ["reload", "R", 28.0, Color(0.9, 0.9, 0.9)],
-			["swap", "⇄", 30.0, Color(0.9, 0.9, 0.9)], ["ammo", "MUN", 30.0, Color(1.0, 0.8, 0.4)], ["crouch", "▼", 30.0, Color(0.8, 0.8, 0.8)],
+			["swap", "⇄", 30.0, Color(0.9, 0.9, 0.9)], ["ammo", "MUN", 30.0, Color(1.0, 0.8, 0.4)], ["crouch", "▼", 30.0, Color(0.8, 0.8, 0.8)], ["spec", "ESP", 34.0, Color(0.55, 0.8, 1.0)], ["mine", "MINA", 28.0, Color(1.0, 0.5, 0.4)],
 			["pause", "II", 26.0, Color(0.9, 0.9, 0.9)], ["heal", "✚", 32.0, Color(0.4, 1.0, 0.5)], ["inventory", "▤", 26.0, Color(0.9, 0.9, 0.9)]]:
 		var b := TouchButton.new()
 		b.label = d[1]
@@ -77,7 +77,7 @@ func _build() -> void:
 	_lbl.injury.add_theme_color_override("font_color", Color(1.0, 0.45, 0.4))
 	_lbl.extract.add_theme_font_size_override("font_size", 30)
 	_lbl.extract.add_theme_color_override("font_color", Color(0.4, 1.0, 0.55))
-	_lbl.objective.text = "◆ OBJETIVO: saqueá y extraé con vida (P0 o helicóptero en la azotea)"
+	_lbl.objective.text = "◆ OBJETIVO: %s" % (str(tower.data.get("objective", "saqueá y extraé con vida (P0 o helicóptero en la azotea)")) if tower else "saqueá y extraé con vida")
 	_layout()
 	get_viewport().size_changed.connect(_layout)
 
@@ -87,7 +87,7 @@ const DEFAULT_POS := {
 	"stick_l": Vector2(0.15, 0.76), "stick_r": Vector2(0.87, 0.74),
 	"fire": Vector2(0.73, 0.86), "jump": Vector2(0.65, 0.90), "melee": Vector2(0.65, 0.73), "grenade": Vector2(0.73, 0.62),
 	"crouch": Vector2(0.57, 0.84), "use": Vector2(0.62, 0.47), "reload": Vector2(0.73, 0.11), "swap": Vector2(0.79, 0.11), "ammo": Vector2(0.85, 0.11),
-	"pause": Vector2(0.03, 0.07), "inventory": Vector2(0.09, 0.07), "heal": Vector2(0.27, 0.92)}
+	"spec": Vector2(0.36, 0.76), "mine": Vector2(0.44, 0.92), "pause": Vector2(0.03, 0.07), "inventory": Vector2(0.09, 0.07), "heal": Vector2(0.27, 0.92)}
 
 func ctl_pos(n: String) -> Vector2:
 	var p: Vector2 = Settings.ctl_pos.get(n, DEFAULT_POS[n])
@@ -136,7 +136,7 @@ func _layout() -> void:
 		(buttons[n] as TouchButton).scale_k = k * float(Settings.ctl_scale.get(n, 1.0))
 		(buttons[n] as TouchButton).modulate.a = Settings.ctl_opacity
 	_place_all(s)
-	for n in ["fire", "jump", "melee", "grenade", "use", "reload", "swap", "ammo", "crouch", "inventory", "heal"]:
+	for n in ["fire", "jump", "melee", "grenade", "use", "reload", "swap", "ammo", "crouch", "inventory", "heal", "spec", "mine"]:
 		(buttons[n] as Control).visible = touch_mode
 	left_stick.visible = touch_mode
 	right_stick.visible = touch_mode
@@ -204,6 +204,10 @@ func _button(n: String, down: bool) -> void:
 		inventory_pressed.emit()
 	if down and n == "ammo" and player:
 		toast(player.cycle_ammo())
+	if down and n == "spec" and player:
+		toast(player.use_specialty())
+	if down and n == "mine" and player:
+		toast(player.plant_mine())
 	if down and n == "crouch":
 		crouch_toggle = not crouch_toggle
 
@@ -282,7 +286,7 @@ func _process(delta: float) -> void:
 	_lbl.loot.text = "Botín: $%d" % player.inventory.total_value()
 	if tower:
 		var fi := tower.floor_at(player.global_position.y)
-		_lbl.floor.text = "PISO %d" % fi if fi < tower.data.floors.size() else "AZOTEA"
+		_lbl.floor.text = ("PISO %s" % str((tower.data.floors[fi] as Dictionary).get("tag", fi)).trim_prefix("B")) if fi < tower.data.floors.size() else ("SUPERFICIE" if tower.data.get("name", "") == "Abismo Vertical" else "AZOTEA")
 	var it := player.interact_target
 	_lbl.prompt.text = ("[E] " if not touch_mode else "") + (it as Interactable).prompt_for(player) if it else ""
 	(buttons.use as Control).visible = touch_mode and it != null
@@ -317,6 +321,9 @@ func _process(delta: float) -> void:
 	for n in ["ammo", "weapon", "floor", "objective", "prompt", "loot"]:
 		(_lbl[n] as Label).visible = not _cinematic_on
 	(buttons.crouch as TouchButton).pressed = crouch_toggle
+	var sp: Dictionary = Specialty.DEFS.get(player.specialty, Specialty.DEFS.radar)
+	(buttons.spec as TouchButton).label = str(sp.label) if player.spec_cd <= 0.0 else str(int(ceil(player.spec_cd)))
+	(buttons.mine as TouchButton).label = "MINA %d" % player.mines
 	queue_redraw()
 
 func _draw() -> void:
@@ -376,7 +383,7 @@ func _draw_minimap(s: Vector2) -> void:
 		var b: Vector2 = to_map.call(float(l[0]), float(l[2]))
 		draw_line(a, b, Color(0.3, 0.85, 1.0, 0.8), 2.0)
 	var e0: Vector2 = to_map.call(float(tower.data.elevator.x), 0.0)
-	var e1: Vector2 = to_map.call(float(tower.data.elevator.x), float(tower.data.floor_h) * 4.0)
+	var e1: Vector2 = to_map.call(float(tower.data.elevator.x), float(tower.data.floor_h) * float((tower.data.elevator.stops as Array).size() - 1))
 	draw_line(e0, e1, Color(1.0, 0.8, 0.2, 0.9), 3.0)
 	for z in get_tree().get_nodes_in_group("extraction"):
 		draw_circle(to_map.call(z.global_position.x, z.global_position.y), 4.0, Color(0.3, 1.0, 0.4))

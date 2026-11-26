@@ -85,13 +85,14 @@ func show_menu(result := {}) -> void:
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 8)
 	v.add_child(gap)
-	var items := [["JUGAR · Torre Alfa", start_game, true], ["ARMERÍA", _armory, false], ["MODO PRÁCTICA", start_practice, false], ["CONFIGURACIÓN", _settings, false],
+	var items := [["JUGAR · Torre Alfa", func(): start_game("torre"), true], ["JUGAR · Abismo Vertical", func(): start_game("abismo"), true],
+		["ARMERÍA", _armory, false], ["ESPECIALIDAD · " + Specialty.name_of(Profile.specialty), _cycle_spec, false], ["MODO PRÁCTICA", start_practice, false], ["CONFIGURACIÓN", _settings, false],
 		["ANALIZAR RENDIMIENTO", _probe, false], ["SALIR", func(): get_tree().quit(), false]]
 	for d in items:
 		var b := Button.new()
 		b.text = d[0]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size = Vector2(380, 54)
+		b.custom_minimum_size = Vector2(380, 46)
 		b.add_theme_font_size_override("font_size", 24)
 		if d[2]:
 			b.add_theme_stylebox_override("normal", UiTheme.box(UiTheme.TEXT, 10, UiTheme.TEXT, 2))
@@ -113,7 +114,7 @@ func _free_stage() -> void:
 		stage.queue_free()
 		stage = null
 
-func start_game() -> void:
+func start_game(map := "torre") -> void:
 	_free_stage()
 	if menu:
 		menu.queue_free()
@@ -121,6 +122,7 @@ func start_game() -> void:
 	if game:
 		game.queue_free()
 	game = Game.new()
+	game.map_id = map
 	add_child(game)
 	game.match_over.connect(func(r: Dictionary):
 		get_tree().paused = false
@@ -146,6 +148,12 @@ func start_practice() -> void:
 		practice.queue_free()
 		practice = null
 		show_menu())
+
+func _cycle_spec() -> void:
+	var i := Specialty.ORDER.find(Profile.specialty)
+	Profile.specialty = Specialty.ORDER[(i + 1) % Specialty.ORDER.size()]
+	Profile.save()
+	show_menu()
 
 func _armory() -> void:
 	_free_stage()

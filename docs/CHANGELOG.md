@@ -165,3 +165,11 @@
   cartuchos en 3D (parados y tumbados) con «USAR» y «COMPRAR».
 * **Menú blanco con líneas:** `UiTheme` claro (tinta sobre blanco) y la torre de la portada pasa por el modo «Plano dibujado».
 * Prueba nueva `municion` (tipos, precios, compra sólo con el arma). 17 pruebas, 0 fallas.
+
+## 0.15.0 — Abismo Vertical y mecánicas nuevas
+
+* **Mapa Abismo Vertical** (8 pisos, 120 m, 2 extracciones: túnel fijo y helicóptero a los 4 min). Ver `docs/ABISMO_VERTICAL.md`. Menú: «JUGAR · Abismo Vertical».
+* Puertas de oficina (patada o disparos), vidrios y tabiques finos que se rompen con ruido; puertas con tarjeta de varios colores; persianas con palanca; trampa de gas.
+* Minas de proximidad, indicador de ruido direccional, especialidades (radar, paramédico, velocista, escudo, cohete, demoledor).
+* Helicóptero con hélice girando; menú con la Torre real en línea y el operador de espaldas; Armería con datos flotantes y cartuchos en línea; agarre de pistola corregido (hombros).
+* Pruebas nuevas `abismo` y `mecanicas`: 19 pruebas, 0 fallas.

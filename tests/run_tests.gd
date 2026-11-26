@@ -10,7 +10,7 @@ func _ready() -> void:
 	var a := OS.get_cmdline_user_args()
 	if a.size() >= 2 and a[0] == "--filter":
 		filt = a[1]
-	var tests := ["mapa", "velocidad", "settings", "inventario", "municion", "juego"]
+	var tests := ["mapa", "velocidad", "settings", "inventario", "municion", "abismo", "juego"]
 	for t in tests:
 		if filt != "" and not t.contains(filt) and t != "juego":
 			continue
@@ -31,6 +31,33 @@ func _wait_phys(n: int) -> void:
 		await get_tree().physics_frame
 
 # ---------------------------------------------------------------- sin mundo
+
+func t_abismo() -> String:
+	var d := AbismoVertical.data()
+	var gr := MapGraph.from_data(d)
+	var r := gr.check_reachability()
+	if not r.unreachable.is_empty():
+		return "sectores inaccesibles: %s" % str(r.unreachable)
+	if not r.extraction_ok:
+		return "alguna extracción no se alcanza"
+	if gr.key_rooms.size() < 3:
+		return "faltan llaves (hay %d)" % gr.key_rooms.size()
+	var types := {}
+	for f in d.floors:
+		for w in f.walls:
+			types[str(w[1]).get_slice(":", 0)] = true
+	for need in ["door", "office", "glass", "thin", "locked", "shutter"]:
+		if not types.has(need):
+			return "falta el tipo de pared %s" % need
+	# todas las armas y objetos colocados existen
+	for f in d.floors:
+		for pk in f.pickups:
+			if Inventory.def(str(pk[1])).is_empty():
+				return "objeto inexistente %s" % str(pk[1])
+		for e in f.enemies:
+			if not Firearm.all_stats().has(str(e[2])):
+				return "arma enemiga inexistente %s" % str(e[2])
+	return ""
 
 func t_municion() -> String:
 	# cada tipo debe dar un daño distinto y el precio debe crecer con el poder
@@ -142,7 +169,7 @@ func _game_tests(filt: String) -> void:
 	var p := g.player
 	p.max_health = 1000.0
 	p.health = 1000.0
-	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "cuerpo_muerto", "desmembrar", "anatomia", "captador"]:
+	for t in ["apuntado", "apuntado_fino", "escalera", "ascensor", "balistica", "destruccion", "granada", "lesiones", "cuerpo_muerto", "desmembrar", "anatomia", "captador", "mecanicas"]:
 		if filt != "" and not t.contains(filt):
 			continue
 		p.inp = ActorInput.new()
@@ -379,6 +406,85 @@ func g_destruccion(_p: Actor) -> String:
 		return "no se rompió"
 	if get_tree().get_nodes_in_group("interactables").size() <= before - 1:
 		return "no soltó botín"
+	return ""
+
+## Puertas que se patean, vidrio que suena al romper, mina que explota, escudo que absorbe y especialidades con recarga.
+func g_mecanicas(p: Actor) -> String:
+	var tw := g.tower
+	var y := 0.05
+	# puerta de oficina: se patea y se rompe haciendo ruido
+	var door := Destructible.new()
+	door.kind = "door"
+	g.add_child(door)
+	door.setup("door", Vector3(0.12, 2.5, 1.85), "")
+	door.global_position = Vector3(5.0, y, -0.2)
+	var kick := TowerBuilder.DoorKick.new()
+	kick.door = door
+	door.add_child(kick)
+	await _place(p, Vector3(3.6, y, 0))
+	var heard := [0]
+	var cb := func(_pos, _l, _src): heard[0] += 1
+	NoiseBus.heard.connect(cb)
+	p.kick_at(door)
+	await _wait_phys(70)
+	NoiseBus.heard.disconnect(cb)
+	if door.phase != Destructible.Phase.BROKEN:
+		return "la puerta no se rompió con la patada"
+	if heard[0] == 0:
+		return "romper la puerta no hizo ruido"
+	# vidrio: un disparo lo rompe
+	var gl := Destructible.new()
+	gl.kind = "glass"
+	g.add_child(gl)
+	gl.setup("glass", Vector3(0.1, 2.5, 1.85), "")
+	gl.global_position = Vector3(9.0, y, -0.2)
+	gl.apply_damage(30.0, gl.global_position, Vector3.RIGHT, "bullet")
+	gl.apply_damage(30.0, gl.global_position, Vector3.RIGHT, "bullet")
+	if gl.phase != Destructible.Phase.BROKEN:
+		return "el vidrio no se rompió"
+	# tabique fino: aguanta un tiro, cede a varios
+	var dw := Destructible.new()
+	dw.kind = "drywall"
+	g.add_child(dw)
+	dw.setup("drywall", Vector3(0.2, 2.5, 1.85), "")
+	dw.global_position = Vector3(12.0, y, -0.2)
+	dw.apply_damage(30.0, dw.global_position, Vector3.RIGHT, "bullet")
+	if dw.phase == Destructible.Phase.BROKEN:
+		return "el tabique cedió con un solo tiro"
+	for i in 12:
+		dw.apply_damage(30.0, dw.global_position, Vector3.RIGHT, "bullet")
+	if dw.phase != Destructible.Phase.BROKEN:
+		return "el tabique no cedió con muchos tiros"
+	# mina: explota cuando pasa un enemigo (equipo distinto)
+	var e: Actor = tw.enemies[0]
+	await _place(p, Vector3(20.0, y, 0))
+	p.mines = 1
+	p.facing = 1.0
+	if not p.plant_mine().begins_with("Mina"):
+		return "no pudo plantar la mina"
+	await _wait_phys(100)
+	var h0 := e.health
+	e.global_position = Vector3(20.9, y, 0)
+	await _wait_phys(40)
+	if e.health >= h0 and not e.is_dead():
+		return "la mina no dañó al enemigo"
+	# escudo: absorbe un impacto sin dañar
+	p.specialty = "shield"
+	p.spec_cd = 0.0
+	Specialty.activate(p)
+	var hp := p.health
+	p.take_damage({"damage": 40.0, "type": "bullet", "zone": "torso", "point": p.global_position + Vector3.UP, "dir": Vector3.LEFT})
+	if absf(p.health - hp) > 0.01:
+		return "el escudo no absorbió el impacto"
+	if p.spec_cd <= 0.0 or not Specialty.activate(p).contains("lista en"):
+		return "la especialidad no tiene recarga"
+	# radar y velocista
+	p.spec_cd = 0.0
+	p.specialty = "radar"
+	Specialty.activate(p)
+	if p.radar_t < 9.0:
+		return "el radar no se activó"
+	p.shield_hp = 0.0
 	return ""
 
 func g_granada(p: Actor) -> String:

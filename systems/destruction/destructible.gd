@@ -30,6 +30,8 @@ const DEFS := {
 	"barrel": {"hp": 45.0, "surface": "metal", "thickness": 999.0, "bullet": 1.0, "melee": 0.3, "blast": 3.0, "color": Color(0.6, 0.12, 0.08)},
 	"glass": {"hp": 8.0, "surface": "glass", "thickness": 1.0, "bullet": 1.0, "melee": 1.0, "blast": 5.0, "color": Color(0.7, 0.85, 0.95)},
 	"panel_metal": {"hp": 120.0, "surface": "metal", "thickness": 3.0, "bullet": 0.5, "melee": 0.5, "blast": 2.0, "color": Color(0.35, 0.37, 0.4)},
+	"door": {"hp": 70.0, "surface": "wood", "thickness": 4.0, "bullet": 0.6, "melee": 2.2, "blast": 4.0, "color": Color(0.46, 0.34, 0.22)},
+	"drywall": {"hp": 170.0, "surface": "wood", "thickness": 6.0, "bullet": 0.5, "melee": 0.8, "blast": 4.0, "color": Color(0.82, 0.82, 0.8)},
 	"cardboard": {"hp": 15.0, "surface": "wood", "thickness": 1.0, "bullet": 1.0, "melee": 1.5, "blast": 3.0, "color": Color(0.6, 0.48, 0.3)},
 }
 
@@ -171,6 +173,14 @@ func _break(by: Node, dir: Vector3) -> void:
 		"glass":
 			Sfx.play("glass_break", c, 2.0, 1.0, 22.0, by)
 			Fx.emit("glass", c, dir, 1.5)
+		"door":
+			Sfx.play("wood_break", c, 3.0, 0.8, 28.0, by)
+			Fx.emit("splinter", c, Vector3(dir.x, 0.3, 0), 2.0)
+			Fx.debris(c, d.color, 10, 5.0, Vector3(size.x * 0.5, size.y * 0.4, 0.2))
+		"drywall":
+			Sfx.play("wood_break", c, 0.0, 0.6, 24.0, by)
+			Fx.emit("dust", c, Vector3.UP, 2.0)
+			Fx.debris(c, d.color, 8, 4.0, Vector3(size.x * 0.5, size.y * 0.4, 0.2))
 		"barrel":
 			Explosion.spawn(get_parent(), "barrel", c, by)
 		"panel_metal":

@@ -90,10 +90,12 @@ func add_credits(n: int) -> void:
 	save()
 	changed.emit()
 
+var specialty := "radar"            ## especialidad elegida (ver Specialty)
+
 func save() -> void:
 	var f := FileAccess.open(PATH, FileAccess.WRITE)
 	if f:
-		f.store_string(JSON.stringify({"credits": credits, "owned": owned, "equipped": equipped, "ammo": ammo, "selected": selected}, "\t"))
+		f.store_string(JSON.stringify({"credits": credits, "owned": owned, "equipped": equipped, "ammo": ammo, "selected": selected, "specialty": specialty}, "\t"))
 
 func load_profile() -> void:
 	if not FileAccess.file_exists(PATH):
@@ -106,6 +108,9 @@ func load_profile() -> void:
 		equipped = d.get("equipped", equipped)
 		ammo = d.get("ammo", {})
 		selected = d.get("selected", {})
+		specialty = str(d.get("specialty", "radar"))
+		if not Specialty.DEFS.has(specialty):
+			specialty = "radar"
 		for slot in ["primary", "secondary"]:
 			if not Firearm.all_stats().has(str(equipped.get(slot, ""))) or not owned.has(equipped.get(slot, "")):
 				equipped[slot] = "m4a1" if slot == "primary" else "m1911"
