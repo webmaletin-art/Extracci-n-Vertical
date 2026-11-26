@@ -665,66 +665,85 @@ func _build_roof(d: Dictionary, y: float) -> void:
 		_extraction(node, Vector3(float(d.roof.extraction[0]), y, 0), str(d.roof.extraction[1]), float(d.roof.extraction[2]) if d.roof.extraction.size() > 2 else 0.0)
 		_helicopter(node, Vector3(float(d.roof.extraction[0]), y + 4.5, -6.0))
 
-const HELI_MODEL := "res://assets/props/military_helicopter.glb"
 
 ## Helicóptero de extracción de la azotea (modelo propio de assets/props; si falta, el de cajas de abajo). Es parte del mapa:
 ## los mapas con IA pueden reutilizarlo como punto de extracción.
 func _helicopter(parent: Node3D, pos: Vector3) -> void:
+	# Helicóptero liviano armado con piezas simples (≈ 300 triángulos, sin modelos ni texturas): cuerpo, cabina, cola, patines
+	# y rotores que giran. Se dibuja en línea como el resto del mapa.
 	var h := Node3D.new()
 	h.position = pos
 	parent.add_child(h)
-	if ResourceLoader.exists(HELI_MODEL):
-		var ps := load(HELI_MODEL) as PackedScene
-		if ps:
-			var m := ps.instantiate() as Node3D
-			m.scale = Vector3.ONE * 12.0               # el modelo mide 1 m de largo: ~12 m de helicóptero
-			m.position = Vector3(0, -1.0, 0)
-			h.add_child(m)
-			for hm in m.find_children("*", "MeshInstance3D", true, false):
-				(hm as MeshInstance3D).material_override = _col_mat(Color(0.82, 0.83, 0.85))      # liso: el estilo de línea lo dibuja de blanco
-			# el modelo es una sola malla: las hélices se agregan aparte y giran (rotor principal)
-			var ab := Destructible._aabb(m, Transform3D.IDENTITY)
-			var hub := Node3D.new()
-			hub.position = Vector3(ab.get_center().x * 12.0, m.position.y + ab.end.y * 12.0 + 0.1, ab.get_center().z * 12.0)
-			h.add_child(hub)
-			for k in 2:
-				var bl := MeshInstance3D.new()
-				var bm := BoxMesh.new()
-				bm.size = Vector3(11.0, 0.05, 0.4)
-				bl.mesh = bm
-				bl.rotation.y = k * PI * 0.5
-				bl.material_override = mats.steel
-				hub.add_child(bl)
-			var spin := create_tween().set_loops()
-			spin.tween_property(hub, "rotation:y", TAU, 0.16).as_relative()
-			var bob0 := create_tween().set_loops()
-			bob0.tween_property(h, "position:y", pos.y + 0.25, 1.8).set_trans(Tween.TRANS_SINE)
-			bob0.tween_property(h, "position:y", pos.y - 0.25, 1.8).set_trans(Tween.TRANS_SINE)
-			return
-	var body := MeshInstance3D.new()
-	var cm := CapsuleMesh.new()
-	cm.radius = 1.0
-	cm.height = 4.6
-	body.mesh = cm
-	body.rotation.z = PI * 0.5
-	body.material_override = _col_mat(Color(0.12, 0.14, 0.12), 0.4, 0.5)
-	h.add_child(body)
-	var tail := MeshInstance3D.new()
-	var tm := BoxMesh.new()
-	tm.size = Vector3(4.0, 0.3, 0.3)
-	tail.mesh = tm
-	tail.position = Vector3(3.6, 0.3, 0)
-	tail.material_override = body.material_override
-	h.add_child(tail)
-	var rotor := MeshInstance3D.new()
-	var rm := BoxMesh.new()
-	rm.size = Vector3(9.0, 0.05, 0.3)
-	rotor.mesh = rm
-	rotor.position = Vector3(0, 1.2, 0)
-	rotor.material_override = mats.steel
-	h.add_child(rotor)
-	var tw := create_tween().set_loops()
-	tw.tween_property(rotor, "rotation:y", TAU, 0.25).as_relative()
+	var add := func(mesh: Mesh, p: Vector3, rot := Vector3.ZERO, mat: Material = null) -> MeshInstance3D:
+		var mi := MeshInstance3D.new()
+		mi.mesh = mesh
+		mi.position = p
+		mi.rotation_degrees = rot
+		mi.material_override = mat if mat else mats.concrete
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		h.add_child(mi)
+		return mi
+	var cap := CapsuleMesh.new()
+	cap.radius = 1.35
+	cap.height = 5.4
+	cap.radial_segments = 14
+	cap.rings = 6
+	add.call(cap, Vector3(0, 0, 0), Vector3(0, 0, 90))                       # fuselaje
+	var nose := SphereMesh.new()
+	nose.radius = 1.2
+	nose.height = 2.4
+	nose.radial_segments = 14
+	nose.rings = 7
+	add.call(nose, Vector3(-2.7, -0.05, 0))                                    # cabina
+	var boom := BoxMesh.new()
+	boom.size = Vector3(5.2, 0.55, 0.5)
+	add.call(boom, Vector3(4.6, 0.35, 0), Vector3(0, 0, 4))                    # cola
+	var fin := BoxMesh.new()
+	fin.size = Vector3(0.9, 1.5, 0.12)
+	add.call(fin, Vector3(7.0, 1.0, 0), Vector3(0, 0, -18))                    # deriva
+	var stab := BoxMesh.new()
+	stab.size = Vector3(0.9, 0.1, 1.5)
+	add.call(stab, Vector3(6.6, 0.55, 0))
+	var door := BoxMesh.new()
+	door.size = Vector3(1.9, 1.1, 0.06)
+	add.call(door, Vector3(0.2, 0.1, 1.33), Vector3.ZERO, mats.steel)           # puerta lateral
+	for sz in [-1.0, 1.0]:                                                       # patines
+		var skid := BoxMesh.new()
+		skid.size = Vector3(4.6, 0.12, 0.14)
+		add.call(skid, Vector3(-0.3, -1.9, sz * 1.15))
+		for sx in [-1.6, 1.2]:
+			var strut := BoxMesh.new()
+			strut.size = Vector3(0.1, 0.9, 0.1)
+			add.call(strut, Vector3(sx, -1.45, sz * 1.1), Vector3(sz * 12.0, 0, 0))
+	var mast := CylinderMesh.new()
+	mast.top_radius = 0.12
+	mast.bottom_radius = 0.2
+	mast.height = 0.7
+	add.call(mast, Vector3(0, 1.65, 0))
+	var hub := Node3D.new()
+	hub.position = Vector3(0, 2.05, 0)
+	h.add_child(hub)
+	for k in 2:
+		var bl := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = Vector3(11.0, 0.05, 0.4)
+		bl.mesh = bm
+		bl.rotation.y = k * PI * 0.5
+		bl.material_override = mats.steel
+		hub.add_child(bl)
+	var spin := create_tween().set_loops()
+	spin.tween_property(hub, "rotation:y", TAU, 0.16).as_relative()
+	var tail_hub := Node3D.new()
+	tail_hub.position = Vector3(7.2, 1.1, 0.25)
+	h.add_child(tail_hub)
+	var tb := MeshInstance3D.new()
+	var tbm := BoxMesh.new()
+	tbm.size = Vector3(0.08, 1.7, 0.2)
+	tb.mesh = tbm
+	tb.material_override = mats.steel
+	tail_hub.add_child(tb)
+	var tspin := create_tween().set_loops()
+	tspin.tween_property(tail_hub, "rotation:z", TAU, 0.1).as_relative()
 	var bob := create_tween().set_loops()
 	bob.tween_property(h, "position:y", pos.y + 0.3, 1.6).set_trans(Tween.TRANS_SINE)
 	bob.tween_property(h, "position:y", pos.y - 0.3, 1.6).set_trans(Tween.TRANS_SINE)

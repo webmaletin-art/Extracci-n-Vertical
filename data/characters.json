@@ -6,7 +6,7 @@
    "id": "alfa",
    "name": "ALFA",
    "role": "Asalto",
-   "path": "res://assets/characters/alfa/alfa.glb",
+   "path": "res://assets/lined/characters/alfa.scn",
    "tris": 19946,
    "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
    "material": {
@@ -20,7 +20,7 @@
    "id": "vigia",
    "name": "Vigía",
    "role": "Radar",
-   "path": "res://assets/characters/vigia/vigia.glb",
+   "path": "res://assets/lined/characters/vigia.scn",
    "tris": 19242,
    "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
    "material": {
@@ -34,7 +34,7 @@
    "id": "doc",
    "name": "Doc",
    "role": "Médico",
-   "path": "res://assets/characters/doc/doc.glb",
+   "path": "res://assets/lined/characters/doc.scn",
    "tris": 19890,
    "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
    "material": {
@@ -48,7 +48,7 @@
    "id": "fantasma",
    "name": "Fantasma",
    "role": "Francotirador",
-   "path": "res://assets/characters/fantasma/fantasma.glb",
+   "path": "res://assets/lined/characters/fantasma.scn",
    "tris": 19780,
    "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
    "material": {
@@ -62,7 +62,7 @@
    "id": "mortero",
    "name": "Mortero",
    "role": "Artillero",
-   "path": "res://assets/characters/mortero/mortero.glb",
+   "path": "res://assets/lined/characters/mortero.scn",
    "tris": 18968,
    "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
    "material": {
@@ -76,7 +76,7 @@
    "id": "zapador",
    "name": "Zapador",
    "role": "Ingeniero (minas)",
-   "path": "res://assets/characters/zapador/zapador.glb",
+   "path": "res://assets/lined/characters/zapador.scn",
    "tris": 19466,
    "source": "Tripo3D v3.1 + rig Mixamo (45 créditos) — tomado de Operación Nexus",
    "material": {

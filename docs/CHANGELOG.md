@@ -229,3 +229,10 @@
 
 * Práctica: elegir un arma desde el menú cerraba el juego (la lista de munición se capturaba vacía). Corregido; prueba nueva `practica_armas` (20 pruebas).
 * Bullet time / rayos X: el cuerpo conserva el contorno de tinta mientras la ropa se abre (casco invertido que respeta la ventana), y los miembros que salen volando conservan el material en línea de fábrica (con contorno).
+
+## 0.17.0 — se eliminan los modelos pesados originales
+
+* Borrados: los modelos y texturas originales de personajes (`assets/characters/`, 14 MB), props (`assets/props/*.glb` y sus texturas, 19 MB incluido el helicóptero de 16 MB) y armas (`assets/weapons/*.glb`, 12 MB). El juego usa sólo las versiones en línea de `assets/lined/` (sin texturas, autocontenidas: sólo dependen de los shaders).
+* El helicóptero ahora se arma con piezas simples (≈ 300 triángulos; rotores que giran): ya no hay modelo.
+* El horneado (`tools/bake_lined.gd`) sigue en el repositorio, pero necesita los originales: están en el historial de git (commit `d5e9464` y anteriores). Un arma nueva: `tools/weapons/convert_fbx.py` → `bake_lined.gd -- weapons` → borrar el GLB.
+* La compilación empaqueta `assets/lined` en lugar de `assets/characters`; `boot.gd` comprueba el contenido con el personaje en línea.

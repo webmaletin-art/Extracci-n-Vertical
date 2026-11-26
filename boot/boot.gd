@@ -12,7 +12,7 @@ extends Control
 const CONTENT_DIR := "user://content"
 const INSTALLED := "user://content/instalado.json"
 const NEXT_SCENE := "res://scenes/main.tscn"
-const PROBE := "res://assets/characters/alfa/alfa.glb"
+const PROBE := "res://assets/lined/characters/alfa.scn"
 
 var _label: Label
 var _sub: Label

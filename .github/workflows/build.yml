@@ -117,7 +117,7 @@ jobs:
             packs=$(echo "$packs" | jq -c --argjson e "$entry" '. + [$e]')
           }
           NEW_FILES=""
-          add_pack personajes "Paquete personajes" "personajes, armas, anatomía y sonidos" assets/characters assets/anatomy assets/anims assets/weapons assets/ammo assets/sounds assets/icons
+          add_pack personajes "Paquete personajes" "personajes, armas, anatomía y sonidos" assets/lined assets/anatomy assets/anims assets/weapons assets/ammo assets/sounds assets/icons
           add_pack mapa_torre_alfa "Paquete mapa Torre Alfa" "mapa Torre Alfa (decorado y texturas)" assets/props assets/textures
           jq -n --argjson apk "$N" --argjson min "$MIN" --argjson packs "$packs" --arg notes "$(git log -1 --pretty=%s | head -c 200)" \
             '{apk:$apk, min_apk:$min, notes:$notes, packs:$packs}' > out/manifest.json

@@ -33,7 +33,7 @@ func _initialize() -> void:
 			n += _bake(inst, "weapons", m, false)
 	if what in ["props", "all"]:
 		for f in DirAccess.get_files_at("res://assets/props"):
-			if f.ends_with(".glb") and not f.begins_with("military_helicopter"):
+			if f.ends_with(".glb"):
 				var id := f.get_basename()
 				var inst := (load("res://assets/props/" + f) as PackedScene).instantiate()
 				n += _bake(inst, "props", id, true)
@@ -65,6 +65,10 @@ func _bake(root: Node, kind: String, id: String, with_lines: bool, vertex_color 
 		var mi := n as MeshInstance3D
 		if mi.mesh == null:
 			continue
+		# el mesh importado puede traer su propio material con texturas externas: se quita (si no, el archivo quedaría atado a ellas)
+		if not vertex_color:
+			for s in mi.mesh.get_surface_count():
+				mi.mesh.surface_set_material(s, null)
 		if with_lines:
 			# objetos fijos / sueltos del mapa: relleno plano (tech_flat) + aristas dibujadas, igual que el estilo en vivo
 			for s in mi.mesh.get_surface_count():
