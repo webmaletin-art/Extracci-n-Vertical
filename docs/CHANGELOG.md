@@ -173,3 +173,7 @@
 * Minas de proximidad, indicador de ruido direccional, especialidades (radar, paramédico, velocista, escudo, cohete, demoledor).
 * Helicóptero con hélice girando; menú con la Torre real en línea y el operador de espaldas; Armería con datos flotantes y cartuchos en línea; agarre de pistola corregido (hombros).
 * Pruebas nuevas `abismo` y `mecanicas`: 19 pruebas, 0 fallas.
+
+## 0.15.1 — pack «Flat Guns East»
+
+* 10 armas planas nuevas (`flat_*`): 2 pistolas, 2 subfusiles (uno compacto tipo MAC), 2 fusiles, 2 escopetas y 2 francotiradores (uno .50 antimaterial). Conversión con `tools/weapons/convert_fbx.py` (ahora conserva `models.json` al convertir ids sueltos). 71 armas en total.

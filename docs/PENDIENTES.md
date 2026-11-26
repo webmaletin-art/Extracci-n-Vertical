@@ -7,3 +7,4 @@
 * Colores sólidos pálidos en detalles (escaleras amarillas, puntas de munición, cables) — ver consulta de costo: casi gratis.
 * Armería: revisar a 1600×720, cartuchos con línea más fina, más animaciones del operador.
 * Rehacer las escenas/duelos exportados con las armas y municiones nuevas.
+* Pack «Flat Guns East»: no trae un MAC con nombre propio; el «SMG Compact» (31 cm) hace de subfusil compacto tipo MAC. Si se quiere un MAC-10 real, falta ese modelo.

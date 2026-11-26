@@ -615,7 +615,7 @@
     "use_ao": false
    }
   },
-  "name": "SR-14 «Víbora» táctica",
+  "name": "SR-14 \u00abV\u00edbora\u00bb t\u00e1ctica",
   "parts": {},
   "tris": 12824
  },
@@ -700,7 +700,7 @@
     "use_ao": false
    }
   },
-  "name": "SR-14 «Víbora» camuflada",
+  "name": "SR-14 \u00abV\u00edbora\u00bb camuflada",
   "parts": {},
   "tris": 15209
  },
@@ -1462,7 +1462,7 @@
    }
   },
   "tris": 1536,
-  "name": "Pistola M1911 Táctica",
+  "name": "Pistola M1911 T\u00e1ctica",
   "format": "glb"
  },
  "m16_1": {
@@ -4719,5 +4719,963 @@
   "tris": 1690,
   "format": "glb",
   "name": "sniper_5"
+ },
+ "flat_pistol_c": {
+  "kind": "pistol",
+  "length": 0.17,
+  "has_mag": true,
+  "source": "Flat_Pistol_Compact.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0128,
+    0.0537
+   ],
+   "Support": [
+    0.0,
+    -0.0328,
+    0.0637
+   ],
+   "Muzzle": [
+    0.0,
+    0.0512,
+    -0.085
+   ],
+   "Sight": [
+    0.0,
+    0.0641,
+    0.0255
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Red.Rosewood": {
+    "color": [
+     0.13,
+     0.0,
+     0.003
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 1263
+ },
+ "flat_pistol_f": {
+  "kind": "pistol",
+  "length": 0.21,
+  "has_mag": true,
+  "source": "Flat_Pistol_Full.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0151,
+    0.0401
+   ],
+   "Support": [
+    0.0,
+    -0.0351,
+    0.0501
+   ],
+   "Muzzle": [
+    0.0,
+    0.0607,
+    -0.105
+   ],
+   "Sight": [
+    0.0,
+    0.0754,
+    0.0315
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 1216
+ },
+ "flat_smg_c": {
+  "kind": "smg",
+  "length": 0.31,
+  "has_mag": true,
+  "source": "Flat_SMG_Compact.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0165,
+    -0.0253
+   ],
+   "Support": [
+    0.0,
+    -0.0625,
+    -0.0453
+   ],
+   "Muzzle": [
+    0.0,
+    0.0506,
+    -0.155
+   ],
+   "Sight": [
+    0.0,
+    0.0745,
+    0.0465
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 1685
+ },
+ "flat_smg_f": {
+  "kind": "smg",
+  "length": 0.55,
+  "has_mag": true,
+  "source": "Flat_SMG_Full.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0271,
+    0.0455
+   ],
+   "Support": [
+    0.0,
+    -0.1225,
+    -0.0793
+   ],
+   "Muzzle": [
+    0.0,
+    0.0746,
+    -0.275
+   ],
+   "Sight": [
+    0.0,
+    0.1345,
+    0.0825
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 2146
+ },
+ "flat_rifle_a": {
+  "kind": "rifle",
+  "length": 0.95,
+  "has_mag": true,
+  "source": "Flat_Rifle_Assault.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0096,
+    -0.0473
+   ],
+   "Support": [
+    0.0,
+    -0.1295,
+    -0.1533
+   ],
+   "Muzzle": [
+    0.0,
+    0.0881,
+    -0.475
+   ],
+   "Sight": [
+    0.0,
+    0.1762,
+    0.1425
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 3271
+ },
+ "flat_rifle_b": {
+  "kind": "rifle",
+  "length": 1.0,
+  "has_mag": true,
+  "source": "Flat_Rifle_Battle.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0112,
+    -0.046
+   ],
+   "Support": [
+    0.0,
+    -0.162,
+    -0.1351
+   ],
+   "Muzzle": [
+    0.0,
+    0.0933,
+    -0.5
+   ],
+   "Sight": [
+    0.0,
+    0.174,
+    0.15
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 3143
+ },
+ "flat_shotgun_p": {
+  "kind": "rifle",
+  "length": 1.0,
+  "has_mag": true,
+  "source": "Flat_Shotgun_Pump.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0229,
+    0.2559
+   ],
+   "Support": [
+    0.0,
+    0.0195,
+    -0.1581
+   ],
+   "Muzzle": [
+    0.0,
+    0.0092,
+    -0.5
+   ],
+   "Sight": [
+    0.0,
+    0.0986,
+    0.15
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Blue.Cerulean": {
+    "color": [
+     0.023,
+     0.084,
+     0.515
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Red.Brick": {
+    "color": [
+     0.445,
+     0.016,
+     0.016
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 1508
+ },
+ "flat_shotgun_a": {
+  "kind": "rifle",
+  "length": 0.95,
+  "has_mag": true,
+  "source": "Flat_Shotgun_Auto.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    0.0158,
+    -0.0481
+   ],
+   "Support": [
+    0.0,
+    -0.16,
+    -0.121
+   ],
+   "Muzzle": [
+    0.0,
+    0.1047,
+    -0.475
+   ],
+   "Sight": [
+    0.0,
+    0.1931,
+    0.1425
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Blue.Cerulean": {
+    "color": [
+     0.023,
+     0.084,
+     0.515
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 1930
+ },
+ "flat_sniper_r": {
+  "kind": "rifle",
+  "length": 1.1,
+  "has_mag": true,
+  "source": "Flat_Sniper_Rifle.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0126,
+    0.2066
+   ],
+   "Support": [
+    0.0,
+    0.025,
+    -0.2258
+   ],
+   "Muzzle": [
+    0.0,
+    0.0567,
+    -0.55
+   ],
+   "Sight": [
+    0.0,
+    0.1262,
+    0.165
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 2943
+ },
+ "flat_sniper_m": {
+  "kind": "rifle",
+  "length": 1.35,
+  "has_mag": true,
+  "source": "Flat_Sniper_Material.fbx",
+  "markers": {
+   "Grip": [
+    0.0,
+    -0.0132,
+    0.4357
+   ],
+   "Support": [
+    0.0,
+    0.008,
+    -0.1835
+   ],
+   "Muzzle": [
+    0.0,
+    0.0495,
+    -0.675
+   ],
+   "Sight": [
+    0.0,
+    0.1316,
+    0.2025
+   ]
+  },
+  "materials": {
+   "M_PCL_Flat_Black": {
+    "color": [
+     0.004,
+     0.004,
+     0.004
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Black_Lighter": {
+    "color": [
+     0.01,
+     0.01,
+     0.01
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Darker": {
+    "color": [
+     0.033,
+     0.033,
+     0.033
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Dark": {
+    "color": [
+     0.072,
+     0.072,
+     0.072
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Grey_Light": {
+    "color": [
+     0.212,
+     0.212,
+     0.212
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_White": {
+    "color": [
+     0.784,
+     0.784,
+     0.784
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   },
+   "M_PCL_Flat_Brown.Bole": {
+    "color": [
+     0.191,
+     0.058,
+     0.044
+    ],
+    "metallic": 0.0,
+    "roughness": 1.0
+   }
+  },
+  "tris": 2452
  }
 }

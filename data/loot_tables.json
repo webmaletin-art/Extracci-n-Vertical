@@ -148,6 +148,24 @@
     1
    ],
    [
+    "w_flat_pistol_c",
+    5,
+    1,
+    1
+   ],
+   [
+    "w_flat_pistol_f",
+    5,
+    1,
+    1
+   ],
+   [
+    "w_flat_shotgun_p",
+    5,
+    1,
+    1
+   ],
+   [
     "ammo_9x19_std",
     12,
     1,
@@ -340,6 +358,24 @@
    ],
    [
     "w_shotgun_4",
+    5,
+    1,
+    1
+   ],
+   [
+    "w_flat_pistol_c",
+    5,
+    1,
+    1
+   ],
+   [
+    "w_flat_pistol_f",
+    5,
+    1,
+    1
+   ],
+   [
+    "w_flat_shotgun_p",
     5,
     1,
     1
@@ -557,6 +593,36 @@
    [
     "w_sniper_4",
     3,
+    1,
+    1
+   ],
+   [
+    "w_flat_smg_c",
+    3,
+    1,
+    1
+   ],
+   [
+    "w_flat_smg_f",
+    4,
+    1,
+    1
+   ],
+   [
+    "w_flat_rifle_a",
+    3,
+    1,
+    1
+   ],
+   [
+    "w_flat_shotgun_a",
+    4,
+    1,
+    1
+   ],
+   [
+    "w_flat_sniper_r",
+    4,
     1,
     1
    ],
@@ -866,6 +932,36 @@
     1
    ],
    [
+    "w_flat_smg_c",
+    3,
+    1,
+    1
+   ],
+   [
+    "w_flat_smg_f",
+    4,
+    1,
+    1
+   ],
+   [
+    "w_flat_rifle_a",
+    3,
+    1,
+    1
+   ],
+   [
+    "w_flat_shotgun_a",
+    4,
+    1,
+    1
+   ],
+   [
+    "w_flat_sniper_r",
+    4,
+    1,
+    1
+   ],
+   [
     "ammo_45acp_hp",
     5,
     1,
@@ -1129,6 +1225,36 @@
     1
    ],
    [
+    "w_flat_smg_c",
+    3,
+    1,
+    1
+   ],
+   [
+    "w_flat_smg_f",
+    4,
+    1,
+    1
+   ],
+   [
+    "w_flat_rifle_a",
+    3,
+    1,
+    1
+   ],
+   [
+    "w_flat_shotgun_a",
+    4,
+    1,
+    1
+   ],
+   [
+    "w_flat_sniper_r",
+    4,
+    1,
+    1
+   ],
+   [
     "w_aug",
     2,
     1,
@@ -1154,6 +1280,18 @@
    ],
    [
     "w_sniper_5",
+    2,
+    1,
+    1
+   ],
+   [
+    "w_flat_rifle_b",
+    2,
+    1,
+    1
+   ],
+   [
+    "w_flat_sniper_m",
     2,
     1,
     1

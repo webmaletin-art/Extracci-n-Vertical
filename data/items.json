@@ -90,6 +90,30 @@
   "value": 0,
   "icon": "usb_drive"
  },
+ "keycard_b": {
+  "name": "Tarjeta azul (seguridad)",
+  "type": "llave",
+  "value": 0,
+  "icon": "usb_drive"
+ },
+ "keycard_c": {
+  "name": "Tarjeta amarilla (mantenimiento)",
+  "type": "llave",
+  "value": 0,
+  "icon": "usb_drive"
+ },
+ "keycard_vault": {
+  "name": "Tarjeta roja (bóveda)",
+  "type": "llave",
+  "value": 0,
+  "icon": "usb_drive"
+ },
+ "mine": {
+  "name": "Mina de proximidad",
+  "type": "mina",
+  "value": 180,
+  "icon": "grenade"
+ },
  "w_m1911": {
   "name": "Pistola M1911",
   "type": "arma",
@@ -517,6 +541,76 @@
   "weapon": "sniper_5",
   "icon": "weapon_awm"
  },
+ "w_flat_pistol_c": {
+  "name": "Pistola plana compacta 9 mm",
+  "type": "arma",
+  "value": 110,
+  "weapon": "flat_pistol_c",
+  "icon": "pistol"
+ },
+ "w_flat_pistol_f": {
+  "name": "Pistola plana de servicio .45",
+  "type": "arma",
+  "value": 130,
+  "weapon": "flat_pistol_f",
+  "icon": "pistol"
+ },
+ "w_flat_smg_c": {
+  "name": "Subfusil plano compacto (tipo MAC) .45",
+  "type": "arma",
+  "value": 580,
+  "weapon": "flat_smg_c",
+  "icon": "weapon_mp5"
+ },
+ "w_flat_smg_f": {
+  "name": "Subfusil plano 9 mm",
+  "type": "arma",
+  "value": 360,
+  "weapon": "flat_smg_f",
+  "icon": "weapon_mp5"
+ },
+ "w_flat_rifle_a": {
+  "name": "Fusil de asalto plano 5,56",
+  "type": "arma",
+  "value": 530,
+  "weapon": "flat_rifle_a",
+  "icon": "weapon_mp5"
+ },
+ "w_flat_rifle_b": {
+  "name": "Fusil de batalla plano 7,62×51",
+  "type": "arma",
+  "value": 790,
+  "weapon": "flat_rifle_b",
+  "icon": "weapon_mp5"
+ },
+ "w_flat_shotgun_p": {
+  "name": "Escopeta plana de corredera",
+  "type": "arma",
+  "value": 120,
+  "weapon": "flat_shotgun_p",
+  "icon": "weapon_remington"
+ },
+ "w_flat_shotgun_a": {
+  "name": "Escopeta plana automática",
+  "type": "arma",
+  "value": 220,
+  "weapon": "flat_shotgun_a",
+  "icon": "weapon_remington"
+ },
+ "w_flat_sniper_r": {
+  "name": "Fusil de cerrojo plano .308",
+  "type": "arma",
+  "value": 310,
+  "weapon": "flat_sniper_r",
+  "icon": "weapon_awm"
+ },
+ "w_flat_sniper_m": {
+  "name": "Fusil antimaterial plano .50 BMG",
+  "type": "arma",
+  "value": 1080,
+  "weapon": "flat_sniper_m",
+  "icon": "weapon_awm"
+ },
  "ammo_380_std": {
   "name": "Munición .380 ACP · Estándar (FMJ)",
   "type": "municion",
@@ -601,7 +695,9 @@
    "pistol_2",
    "smg_4",
    "smg_1",
-   "smg_3"
+   "smg_3",
+   "flat_pistol_c",
+   "flat_smg_f"
   ],
   "caliber": "9x19",
   "ammo_type": "std",
@@ -619,7 +715,9 @@
    "pistol_2",
    "smg_4",
    "smg_1",
-   "smg_3"
+   "smg_3",
+   "flat_pistol_c",
+   "flat_smg_f"
   ],
   "caliber": "9x19",
   "ammo_type": "tr",
@@ -637,7 +735,9 @@
    "pistol_2",
    "smg_4",
    "smg_1",
-   "smg_3"
+   "smg_3",
+   "flat_pistol_c",
+   "flat_smg_f"
   ],
   "caliber": "9x19",
   "ammo_type": "hp",
@@ -655,7 +755,9 @@
    "pistol_2",
    "smg_4",
    "smg_1",
-   "smg_3"
+   "smg_3",
+   "flat_pistol_c",
+   "flat_smg_f"
   ],
   "caliber": "9x19",
   "ammo_type": "ap",
@@ -673,7 +775,9 @@
    "pistol_2",
    "smg_4",
    "smg_1",
-   "smg_3"
+   "smg_3",
+   "flat_pistol_c",
+   "flat_smg_f"
   ],
   "caliber": "9x19",
   "ammo_type": "in",
@@ -691,7 +795,9 @@
    "pistol_2",
    "smg_4",
    "smg_1",
-   "smg_3"
+   "smg_3",
+   "flat_pistol_c",
+   "flat_smg_f"
   ],
   "caliber": "9x19",
   "ammo_type": "fl",
@@ -780,7 +886,9 @@
    "m1911_1",
    "m1911t",
    "pistol_4",
-   "smg_2"
+   "smg_2",
+   "flat_pistol_f",
+   "flat_smg_c"
   ],
   "caliber": "45acp",
   "ammo_type": "std",
@@ -797,7 +905,9 @@
    "m1911_1",
    "m1911t",
    "pistol_4",
-   "smg_2"
+   "smg_2",
+   "flat_pistol_f",
+   "flat_smg_c"
   ],
   "caliber": "45acp",
   "ammo_type": "tr",
@@ -814,7 +924,9 @@
    "m1911_1",
    "m1911t",
    "pistol_4",
-   "smg_2"
+   "smg_2",
+   "flat_pistol_f",
+   "flat_smg_c"
   ],
   "caliber": "45acp",
   "ammo_type": "hp",
@@ -831,7 +943,9 @@
    "m1911_1",
    "m1911t",
    "pistol_4",
-   "smg_2"
+   "smg_2",
+   "flat_pistol_f",
+   "flat_smg_c"
   ],
   "caliber": "45acp",
   "ammo_type": "ap",
@@ -848,7 +962,9 @@
    "m1911_1",
    "m1911t",
    "pistol_4",
-   "smg_2"
+   "smg_2",
+   "flat_pistol_f",
+   "flat_smg_c"
   ],
   "caliber": "45acp",
   "ammo_type": "in",
@@ -865,7 +981,9 @@
    "m1911_1",
    "m1911t",
    "pistol_4",
-   "smg_2"
+   "smg_2",
+   "flat_pistol_f",
+   "flat_smg_c"
   ],
   "caliber": "45acp",
   "ammo_type": "fl",
@@ -1415,7 +1533,8 @@
    "ar_2",
    "bullpup_2",
    "bullpup_3",
-   "bullpup_1"
+   "bullpup_1",
+   "flat_rifle_a"
   ],
   "caliber": "556",
   "ammo_type": "std",
@@ -1443,7 +1562,8 @@
    "ar_2",
    "bullpup_2",
    "bullpup_3",
-   "bullpup_1"
+   "bullpup_1",
+   "flat_rifle_a"
   ],
   "caliber": "556",
   "ammo_type": "tr",
@@ -1471,7 +1591,8 @@
    "ar_2",
    "bullpup_2",
    "bullpup_3",
-   "bullpup_1"
+   "bullpup_1",
+   "flat_rifle_a"
   ],
   "caliber": "556",
   "ammo_type": "hp",
@@ -1499,7 +1620,8 @@
    "ar_2",
    "bullpup_2",
    "bullpup_3",
-   "bullpup_1"
+   "bullpup_1",
+   "flat_rifle_a"
   ],
   "caliber": "556",
   "ammo_type": "ap",
@@ -1527,7 +1649,8 @@
    "ar_2",
    "bullpup_2",
    "bullpup_3",
-   "bullpup_1"
+   "bullpup_1",
+   "flat_rifle_a"
   ],
   "caliber": "556",
   "ammo_type": "in",
@@ -1555,7 +1678,8 @@
    "ar_2",
    "bullpup_2",
    "bullpup_3",
-   "bullpup_1"
+   "bullpup_1",
+   "flat_rifle_a"
   ],
   "caliber": "556",
   "ammo_type": "fl",
@@ -1655,7 +1779,8 @@
    "m4dmr",
    "ar2_1",
    "ar_4",
-   "sniper_3"
+   "sniper_3",
+   "flat_rifle_b"
   ],
   "caliber": "762x51",
   "ammo_type": "std",
@@ -1671,7 +1796,8 @@
    "m4dmr",
    "ar2_1",
    "ar_4",
-   "sniper_3"
+   "sniper_3",
+   "flat_rifle_b"
   ],
   "caliber": "762x51",
   "ammo_type": "tr",
@@ -1687,7 +1813,8 @@
    "m4dmr",
    "ar2_1",
    "ar_4",
-   "sniper_3"
+   "sniper_3",
+   "flat_rifle_b"
   ],
   "caliber": "762x51",
   "ammo_type": "hp",
@@ -1703,7 +1830,8 @@
    "m4dmr",
    "ar2_1",
    "ar_4",
-   "sniper_3"
+   "sniper_3",
+   "flat_rifle_b"
   ],
   "caliber": "762x51",
   "ammo_type": "ap",
@@ -1719,7 +1847,8 @@
    "m4dmr",
    "ar2_1",
    "ar_4",
-   "sniper_3"
+   "sniper_3",
+   "flat_rifle_b"
   ],
   "caliber": "762x51",
   "ammo_type": "in",
@@ -1735,7 +1864,8 @@
    "m4dmr",
    "ar2_1",
    "ar_4",
-   "sniper_3"
+   "sniper_3",
+   "flat_rifle_b"
   ],
   "caliber": "762x51",
   "ammo_type": "fl",
@@ -1748,7 +1878,8 @@
   "amount": 20,
   "ammo_for": [
    "sniper_6",
-   "sniper_1"
+   "sniper_1",
+   "flat_sniper_r"
   ],
   "caliber": "308",
   "ammo_type": "std",
@@ -1761,7 +1892,8 @@
   "amount": 20,
   "ammo_for": [
    "sniper_6",
-   "sniper_1"
+   "sniper_1",
+   "flat_sniper_r"
   ],
   "caliber": "308",
   "ammo_type": "tr",
@@ -1774,7 +1906,8 @@
   "amount": 20,
   "ammo_for": [
    "sniper_6",
-   "sniper_1"
+   "sniper_1",
+   "flat_sniper_r"
   ],
   "caliber": "308",
   "ammo_type": "hp",
@@ -1787,7 +1920,8 @@
   "amount": 20,
   "ammo_for": [
    "sniper_6",
-   "sniper_1"
+   "sniper_1",
+   "flat_sniper_r"
   ],
   "caliber": "308",
   "ammo_type": "ap",
@@ -1800,7 +1934,8 @@
   "amount": 20,
   "ammo_for": [
    "sniper_6",
-   "sniper_1"
+   "sniper_1",
+   "flat_sniper_r"
   ],
   "caliber": "308",
   "ammo_type": "in",
@@ -1813,7 +1948,8 @@
   "amount": 20,
   "ammo_for": [
    "sniper_6",
-   "sniper_1"
+   "sniper_1",
+   "flat_sniper_r"
   ],
   "caliber": "308",
   "ammo_type": "fl",
@@ -1969,7 +2105,8 @@
   "value": 28,
   "amount": 5,
   "ammo_for": [
-   "sniper_5"
+   "sniper_5",
+   "flat_sniper_m"
   ],
   "caliber": "50bmg",
   "ammo_type": "std",
@@ -1981,7 +2118,8 @@
   "value": 43,
   "amount": 5,
   "ammo_for": [
-   "sniper_5"
+   "sniper_5",
+   "flat_sniper_m"
   ],
   "caliber": "50bmg",
   "ammo_type": "tr",
@@ -1993,7 +2131,8 @@
   "value": 63,
   "amount": 5,
   "ammo_for": [
-   "sniper_5"
+   "sniper_5",
+   "flat_sniper_m"
   ],
   "caliber": "50bmg",
   "ammo_type": "hp",
@@ -2005,7 +2144,8 @@
   "value": 87,
   "amount": 5,
   "ammo_for": [
-   "sniper_5"
+   "sniper_5",
+   "flat_sniper_m"
   ],
   "caliber": "50bmg",
   "ammo_type": "ap",
@@ -2017,7 +2157,8 @@
   "value": 105,
   "amount": 5,
   "ammo_for": [
-   "sniper_5"
+   "sniper_5",
+   "flat_sniper_m"
   ],
   "caliber": "50bmg",
   "ammo_type": "in",
@@ -2029,7 +2170,8 @@
   "value": 140,
   "amount": 5,
   "ammo_for": [
-   "sniper_5"
+   "sniper_5",
+   "flat_sniper_m"
   ],
   "caliber": "50bmg",
   "ammo_type": "fl",
@@ -2046,7 +2188,9 @@
    "shotgun_1",
    "shotgun_2",
    "shotgun_3",
-   "shotgun_4"
+   "shotgun_4",
+   "flat_shotgun_p",
+   "flat_shotgun_a"
   ],
   "caliber": "12ga",
   "ammo_type": "std",
@@ -2063,7 +2207,9 @@
    "shotgun_1",
    "shotgun_2",
    "shotgun_3",
-   "shotgun_4"
+   "shotgun_4",
+   "flat_shotgun_p",
+   "flat_shotgun_a"
   ],
   "caliber": "12ga",
   "ammo_type": "tr",
@@ -2080,7 +2226,9 @@
    "shotgun_1",
    "shotgun_2",
    "shotgun_3",
-   "shotgun_4"
+   "shotgun_4",
+   "flat_shotgun_p",
+   "flat_shotgun_a"
   ],
   "caliber": "12ga",
   "ammo_type": "hp",
@@ -2097,7 +2245,9 @@
    "shotgun_1",
    "shotgun_2",
    "shotgun_3",
-   "shotgun_4"
+   "shotgun_4",
+   "flat_shotgun_p",
+   "flat_shotgun_a"
   ],
   "caliber": "12ga",
   "ammo_type": "ap",
@@ -2114,7 +2264,9 @@
    "shotgun_1",
    "shotgun_2",
    "shotgun_3",
-   "shotgun_4"
+   "shotgun_4",
+   "flat_shotgun_p",
+   "flat_shotgun_a"
   ],
   "caliber": "12ga",
   "ammo_type": "in",
@@ -2131,34 +2283,12 @@
    "shotgun_1",
    "shotgun_2",
    "shotgun_3",
-   "shotgun_4"
+   "shotgun_4",
+   "flat_shotgun_p",
+   "flat_shotgun_a"
   ],
   "caliber": "12ga",
   "ammo_type": "fl",
   "icon": "ammo_9mm_common"
- },
- "keycard_b": {
-  "name": "Tarjeta azul (seguridad)",
-  "type": "llave",
-  "value": 0,
-  "icon": "usb_drive"
- },
- "keycard_c": {
-  "name": "Tarjeta amarilla (mantenimiento)",
-  "type": "llave",
-  "value": 0,
-  "icon": "usb_drive"
- },
- "keycard_vault": {
-  "name": "Tarjeta roja (bóveda)",
-  "type": "llave",
-  "value": 0,
-  "icon": "usb_drive"
- },
- "mine": {
-  "name": "Mina de proximidad",
-  "type": "mina",
-  "value": 180,
-  "icon": "grenade"
  }
 }

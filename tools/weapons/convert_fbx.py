@@ -40,7 +40,7 @@ def find(name):
     return None
 
 
-markers = {}
+markers = json.load(open(MK)) if (ONLY and os.path.exists(MK)) else {}      # con ids concretos se conserva lo ya convertido
 for wid, (fname, length, kind) in WEAPONS.items():
     if ONLY and wid not in ONLY:
         continue

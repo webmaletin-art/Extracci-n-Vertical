@@ -88,6 +88,17 @@ Q = [
  ("sniper_2", "SniperRifle_2", "Fusil de cerrojo .300 Win Mag", "sniper", "300wm", 1.30, 38, False, 5, 3.4, 280, 0.28, 6.2, 1),
  ("sniper_4", "SniperRifle_4", "Fusil de cerrojo .338 Lapua", "sniper", "338", 1.15, 35, False, 5, 3.6, 330, 0.25, 7.0, 1),
  ("sniper_5", "SniperRifle_5", "Fusil antimaterial .50 BMG", "sniper", "50bmg", 1.40, 50, False, 5, 4.2, 400, 0.30, 9.5, 1),
+ # --- Pack «Flat Guns East» (diez armas planas genéricas; sin nombre real, se clasifican por tipo)
+ ("flat_pistol_c", "Flat_Pistol_Compact", "Pistola plana compacta 9 mm", "pistol", "9x19", 0.17, 330, False, 13, 1.6, 25, 2.7, 2.4, 1),
+ ("flat_pistol_f", "Flat_Pistol_Full", "Pistola plana de servicio .45", "pistol", "45acp", 0.21, 300, False, 12, 1.8, 30, 2.3, 3.0, 1),
+ ("flat_smg_c", "Flat_SMG_Compact", "Subfusil plano compacto (tipo MAC) .45", "smg", "45acp", 0.31, 1000, True, 30, 2.0, 24, 4.2, 3.8, 1),
+ ("flat_smg_f", "Flat_SMG_Full", "Subfusil plano 9 mm", "smg", "9x19", 0.55, 750, True, 30, 2.1, 30, 3.0, 2.6, 1),
+ ("flat_rifle_a", "Flat_Rifle_Assault", "Fusil de asalto plano 5,56", "rifle", "556", 0.95, 750, True, 30, 2.3, 85, 1.7, 1.5, 1),
+ ("flat_rifle_b", "Flat_Rifle_Battle", "Fusil de batalla plano 7,62×51", "rifle", "762x51", 1.00, 600, True, 20, 2.6, 110, 1.8, 2.8, 1),
+ ("flat_shotgun_p", "Flat_Shotgun_Pump", "Escopeta plana de corredera", "shotgun", "12ga", 1.00, 70, False, 7, 3.2, 15, 6.5, 6.2, 8),
+ ("flat_shotgun_a", "Flat_Shotgun_Auto", "Escopeta plana automática", "shotgun", "12ga", 0.95, 180, False, 8, 3.0, 15, 6.8, 6.0, 8),
+ ("flat_sniper_r", "Flat_Sniper_Rifle", "Fusil de cerrojo plano .308", "sniper", "308", 1.10, 40, False, 5, 3.2, 230, 0.3, 5.4, 1),
+ ("flat_sniper_m", "Flat_Sniper_Material", "Fusil antimaterial plano .50 BMG", "sniper", "50bmg", 1.35, 55, False, 10, 4.0, 380, 0.3, 9.0, 1),
 ]
 # calibres de las 21 armas anteriores (sólo metadato: no se tocan sus estadísticas)
 OLD_CAL = {"m1911": "45acp", "m1911_1": "45acp", "m1911t": "45acp", "deagle": "50ae", "mp7": "46x30", "p90": "57x28", "vector": "45acp",

@@ -232,7 +232,9 @@
     "pistol_2",
     "smg_4",
     "smg_1",
-    "smg_3"
+    "smg_3",
+    "flat_pistol_c",
+    "flat_smg_f"
    ]
   },
   "40sw": {
@@ -269,7 +271,9 @@
     "m1911_1",
     "m1911t",
     "pistol_4",
-    "smg_2"
+    "smg_2",
+    "flat_pistol_f",
+    "flat_smg_c"
    ]
   },
   "38sp": {
@@ -416,7 +420,8 @@
     "ar_2",
     "bullpup_2",
     "bullpup_3",
-    "bullpup_1"
+    "bullpup_1",
+    "flat_rifle_a"
    ]
   },
   "762x39": {
@@ -454,7 +459,8 @@
     "m4dmr",
     "ar2_1",
     "ar_4",
-    "sniper_3"
+    "sniper_3",
+    "flat_rifle_b"
    ]
   },
   "308": {
@@ -471,7 +477,8 @@
    "round_price": 8.59,
    "weapons": [
     "sniper_6",
-    "sniper_1"
+    "sniper_1",
+    "flat_sniper_r"
    ]
   },
   "300wm": {
@@ -519,7 +526,8 @@
    "box": 5,
    "round_price": 23.31,
    "weapons": [
-    "sniper_5"
+    "sniper_5",
+    "flat_sniper_m"
    ]
   },
   "12ga": {
@@ -540,7 +548,9 @@
     "shotgun_1",
     "shotgun_2",
     "shotgun_3",
-    "shotgun_4"
+    "shotgun_4",
+    "flat_shotgun_p",
+    "flat_shotgun_a"
    ]
   }
  },
@@ -618,7 +628,9 @@
     "pistol_2",
     "smg_4",
     "smg_1",
-    "smg_3"
+    "smg_3",
+    "flat_pistol_c",
+    "flat_smg_f"
    ]
   },
   "9x19_tr": {
@@ -634,7 +646,9 @@
     "pistol_2",
     "smg_4",
     "smg_1",
-    "smg_3"
+    "smg_3",
+    "flat_pistol_c",
+    "flat_smg_f"
    ]
   },
   "9x19_hp": {
@@ -650,7 +664,9 @@
     "pistol_2",
     "smg_4",
     "smg_1",
-    "smg_3"
+    "smg_3",
+    "flat_pistol_c",
+    "flat_smg_f"
    ]
   },
   "9x19_ap": {
@@ -666,7 +682,9 @@
     "pistol_2",
     "smg_4",
     "smg_1",
-    "smg_3"
+    "smg_3",
+    "flat_pistol_c",
+    "flat_smg_f"
    ]
   },
   "9x19_in": {
@@ -682,7 +700,9 @@
     "pistol_2",
     "smg_4",
     "smg_1",
-    "smg_3"
+    "smg_3",
+    "flat_pistol_c",
+    "flat_smg_f"
    ]
   },
   "9x19_fl": {
@@ -698,7 +718,9 @@
     "pistol_2",
     "smg_4",
     "smg_1",
-    "smg_3"
+    "smg_3",
+    "flat_pistol_c",
+    "flat_smg_f"
    ]
   },
   "40sw_std": {
@@ -773,7 +795,9 @@
     "m1911_1",
     "m1911t",
     "pistol_4",
-    "smg_2"
+    "smg_2",
+    "flat_pistol_f",
+    "flat_smg_c"
    ]
   },
   "45acp_tr": {
@@ -788,7 +812,9 @@
     "m1911_1",
     "m1911t",
     "pistol_4",
-    "smg_2"
+    "smg_2",
+    "flat_pistol_f",
+    "flat_smg_c"
    ]
   },
   "45acp_hp": {
@@ -803,7 +829,9 @@
     "m1911_1",
     "m1911t",
     "pistol_4",
-    "smg_2"
+    "smg_2",
+    "flat_pistol_f",
+    "flat_smg_c"
    ]
   },
   "45acp_ap": {
@@ -818,7 +846,9 @@
     "m1911_1",
     "m1911t",
     "pistol_4",
-    "smg_2"
+    "smg_2",
+    "flat_pistol_f",
+    "flat_smg_c"
    ]
   },
   "45acp_in": {
@@ -833,7 +863,9 @@
     "m1911_1",
     "m1911t",
     "pistol_4",
-    "smg_2"
+    "smg_2",
+    "flat_pistol_f",
+    "flat_smg_c"
    ]
   },
   "45acp_fl": {
@@ -848,7 +880,9 @@
     "m1911_1",
     "m1911t",
     "pistol_4",
-    "smg_2"
+    "smg_2",
+    "flat_pistol_f",
+    "flat_smg_c"
    ]
   },
   "38sp_std": {
@@ -1312,7 +1346,8 @@
     "ar_2",
     "bullpup_2",
     "bullpup_3",
-    "bullpup_1"
+    "bullpup_1",
+    "flat_rifle_a"
    ]
   },
   "556_tr": {
@@ -1338,7 +1373,8 @@
     "ar_2",
     "bullpup_2",
     "bullpup_3",
-    "bullpup_1"
+    "bullpup_1",
+    "flat_rifle_a"
    ]
   },
   "556_hp": {
@@ -1364,7 +1400,8 @@
     "ar_2",
     "bullpup_2",
     "bullpup_3",
-    "bullpup_1"
+    "bullpup_1",
+    "flat_rifle_a"
    ]
   },
   "556_ap": {
@@ -1390,7 +1427,8 @@
     "ar_2",
     "bullpup_2",
     "bullpup_3",
-    "bullpup_1"
+    "bullpup_1",
+    "flat_rifle_a"
    ]
   },
   "556_in": {
@@ -1416,7 +1454,8 @@
     "ar_2",
     "bullpup_2",
     "bullpup_3",
-    "bullpup_1"
+    "bullpup_1",
+    "flat_rifle_a"
    ]
   },
   "556_fl": {
@@ -1442,7 +1481,8 @@
     "ar_2",
     "bullpup_2",
     "bullpup_3",
-    "bullpup_1"
+    "bullpup_1",
+    "flat_rifle_a"
    ]
   },
   "762x39_std": {
@@ -1528,7 +1568,8 @@
     "m4dmr",
     "ar2_1",
     "ar_4",
-    "sniper_3"
+    "sniper_3",
+    "flat_rifle_b"
    ]
   },
   "762x51_tr": {
@@ -1542,7 +1583,8 @@
     "m4dmr",
     "ar2_1",
     "ar_4",
-    "sniper_3"
+    "sniper_3",
+    "flat_rifle_b"
    ]
   },
   "762x51_hp": {
@@ -1556,7 +1598,8 @@
     "m4dmr",
     "ar2_1",
     "ar_4",
-    "sniper_3"
+    "sniper_3",
+    "flat_rifle_b"
    ]
   },
   "762x51_ap": {
@@ -1570,7 +1613,8 @@
     "m4dmr",
     "ar2_1",
     "ar_4",
-    "sniper_3"
+    "sniper_3",
+    "flat_rifle_b"
    ]
   },
   "762x51_in": {
@@ -1584,7 +1628,8 @@
     "m4dmr",
     "ar2_1",
     "ar_4",
-    "sniper_3"
+    "sniper_3",
+    "flat_rifle_b"
    ]
   },
   "762x51_fl": {
@@ -1598,7 +1643,8 @@
     "m4dmr",
     "ar2_1",
     "ar_4",
-    "sniper_3"
+    "sniper_3",
+    "flat_rifle_b"
    ]
   },
   "308_std": {
@@ -1609,7 +1655,8 @@
    "price": 170,
    "weapons": [
     "sniper_6",
-    "sniper_1"
+    "sniper_1",
+    "flat_sniper_r"
    ]
   },
   "308_tr": {
@@ -1620,7 +1667,8 @@
    "price": 260,
    "weapons": [
     "sniper_6",
-    "sniper_1"
+    "sniper_1",
+    "flat_sniper_r"
    ]
   },
   "308_hp": {
@@ -1631,7 +1679,8 @@
    "price": 380,
    "weapons": [
     "sniper_6",
-    "sniper_1"
+    "sniper_1",
+    "flat_sniper_r"
    ]
   },
   "308_ap": {
@@ -1642,7 +1691,8 @@
    "price": 515,
    "weapons": [
     "sniper_6",
-    "sniper_1"
+    "sniper_1",
+    "flat_sniper_r"
    ]
   },
   "308_in": {
@@ -1653,7 +1703,8 @@
    "price": 620,
    "weapons": [
     "sniper_6",
-    "sniper_1"
+    "sniper_1",
+    "flat_sniper_r"
    ]
   },
   "308_fl": {
@@ -1664,7 +1715,8 @@
    "price": 825,
    "weapons": [
     "sniper_6",
-    "sniper_1"
+    "sniper_1",
+    "flat_sniper_r"
    ]
   },
   "300wm_std": {
@@ -1794,7 +1846,8 @@
    "box": 5,
    "price": 115,
    "weapons": [
-    "sniper_5"
+    "sniper_5",
+    "flat_sniper_m"
    ]
   },
   "50bmg_tr": {
@@ -1804,7 +1857,8 @@
    "box": 5,
    "price": 175,
    "weapons": [
-    "sniper_5"
+    "sniper_5",
+    "flat_sniper_m"
    ]
   },
   "50bmg_hp": {
@@ -1814,7 +1868,8 @@
    "box": 5,
    "price": 255,
    "weapons": [
-    "sniper_5"
+    "sniper_5",
+    "flat_sniper_m"
    ]
   },
   "50bmg_ap": {
@@ -1824,7 +1879,8 @@
    "box": 5,
    "price": 350,
    "weapons": [
-    "sniper_5"
+    "sniper_5",
+    "flat_sniper_m"
    ]
   },
   "50bmg_in": {
@@ -1834,7 +1890,8 @@
    "box": 5,
    "price": 420,
    "weapons": [
-    "sniper_5"
+    "sniper_5",
+    "flat_sniper_m"
    ]
   },
   "50bmg_fl": {
@@ -1844,7 +1901,8 @@
    "box": 5,
    "price": 560,
    "weapons": [
-    "sniper_5"
+    "sniper_5",
+    "flat_sniper_m"
    ]
   },
   "12ga_std": {
@@ -1859,7 +1917,9 @@
     "shotgun_1",
     "shotgun_2",
     "shotgun_3",
-    "shotgun_4"
+    "shotgun_4",
+    "flat_shotgun_p",
+    "flat_shotgun_a"
    ]
   },
   "12ga_tr": {
@@ -1874,7 +1934,9 @@
     "shotgun_1",
     "shotgun_2",
     "shotgun_3",
-    "shotgun_4"
+    "shotgun_4",
+    "flat_shotgun_p",
+    "flat_shotgun_a"
    ]
   },
   "12ga_hp": {
@@ -1889,7 +1951,9 @@
     "shotgun_1",
     "shotgun_2",
     "shotgun_3",
-    "shotgun_4"
+    "shotgun_4",
+    "flat_shotgun_p",
+    "flat_shotgun_a"
    ]
   },
   "12ga_ap": {
@@ -1904,7 +1968,9 @@
     "shotgun_1",
     "shotgun_2",
     "shotgun_3",
-    "shotgun_4"
+    "shotgun_4",
+    "flat_shotgun_p",
+    "flat_shotgun_a"
    ]
   },
   "12ga_in": {
@@ -1919,7 +1985,9 @@
     "shotgun_1",
     "shotgun_2",
     "shotgun_3",
-    "shotgun_4"
+    "shotgun_4",
+    "flat_shotgun_p",
+    "flat_shotgun_a"
    ]
   },
   "12ga_fl": {
@@ -1934,7 +2002,9 @@
     "shotgun_1",
     "shotgun_2",
     "shotgun_3",
-    "shotgun_4"
+    "shotgun_4",
+    "flat_shotgun_p",
+    "flat_shotgun_a"
    ]
   }
  }
