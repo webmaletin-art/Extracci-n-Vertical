@@ -71,9 +71,7 @@ var _plates: Array[Node3D] = []
 func _ready() -> void:
 	PlayerController.setup_input_map()
 	WEAPONS = Firearm.all_stats().keys()
-	for t in Ammo.TYPE_ORDER:
-		AMMO[t] = {"name": str(Ammo.data().types[t].name)}
-	AMMO.merge(AMMO_TEST)
+	_rebuild_ammo()
 	_saved_bt = Settings.bullet_time
 	Settings.bullet_time = 2           # toma de cerca de cada herida
 	Fx.attach(self)
@@ -123,6 +121,16 @@ func _ready() -> void:
 	_build_ui()
 	Sfx.ambient("amb_wind", -26.0)
 
+## Munición disponible para el arma elegida: las escopetas usan sus propios cartuchos (postas, balón, etc.).
+func _rebuild_ammo() -> void:
+	AMMO = {}
+	for t in Ammo.TYPE_ORDER:
+		AMMO[t] = {"name": Ammo.label(weapon_id, t)}
+	if not Ammo.is_shotgun(weapon_id):
+		AMMO.merge(AMMO_TEST)
+	if not AMMO.has(ammo_id):
+		ammo_id = "std"
+
 func _exit_tree() -> void:
 	Settings.bullet_time = _saved_bt
 	_stop_recording()
@@ -167,8 +175,14 @@ func _build_arena() -> void:
 	var p2 := _box(Vector3(34.0, 0.9, 0.0), Vector3(0.12, 1.8, 1.6), "metal", metal, Basis(Vector3.BACK, deg_to_rad(-62.0)))
 	var p3 := _box(Vector3(26.0, 0.07, 0.0), Vector3(3.0, 0.14, 1.6), "metal", metal, Basis(Vector3.BACK, deg_to_rad(-12.0)))
 	_plates = [p1, p2, p3]
+	_set_plates(false)
 	_box(Vector3(38.0, 0.6, 0.0), Vector3(1.2, 1.2, 1.2), "concrete", concrete)
 	_box(Vector3(41.0, 0.45, 0.0), Vector3(0.9, 0.9, 0.9), "wood", wood)
+
+func _set_plates(on: bool) -> void:
+	for p in _plates:
+		p.visible = on
+		p.collision_layer = 1 if on else 0
 
 func _mat(c: Color, metallic := 0.0, rough := 0.9) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
@@ -266,7 +280,7 @@ func _process(delta: float) -> void:
 	if _info and player:
 		var w := player.weapon()
 		_info.text = "%s · %s%s\n%s\nManiquí a %.0f m · %s" % [
-			Firearm.all_stats()[weapon_id].name, AMMO[ammo_id].name, ("  [%d/%d]" % [w.mag, int(w.stats.mag)]) if w else "",
+			Firearm.all_stats()[weapon_id].name, Ammo.label(weapon_id, ammo_id) if Ammo.TYPE_ORDER.has(ammo_id) else str(AMMO[ammo_id].name), ("  [%d/%d]" % [w.mag, int(w.stats.mag)]) if w else "",
 			Firearm.summary(Firearm.all_stats()[weapon_id]), distance, "inmortal" if immortal else "mortal"]
 	if w_valid():
 		var w2 := player.weapon()
@@ -387,12 +401,20 @@ func _build_ui() -> void:
 	v.add_theme_constant_override("separation", 6)
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(v)
+	var ammo_opt: OptionButton
+	var fill_ammo := func():
+		ammo_opt.clear()
+		for k in AMMO.keys():
+			ammo_opt.add_item(str(AMMO[k].name))
+		ammo_opt.selected = maxi(AMMO.keys().find(ammo_id), 0)
 	_option(v, "Arma", WEAPONS.map(func(k): return Firearm.all_stats()[k].name), WEAPONS.find(weapon_id), func(i):
 		weapon_id = WEAPONS[i]
+		_rebuild_ammo()
+		fill_ammo.call()
 		_equip())
-	var ammo_keys := AMMO.keys()
-	_option(v, "Munición", ammo_keys.map(func(k): return AMMO[k].name), ammo_keys.find(ammo_id), func(i):
-		ammo_id = ammo_keys[i]
+	var ammo_keys0 := AMMO.keys()
+	ammo_opt = _option(v, "Munición", ammo_keys0.map(func(k): return AMMO[k].name), ammo_keys0.find(ammo_id), func(i):
+		ammo_id = AMMO.keys()[i]
 		_apply_ammo(player.weapon()))
 	var chars: Array = []
 	for c in CharacterModel.all():
@@ -445,6 +467,7 @@ func _build_ui() -> void:
 	fire.add_theme_font_size_override("font_size", 24)
 	fire.pressed.connect(func(): shoot_zone(str(zone_keys[zrow.selected])))
 	v.add_child(fire)
+	_check(v, "Placas de rebote (prueba de rebotes)", func(on): _set_plates(on))
 	_check(v, "Maniquí agachado", func(on): crouched = on)
 	_check(v, "Maniquí inmortal (acumula heridas)", func(on):
 		immortal = on

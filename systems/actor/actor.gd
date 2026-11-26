@@ -413,6 +413,11 @@ func cycle_weapon() -> void:
 func _physics_process(delta: float) -> void:
 	_time += delta
 	_spec_tick(delta)
+	if aim_dir.distance_to(_aim_prev) < 0.01 and absf(velocity.x) < 0.5:
+		_aim_still += delta
+	else:
+		_aim_still = maxf(_aim_still - delta * 3.0, 0.0)
+	_aim_prev = aim_dir
 	if injuries.deaf > 0.0:
 		injuries.deaf = maxf(injuries.deaf - delta, 0.0)
 		if is_player:
@@ -496,6 +501,33 @@ func _update_aim(delta := 1.0 / 60.0) -> void:
 		facing = signf(aim_dir.x)
 
 ## Dirección de disparo (apuntado + retroceso), 3D en el plano del juego.
+var _aim_still := 0.0                 ## segundos con la mira quieta (se asienta la puntería)
+var _aim_prev := Vector2.ZERO
+
+## Ayuda de puntería: si la mira pasa cerca de un enemigo, el disparo se corrige hacia el CENTRO de su torso
+## (tanto más cuanto mejor asentada y quieta esté la mira). Con la mira inestable no corrige nada.
+func _center_assist(from: Vector3, dir: Vector3, rng: float, k: float) -> Vector3:
+	if k <= 0.05:
+		return dir
+	var best: Vector3 = Vector3.ZERO
+	var best_d := 0.7
+	for n in get_tree().get_nodes_in_group("actors"):
+		var o := n as Actor
+		if o == null or o == self or o.is_dead() or o.team == team:
+			continue
+		var c := o.global_position + Vector3(0, 1.15, 0)
+		var to := c - from
+		var along := to.dot(dir)
+		if along < 0.5 or along > maxf(rng, 20.0):
+			continue
+		var miss := (to - dir * along).length()
+		if miss < best_d:
+			best_d = miss
+			best = to.normalized()
+	if best == Vector3.ZERO:
+		return dir
+	return dir.slerp(best, clampf(k, 0.0, 1.0) * 0.85).normalized()
+
 func fire_dir() -> Vector3:
 	var sway := 0.0
 	if injuries.arm > 0.0 or injuries.head > 0.0 or injuries.hand > 0.0:
@@ -890,9 +922,14 @@ func _shoot(w: Firearm) -> void:
 		from = (wall.position as Vector3) - fire_dir() * 0.05
 	var exclude := hitbox_rids()
 	var first := -1
+	# puntería: quieto y con la mira asentada va al centro del cuerpo; corriendo o disparando apenas se apunta, se abre
+	var move_k := clampf(absf(velocity.x) / 4.0, 0.0, 1.0)
+	var settle := clampf(_aim_still / 0.35, 0.0, 1.0)
+	var chaos := clampf(move_k * 1.2 + (1.0 - settle) * 0.9, 0.0, 1.5)
+	var base_dir := _center_assist(from, fire_dir(), float(st.get("range", 60.0)), 1.0 - chaos)
 	for n in int(st.pellets):
-		var spread := deg_to_rad(float(st.spread)) * (0.6 if crouching else 1.0) * (1.4 if absf(velocity.x) > 2.5 else 1.0) * injuries.aim_penalty()
-		var d := fire_dir().rotated(Vector3.BACK, randf_range(-spread, spread) * 0.5)
+		var spread := deg_to_rad(float(st.spread)) * (0.6 if crouching else 1.0) * (1.0 + chaos * 2.2) * injuries.aim_penalty()
+		var d := base_dir.rotated(Vector3.BACK, randf_range(-spread, spread) * 0.5)
 		if Ballistics.instance:
 			var idx := Ballistics.instance.fire(from, d, float(st.speed), float(st.damage), self, exclude,
 				{"penetration": st.penetration, "drag": st.drag, "ricochet": st.ricochet, "range": float(st.get("range", 0.0)),
@@ -1137,7 +1174,7 @@ func take_damage(info: Dictionary) -> void:
 	var dir: Vector3 = info.get("dir", Vector3(-facing, 0, 0))
 	if t in ["bullet", "fragment", "knife", "blast", "impact"] or (t in ["punch", "kick"] and amount > 12.0):
 		var bp: Vector3 = info.get("point", global_position + Vector3.UP * 1.2)
-		var through: bool = t == "bullet" and zone in ["head", "neck", "arm", "leg", "hand", "foot"]
+		var through: bool = t == "bullet" and (zone in ["head", "neck", "arm", "leg", "hand", "foot"] or str((info.get("ammo_fx", {}) as Dictionary).get("type", "")) == "ap")
 		if Blood.instance:
 			# cuánta sangre sale depende de la potencia del arma (un .338 / 7,62 salpica mucho más que una pistola)
 			var afx: Dictionary = info.get("ammo_fx", {})
@@ -1409,6 +1446,7 @@ func _update_visual(delta: float) -> void:
 		ik.spine_pitch = pitch * (0.5 + 0.2 * absf(pitch) / deg_to_rad(80.0)) * _ik_w
 		ik.head_pitch = pitch * 0.25 * _ik_w
 		ik.left_grip_weight = 1.0
+		ik.shoulder_open = deg_to_rad(10.0) * _ik_w
 	else:
 		ik.weapon_aim_dir = Vector3.ZERO
 		ik.weapon_target_w = 0.0

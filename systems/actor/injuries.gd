@@ -120,7 +120,7 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 				_strength = 0.6
 			# escopeta: cada perdigón rompe más de cerca (a quemarropa destroza; a 10 m apenas)
 			if int(info.get("pellets", 1)) > 1:
-				_strength = clampf(2.4 - float(info.get("distance", 6.0)) * 0.2, 0.6, 2.4) * float(afx.get("bone", 1.0))
+				_strength = clampf(2.8 - float(info.get("distance", 6.0)) * 0.2, 0.7, 2.8) * float(afx.get("bone", 1.0)) * 1.25
 			# recorrido por dentro: al pegar en un hueso duro la bala puede desviarse y seguir rompiendo en otra dirección
 			var o := point - dir * 0.3
 			var d := dir
@@ -177,11 +177,17 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 					res.path.append({"node": last_hit.node, "p": last_hit.p_out + (last_hit.dir as Vector3) * 0.35, "seq": -1, "exit": true})
 			# incendiaria / punta de flor: el daño interno se ensancha (revienta lo que hay alrededor del recorrido)
 			var organ_k := float(afx.get("organ", 1.0))
-			if t == "bullet" and organ_k > 1.15 and not last_hit.is_empty():
-				var burst_r := 0.045 * organ_k
+			var is_burst := bool(afx.get("burst", false))
+			var ptype := str(afx.get("type", "std"))
+			var pel := int(info.get("pellets", 1))
+			var extra_n := 4 if is_burst else (3 if ptype == "hp" else (2 if organ_k > 1.15 else 0))
+			if pel > 1 and float(info.get("distance", 6.0)) < 9.0:
+				extra_n += 3                                 # escopeta de cerca: destroza todo lo que hay alrededor
+			if t == "bullet" and extra_n > 0 and not last_hit.is_empty():
+				var burst_r := 0.045 * maxf(organ_k, 1.0) * (1.6 if pel > 1 else 1.0)
 				var added := 0
 				for n in anat.near(point, burst_r):
-					if seen.has(n) or added >= (4 if bool(afx.get("burst", false)) else 2):
+					if seen.has(n) or added >= extra_n:
 						continue
 					seen[n] = true
 					added += 1
@@ -189,8 +195,15 @@ func process(actor: Actor, info: Dictionary) -> Dictionary:
 						"p_in": anat.world_to_bind(n, point), "p_out": anat.world_to_bind(n, point + dir * 0.03), "dir": anat.dir_to_bind(n, dir), "t_in": 0.0, "t_out": 0.03}
 					anat.next_seq()
 					_hit_structure(anat, actor, hh, t, r * 1.8, res, o, d)
-					if bool(afx.get("burst", false)):
+					if is_burst:
 						res.texts.append("Estallido de %s" % hh.label)
+					elif ptype == "hp":
+						res.texts.append("Desgarro de %s" % hh.label)
+					elif pel > 1:
+						res.texts.append("Destrozo de %s" % hh.label)
+			if t == "bullet" and str(afx.get("type", "")) == "ap" and not (res.path as Array).is_empty():
+				bleeding = minf(bleeding + 0.4, 3.0)         # la perforante deja un túnel limpio que sangra
+				res.texts.append("Orificio de salida sangrante")
 			res["seq1"] = anat._seq
 			if t in ["bullet", "fragment"] and max_depth < INF and not last_hit.is_empty():
 				var ln := str(last_hit.node)

@@ -193,7 +193,7 @@ func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, t
 		if is_instance_valid(old):
 			(old as Node).queue_free()
 	a.set_meta("wound_holes", holes)
-	var sz := (0.04 + 0.026 * power) * wound_k              # el tamaño sale de la potencia y del tipo de munición (flor / incendiaria: enorme)
+	var sz := clampf((0.035 + 0.02 * power) * minf(wound_k, 1.6), 0.03, 0.085)              # el tamaño sale de la potencia y del tipo de munición (flor / incendiaria: enorme)
 	for side in ([[-1.0, 1.0], [1.0, 1.7]] if through else [[-1.0, 1.0]]):
 		var mi := MeshInstance3D.new()
 		var q := QuadMesh.new()
@@ -209,6 +209,10 @@ func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, t
 		# el punto del disparo está en el borde de la zona de impacto (más grande que el cuerpo): se mete hacia el hueso
 		# para que el orificio quede sobre la piel y no flotando afuera
 		var inset := _inset(bone)
+		var bpos := a.skel.global_transform * a.skel.get_bone_global_pose(a.skel.find_bone(bone)).origin
+		var tc := clampf((bpos - point).dot(dir.normalized()), inset * 0.5, 0.38)      # hacia el centro del hueso a lo largo del disparo
+		inset = tc
+		zd *= 0.7                                                                         # un poco más adentro que el traje
 		var p := point + dir.normalized() * inset + Vector3(0, 0, zd)
 		if side[0] > 0.0:
 			p = point + dir.normalized() * (inset * 1.9 + 0.03) + Vector3(0, 0, zd)
@@ -226,7 +230,7 @@ func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, t
 				_wound_stain_mat.render_priority = 3
 			var st := MeshInstance3D.new()
 			var sq := QuadMesh.new()
-			sq.size = Vector2(sz, sz) * 2.6
+			sq.size = Vector2(sz, sz) * 1.9
 			st.mesh = sq
 			st.material_override = _wound_stain_mat
 			st.set_meta("no_tech", true)
@@ -234,7 +238,7 @@ func wound(a: Actor, bone: String, point: Vector3, dir: Vector3, power: float, t
 			att.add_child(st)
 			st.global_transform = Transform3D(Basis.looking_at(Vector3(0, 0, -1), Vector3.UP).rotated(Vector3.BACK, randf() * TAU), p + Vector3(0, 0, -0.004))
 			st.scale = Vector3(0.5, 0.5, 1.0)
-			st.create_tween().tween_property(st, "scale", Vector3(1.0 + 0.5 * wound_k, 1.0 + 0.5 * wound_k, 1.0), 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+			st.create_tween().tween_property(st, "scale", Vector3(1.0 + 0.25 * minf(wound_k, 2.0), 1.0 + 0.25 * minf(wound_k, 2.0), 1.0), 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 ## Distancia de la piel al plano del juego (z = 0) según el hueso: el orificio se pega a la superficie del cuerpo y no flota.
 static func _inset(bone: String) -> float:

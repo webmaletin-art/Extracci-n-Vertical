@@ -35,7 +35,7 @@ CAL = {
 TYPES = {
  "std": ("Estándar (FMJ)",   1.00, 1.00, 1.00, 1.00, 1.00, 0, 1.0, "Camisa completa: equilibrada y barata.", 1.0, 1.0, 1.0, 1.0, False),
  "tr":  ("Trazante",         1.00, 1.00, 1.20, 1.00, 0.95, 2, 1.5, "Deja una estela luminosa: se ve adónde van los tiros.", 1.0, 1.0, 1.0, 1.0, False),
- "hp":  ("Punta hueca",      1.30, 0.45, 0.50, 0.97, 1.00, 0, 2.2, "Se abre al impactar: más daño, orificio más grande y más sangre; atraviesa poco.", 1.25, 1.5, 1.5, 1.2, False),
+ "hp":  ("Punta hueca",      1.30, 0.45, 0.50, 0.97, 1.00, 0, 2.2, "Se abre al impactar: más daño, orificio más grande y más sangre; atraviesa poco.", 1.25, 1.5, 1.5, 1.5, False),
  "ap":  ("Perforante",       1.12, 2.60, 0.60, 1.06, 0.90, 2, 3.0, "Núcleo de acero: atraviesa paredes y coberturas y rompe el hueso por el medio.", 1.45, 0.8, 0.9, 1.0, False),
  "in":  ("Incendiaria",      1.25, 0.70, 0.40, 0.98, 1.00, 4, 3.6, "Estalla al entrar: revienta órganos y partes del cuerpo, quema y destroza la ropa.", 1.7, 2.1, 2.0, 2.2, True),
  "fl":  ("Punta de flor",    1.55, 0.35, 0.20, 0.96, 1.00, 0, 4.8, "Se abre en pétalos: el máximo daño, huesos astillados, orificio enorme y mucha sangre.", 1.9, 2.7, 2.5, 1.8, False),

@@ -167,9 +167,9 @@ func _step(i: int, space: PhysicsDirectSpaceState3D, p0: Vector3, p1: Vector3) -
 			Fx.impact(point, -dir, "flesh")
 			if bool((_afx[i] as Dictionary).get("burst", false)):
 				# incendiaria: estalla al entrar (chispas, fuego y un destello)
-				Fx.emit("spark", point, -dir, 2.0)
-				Fx.emit("fireball", point, Vector3.UP, 0.35)
-				Fx.flash(point, 5.0, 3.0, 0.18, Color(1.0, 0.55, 0.2))
+				Fx.emit("spark", point, -dir, 1.2)
+				Fx.emit("fireball", point, Vector3.UP, 0.08)      # llama diminuta: lo que se ve es el daño por dentro
+				Fx.flash(point, 1.8, 1.2, 0.08, Color(1.0, 0.6, 0.25))
 			Sfx.play("impact_flesh", point, -2.0)
 			# la bala atraviesa las partes finas (cabeza, cuello, brazos, piernas, manos, pies) y sigue; el torso sólo
 			# lo atraviesan los calibres potentes

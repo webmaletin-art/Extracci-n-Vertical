@@ -46,7 +46,7 @@
    "bone": 1.25,
    "wound": 1.5,
    "blood": 1.5,
-   "organ": 1.2,
+   "organ": 1.5,
    "burst": false
   },
   "ap": {

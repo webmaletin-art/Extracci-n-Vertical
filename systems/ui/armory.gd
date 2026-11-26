@@ -578,25 +578,22 @@ func _load_cartridges(cal: String) -> void:
 		_aroot.remove_child(ch)
 		ch.queue_free()
 	var c: Dictionary = Ammo.data().calibers[cal]
-	var oal := float(c.oal) * 0.001
-	var k := 1.0 / oal                          # todos los cartuchos se ven a la misma altura
-	var i := 0
-	for t in Ammo.TYPE_ORDER:
-		var path := "res://assets/ammo/cartridges/%s_%s.glb" % [cal, t]
+	var k := 1.0 / (float(c.oal) * 0.001)           # todos los cartuchos se ven a la misma altura
+	for ty in Ammo.TYPE_ORDER:
+		var path := "res://assets/ammo/cartridges/%s_%s.glb" % [cal, ty]
 		if not ResourceLoader.exists(path):
 			continue
-		var n := (load(path) as PackedScene).instantiate() as Node3D
-		n.scale = Vector3.ONE * k
-		n.name = "c_" + str(t)
-		_ink(n)
-		_aroot.add_child(n)
-		n.position = Vector3(float(i), 0.0, 0.0)
-		if i % 2 == 1:                              # algunas munición tumbada (como sueltas sobre la mesa)
-			n.rotation_degrees = Vector3(0, 0, 90 + (i % 3) * 6)
-		i += 1
+		# dos por tipo: uno parado (la vaina) y uno tumbado con la punta de frente, para distinguir hueca / flor / perforante / trazante
+		for lying in [false, true]:
+			var n := (load(path) as PackedScene).instantiate() as Node3D
+			n.scale = Vector3.ONE * k
+			n.name = "%s_%s" % ["l" if lying else "c", str(ty)]
+			_aroot.add_child(n)
+			_ink(n)
+			if lying:
+				n.rotation_degrees = Vector3(0, 38, 90)
 	_layout_ammo()
 
-## Un cartucho por columna: se reparten a lo ancho para quedar justo sobre su cartel y su botón.
 func _layout_ammo() -> void:
 	if _acam == null or _ammo_view == null:
 		return
@@ -605,19 +602,15 @@ func _layout_ammo() -> void:
 	if sz.x < 10 or sz.y < 10:
 		return
 	_acam.size = 1.3
-	var width := _acam.size * sz.x / sz.y
-	var step := width / float(n)
-	_acam.global_position = Vector3(float(n - 1) * 0.5 * 1.0, 0.5, 3.0)
-	var i := 0
+	var step := _acam.size * sz.x / sz.y / float(n)
 	for ch in _aroot.get_children():
-		var idx := i
-		ch.position.x = (float(idx) - float(n - 1) * 0.5) * step
-		if idx % 2 == 1:
-			ch.position.x += 0.5 * minf(step, 1.0) * 0.9      # el pie queda en el origen: se centra el cuerpo tumbado
-			ch.position.y = 0.2
+		var ty := str(ch.name).substr(2)
+		var idx := Ammo.TYPE_ORDER.find(ty)
+		var cx := (float(idx) - float(n - 1) * 0.5) * step
+		if str(ch.name).begins_with("l_"):
+			ch.position = Vector3(cx + step * 0.38, 0.2, 0.3)      # tumbado: el pie queda a la derecha, la punta mira a la cámara
 		else:
-			ch.position.y = 0.0
-		i += 1
+			ch.position = Vector3(cx - step * 0.22, 0.0, 0.0)
 	_acam.global_position = Vector3(0.0, 0.5, 3.0)
 
 # ------------------------------------------------------------------------------------------------ datos flotantes

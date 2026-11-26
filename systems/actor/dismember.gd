@@ -17,8 +17,9 @@ const CUTS := {
 	"RightForeArm": [["RightForeArm", 0.6, 50.0], ["RightHand", 0.4, 40.0]],
 	"LeftHand": [["LeftHand", 1.0, 35.0]],
 	"RightHand": [["RightHand", 1.0, 35.0]],
-	"LeftUpLeg": [["LeftUpLeg", 0.3, 85.0], ["LeftLeg", 0.7, 60.0]],
-	"RightUpLeg": [["RightUpLeg", 0.3, 85.0], ["RightLeg", 0.7, 60.0]],
+	"LeftUpLeg": [["LeftUpLeg", 0.55, 75.0], ["LeftLeg", 0.45, 60.0]],
+	"RightUpLeg": [["RightUpLeg", 0.55, 75.0], ["RightLeg", 0.45, 60.0]],
+	"Hips": [["LeftUpLeg", 0.5, 95.0], ["RightUpLeg", 0.5, 95.0]],         # ingle: un tiro potente o la muerte arrancan la pierna entera
 	"LeftLeg": [["LeftLeg", 0.6, 60.0], ["LeftFoot", 0.4, 45.0]],
 	"RightLeg": [["RightLeg", 0.6, 60.0], ["RightFoot", 0.4, 45.0]],
 	"LeftFoot": [["LeftFoot", 1.0, 40.0]],
@@ -27,7 +28,7 @@ const CUTS := {
 }
 ## Radio aproximado del corte (m) por articulación.
 const RADIUS := {"LeftArm": 0.055, "RightArm": 0.055, "LeftForeArm": 0.045, "RightForeArm": 0.045, "LeftHand": 0.035, "RightHand": 0.035,
-	"LeftUpLeg": 0.085, "RightUpLeg": 0.085, "LeftLeg": 0.06, "RightLeg": 0.06, "LeftFoot": 0.045, "RightFoot": 0.045, "Head": 0.06}
+	"LeftUpLeg": 0.085, "RightUpLeg": 0.085, "LeftLeg": 0.06, "RightLeg": 0.06, "LeftFoot": 0.045, "RightFoot": 0.045, "Head": 0.06, "Hips": 0.09}
 const P := "mixamorig_"
 
 ## Llamar con cada impacto de bala / esquirla sobre un cuerpo que murió o que muere con este disparo.

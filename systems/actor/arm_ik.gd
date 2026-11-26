@@ -19,6 +19,7 @@ var head_pitch := 0.0
 var head_yaw := 0.0                    ## radianes: giro de la cabeza (contrarresta el torso en diagonal)
 var head_roll := 0.0                   ## radianes: inclinación de la cabeza hacia el hombro derecho (+) al apuntar
 var spine_roll := 0.0                  ## radianes: torso inclinado hacia el costado derecho (+)
+var shoulder_open := 0.0               ## radianes: hombros hacia afuera/adelante al apuntar (los brazos no quedan metidos en el torso)
 var spine_lean := 0.0                  ## radianes: inclinación hacia adelante (+) por velocidad / aceleración
 var body_fwd := Vector3.FORWARD        ## eje de avance del personaje (mundo)
 var body_right := Vector3.RIGHT        ## eje derecho del personaje (mundo)
@@ -222,7 +223,22 @@ static func apply_animation_pose(sk: Skeleton3D, anim: Animation, t: float) -> v
 			Animation.TYPE_POSITION_3D:
 				sk.set_bone_pose_position(b, anim.position_track_interpolate(i, t))
 
+func _open_shoulders(sk: Skeleton3D, inv: Transform3D) -> void:
+	var up_axis := (inv.basis * body_up).normalized()
+	var fwd_axis := (inv.basis * body_fwd).normalized()
+	for side in ["Right", "Left"]:
+		var b: int = _b[side + "Shoulder"]
+		if b < 0:
+			continue
+		var sgn := -1.0 if side == "Right" else 1.0
+		var g := sk.get_bone_global_pose(b)
+		# elevar un poco la clavícula y llevarla hacia adelante: el hombro sale del pecho
+		g.basis = Basis(up_axis, sgn * shoulder_open) * Basis(fwd_axis, sgn * shoulder_open * 0.8) * g.basis
+		sk.set_bone_global_pose(b, g)
+
 func _process_attached(sk: Skeleton3D, inv: Transform3D) -> void:
+	if shoulder_open > 0.001 and weapon_target_w > 0.001:
+		_open_shoulders(sk, inv)
 	# mano derecha: la de la animación (con la corrección del override, si hay)
 	if right_override_active and right_override_weight > 0.001:
 		var rf := right_override_frame

@@ -177,3 +177,13 @@
 ## 0.15.1 — pack «Flat Guns East»
 
 * 10 armas planas nuevas (`flat_*`): 2 pistolas, 2 subfusiles (uno compacto tipo MAC), 2 fusiles, 2 escopetas y 2 francotiradores (uno .50 antimaterial). Conversión con `tools/weapons/convert_fbx.py` (ahora conserva `models.json` al convertir ids sueltos). 71 armas en total.
+
+## 0.15.2 — correcciones tras la prueba
+
+* Práctica: ya no queda la Torre dibujada de fondo (TechView borra las líneas agrupadas al cambiar de escena); placas de rebote opcionales (apagadas por defecto, no estorban); la munición de escopeta usa sus propios cartuchos.
+* Heridas más chicas, pegadas a la piel y centradas en el cuerpo (no en el borde de la silueta).
+* Puntería: la mira asentada y quieta corrige hacia el centro del torso; corriendo o disparando de inmediato la dispersión crece hasta ×3 y el tiro puede ir a cualquier parte.
+* Munición: la incendiaria es una llama diminuta pero revienta órganos; la punta hueca desgarra; la perforante deja orificio de salida que sangra; la escopeta de cerca destroza huesos y órganos.
+* Desmembramiento: la pierna entera sale por la ingle con un tiro potente o al morir.
+* Armería: cada tipo de munición muestra un cartucho parado y otro tumbado con la punta de frente.
+* Agarre: los hombros se abren un poco hacia afuera al apuntar.

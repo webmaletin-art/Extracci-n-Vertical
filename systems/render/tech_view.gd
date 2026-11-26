@@ -208,6 +208,17 @@ func _batch_add(ln: ArrayMesh, xf: Transform3D) -> void:
 		bi.append(base + k)
 	_batch[key] = [bv, bc, bi]
 
+## Borra las líneas agrupadas de lo que ya no existe (al salir de una escena); lo nuevo se vuelve a convertir.
+func purge_lines() -> void:
+	for ln in _lines_nodes:
+		if is_instance_valid(ln):
+			(ln as Node).queue_free()
+	_lines_nodes.clear()
+	for k in _orig.keys():
+		var e: Array = _orig[k]
+		if not is_instance_valid(e[0]):
+			_orig.erase(k)
+
 func _batch_commit(root: Node) -> void:
 	for key in _batch:
 		var b: Array = _batch[key]
