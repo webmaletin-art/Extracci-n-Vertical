@@ -242,3 +242,9 @@
 * `TechView` ya no convierte nada al vuelo (de 442 a ~50 líneas): sólo guarda los parámetros globales de línea (grosor, intensidad, contraste, sombreado), el láser en tinta y la onda expansiva. Se eliminaron los estilos A/B/C/original, la pasada de pantalla (`tech_post`), el test de rendimiento de estilos, el selector de estilo y de rayos X de la práctica y las pruebas `tech_*`.
 * Lo armado por código (rieles, escaleras de mano, ascensor, lámparas, cajas, objetos sueltos, granadas, minas, cohete, arena de práctica, plataforma de la Armería) se pinta al crearlo con `LinedBake.style_tree`. Conservan su color: anatomía (rayos X), sangre, heridas, fogonazo, láser, luz roja de alarma y de las puertas.
 * Sin luces ni sombras de escenario: fondo de papel blanco; se quitaron la luna, el grupo de 4 luces, la luz del ascensor y la de la zona de extracción. Los velos de sectores son gris claro.
+
+## 0.19.0 — portada con escena en cámara lenta, pantalla de carga y sangre
+
+* **Escena de la portada** (`MenuScene`): letrero «EXTRACCIÓN EXTREME VERTICAL» y municiones (entera, perforante, deformada en «hongo» con esquirlas, casquillo, fogonazo, anillos de velocidad) modelados en Blender (`tools/menu_scene/make_scene.py`, fuentes `tools/menu_scene/*.glb`) y horneados en línea (`tools/bake_lined.gd -- menu`). Un tirador y un blanco, movimiento lentísimo en bucle. En el menú queda a la derecha del edificio: se gira arrastrando y se acerca con la rueda o el pellizco.
+* **Pantalla de carga** (`boot/boot.gd`): imagen de la misma escena (`boot/carga.png`) con el estado y la barra abajo. Sin logo de Godot (`boot_splash/show_image=false`, fondo claro).
+* **Sangre:** las gotas vuelan sólo en el plano del juego (no caían por delante del piso) y las manchas no se pegan en el borde delantero del piso.

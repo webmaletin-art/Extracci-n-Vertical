@@ -87,6 +87,7 @@ func _make_emitter() -> CPUParticles3D:
 	p.explosiveness = 0.85
 	p.lifetime = 1.3
 	p.local_coords = false
+	p.flatness = 1.0                       # las gotas vuelan sólo en el plano del juego (no caen delante del piso, por debajo del borde)
 	p.gravity = Vector3(0, -9.8, 0)
 	p.scale_amount_min = 0.5
 	p.scale_amount_max = 1.8
@@ -149,7 +150,8 @@ func drops(point: Vector3, dir: Vector3, amount: float, speed: float, spread := 
 			var q := PhysicsRayQueryParameters3D.create(pos, nxt, 1 | 8)
 			var h := space.intersect_ray(q)
 			if not h.is_empty():
-				stain(h.position, h.normal, randf_range(0.16, 0.42) * (0.7 + amount), true)
+				if h.position.z < 0.5:               # sólo en el plano del juego o detrás: nunca en el borde delantero del piso
+					stain(h.position, h.normal, randf_range(0.16, 0.42) * (0.7 + amount), true)
 				break
 			pos = nxt
 

@@ -8,7 +8,9 @@ config/description="Explora. Saquea. Sobrevive. Extrae."
 config/version="0.1.0"
 run/main_scene="res://boot/boot.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-boot_splash/bg_color=Color(0.04, 0.05, 0.06, 1)
+boot_splash/bg_color=Color(0.97, 0.97, 0.96, 1)
+boot_splash/show_image=false
+boot_splash/fullsize=false
 config/icon="res://icon.svg"
 config/quit_on_go_back=false
 

@@ -34,7 +34,7 @@ static func style_tree(root: Node) -> int:
 	var stack: Array = [root]
 	while not stack.is_empty():
 		var node: Node = stack.pop_back()
-		if node.has_meta("no_tech") or node is Actor or node is AnatomyBody or node is Ballistics or node is Blood or node is Gibs or node.name == "FxPool":
+		if _skip_node(node):
 			continue
 		for c in node.get_children():
 			stack.append(c)
@@ -62,6 +62,14 @@ static func style_tree(root: Node) -> int:
 				mi.add_child(lm)
 			n += 1
 	return n
+
+## Lo que no se pinta: marcado `no_tech`, personajes (CharacterBody3D), anatomía, balas, sangre, restos y el pool de efectos.
+## (Se reconoce por nombre de clase para no depender de esos scripts: el horneador corre sin los autoloads.)
+static func _skip_node(n: Node) -> bool:
+	if n.has_meta("no_tech") or n is CharacterBody3D or n.name == "FxPool":
+		return true
+	var sc = n.get_script()
+	return sc != null and str(sc.get_global_name()) in ["AnatomyBody", "Ballistics", "Blood", "Gibs"]
 
 ## Ruta de la versión en línea de un modelo (o "" si todavía no existe).
 static func lined_path(kind: String, id: String) -> String:

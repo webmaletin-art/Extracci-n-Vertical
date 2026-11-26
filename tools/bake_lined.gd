@@ -37,6 +37,12 @@ func _initialize() -> void:
 				var id := f.get_basename()
 				var inst := (load("res://assets/props/" + f) as PackedScene).instantiate()
 				n += _bake(inst, "props", id, true)
+	if what in ["menu", "all"]:
+		for id in ["letrero", "municion"]:
+			var doc := GLTFDocument.new()
+			var st := GLTFState.new()
+			doc.append_from_file(ProjectSettings.globalize_path("res://tools/menu_scene/%s.glb" % id), st)
+			n += _bake(doc.generate_scene(st), "props", "menu_" + id, true)        # tools/ no se importa: se lee el GLB directo
 	if what in ["characters", "all"]:
 		for c in CharacterModel.all():
 			var inst := (load(str(c.path)) as PackedScene).instantiate()

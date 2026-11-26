@@ -35,6 +35,7 @@ func show_menu(result := {}) -> void:
 	if menu:
 		menu.queue_free()
 	menu = Control.new()
+	menu.mouse_filter = Control.MOUSE_FILTER_IGNORE          # el fondo 3D de la portada recibe el arrastre (girar y acercar)
 	menu.theme = UiTheme.make()
 	menu.set_anchors_preset(Control.PRESET_FULL_RECT)
 	ui.add_child(menu)

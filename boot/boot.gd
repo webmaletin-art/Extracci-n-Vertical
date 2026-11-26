@@ -42,22 +42,31 @@ func _ready() -> void:
 func _build_ui() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	var bg := ColorRect.new()
-	bg.color = Color(0.03, 0.04, 0.05)
+	bg.color = Color(0.97, 0.97, 0.96)
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
+	# imagen de carga: la escena de la portada (tirador, municiones atravesando el cuerpo, letrero), todo en línea
+	var pic := TextureRect.new()
+	pic.texture = load("res://boot/carga.png")
+	pic.set_anchors_preset(Control.PRESET_FULL_RECT)
+	pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	add_child(pic)
+	var band := ColorRect.new()
+	band.color = Color(1, 1, 1, 0.82)
+	band.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	band.offset_top = -150
+	add_child(band)
 	var v := VBoxContainer.new()
-	v.set_anchors_preset(Control.PRESET_CENTER)
-	v.position = Vector2(-300, -110)
-	v.custom_minimum_size = Vector2(600, 220)
-	v.add_theme_constant_override("separation", 10)
+	v.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	v.offset_top = -140
+	v.offset_left = 120
+	v.offset_right = -120
+	v.add_theme_constant_override("separation", 8)
 	add_child(v)
-	var t := Label.new()
-	t.text = "EXTRACCIÓN\nVERTICAL"
-	t.add_theme_font_size_override("font_size", 54)
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	v.add_child(t)
 	_label = Label.new()
 	_label.add_theme_font_size_override("font_size", 22)
+	_label.add_theme_color_override("font_color", Color(0.07, 0.07, 0.09))
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	v.add_child(_label)
@@ -67,7 +76,7 @@ func _build_ui() -> void:
 	v.add_child(_bar)
 	_sub = Label.new()
 	_sub.add_theme_font_size_override("font_size", 16)
-	_sub.add_theme_color_override("font_color", Color(0.6, 0.62, 0.66))
+	_sub.add_theme_color_override("font_color", Color(0.35, 0.35, 0.38))
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(_sub)
 	_retry = Button.new()
